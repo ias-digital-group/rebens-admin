@@ -1,5 +1,5 @@
 {
-  "name": "vue-black-dashboard-pro",
+  "name": "vue-rebens-portal",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -49,6 +49,6 @@
     "last 2 versions",
     "not ie <= 8"
   ],
-  "author": "cristijora <joracristi@gmail.com>",
-  "description": "Vue Black Dashboard PRO"
+  "author": "renatomr912 <renatomr@gmail.com>",
+  "description": "Rebens Management Portal"
 }

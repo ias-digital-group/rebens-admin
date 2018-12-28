@@ -13,7 +13,8 @@ module.exports = {
         src: resolveSrc('src'),
         assets: resolveSrc('src/assets')
       }
-    }
+    },
+    devtool: 'source-map'
   },
   pluginOptions: {
     i18n: {
