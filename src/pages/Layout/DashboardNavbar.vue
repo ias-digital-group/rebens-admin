@@ -1,16 +1,10 @@
 <template>
-  <base-nav
-    v-model="showMenu"
-    class="navbar-absolute top-navbar"
-    type="white"
-    :transparent="true"
-  >
+  <base-nav v-model="showMenu" class="navbar-absolute top-navbar" type="white" :transparent="true">
     <div slot="brand" class="navbar-wrapper">
-      <div class="navbar-minimize d-inline"><sidebar-toggle-button /></div>
-      <div
-        class="navbar-toggle d-inline"
-        :class="{ toggled: $sidebar.showSidebar }"
-      >
+      <div class="navbar-minimize d-inline">
+        <sidebar-toggle-button />
+      </div>
+      <div class="navbar-toggle d-inline" :class="{ toggled: $sidebar.showSidebar }">
         <button type="button" class="navbar-toggler" @click="toggleSidebar">
           <span class="navbar-toggler-bar bar1"></span>
           <span class="navbar-toggler-bar bar2"></span>
@@ -26,61 +20,29 @@
           <input type="text" class="form-control" placeholder="Search...">
           <div class="input-group-addon"><i class="tim-icons icon-zoom-split"></i></div>
         -->
-        <button
-          class="btn btn-link"
-          id="search-button"
-          data-toggle="modal"
-          data-target="#searchModal"
-        >
+        <button class="btn btn-link" id="search-button" data-toggle="modal" data-target="#searchModal">
           <i class="tim-icons icon-zoom-split"></i>
         </button>
         <!-- You can choose types of search input -->
       </div>
-      <modal
-        :show.sync="searchModalVisible"
-        class="modal-search"
-        id="searchModal"
-        :centered="false"
-        :show-close="true"
-      >
-        <input
-          slot="header"
-          v-model="searchQuery"
-          type="text"
-          class="form-control"
-          id="inlineFormInputGroup"
-          placeholder="SEARCH"
-        />
+      <modal :show.sync="searchModalVisible" class="modal-search" id="searchModal" :centered="false" :show-close="true">
+        <input slot="header" v-model="searchQuery" type="text" class="form-control" id="inlineFormInputGroup"
+          placeholder="SEARCH" />
       </modal>
-      <base-dropdown
-        tag="li"
-        :menu-on-right="!$rtl.isRTL"
-        title-tag="a"
-        class="nav-item"
-      >
-        <a
-          slot="title"
-          href="#"
-          class="dropdown-toggle nav-link"
-          data-toggle="dropdown"
-          aria-expanded="true"
-        >
+      <base-dropdown tag="li" :menu-on-right="!$rtl.isRTL" title-tag="a" class="nav-item">
+        <a slot="title" href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="true">
           <div class="notification d-none d-lg-block d-xl-block"></div>
           <i class="tim-icons icon-sound-wave"></i>
           <p class="d-lg-none">New Notifications</p>
         </a>
         <li class="nav-link">
-          <a href="#" class="nav-item dropdown-item"
-            >Mike John responded to your email</a
-          >
+          <a href="#" class="nav-item dropdown-item">Mike John responded to your email</a>
         </li>
         <li class="nav-link">
           <a href="#" class="nav-item dropdown-item">You have 5 more tasks</a>
         </li>
         <li class="nav-link">
-          <a href="#" class="nav-item dropdown-item"
-            >Your friend Michael is in town</a
-          >
+          <a href="#" class="nav-item dropdown-item">Your friend Michael is in town</a>
         </li>
         <li class="nav-link">
           <a href="#" class="nav-item dropdown-item">Another notification</a>
@@ -89,33 +51,18 @@
           <a href="#" class="nav-item dropdown-item">Another one</a>
         </li>
       </base-dropdown>
-      <base-dropdown
-        tag="li"
-        :menu-on-right="!$rtl.isRTL"
-        title-tag="a"
-        class="nav-item"
-        menu-classes="dropdown-navbar"
-      >
-        <a
-          slot="title"
-          href="#"
-          class="dropdown-toggle nav-link"
-          data-toggle="dropdown"
-          aria-expanded="true"
-        >
+      <base-dropdown tag="li" :menu-on-right="!$rtl.isRTL" title-tag="a" class="nav-item" menu-classes="dropdown-navbar">
+        <a slot="title" href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="true">
           <div class="photo"><img src="img/mike.jpg" /></div>
           <b class="caret d-none d-lg-block d-xl-block"></b>
-          <p class="d-lg-none">Log out</p>
+          <p class="d-lg-none">{{$t('navbar.user.logout')}}</p>
         </a>
         <li class="nav-link">
-          <a href="#" class="nav-item dropdown-item">Profile</a>
-        </li>
-        <li class="nav-link">
-          <a href="#" class="nav-item dropdown-item">Settings</a>
+          <a href="#" class="nav-item dropdown-item">{{$t('navbar.user.profile')}}</a>
         </li>
         <div class="dropdown-divider"></div>
         <li class="nav-link">
-          <a href="#" class="nav-item dropdown-item">Log out</a>
+          <a href="#" class="nav-item dropdown-item">{{$t('navbar.user.logout')}}</a>
         </li>
       </base-dropdown>
     </ul>

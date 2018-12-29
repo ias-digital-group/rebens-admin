@@ -3,46 +3,20 @@
     <div class="container-fluid">
       <ul class="nav">
         <li class="nav-item">
-          <a
-            href="http://creative-tim.com"
-            target="_blank"
-            rel="noopener"
-            class="nav-link"
-          >
-            Creative Tim
+          <a href="http://iasdigitalgroup.com/" target="_blank" rel="noopener" class="nav-link">
+            {{$t("footer.company")}}
           </a>
         </li>
         <li class="nav-item">
-          <a
-            href="https://www.creative-tim.com/presentation"
-            target="_blank"
-            rel="noopener"
-            class="nav-link"
-          >
-            About Us
-          </a>
-        </li>
-        <li class="nav-item">
-          <a
-            href="http://blog.creative-tim.com"
-            target="_blank"
-            rel="noopener"
-            class="nav-link"
-          >
-            Blog
+          <a href="http://iasdigitalgroup.com/#who" target="_blank" rel="noopener" class="nav-link">
+            {{$t("footer.aboutus")}}
           </a>
         </li>
       </ul>
       <div class="copyright">
-        &copy; {{ year }}, made with <i class="tim-icons icon-heart-2"></i> by
-        <a href="https://binarcode.com" target="_blank">BinarCode</a> and
-        <a
-          href="https://www.creative-tim.com/?ref=pdf-vuejs"
-          target="_blank"
-          rel="noopener"
-          >Creative Tim</a
-        >
-        for a better web.
+        &copy; {{ year }}, {{$t("footer.copyrightphrase1")}}<i class="tim-icons icon-heart-2"></i> {{$t("footer.copyrightphrase2")}}
+        <a href="https://iasdigitalgroup.com" target="_blank">{{$t("footer.company")}}</a>
+        {{$t("footer.copyrightphrase3")}}
       </div>
     </div>
   </footer>

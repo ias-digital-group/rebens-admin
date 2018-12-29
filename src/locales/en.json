@@ -1,4 +1,9 @@
 {
+  "pages": {
+    "categories": {
+      "title": "Categories"
+    }
+  },
   "sidebar": {
     "title": "Creative Tim",
     "shortTitle": "CT",

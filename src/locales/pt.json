@@ -1,4 +1,26 @@
 {
+    "pages": {
+      "dashboard": {
+        "title": "Dashboard"
+      },
+      "categories": {
+        "title": "Categorias"
+      }
+    },
+    "navbar":{
+      "user":{
+        "profile":"Perfil",
+        "logout":"Sair"
+      }
+    },
+    "footer":{
+      "aboutus": "Sobre nós",
+      "blog": "Blog",
+      "company": "IAS Digital Group",
+      "copyrightphrase1":"feito com ",
+      "copyrightphrase2":"por ",
+      "copyrightphrase3":"por uma web melhor"
+    },
     "sidebar": {
       "title": "Rebens",
       "shortTitle": "RB",

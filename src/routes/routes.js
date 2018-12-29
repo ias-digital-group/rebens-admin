@@ -2,6 +2,7 @@ import DashboardLayout from 'src/pages/Layout/DashboardLayout.vue';
 import AuthLayout from 'src/pages/Layout/AuthLayout.vue';
 // GeneralViews
 import NotFound from 'src/pages/GeneralViews/NotFoundPage.vue';
+import i18n from '../i18n';
 
 // Dashboard pages
 const Dashboard = () =>
@@ -9,6 +10,23 @@ const Dashboard = () =>
 
 const Login = () =>
   import(/* webpackChunkName: "dashboard" */ 'src/pages/Login/Login.vue');
+
+const categoriesList = () =>
+  import(/* webpackChunkName: "dashboard" */ 'src/pages/Categories/List.vue');
+
+let categoriesPages = {
+  path: '/categories',
+  component: DashboardLayout,
+  name: i18n.t('pages.categories.title'),
+  children: [
+    {
+      path: '',
+      name: i18n.t('pages.categories.title'),
+      component: categoriesList
+    }
+  ]
+};
+
 const routes = [
   {
     path: '/',
@@ -23,7 +41,7 @@ const routes = [
     children: [
       {
         path: 'dashboard',
-        name: 'Dashboard',
+        name: i18n.t('pages.dashboard.title'),
         components: { default: Dashboard }
       }
     ]
@@ -40,7 +58,8 @@ const routes = [
       }
     ]
   },
-  { path: '*', component: NotFound }
+  { path: '*', component: NotFound },
+  categoriesPages
 ];
 
 export default routes;
