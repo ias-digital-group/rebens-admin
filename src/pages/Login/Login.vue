@@ -9,16 +9,10 @@
           </template>
 
           <div>
-            <base-input
-              placeholder="Email"
-              addon-left-icon="tim-icons icon-email-85"
-            >
+            <base-input placeholder="Email" addon-left-icon="tim-icons icon-email-85">
             </base-input>
 
-            <base-input
-              placeholder="Password"
-              addon-left-icon="tim-icons icon-lock-circle"
-            >
+            <base-input placeholder="Password" addon-left-icon="tim-icons icon-lock-circle">
             </base-input>
           </div>
 

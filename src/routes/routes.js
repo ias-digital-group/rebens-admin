@@ -2,6 +2,7 @@ import DashboardLayout from 'src/pages/Layout/DashboardLayout.vue';
 import AuthLayout from 'src/pages/Layout/AuthLayout.vue';
 // GeneralViews
 import NotFound from 'src/pages/GeneralViews/NotFoundPage.vue';
+import AccessDenied from 'src/pages/GeneralViews/AccessDenied.vue';
 import i18n from '../i18n';
 
 // Dashboard pages
@@ -17,12 +18,17 @@ const categoriesList = () =>
 let categoriesPages = {
   path: '/categories',
   component: DashboardLayout,
-  name: i18n.t('pages.categories.title'),
+  meta: {
+    requiresAuth: true
+  },
   children: [
     {
       path: '',
       name: i18n.t('pages.categories.title'),
-      component: categoriesList
+      component: categoriesList,
+      meta: {
+        requiresAuth: true
+      }
     }
   ]
 };
@@ -31,7 +37,10 @@ const routes = [
   {
     path: '/',
     redirect: '/dashboard',
-    name: 'Home'
+    name: 'Home',
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/',
@@ -42,7 +51,10 @@ const routes = [
       {
         path: 'dashboard',
         name: i18n.t('pages.dashboard.title'),
-        components: { default: Dashboard }
+        components: { default: Dashboard },
+        meta: {
+          requiresAuth: true
+        }
       }
     ]
   },
@@ -50,15 +62,35 @@ const routes = [
     path: '/',
     component: AuthLayout,
     name: 'Authentication',
+    meta: {
+      requiresAuth: false
+    },
     children: [
       {
         path: '/login',
         name: 'Login',
-        component: Login
+        component: Login,
+        meta: {
+          requiresAuth: false
+        }
       }
     ]
   },
-  { path: '*', component: NotFound },
+  {
+    path: '*',
+    component: NotFound,
+    meta: {
+      requiresAuth: false
+    }
+  },
+  {
+    path: '/access-denied',
+    component: AccessDenied,
+    name: i18n.t('pages.access-denied.title'),
+    meta: {
+      requiresAuth: false
+    }
+  },
   categoriesPages
 ];
 

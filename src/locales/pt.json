@@ -5,6 +5,9 @@
       },
       "categories": {
         "title": "Categorias"
+      },
+      "access-denied": {
+        "title": "Acesso negado"
       }
     },
     "navbar":{

@@ -57,7 +57,6 @@
 import { Table, TableColumn, Select, Option } from 'element-ui';
 import { BasePagination } from 'src/components';
 import users from './users';
-import Fuse from 'fuse.js';
 import swal from 'sweetalert2';
 
 export default {
@@ -128,8 +127,7 @@ export default {
         }
       ],
       tableData: users,
-      searchedData: [],
-      fuseSearch: null
+      searchedData: []
     };
   },
   methods: {
@@ -181,25 +179,7 @@ export default {
     }
   },
   mounted() {
-    // Fuse search initialization.
-    this.fuseSearch = new Fuse(this.tableData, {
-      keys: ['name', 'email'],
-      threshold: 0.3
-    });
-  },
-  watch: {
-    /**
-     * Searches through the table data by a given query.
-     * NOTE: If you have a lot of data, it's recommended to do the search on the Server Side and only display the results here.
-     * @param value of the query
-     */
-    searchQuery(value) {
-      let result = this.tableData;
-      if (value !== '') {
-        result = this.fuseSearch.search(this.searchQuery);
-      }
-      this.searchedData = result;
-    }
+  
   }
 };
 </script>
