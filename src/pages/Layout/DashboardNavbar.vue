@@ -62,7 +62,7 @@
         </li>
         <div class="dropdown-divider"></div>
         <li class="nav-link">
-          <a href="#" class="nav-item dropdown-item">{{$t('navbar.user.logout')}}</a>
+          <a href="javascript:void(0);" @click="signout" class="nav-item dropdown-item">{{$t('navbar.user.logout')}}</a>
         </li>
       </base-dropdown>
     </ul>
@@ -115,6 +115,10 @@ export default {
     },
     toggleMenu() {
       this.showMenu = !this.showMenu;
+    },
+    signout() {
+      this.$auth.signout();
+      this.$router.push('/login');
     }
   }
 };

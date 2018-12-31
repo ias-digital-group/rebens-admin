@@ -8,6 +8,11 @@
       },
       "access-denied": {
         "title": "Acesso negado"
+      },
+      "login": {
+        "title": "Login",
+        "subtitle": "Identifique-se",
+        "signin-button": "Entrar"
       }
     },
     "navbar":{
@@ -22,7 +27,7 @@
       "company": "IAS Digital Group",
       "copyrightphrase1":"feito com ",
       "copyrightphrase2":"por ",
-      "copyrightphrase3":"por uma web melhor"
+      "copyrightphrase3":""
     },
     "sidebar": {
       "title": "Rebens",

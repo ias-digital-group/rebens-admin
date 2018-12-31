@@ -1,14 +1,11 @@
 <template>
-  <div
-    class="form-group"
-    :class="{
+  <div class="form-group" :class="{
       'input-group': hasIcon,
       'input-group-focus': focused,
       'has-danger': error,
       'has-success': !error && touched,
       'has-label': label
-    }"
-  >
+    }">
     <slot name="label">
       <label v-if="label"> {{ label }} {{ required ? '*' : '' }} </label>
     </slot>
@@ -18,13 +15,7 @@
       </span>
     </slot>
     <slot>
-      <input
-        :value="value"
-        v-bind="$attrs"
-        v-on="listeners"
-        class="form-control"
-        aria-describedby="addon-right addon-left"
-      />
+      <input :value="value" v-bind="$attrs" v-on="listeners" class="form-control" aria-describedby="addon-right addon-left" />
     </slot>
 
     <slot name="error" v-if="error || $slots.error">

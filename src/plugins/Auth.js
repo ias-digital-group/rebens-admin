@@ -11,6 +11,15 @@ function install(Vue) {
       this._user = this.getUser();
       return this._user;
     },
+    saveUser(signinResponse) {
+      const user = {
+        accessToken: signinResponse.extra.token.accessToken,
+        name: signinResponse.extra.user.name,
+        email: signinResponse.extra.user.email,
+        id: signinResponse.extra.user.id
+      };
+      localStorage.setItem(this._userStoreKey, JSON.stringify(user));
+    },
     getUser() {
       let storageString = localStorage.getItem(this._userStoreKey);
       if (storageString) {
@@ -22,8 +31,11 @@ function install(Vue) {
     get _userStoreKey() {
       return 'portal.user';
     },
-    isAuthenticated() {
-      return !!localStorage.getItem(this._userStoreKey);
+    get isAuthenticated() {
+      return localStorage.getItem(this._userStoreKey);
+    },
+    signout() {
+      localStorage.clear();
     },
     authRedirectGuard() {
       const self = this;
@@ -36,7 +48,7 @@ function install(Vue) {
             next();
           } else {
             next({
-              path: '/access-denied'
+              path: '/login'
             });
           }
         } else {

@@ -68,7 +68,7 @@ const routes = [
     children: [
       {
         path: '/login',
-        name: 'Login',
+        name: i18n.t('pages.login.title'),
         component: Login,
         meta: {
           requiresAuth: false
