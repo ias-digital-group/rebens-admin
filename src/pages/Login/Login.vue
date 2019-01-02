@@ -13,19 +13,19 @@
               required
               v-model="credentials.email"
               v-validate="modelValidations.email"
-              :error="getError('email')"
-              name="email"
+              :error="getError($t('pages.login.input-email'))"
+              :name="$t('pages.login.input-email')"
               type="email"
-              placeholder="Email" 
+              :placeholder="$t('pages.login.input-email')" 
             >
             </base-input>
             <base-input 
-              placeholder="Password" 
+              :placeholder="$t('pages.login.input-password')" 
               required
-              name="password"
+              :name="$t('pages.login.input-password')"
               v-model="credentials.password"
               v-validate="modelValidations.password"
-              :error="getError('password')"
+              :error="getError($t('pages.login.input-password'))"
               type="password">
             </base-input>
           </div>
@@ -37,6 +37,7 @@
               size="lg" 
               native-type="submit"
               @click.native.prevent="validate"
+              :loading="fullscreenLoading"
               block>
               {{$t('pages.login.signin-button')}}
             </base-button>
@@ -51,6 +52,7 @@ import accountService from '../../services/Account/accountService';
 export default {
   data() {
     return {
+      fullscreenLoading: false,
       credentials: {
         email: '',
         password: ''
@@ -73,6 +75,7 @@ export default {
     },
     validate() {
       const self = this;
+      this.$data.fullscreenLoading = true;
       this.$validator.validateAll().then(isValid => {
         //R3bens#123
         if (isValid) {
@@ -93,6 +96,7 @@ export default {
                   self.$router.push('/');
                   return;
                 }
+                this.$data.fullscreenLoading = false;
                 self.$notify({
                   type: 'primary',
                   message: response.data.message,
@@ -105,6 +109,7 @@ export default {
                   message: err,
                   icon: 'tim-icons icon-bell-55'
                 });
+                this.$data.fullscreenLoading = false;
               }
             );
         }

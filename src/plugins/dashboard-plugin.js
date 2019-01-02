@@ -3,7 +3,7 @@ import 'src/polyfills';
 // Notifications plugin. Used on Notifications page
 import Notifications from 'src/components/NotificationPlugin';
 // Validation plugin used to validate forms
-import VeeValidate from 'vee-validate';
+import VeeValidate, { Validator } from 'vee-validate';
 // A plugin file where you could register global components used across the app
 import GlobalComponents from './globalComponents';
 // A plugin file where you could register global directives
@@ -21,7 +21,7 @@ locale.use(lang);
 import 'src/assets/sass/black-dashboard-pro.scss';
 import 'src/assets/css/nucleo-icons.css';
 import 'src/assets/css/demo.css';
-
+import ptBr from 'vee-validate/dist/locale/pt_BR';
 // library auto imports
 import 'es6-promise/auto';
 
@@ -32,6 +32,11 @@ export default {
     Vue.use(RTLPlugin);
     Vue.use(SideBar);
     Vue.use(Notifications);
-    Vue.use(VeeValidate, { fieldsBagName: 'veeFields' });
+    if (process.env.VUE_APP_I18N_LOCALE == 'pt') {
+      Validator.localize('pt_BR', ptBr);
+      Vue.use(VeeValidate, { fieldsBagName: 'veeFields', locale: ptBr });
+    } else {
+      Vue.use(VeeValidate, { fieldsBagName: 'veeFields' });
+    }
   }
 };

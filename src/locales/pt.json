@@ -12,6 +12,8 @@
       "login": {
         "title": "Login",
         "subtitle": "Identifique-se",
+        "input-email": "e-mail",
+        "input-password": "senha",
         "signin-button": "Entrar"
       }
     },
