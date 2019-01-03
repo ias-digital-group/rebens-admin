@@ -6,8 +6,11 @@ import AccessDenied from 'src/pages/GeneralViews/AccessDenied.vue';
 import i18n from '../i18n';
 
 // Dashboard pages
-const Dashboard = () =>
-  import(/* webpackChunkName: "dashboard" */ 'src/pages/Dashboard/Dashboard.vue');
+// const Dashboard = () =>
+//   import(/* webpackChunkName: "dashboard" */ 'src/pages/Dashboard/Dashboard.vue');
+
+const Content = () =>
+  import(/* webpackChunkName: "dashboard" */ 'src/pages/Layout/Content.vue');
 
 const Login = () =>
   import(/* webpackChunkName: "dashboard" */ 'src/pages/Login/Login.vue');
@@ -36,22 +39,14 @@ let categoriesPages = {
 const routes = [
   {
     path: '/',
-    redirect: '/dashboard',
-    name: 'Home',
-    meta: {
-      requiresAuth: true
-    }
-  },
-  {
-    path: '/',
     component: DashboardLayout,
     redirect: '/dashboard',
     name: 'Dashboard layout',
     children: [
       {
-        path: 'dashboard',
+        path: '/dashboard',
         name: i18n.t('pages.dashboard.title'),
-        components: { default: Dashboard },
+        components: { default: Content },
         meta: {
           requiresAuth: true
         }

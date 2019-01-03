@@ -6,7 +6,7 @@
       :background-color="sidebarBackground"
       :short-title="$t('sidebar.shortTitle')"
       :title="$t('sidebar.title')">
-      <template slot-scope="props" slot="links">
+      <template slot="links">
         <sidebar-item
           :link="{
             name: $t('sidebar.dashboard'),
@@ -16,7 +16,6 @@
         >
         </sidebar-item>
         <sidebar-item :link="{ name: $t('sidebar.categories'), icon: 'tim-icons icon-book-bookmark', path: '/categories' }"></sidebar-item>
-        <sidebar-item :link="{ name: $t('sidebar.faq'), icon: 'far fa-question-circle', path: '/faq' }"></sidebar-item>
       </template>
     </side-bar>
     <div class="main-panel" :data="sidebarBackground">

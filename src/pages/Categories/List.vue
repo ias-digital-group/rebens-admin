@@ -2,10 +2,10 @@
   <div class="row">
     <div class="col-12">
       <card card-body-classes="table-full-width">
-        <h4 slot="header" class="card-title">Paginated Tables</h4>
+        <h4 slot="header" class="card-title">{{$t('pages.categories.title')}}</h4>
         <div>
           <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
-            <el-select class="select-primary mb-3 pagination-select" v-model="pagination.perPage" placeholder="Per page">
+            <el-select class="select-primary mb-3 pagination-select" v-model="pagination.perPage" placeholder="Per page" v-if="!loading">
               <el-option class="select-primary" v-for="item in pagination.perPageOptions" :key="item" :label="item"
                 :value="item">
               </el-option>
@@ -31,8 +31,8 @@
         </div>
         <div slot="footer" class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
           <div class="">
-            <p class="card-category">
-              Showing {{ from + 1 }} to {{ to }} of {{ total }} entries
+            <p class="card-category" v-if="!loading">
+              Total de categorias: {{ total }}
             </p>
           </div>
           <base-pagination class="pagination-no-border" v-model="pagination.currentPage" :per-page="pagination.perPage"
@@ -143,24 +143,26 @@ export default {
       const request = {
         page: this.$data.pagination.currentPage - 1,
         pageItems: this.$data.pagination.perPage
-      }
+      };
       this.$data.loading = true;
-      categoryService.findAll(request).then((response) =>{
-        self.$data.tableData = response.data.extra.page
-        self.$data.pagination.currentPage = response.data.extra.currentPage + 1;
-        self.$data.pagination.total = response.data.extra.totalItems;
-        self.$data.loading = false;  
-      }, () =>{
+      categoryService.findAll(request).then(
+        response => {
+          self.$data.tableData = response.data.extra.page;
+          self.$data.pagination.currentPage =
+            response.data.extra.currentPage + 1;
+          self.$data.pagination.total = response.data.extra.totalItems;
           self.$data.loading = false;
-      });
+        },
+        () => {
+          self.$data.loading = false;
+        }
+      );
     }
   },
   created() {
     this.fetchData();
   },
-  mounted() {
-  
-  }
+  mounted() {}
 };
 </script>
 <style>
