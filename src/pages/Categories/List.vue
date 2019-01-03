@@ -36,7 +36,7 @@
             </p>
           </div>
           <base-pagination class="pagination-no-border" v-model="pagination.currentPage" :per-page="pagination.perPage"
-            :total="total">
+            :total="total" v-on:input="onPageChanged">
           </base-pagination>
         </div>
       </card>
@@ -68,7 +68,7 @@ export default {
       return this.pagination.perPage * (this.pagination.currentPage - 1);
     },
     total() {
-      return this.tableData.length;
+      return this.pagination.total;
     }
   },
   data() {
@@ -134,15 +134,21 @@ export default {
         this.tableData.splice(indexToDelete, 1);
       }
     },
+    onPageChanged(page) {
+      this.$data.pagination.currentPage = page;
+      this.fetchData();
+    },
     fetchData() {
       const self = this;
       const request = {
-        page: this.$data.pagination.currentPage,
+        page: this.$data.pagination.currentPage - 1,
         pageItems: this.$data.pagination.perPage
       }
       this.$data.loading = true;
       categoryService.findAll(request).then((response) =>{
         self.$data.tableData = response.data.extra.page
+        self.$data.pagination.currentPage = response.data.extra.currentPage + 1;
+        self.$data.pagination.total = response.data.extra.totalItems;
         self.$data.loading = false;  
       }, () =>{
           self.$data.loading = false;

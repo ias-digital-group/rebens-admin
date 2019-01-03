@@ -139,10 +139,10 @@ export default {
   watch: {
     perPage() {
       this.$emit('input', 1);
-    },
-    total() {
-      this.$emit('input', 1);
     }
+    // total() {
+    //   this.$emit('input', 1);
+    // }
   }
 };
 </script>
