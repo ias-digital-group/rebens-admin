@@ -11,8 +11,9 @@ const instance = axios.create({
 instance.interceptors.request.use(
   config => {
     if (Vue.prototype.$auth.isAuthenticated) {
-      config.headers.common['Authorization'] =
-        'Bearer ' + Vue.prototype.$auth.currentUser.accessToken;
+      config.headers.common['Authorization'] = `Bearer ${
+        Vue.prototype.$auth.currentUser.accessToken
+      }`;
     }
     return config;
   },

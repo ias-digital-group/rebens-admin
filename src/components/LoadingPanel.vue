@@ -18,8 +18,8 @@ export default {};
 .el-loading-spinner .path {
   stroke: #66615b !important;
 }
-
+/* 
 .el-loading-mask {
   background: transparent !important;
-}
+} */
 </style>

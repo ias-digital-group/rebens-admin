@@ -10,23 +10,13 @@
                 :value="item">
               </el-option>
             </el-select>
-
-            <base-input>
-              <el-input type="search" class="mb-3 search-input" clearable prefix-icon="el-icon-search" placeholder="Search records"
-                v-model="searchQuery" aria-controls="datatables">
-              </el-input>
-            </base-input>
           </div>
-          <el-table :data="queriedData">
+          <el-table :data="tableData" v-loading="loading" empty-text="...">
             <el-table-column v-for="column in tableColumns" :key="column.label" :min-width="column.minWidth" :prop="column.prop"
               :label="column.label">
             </el-table-column>
             <el-table-column :min-width="135" align="right" label="Actions">
               <div slot-scope="props">
-                <base-button @click.native="handleLike(props.$index, props.row);" class="like btn-link" type="info"
-                  size="sm" icon>
-                  <i class="tim-icons icon-heart-2"></i>
-                </base-button>
                 <base-button @click.native="handleEdit(props.$index, props.row);" class="edit btn-link" type="warning"
                   size="sm" icon>
                   <i class="tim-icons icon-pencil"></i>
@@ -56,9 +46,8 @@
 <script>
 import { Table, TableColumn, Select, Option } from 'element-ui';
 import { BasePagination } from 'src/components';
-import users from './users';
 import swal from 'sweetalert2';
-
+import categoryService from '../../services/Category/categoryService';
 export default {
   components: {
     BasePagination,
@@ -68,16 +57,6 @@ export default {
     [TableColumn.name]: TableColumn
   },
   computed: {
-    /***
-     * Returns a page from the searched data or the whole data. Search is performed in the watch section below
-     */
-    queriedData() {
-      let result = this.tableData;
-      if (this.searchedData.length > 0) {
-        result = this.searchedData;
-      }
-      return result.slice(this.from, this.to);
-    },
     to() {
       let highBound = this.from + this.pagination.perPage;
       if (this.total < highBound) {
@@ -89,9 +68,7 @@ export default {
       return this.pagination.perPage * (this.pagination.currentPage - 1);
     },
     total() {
-      return this.searchedData.length > 0
-        ? this.searchedData.length
-        : this.tableData.length;
+      return this.tableData.length;
     }
   },
   data() {
@@ -102,43 +79,23 @@ export default {
         perPageOptions: [5, 10, 25, 50],
         total: 0
       },
-      searchQuery: '',
-      propsToSearch: ['name', 'email', 'age'],
+      loading: false,
       tableColumns: [
+        {
+          prop: 'id',
+          label: 'Id',
+          minWidth: 0
+        },
         {
           prop: 'name',
           label: 'Name',
           minWidth: 200
-        },
-        {
-          prop: 'email',
-          label: 'Email',
-          minWidth: 250
-        },
-        {
-          prop: 'age',
-          label: 'Age',
-          minWidth: 100
-        },
-        {
-          prop: 'salary',
-          label: 'Salary',
-          minWidth: 120
         }
       ],
-      tableData: users,
-      searchedData: []
+      tableData: []
     };
   },
   methods: {
-    handleLike(index, row) {
-      swal({
-        title: `You liked ${row.name}`,
-        buttonsStyling: false,
-        type: 'success',
-        confirmButtonClass: 'btn btn-success btn-fill'
-      });
-    },
     handleEdit(index, row) {
       swal({
         title: `You want to edit ${row.name}`,
@@ -176,9 +133,28 @@ export default {
       if (indexToDelete >= 0) {
         this.tableData.splice(indexToDelete, 1);
       }
+    },
+    fetchData() {
+      const self = this;
+      const request = {
+        page: this.$data.pagination.currentPage,
+        pageItems: this.$data.pagination.perPage
+      }
+      this.$data.loading = true;
+      categoryService.findAll(request).then((response) =>{
+        self.$data.tableData = response.data.extra.page
+        self.$data.loading = false;  
+      }, () =>{
+          self.$data.loading = false;
+      });
     }
   },
-  mounted() {}
+  created() {
+    this.fetchData();
+  },
+  mounted() {
+  
+  }
 };
 </script>
 <style>
