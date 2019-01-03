@@ -178,9 +178,7 @@ export default {
       }
     }
   },
-  mounted() {
-  
-  }
+  mounted() {}
 };
 </script>
 <style>
