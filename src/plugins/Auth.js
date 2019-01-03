@@ -1,4 +1,5 @@
 /* eslint-disable no-undef */
+import router from '../routes/router';
 function install(Vue) {
   Vue.prototype.$auth = {
     constructor() {
@@ -33,6 +34,10 @@ function install(Vue) {
     },
     get isAuthenticated() {
       return localStorage.getItem(this._userStoreKey);
+    },
+    signin() {
+      this.signout();
+      router.push('/login');
     },
     signout() {
       localStorage.clear();
