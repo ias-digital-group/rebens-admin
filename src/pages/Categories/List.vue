@@ -8,6 +8,19 @@
           </h4>
         </template>
         <div>
+          <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
+            <base-input>
+              <el-input
+                type="search"
+                class="mb-3 search-input"
+                clearable
+                prefix-icon="el-icon-search"
+                placeholder="Search records"
+                aria-controls="datatables"
+                v-model="searchQuery">
+              </el-input>
+            </base-input>
+          </div>
           <el-table :data="tableData" v-loading="loading" :empty-text="$t('pages.categories.emptytext')">
             <el-table-column v-for="column in tableColumns" :key="column.label" :min-width="column.minWidth" :prop="column.prop"
               :label="column.label">
@@ -70,8 +83,17 @@ export default {
       return this.pagination.total;
     }
   },
+  watch:{
+    searchQuery(value) {
+      if (this.searchQuery != value) {
+        this.pagination.currentPage = 0;
+      }
+      this.fetchData();
+    }
+  },
   data() {
     return {
+      searchQuery: '',
       pagination: {
         perPage: 5,
         currentPage: 1,
@@ -141,13 +163,15 @@ export default {
       const self = this;
       const request = {
         page: this.$data.pagination.currentPage - 1,
-        pageItems: this.$data.pagination.perPage
+        pageItems: this.$data.pagination.perPage,
+        searchWord: this.searchQuery,
+        sort: 'name ASC'
       };
       this.$data.loading = true;
       categoryService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;
-          self.$data.pagination.currentPage = response.currentPage + 1;
+          //self.$data.pagination.currentPage = response.currentPage + 1;
           self.$data.pagination.total = response.totalItems;
           self.$data.loading = false;
         },

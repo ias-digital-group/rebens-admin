@@ -3,7 +3,7 @@ import router from '../routes/router';
 function install(Vue) {
   Vue.prototype.$auth = {
     constructor() {
-      _user = this.getUser();
+      _user = null;
     },
     get currentUser() {
       if (this._user) {
@@ -20,6 +20,8 @@ function install(Vue) {
         id: signinResponse.user.id,
         role: signinResponse.role
       };
+      this.clearStorage();
+      console.log(user.accessToken);
       localStorage.setItem(this._userStoreKey, JSON.stringify(user));
     },
     getUser() {
@@ -37,11 +39,13 @@ function install(Vue) {
       return localStorage.getItem(this._userStoreKey);
     },
     signin() {
-      this.signout();
       router.push('/login');
     },
-    signout() {
+    clearStorage() {
       localStorage.clear();
+    },
+    signout() {
+      this.clearStorage();
     },
     authRedirectGuard() {
       const self = this;

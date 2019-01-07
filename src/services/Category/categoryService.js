@@ -3,10 +3,10 @@ const categoryUrl = process.env.VUE_APP_API_URI.concat('category/');
 export default {
   findAll: request => {
     return new Promise((resolve, reject) => {
-      request = request ? request : { page: 1, pageItems: 30 };
+      request = request ? request : { page: 0, pageItems: 30, searchWord: '' };
       HTTP.get(
         categoryUrl.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}`
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}`
         )
       ).then(
         response => {
