@@ -10,6 +10,18 @@ export default {
         )
       ).then(
         response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  getListTree: () => {
+    return new Promise((resolve, reject) => {
+      HTTP.get(categoryUrl.concat('ListTree')).then(
+        response => {
           resolve(response);
         },
         error => {

@@ -15,8 +15,11 @@ const Content = () =>
 const Login = () =>
   import(/* webpackChunkName: "dashboard" */ 'src/pages/Login/Login.vue');
 
-const categoriesList = () =>
+const CategoriesList = () =>
   import(/* webpackChunkName: "dashboard" */ 'src/pages/Categories/List.vue');
+
+const CategoriesEdit = () =>
+  import(/* webpackChunkName: "dashboard" */ 'src/pages/Categories/Edit.vue');
 
 let categoriesPages = {
   path: '/categories',
@@ -28,7 +31,15 @@ let categoriesPages = {
     {
       path: '',
       name: i18n.t('pages.categories.title'),
-      component: categoriesList,
+      component: CategoriesList,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: 'new',
+      name: `${i18n.t('pages.categories.title')} -`,
+      component: CategoriesEdit,
       meta: {
         requiresAuth: true
       }

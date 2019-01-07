@@ -14,10 +14,11 @@ function install(Vue) {
     },
     saveUser(signinResponse) {
       const user = {
-        accessToken: signinResponse.extra.token.accessToken,
-        name: signinResponse.extra.user.name,
-        email: signinResponse.extra.user.email,
-        id: signinResponse.extra.user.id
+        accessToken: signinResponse.token.accessToken,
+        name: signinResponse.user.name,
+        email: signinResponse.user.email,
+        id: signinResponse.user.id,
+        role: signinResponse.role
       };
       localStorage.setItem(this._userStoreKey, JSON.stringify(user));
     },

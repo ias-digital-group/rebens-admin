@@ -2,20 +2,17 @@
   <div class="row">
     <div class="col-12">
       <card card-body-classes="table-full-width">
-        <h4 slot="header" class="card-title">{{$t('pages.categories.title')}}</h4>
+        <template slot="header">
+          <h4 class="card-title">{{$t('pages.categories.title')}}
+            <base-link to="/categories/new" class="btn btn-icon btn-simple btn-twitter btn-sm"><i class="tim-icons icon-simple-add"></i></base-link>
+          </h4>
+        </template>
         <div>
-          <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
-            <el-select class="select-primary mb-3 pagination-select" v-model="pagination.perPage" placeholder="Per page" v-if="!loading">
-              <el-option class="select-primary" v-for="item in pagination.perPageOptions" :key="item" :label="item"
-                :value="item">
-              </el-option>
-            </el-select>
-          </div>
-          <el-table :data="tableData" v-loading="loading" empty-text="...">
+          <el-table :data="tableData" v-loading="loading" :empty-text="$t('pages.categories.emptytext')">
             <el-table-column v-for="column in tableColumns" :key="column.label" :min-width="column.minWidth" :prop="column.prop"
               :label="column.label">
             </el-table-column>
-            <el-table-column :min-width="135" align="right" label="Actions">
+            <el-table-column :min-width="135" align="right" :label="$t('pages.categories.grid.actions')">
               <div slot-scope="props">
                 <base-button @click.native="handleEdit(props.$index, props.row);" class="edit btn-link" type="warning"
                   size="sm" icon>
@@ -31,9 +28,11 @@
         </div>
         <div slot="footer" class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
           <div class="">
-            <p class="card-category" v-if="!loading">
-              Total de categorias: {{ total }}
-            </p>
+            <el-select class="select-primary mb-3 pagination-select" v-model="pagination.perPage" :placeholder="$t('pages.categories.perpage-placeholder')" v-if="!loading">
+              <el-option class="select-primary" v-for="item in pagination.perPageOptions" :key="item" :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
           </div>
           <base-pagination class="pagination-no-border" v-model="pagination.currentPage" :per-page="pagination.perPage"
             :total="total" v-on:input="onPageChanged">
@@ -83,12 +82,12 @@ export default {
       tableColumns: [
         {
           prop: 'id',
-          label: 'Id',
+          label: this.$i18n.t('pages.categories.grid.id'),
           minWidth: 0
         },
         {
           prop: 'name',
-          label: 'Name',
+          label: this.$i18n.t('pages.categories.grid.name'),
           minWidth: 200
         }
       ],
@@ -147,10 +146,9 @@ export default {
       this.$data.loading = true;
       categoryService.findAll(request).then(
         response => {
-          self.$data.tableData = response.data.extra.page;
-          self.$data.pagination.currentPage =
-            response.data.extra.currentPage + 1;
-          self.$data.pagination.total = response.data.extra.totalItems;
+          self.$data.tableData = response.data;
+          self.$data.pagination.currentPage = response.currentPage + 1;
+          self.$data.pagination.total = response.totalItems;
           self.$data.loading = false;
         },
         () => {
@@ -166,8 +164,4 @@ export default {
 };
 </script>
 <style>
-.pagination-select,
-.search-input {
-  width: 200px;
-}
 </style>

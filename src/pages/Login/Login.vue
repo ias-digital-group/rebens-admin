@@ -4,7 +4,7 @@
       <form @submit.prevent>
         <card class="card-login card-white">
           <template slot="header">
-            <img src="img/logo-login2.png" alt="" />
+            <img src="img/card-primary.png" alt="" />
             
           </template>
 
@@ -87,31 +87,32 @@ export default {
             .then(
               response => {
                 if (
-                  response.data.message == null &&
-                  response.data.extra &&
-                  response.data.extra.token &&
-                  response.data.extra.token.authenticated
+                  response &&
+                  response.token &&
+                  response.token.authenticated
                 ) {
-                  self.$auth.saveUser(response.data);
+                  self.$auth.saveUser(response);
                   self.$router.push('/');
                   return;
                 }
                 this.$data.fullscreenLoading = false;
                 self.$notify({
                   type: 'primary',
-                  message: response.data.message,
+                  message: response.message,
                   icon: 'tim-icons icon-bell-55'
                 });
               },
               err => {
                 self.$notify({
                   type: 'primary',
-                  message: err,
+                  message: err.message,
                   icon: 'tim-icons icon-bell-55'
                 });
                 this.$data.fullscreenLoading = false;
               }
             );
+        } else {
+          this.$data.fullscreenLoading = false;
         }
       });
     }

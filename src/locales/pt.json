@@ -4,7 +4,15 @@
         "title": "Dashboard"
       },
       "categories": {
-        "title": "Categorias"
+        "title": "Categorias",
+        "perpage-placeholder": "Por página",
+        "emptytext": "...",
+        "recordcount-message": "Total de categorias:",
+        "grid": {
+          "id": "ID",
+          "name": "Nome",
+          "actions": "Ações"
+        }
       },
       "access-denied": {
         "title": "Acesso negado"

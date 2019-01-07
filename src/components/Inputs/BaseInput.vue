@@ -15,7 +15,12 @@
       </span>
     </slot>
     <slot>
-      <input :value="value" v-bind="$attrs" v-on="listeners" class="form-control" aria-describedby="addon-right addon-left" />
+      <template v-if="inputMask && inputMask.length > 0">
+        <the-mask :value="value" :mask='inputMask' v-bind="$attrs" v-on="listeners" class="form-control" aria-describedby="addon-right addon-left" />  
+      </template>
+      <template v-else>
+        <input :value="value" v-bind="$attrs" v-on="listeners" class="form-control" aria-describedby="addon-right addon-left" />
+      </template>
     </slot>
 
     <slot name="error" v-if="error || $slots.error">
@@ -56,6 +61,10 @@ export default {
     addonLeftIcon: {
       type: String,
       description: 'Input icon on the left'
+    },
+    inputMask: {
+      type: Array,
+      description: 'Input mask'
     }
   },
   model: {
@@ -92,7 +101,7 @@ export default {
       if (!this.touched) {
         this.touched = true;
       }
-      this.$emit('input', evt.target.value);
+      this.$emit('input', evt.target ? evt.target.value : evt);
     },
     onFocus() {
       this.focused = true;

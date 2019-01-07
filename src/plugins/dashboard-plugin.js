@@ -24,7 +24,7 @@ import 'src/assets/css/demo.css';
 import ptBr from 'vee-validate/dist/locale/pt_BR';
 // library auto imports
 import 'es6-promise/auto';
-
+import VueTheMask from 'vue-the-mask';
 export default {
   install(Vue) {
     Vue.use(GlobalComponents);
@@ -32,6 +32,7 @@ export default {
     Vue.use(RTLPlugin);
     Vue.use(SideBar);
     Vue.use(Notifications);
+    Vue.use(VueTheMask);
     if (process.env.VUE_APP_I18N_LOCALE == 'pt') {
       Validator.localize('pt_BR', ptBr);
       Vue.use(VeeValidate, { fieldsBagName: 'veeFields', locale: ptBr });

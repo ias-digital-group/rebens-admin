@@ -9,7 +9,7 @@ export default {
       };
       HTTP.post(accountUrl.concat('login'), model).then(
         response => {
-          resolve(response);
+          resolve(response.data);
         },
         error => {
           reject(error);

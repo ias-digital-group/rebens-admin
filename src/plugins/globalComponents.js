@@ -4,6 +4,7 @@ import Card from 'src/components/Cards/Card.vue';
 import BaseButton from 'src/components/BaseButton.vue';
 import BaseCheckbox from 'src/components/Inputs/BaseCheckbox.vue';
 import { Input, InputNumber, Tooltip, Popover } from 'element-ui';
+import BaseRouterLink from 'src/components/BaseRouterLink.vue';
 /**
  * You can register global components here and use them as a plugin in your main Vue instance
  */
@@ -17,6 +18,7 @@ const GlobalComponents = {
     Vue.component(BaseButton.name, BaseButton);
     Vue.component(Input.name, Input);
     Vue.component(InputNumber.name, InputNumber);
+    Vue.component(BaseRouterLink.name, BaseRouterLink);
     Vue.use(Tooltip);
     Vue.use(Popover);
   }

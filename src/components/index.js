@@ -36,6 +36,7 @@ import LoadingPanel from './LoadingPanel.vue';
 
 import BasePagination from './BasePagination.vue';
 
+import BaseRouterLink from './BaseRouterLink.vue';
 import SidebarPlugin from './SidebarPlugin';
 
 import AnimatedNumber from './AnimatedNumber';
@@ -74,6 +75,7 @@ export {
   BaseButton,
   Collapse,
   CollapseItem,
-  LoadingPanel
+  LoadingPanel,
+  BaseRouterLink
   // AsyncWorldMap
 };
