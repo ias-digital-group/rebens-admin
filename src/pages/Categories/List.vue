@@ -21,9 +21,9 @@
               </el-input>
             </base-input>
           </div>
-          <el-table :data="tableData" v-loading="loading" :empty-text="$t('pages.categories.emptytext')">
+          <el-table :data="tableData" v-loading="loading" :empty-text="$t('pages.categories.emptytext')" @sort-change="onSortChanged" :default-sort="{prop: 'name', order:'ascending'}">
             <el-table-column v-for="column in tableColumns" :key="column.label" :min-width="column.minWidth" :prop="column.prop"
-              :label="column.label">
+              :label="column.label" sortable="custom">
             </el-table-column>
             <el-table-column :min-width="135" align="right" :label="$t('pages.categories.grid.actions')">
               <div slot-scope="props">
@@ -94,6 +94,7 @@ export default {
   data() {
     return {
       searchQuery: '',
+      sortField: 'name ASC',
       pagination: {
         perPage: 5,
         currentPage: 1,
@@ -159,13 +160,18 @@ export default {
       this.$data.pagination.currentPage = page;
       this.fetchData();
     },
+    onSortChanged(row) {
+      this.sortField = `${row.prop} ${row.order == 'ascending' ? 'ASC' : 'DESC'}`;
+      console.log(this.sortField);
+      this.fetchData();
+    },
     fetchData() {
       const self = this;
       const request = {
         page: this.$data.pagination.currentPage - 1,
         pageItems: this.$data.pagination.perPage,
         searchWord: this.searchQuery,
-        sort: 'name ASC'
+        sort: this.sortField
       };
       this.$data.loading = true;
       categoryService.findAll(request).then(
