@@ -43,6 +43,15 @@ let categoriesPages = {
       meta: {
         requiresAuth: true
       }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_user',
+      props: true,
+      component: CategoriesEdit,
+      meta: {
+        requiresAuth: true
+      }
     }
   ]
 };

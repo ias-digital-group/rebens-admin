@@ -21,7 +21,7 @@
               </el-input>
             </base-input>
           </div>
-          <el-table :data="tableData" v-loading="loading" :empty-text="$t('pages.categories.emptytext')" @sort-change="onSortChanged" :default-sort="{prop: 'name', order:'ascending'}">
+          <el-table ref="table" :data="tableData" v-loading="loading" :empty-text="$t('pages.categories.emptytext')" @sort-change="onSortChanged" :default-sort="{prop: sortField, order: sortOrder}">
             <el-table-column v-for="column in tableColumns" :key="column.label" :min-width="column.minWidth" :prop="column.prop"
               :label="column.label" sortable="custom">
             </el-table-column>
@@ -58,9 +58,10 @@
 <script>
 import { Table, TableColumn, Select, Option } from 'element-ui';
 import { BasePagination } from 'src/components';
-import swal from 'sweetalert2';
 import categoryService from '../../services/Category/categoryService';
+import listPage from '../../mixins/listPage';
 export default {
+  mixins: [listPage],
   components: {
     BasePagination,
     [Select.name]: Select,
@@ -68,40 +69,10 @@ export default {
     [Table.name]: Table,
     [TableColumn.name]: TableColumn
   },
-  computed: {
-    to() {
-      let highBound = this.from + this.pagination.perPage;
-      if (this.total < highBound) {
-        highBound = this.total;
-      }
-      return highBound;
-    },
-    from() {
-      return this.pagination.perPage * (this.pagination.currentPage - 1);
-    },
-    total() {
-      return this.pagination.total;
-    }
-  },
-  watch:{
-    searchQuery(value) {
-      if (this.searchQuery != value) {
-        this.pagination.currentPage = 0;
-      }
-      this.fetchData();
-    }
-  },
   data() {
     return {
-      searchQuery: '',
-      sortField: 'name ASC',
-      pagination: {
-        perPage: 5,
-        currentPage: 1,
-        perPageOptions: [5, 10, 25, 50],
-        total: 0
-      },
-      loading: false,
+      internalName: 'pages.categories.list',
+      sortField: 'name',
       tableColumns: [
         {
           prop: 'id',
@@ -113,57 +84,15 @@ export default {
           label: this.$i18n.t('pages.categories.grid.name'),
           minWidth: 200
         }
-      ],
-      tableData: []
+      ]
     };
   },
   methods: {
     handleEdit(index, row) {
-      swal({
-        title: `You want to edit ${row.name}`,
-        buttonsStyling: false,
-        confirmButtonClass: 'btn btn-info btn-fill'
-      });
+      this.$router.push(`/categories/${row.id}/edit/`);
     },
     handleDelete(index, row) {
-      swal({
-        title: 'Are you sure?',
-        text: `You won't be able to revert this!`,
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonClass: 'btn btn-success btn-fill',
-        cancelButtonClass: 'btn btn-danger btn-fill',
-        confirmButtonText: 'Yes, delete it!',
-        buttonsStyling: false
-      }).then(result => {
-        if (result.value) {
-          this.deleteRow(row);
-          swal({
-            title: 'Deleted!',
-            text: `You deleted ${row.name}`,
-            type: 'success',
-            confirmButtonClass: 'btn btn-success btn-fill',
-            buttonsStyling: false
-          });
-        }
-      });
-    },
-    deleteRow(row) {
-      let indexToDelete = this.tableData.findIndex(
-        tableRow => tableRow.id === row.id
-      );
-      if (indexToDelete >= 0) {
-        this.tableData.splice(indexToDelete, 1);
-      }
-    },
-    onPageChanged(page) {
-      this.$data.pagination.currentPage = page;
-      this.fetchData();
-    },
-    onSortChanged(row) {
-      this.sortField = `${row.prop} ${row.order == 'ascending' ? 'ASC' : 'DESC'}`;
-      console.log(this.sortField);
-      this.fetchData();
+      this.$router.push(`/categories/${row.id}/remove/`);
     },
     fetchData() {
       const self = this;
@@ -171,14 +100,13 @@ export default {
         page: this.$data.pagination.currentPage - 1,
         pageItems: this.$data.pagination.perPage,
         searchWord: this.searchQuery,
-        sort: this.sortField
+        sort: this.formatSortFieldParam
       };
       this.$data.loading = true;
       categoryService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;
-          //self.$data.pagination.currentPage = response.currentPage + 1;
-          self.$data.pagination.total = response.totalItems;
+          self.savePageSettings(self, response.totalItems);
           self.$data.loading = false;
         },
         () => {
@@ -186,11 +114,7 @@ export default {
         }
       );
     }
-  },
-  created() {
-    this.fetchData();
-  },
-  mounted() {}
+  }
 };
 </script>
 <style>
