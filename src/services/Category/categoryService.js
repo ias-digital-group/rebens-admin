@@ -18,11 +18,23 @@ export default {
       );
     });
   },
+  get: (id) => {
+    return new Promise((resolve, reject) => {
+      HTTP.get(categoryUrl.concat(id)).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
   getListTree: () => {
     return new Promise((resolve, reject) => {
       HTTP.get(categoryUrl.concat('ListTree')).then(
         response => {
-          resolve(response);
+          resolve(response.data);
         },
         error => {
           reject(error);

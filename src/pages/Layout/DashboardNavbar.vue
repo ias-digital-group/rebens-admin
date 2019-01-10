@@ -82,7 +82,7 @@ export default {
   },
   computed: {
     routeName() {
-      const { name } = this.$route;
+      const name = this.$route.meta.title;
       return this.capitalizeFirstLetter(name);
     },
     isRTL() {

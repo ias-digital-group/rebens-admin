@@ -25,23 +25,26 @@ let categoriesPages = {
   path: '/categories',
   component: DashboardLayout,
   meta: {
-    requiresAuth: true
+    requiresAuth: true,
+    title: i18n.t('pages.categories.title')
   },
   children: [
     {
       path: '',
-      name: i18n.t('pages.categories.title'),
+      name: 'category',
       component: CategoriesList,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        title: i18n.t('pages.categories.title')
       }
     },
     {
       path: 'new',
-      name: `${i18n.t('pages.categories.title')} -`,
+      name: `new_user`,
       component: CategoriesEdit,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        title: i18n.t('pages.categories.title')
       }
     },
     {
@@ -50,7 +53,8 @@ let categoriesPages = {
       props: true,
       component: CategoriesEdit,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        title: i18n.t('pages.categories.title')
       }
     }
   ]
@@ -68,7 +72,8 @@ const routes = [
         name: i18n.t('pages.dashboard.title'),
         components: { default: Content },
         meta: {
-          requiresAuth: true
+          requiresAuth: true,
+          title: i18n.t('pages.dashboard.title')
         }
       }
     ]
@@ -78,7 +83,8 @@ const routes = [
     component: AuthLayout,
     name: 'Authentication',
     meta: {
-      requiresAuth: false
+      requiresAuth: false,
+      title: i18n.t('pages.login.title')
     },
     children: [
       {
@@ -86,7 +92,8 @@ const routes = [
         name: i18n.t('pages.login.title'),
         component: Login,
         meta: {
-          requiresAuth: false
+          requiresAuth: false,
+          title: i18n.t('pages.login.title')
         }
       }
     ]
@@ -95,7 +102,8 @@ const routes = [
     path: '*',
     component: NotFound,
     meta: {
-      requiresAuth: false
+      requiresAuth: false,
+      title: 'Not Found'
     }
   },
   {
@@ -103,7 +111,8 @@ const routes = [
     component: AccessDenied,
     name: i18n.t('pages.access-denied.title'),
     meta: {
-      requiresAuth: false
+      requiresAuth: false,
+      title: i18n.t('pages.access-denied.title')
     }
   },
   categoriesPages

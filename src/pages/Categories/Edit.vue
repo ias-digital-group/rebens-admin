@@ -3,7 +3,7 @@
   <div class="col-md-12">
     <card title="Horizontal Form">
       <h4 slot="header" class="card-title">{{$t('pages.categories.title')}}</h4>
-      <form class="form-horizontal" @submit.prevent>
+      <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
         <div class="row">
           <label class="col-md-3 col-form-label">Nome</label>
           <div class="col-md-9">
@@ -15,7 +15,7 @@
               :error="getError('name')"
               name="name"
               placeholder="Nome" 
-              maxlength='100'></base-input>
+              maxlength='200'></base-input>
           </div>
         </div>
         <div class="row">
@@ -41,7 +41,8 @@
                 class="select-info"
                 placeholder="Categoria pai"
                 v-model="model.idParent"
-              >
+                v-loading.lock="selectLoading"
+                lock>
                 <el-option
                   v-for="category in categoriesList"
                   class="select-primary"
@@ -69,7 +70,7 @@
               native-type="submit" 
               type="primary"
               @click.native.prevent="validate"
-              :loading="formLoading">
+              :loading="submitLoading">
               Salvar
             </base-button>
           </div>
@@ -81,59 +82,93 @@
 </template>
 <script>
 import { Select, Option } from 'element-ui';
+import categoryService from '../../services/Category/categoryService';
+import _ from 'lodash';
+
 export default {
   components: {
     [Option.name]: Option,
-    [Select.name]: Select,
+    [Select.name]: Select
   },
   data() {
     return {
+      selectLoading: false,
       formLoading: false,
+      submitLoading: false,
       model: {
         name: '',
         order: null,
-        idParent: 0
+        idParent: null
       },
       modelValidations: {
         name: {
           required: true,
-          max:100
+          max: 200
         },
         order: {
           required: true,
           max: 4
         }
       },
-      categoriesList: [
-        {
-          id: 0,
-          name: 'Sem categoria'
-        },
-        {
-          id: 1,
-          name: 'Categoria1'
-        },
-        {
-          id: 2,
-          name: 'Categoria2'
-        }
-      ]
+      categoriesList: []
     };
+  },
+  computed: {
+    viewAction() {
+      return this.$route.name == 'edit_category' ? 'edit' : 'new';
+    }
   },
   methods: {
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
-    validate(){
+    validate() {
       const self = this;
-      this.formLoading = true;
       this.$validator.validateAll().then(isValid => {
-        if (!isValid) {
-          self.formLoading = false;
-        }
+        if (isValid) {
+          self.submitLoading = true;
+          if (selg.viewAction == 'new') {
+            categoryService.create(self.model).then();
+          } else {
+            categoryService.update(self.model).then();
+          }
+        } 
       });
+    },
+    fetchData() {
+      const self = this;
+      
+      if (this.viewAction == 'edit') { 
+        this.formLoading = true;
+        categoryService.get(self.id).then(
+          response => {
+            self.model = response;
+            self.formLoading = false;
+          },
+          () => {
+            self.formLoading = false;
+          }
+        );
+      }
+      this.selectLoading = true;
+      categoryService.getListTree().then(
+        response => {
+          self.categoriesList.push({ id: null, name: '' });
+          _.each(response, function(el) {
+            self.categoriesList.push({ id: el.id, name: el.name });
+          });
+          self.selectLoading = false;
+        },
+        () => {
+          self.selectLoading = false;
+        }
+      );
     }
+  },
+  created() {
+    this.fetchData();
   }
 };
 </script>
-<style></style>
+<style>
+</style>
