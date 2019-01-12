@@ -2,7 +2,7 @@
 <div class="row">
   <div class="col-md-12">
     <card title="Horizontal Form">
-      <h4 slot="header" class="card-title">{{$t('pages.categories.title')}}</h4>
+      <h4 slot="header" class="card-title">{{$t('pages.partners.title')}}</h4>
       <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
         <div class="row">
           <label class="col-md-3 col-form-label">Nome</label>
