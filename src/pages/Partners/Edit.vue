@@ -19,42 +19,6 @@
           </div>
         </div>
         <div class="row">
-          <label class="col-md-3 col-form-label">Ordem</label>
-          <div class="col-md-2">
-            <base-input 
-              required
-              v-model="model.order"
-              v-validate="modelValidations.order"
-              type="tel"
-              :error="getError('order')"
-              name="order"
-              placeholder="Ordem" 
-              maxlength='4' 
-              :inputMask="['####']">
-            </base-input>
-          </div>
-        </div>
-        <div class="row">
-          <label class="col-md-3 col-form-label">Categoria pai</label>
-          <div class="col-md-9">
-            <el-select
-                class="select-info"
-                placeholder="Categoria pai"
-                v-model="model.idParent"
-                v-loading.lock="selectLoading"
-                lock>
-                <el-option
-                  v-for="category in categoriesList"
-                  class="select-primary"
-                  :value="category.id"
-                  :label="category.name"
-                  :key="category.id"
-                >
-                </el-option>
-              </el-select>
-          </div>
-        </div>
-        <div class="row">
             <label class="col-md-3 col-form-label"></label>
             <div class="col-md-9">
               <div class="form-group">
@@ -83,8 +47,7 @@
 </template>
 <script>
 import { Select, Option } from 'element-ui';
-import categoryService from '../../services/Category/categoryService';
-import _ from 'lodash';
+import partnerService from '../../services/Partner/partnerService';
 
 export default {
   components: {
@@ -96,31 +59,23 @@ export default {
   },
   data() {
     return {
-      selectLoading: false,
       formLoading: false,
       submitLoading: false,
       model: {
         name: '',
-        order: null,
-        idParent: null,
         active: false
       },
       modelValidations: {
         name: {
           required: true,
           max: 200
-        },
-        order: {
-          required: true,
-          max: 4
         }
-      },
-      categoriesList: []
+      }
     };
   },
   computed: {
     viewAction() {
-      return this.$route.name == 'edit_category' ? 'edit' : 'new';
+      return this.$route.name == 'edit_partner' ? 'edit' : 'new';
     }
   },
   methods: {
@@ -133,14 +88,14 @@ export default {
         if (isValid) {
           self.submitLoading = true;
           if (self.viewAction == 'new') {
-            categoryService.create(self.model).then(
+            partnerService.create(self.model).then(
               response => {
                 self.$notify({
                   type: 'primary',
-                  message: 'Categoria cadastrada com sucesso!',
+                  message: 'Parceiro cadastrado com sucesso!',
                   icon: 'tim-icons icon-bell-55'
                 });
-                self.$router.push('/categories');
+                self.$router.push('/partners');
                 self.submitLoading = false;
               },
               err => {
@@ -153,14 +108,14 @@ export default {
               }
             );
           } else {
-            categoryService.update(self.model).then(
+            partnerService.update(self.model).then(
               response => {
                 self.$notify({
                   type: 'primary',
                   message: response.message,
                   icon: 'tim-icons icon-bell-55'
                 });
-                self.$router.push('/categories');
+                self.$router.push('/partners');
                 self.submitLoading = false;
               },
               err => {
@@ -180,7 +135,7 @@ export default {
       const self = this;
       if (this.viewAction == 'edit') {
         this.formLoading = true;
-        categoryService.get(self.id).then(
+        partnerService.get(self.id).then(
           response => {
             self.model = response.data;
             self.formLoading = false;
@@ -190,21 +145,6 @@ export default {
           }
         );
       }
-      this.selectLoading = true;
-      categoryService.getListTree().then(
-        response => {
-          self.categoriesList.push({ id: null, name: '' });
-          _.each(response.data, function(el) {
-            if (el.id != self.id) {
-              self.categoriesList.push({ id: el.id, name: el.name });
-            }
-          });
-          self.selectLoading = false;
-        },
-        () => {
-          self.selectLoading = false;
-        }
-      );
     }
   },
   created() {

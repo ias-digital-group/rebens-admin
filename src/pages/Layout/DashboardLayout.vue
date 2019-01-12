@@ -16,6 +16,7 @@
         >
         </sidebar-item>
         <sidebar-item :link="{ name: $t('sidebar.categories'), icon: 'tim-icons icon-book-bookmark', path: '/categories' }"></sidebar-item>
+        <sidebar-item :link="{ name: $t('sidebar.partners'), icon: 'fas fa-handshake', path: '/partners' }"></sidebar-item>
       </template>
     </side-bar>
     <div class="main-panel" :data="sidebarBackground">

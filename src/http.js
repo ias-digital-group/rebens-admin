@@ -14,7 +14,6 @@ instance.interceptors.request.use(
       config.headers.common['Authorization'] = `Bearer ${
         Vue.prototype.$auth.currentUser.accessToken
       }`;
-      console.log(Vue.prototype.$auth.currentUser.accessToken);
     }
     return config;
   },

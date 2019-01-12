@@ -21,6 +21,12 @@ const CategoriesList = () =>
 const CategoriesEdit = () =>
   import(/* webpackChunkName: "dashboard" */ 'src/pages/Categories/Edit.vue');
 
+const PartnersList = () =>
+  import(/* webpackChunkName: "dashboard" */ 'src/pages/Partners/List.vue');
+
+const PartnersEdit = () =>
+  import(/* webpackChunkName: "dashboard" */ 'src/pages/Partners/Edit.vue');
+
 let categoriesPages = {
   path: '/categories',
   component: DashboardLayout,
@@ -55,6 +61,45 @@ let categoriesPages = {
       meta: {
         requiresAuth: true,
         title: i18n.t('pages.categories.title')
+      }
+    }
+  ]
+};
+
+let partnersPages = {
+  path: '/partners',
+  component: DashboardLayout,
+  meta: {
+    requiresAuth: true,
+    title: i18n.t('pages.partners.title')
+  },
+  children: [
+    {
+      path: '',
+      name: 'partner',
+      component: PartnersList,
+      meta: {
+        requiresAuth: true,
+        title: i18n.t('pages.partners.title')
+      }
+    },
+    {
+      path: 'new',
+      name: `new_partner`,
+      component: PartnersEdit,
+      meta: {
+        requiresAuth: true,
+        title: i18n.t('pages.partner.title')
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_partner',
+      props: true,
+      component: PartnersEdit,
+      meta: {
+        requiresAuth: true,
+        title: i18n.t('pages.partner.title')
       }
     }
   ]
@@ -115,7 +160,8 @@ const routes = [
       title: i18n.t('pages.access-denied.title')
     }
   },
-  categoriesPages
+  categoriesPages,
+  partnersPages
 ];
 
 export default routes;
