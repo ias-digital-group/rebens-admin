@@ -95,7 +95,7 @@ export default {
                   self.$router.push('/');
                   return;
                 }
-                this.$data.fullscreenLoading = false;
+                self.$data.fullscreenLoading = false;
                 self.$notify({
                   type: 'primary',
                   message: response.message,
@@ -108,7 +108,7 @@ export default {
                   message: err.message,
                   icon: 'tim-icons icon-bell-55'
                 });
-                this.$data.fullscreenLoading = false;
+                self.$data.fullscreenLoading = false;
               }
             );
         } else {

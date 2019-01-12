@@ -40,7 +40,7 @@ let categoriesPages = {
     },
     {
       path: 'new',
-      name: `new_user`,
+      name: `new_category`,
       component: CategoriesEdit,
       meta: {
         requiresAuth: true,
@@ -49,7 +49,7 @@ let categoriesPages = {
     },
     {
       path: ':id/edit',
-      name: 'edit_user',
+      name: 'edit_category',
       props: true,
       component: CategoriesEdit,
       meta: {

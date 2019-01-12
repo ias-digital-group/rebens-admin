@@ -58,7 +58,7 @@
             <label class="col-md-3 col-form-label"></label>
             <div class="col-md-9">
               <div class="form-group">
-                <base-checkbox>Ativo</base-checkbox>
+                <base-checkbox v-model="model.active">Ativo</base-checkbox>
               </div>
             </div>
         </div>
@@ -68,11 +68,12 @@
             <base-button 
               class="mt-3" 
               native-type="submit" 
-              type="primary"
+              type="info"
               @click.native.prevent="validate"
               :loading="submitLoading">
               Salvar
             </base-button>
+            <base-link class="btn mt-3 btn-secondary" to="/categories">Voltar</base-link>
           </div>
         </div>
       </form>
@@ -89,6 +90,9 @@ export default {
   components: {
     [Option.name]: Option,
     [Select.name]: Select
+  },
+  props: {
+    id: String
   },
   data() {
     return {
@@ -127,22 +131,57 @@ export default {
       this.$validator.validateAll().then(isValid => {
         if (isValid) {
           self.submitLoading = true;
-          if (selg.viewAction == 'new') {
-            categoryService.create(self.model).then();
+          if (self.viewAction == 'new') {
+            categoryService.create(self.model).then(
+              response => {
+                self.$notify({
+                  type: 'primary',
+                  message: response.message,
+                  icon: 'tim-icons icon-bell-55'
+                });
+                self.$router.push('/categories');
+                self.submitLoading = false;
+              },
+              err => {
+                self.$notify({
+                  type: 'primary',
+                  message: err.message,
+                  icon: 'tim-icons icon-bell-55'
+                });
+                self.submitLoading = false;
+              }
+            );
           } else {
-            categoryService.update(self.model).then();
+            categoryService.update(self.model).then(
+              response => {
+                self.$notify({
+                  type: 'primary',
+                  message: response.message,
+                  icon: 'tim-icons icon-bell-55'
+                });
+                self.$router.push('/categories');
+                self.submitLoading = false;
+              },
+              err => {
+                self.$notify({
+                  type: 'primary',
+                  message: err.message,
+                  icon: 'tim-icons icon-bell-55'
+                });
+                self.submitLoading = false;
+              }
+            );
           }
-        } 
+        }
       });
     },
     fetchData() {
       const self = this;
-      
-      if (this.viewAction == 'edit') { 
+      if (this.viewAction == 'edit') {
         this.formLoading = true;
         categoryService.get(self.id).then(
           response => {
-            self.model = response;
+            self.model = response.data;
             self.formLoading = false;
           },
           () => {
@@ -154,8 +193,10 @@ export default {
       categoryService.getListTree().then(
         response => {
           self.categoriesList.push({ id: null, name: '' });
-          _.each(response, function(el) {
-            self.categoriesList.push({ id: el.id, name: el.name });
+          _.each(response.data, function(el) {
+            if (el.id != self.id) {  
+              self.categoriesList.push({ id: el.id, name: el.name });
+            }
           });
           self.selectLoading = false;
         },

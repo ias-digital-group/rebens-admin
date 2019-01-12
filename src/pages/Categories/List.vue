@@ -83,6 +83,11 @@ export default {
           prop: 'name',
           label: this.$i18n.t('pages.categories.grid.name'),
           minWidth: 200
+        },
+        {
+          prop: 'order',
+          label: this.$i18n.t('pages.categories.grid.order'),
+          minWidth: 0
         }
       ]
     };

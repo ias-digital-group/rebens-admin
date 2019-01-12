@@ -21,7 +21,6 @@ function install(Vue) {
         role: signinResponse.role
       };
       this.clearStorage();
-      console.log(user.accessToken);
       localStorage.setItem(this._userStoreKey, JSON.stringify(user));
     },
     getUser() {
