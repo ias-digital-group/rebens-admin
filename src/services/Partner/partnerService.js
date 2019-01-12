@@ -57,5 +57,17 @@ export default {
         }
       );
     });
+  },
+  delete: id => {
+    return new Promise((resolve, reject) => {
+      HTTP.delete(partnerUrl.concat(id)).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
   }
 };

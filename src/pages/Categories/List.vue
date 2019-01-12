@@ -15,7 +15,7 @@
                 class="mb-3 search-input"
                 clearable
                 prefix-icon="el-icon-search"
-                placeholder="Search records"
+                placeholder="Procurar categorias"
                 aria-controls="datatables"
                 v-model="searchQuery">
               </el-input>
@@ -53,16 +53,44 @@
         </div>
       </card>
     </div>
+    <!-- Classic Modal -->
+    <modal
+      :show.sync="modal.visible"
+      headerClasses="justify-content-center">
+      <h4 slot="header" class="title title-up">Remover categoria</h4>
+      <form class="modal-form" ref="modalForm" @submit.prevent v-loading="modal.formLoading">
+        <p>
+          Nome da categoria <strong>{{modal.model.name}}</strong>
+        </p>
+        <input type="hidden" name="nome" v-model="modal.model.name" ref="nome">
+        <base-input
+          required
+          v-model="modal.nameConfirmation"
+          label="Digite o nome da categoria para confirmar"
+          placeholder="Confirme o nome"
+          :error="getError('confirmação')"
+          type="text"
+          v-validate="modal.modelValidations.name_confirm" name="confirmação">
+        </base-input>
+      </form>
+      <template slot="footer">
+        <base-button @click.native.prevent="validateModal" type="danger">Remover</base-button>
+        <base-button
+          type="info"
+          @click.native="modal.visible = false;">Fechar</base-button>
+      </template>
+    </modal>
   </div>
 </template>
 <script>
 import { Table, TableColumn, Select, Option } from 'element-ui';
-import { BasePagination } from 'src/components';
+import { BasePagination, Modal } from 'src/components';
 import categoryService from '../../services/Category/categoryService';
 import listPage from '../../mixins/listPage';
 export default {
   mixins: [listPage],
   components: {
+    Modal,
     BasePagination,
     [Select.name]: Select,
     [Option.name]: Option,
@@ -96,9 +124,6 @@ export default {
     handleEdit(index, row) {
       this.$router.push(`/categories/${row.id}/edit/`);
     },
-    handleDelete(index, row) {
-      
-    },
     fetchData() {
       const self = this;
       const request = {
@@ -118,9 +143,42 @@ export default {
           self.$data.loading = false;
         }
       );
+    },
+    validateModal() {
+      const self = this;
+      this.$validator.validateAll().then(isValid => {
+        if (isValid) {
+          self.modal.formLoading = true;
+          categoryService.delete(self.modal.model.id).then(
+            response => {
+              self.$notify({
+                type: 'primary',
+                message: response.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+              self.resetModal();
+              self.pagination.currentPage = 1;
+              self.fetchData();
+            },
+            err => {
+              self.$notify({
+                type: 'primary',
+                message: err.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+              self.modal.formLoading = false;
+            }
+          );
+        }
+      });
     }
   }
 };
 </script>
-<style>
+<style lang="scss" scoped>
+.modal-form {
+  .has-label::after {
+    top: 43px !important;
+  }
+}
 </style>

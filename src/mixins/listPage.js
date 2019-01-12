@@ -12,7 +12,20 @@ export default {
         perPageOptions: [5, 10, 25, 50],
         total: 0
       },
-      tableData: []
+      tableData: [],
+      modal: {
+        visible: false,
+        formLoading: false,
+        model: {},
+        nameConfirmation: '',
+        modelValidations: {
+          name_confirm: {
+            required: true,
+            confirmed: 'nome',
+            max: 200
+          }
+        }
+      }
     };
   },
   computed: {
@@ -38,7 +51,7 @@ export default {
   watch: {
     searchQuery(value) {
       if (this.searchQuery != value) {
-        this.pagination.currentPage = 0;
+        this.pagination.currentPage = 1;
       }
       this.fetchData();
     }
@@ -67,6 +80,20 @@ export default {
       this.sortOrder = row.order;
       this.fetchData();
     },
+    handleDelete(index, row) {
+      this.modal.model = row;
+      this.modal.visible = true;
+    },
+    resetModal() {
+      this.modal.visible = false;
+      this.modal.model = {};
+      this.modal.formLoading = false;
+      this.modal.nameConfirmation = '';
+    },
+    getError(fieldName) {
+      return this.errors.first(fieldName);
+    },
+    validateModal() {},
     fetchData() {},
     savePageSettings(vm, totalItems) {
       vm.$store.commit('setPageSetting', {
