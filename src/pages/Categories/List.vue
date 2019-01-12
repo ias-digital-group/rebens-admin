@@ -97,7 +97,7 @@ export default {
       this.$router.push(`/categories/${row.id}/edit/`);
     },
     handleDelete(index, row) {
-      this.$router.push(`/categories/${row.id}/remove/`);
+      
     },
     fetchData() {
       const self = this;

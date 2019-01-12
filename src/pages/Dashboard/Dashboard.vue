@@ -5,14 +5,14 @@
       <card type="chart">
         <template slot="header">
           <div class="row">
-            <div class="col-sm-6" :class="isRTL ? 'text-right' : 'text-left'">
+            <div class="col-sm-6" :class="'text-left'">
               <h5 class="card-category">Total shipments</h5>
               <h2 class="card-title">Performance</h2>
             </div>
             <div class="col-sm-6">
               <div
                 class="btn-group btn-group-toggle"
-                :class="isRTL ? 'float-left' : 'float-right'"
+                :class="'float-right'"
                 data-toggle="buttons"
               >
                 <label
@@ -61,7 +61,7 @@
     </div>
 
     <!-- Small charts -->
-    <div class="col-lg-4" :class="{ 'text-right': isRTL }">
+    <div class="col-lg-4">
       <card type="chart">
         <template slot="header">
           <h5 class="card-category">Total Shipments</h5>
@@ -81,7 +81,7 @@
         </div>
       </card>
     </div>
-    <div class="col-lg-4" :class="{ 'text-right': isRTL }">
+    <div class="col-lg-4">
       <card type="chart">
         <template slot="header">
           <h5 class="card-category">Daily Sales</h5>
@@ -100,7 +100,7 @@
         </div>
       </card>
     </div>
-    <div class="col-lg-4" :class="{ 'text-right': isRTL }">
+    <div class="col-lg-4">
       <card type="chart">
         <template slot="header">
           <h5 class="card-category">Completed tasks</h5>
@@ -261,12 +261,6 @@ export default {
     };
   },
   computed: {
-    enableRTL() {
-      return this.$route.query.enableRTL;
-    },
-    isRTL() {
-      return this.$rtl.isRTL;
-    },
     bigLineChartCategories() {
       return ['Accounts', 'Purchases', 'Sessions'];
     }
@@ -313,17 +307,7 @@ export default {
   },
   mounted() {
     this.i18n = this.$i18n;
-    if (this.enableRTL) {
-      this.i18n.locale = 'ar';
-      this.$rtl.enableRTL();
-    }
     this.initBigChart(0);
-  },
-  beforeDestroy() {
-    if (this.$rtl.isRTL) {
-      this.i18n.locale = 'en';
-      this.$rtl.disableRTL();
-    }
   }
 };
 </script>

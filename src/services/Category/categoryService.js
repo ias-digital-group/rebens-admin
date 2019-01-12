@@ -69,5 +69,17 @@ export default {
         }
       );
     });
+  },
+  delete: id => {
+    return new Promise((resolve, reject) => {
+      HTTP.delete(categoryUrl, id).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
   }
 };

@@ -99,7 +99,7 @@ let partnersPages = {
       component: PartnersEdit,
       meta: {
         requiresAuth: true,
-        title: i18n.t('pages.partner.title')
+        title: i18n.t('pages.partners.title')
       }
     }
   ]
