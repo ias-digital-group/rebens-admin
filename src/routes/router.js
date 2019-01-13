@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import routes from './routes';
-import Auth from '../plugins/Auth';
-Vue.use(Auth);
+import store from '../store';
+
 Vue.use(VueRouter);
 
 // configure router
@@ -11,6 +11,19 @@ const router = new VueRouter({
   linkActiveClass: 'active'
 });
 
-router.beforeEach(Vue.prototype.$auth.authRedirectGuard());
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  if (requiresAuth) {
+    if (store.getters.isAuthenticated) {
+      next();
+    } else {
+      next({
+        path: '/login'
+      });
+    }
+  } else {
+    next();
+  }
+});
 
 export default router;

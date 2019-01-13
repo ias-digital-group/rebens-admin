@@ -114,7 +114,7 @@ export default {
       this.showMenu = !this.showMenu;
     },
     signout() {
-      this.$auth.signout();
+      this.$store.dispatch('removeUser');
       this.$router.push('/login');
     }
   }

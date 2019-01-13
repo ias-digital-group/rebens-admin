@@ -91,9 +91,9 @@ export default {
                   response.token &&
                   response.token.authenticated
                 ) {
-                  self.$auth.saveUser(response);
-                  self.$router.push('/');
-                  return;
+                  self.$store.dispatch('setUser', response).then(() => {
+                    self.$router.push('/');
+                  });
                 }
                 self.$data.fullscreenLoading = false;
                 self.$notify({

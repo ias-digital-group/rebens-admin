@@ -1,5 +1,6 @@
 import axios from 'axios';
-import Vue from 'vue';
+import store from './store';
+import router from './routes/router';
 
 const instance = axios.create({
   headers: {
@@ -10,11 +11,9 @@ const instance = axios.create({
 // Add a request interceptor
 instance.interceptors.request.use(
   config => {
-    if (Vue.prototype.$auth.isAuthenticated) {
-      config.headers.common['Authorization'] = `Bearer ${
-        Vue.prototype.$auth.currentUser.accessToken
-      }`;
-    }
+    config.headers.common['Authorization'] = `Bearer ${
+      store.getters.accessToken
+    }`;
     return config;
   },
   error => {
@@ -29,7 +28,8 @@ instance.interceptors.response.use(
   async error => {
     if (error.response) {
       if (401 === error.response.status) {
-        Vue.prototype.$auth.signin();
+        store.dispatch('removeUser');
+        router.push('/login');
       }
     }
     return Promise.reject(error);
