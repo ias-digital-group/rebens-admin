@@ -27,6 +27,12 @@ const PartnersList = () =>
 const PartnersEdit = () =>
   import(/* webpackChunkName: "dashboard" */ 'src/pages/Partners/Edit.vue');
 
+const OperationsList = () =>
+  import(/* webpackChunkName: "dashboard" */ 'src/pages/Operations/List.vue');
+
+const OperationsEdit = () =>
+  import(/* webpackChunkName: "dashboard" */ 'src/pages/Operations/Edit.vue');
+
 let categoriesPages = {
   path: '/categories',
   component: DashboardLayout,
@@ -105,6 +111,45 @@ let partnersPages = {
   ]
 };
 
+let operationsPages = {
+  path: '/operations',
+  component: DashboardLayout,
+  meta: {
+    requiresAuth: true,
+    title: i18n.t('pages.operations.title')
+  },
+  children: [
+    {
+      path: '',
+      name: 'operation',
+      component: OperationsList,
+      meta: {
+        requiresAuth: true,
+        title: i18n.t('pages.operations.title')
+      }
+    },
+    {
+      path: 'new',
+      name: `new_operation`,
+      component: OperationsEdit,
+      meta: {
+        requiresAuth: true,
+        title: i18n.t('pages.operations.title')
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_operation',
+      props: true,
+      component: OperationsEdit,
+      meta: {
+        requiresAuth: true,
+        title: i18n.t('pages.operations.title')
+      }
+    }
+  ]
+};
+
 const routes = [
   {
     path: '/',
@@ -161,7 +206,8 @@ const routes = [
     }
   },
   categoriesPages,
-  partnersPages
+  partnersPages,
+  operationsPages
 ];
 
 export default routes;

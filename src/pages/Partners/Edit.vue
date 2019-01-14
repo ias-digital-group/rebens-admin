@@ -89,7 +89,7 @@ export default {
           self.submitLoading = true;
           if (self.viewAction == 'new') {
             partnerService.create(self.model).then(
-              response => {
+              () => {
                 self.$notify({
                   type: 'primary',
                   message: 'Parceiro cadastrado com sucesso!',

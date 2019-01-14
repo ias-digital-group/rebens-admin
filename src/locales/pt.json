@@ -26,6 +26,18 @@
           "actions": "Ações"
         }
       },
+      "operations": {
+        "title": "Operações",
+        "perpage-placeholder": "Por página",
+        "emptytext": "...",
+        "recordcount-message": "Total de operações:",
+        "grid": {
+          "id": "ID",
+          "title": "Titulo",
+          "active": "Ativo",
+          "actions": "Ações"
+        }
+      },
       "access-denied": {
         "title": "Acesso negado"
       },
@@ -58,7 +70,7 @@
       "categories": "Categorias",
       "partners": "Parceiros",
       "benefits": "Benefícios",
-      
+      "operations": "Operações",
       "pages": "Pages",
       "pricing": "Pricing",
       "rtl": "RTL Support",

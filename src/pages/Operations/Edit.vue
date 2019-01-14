@@ -2,53 +2,81 @@
 <div class="row">
   <div class="col-md-12">
     <card title="Horizontal Form">
-      <h4 slot="header" class="card-title">{{$t('pages.categories.title')}}</h4>
+      <h4 slot="header" class="card-title">{{$t('pages.operations.title')}}</h4>
       <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
         <div class="row">
-          <label class="col-md-3 col-form-label">Nome</label>
+          <label class="col-md-3 col-form-label">Titulo</label>
           <div class="col-md-9">
             <base-input 
               required
-              v-model="model.name"
-              v-validate="modelValidations.name"
+              v-model="model.title"
+              v-validate="modelValidations.title"
               type="text"
-              :error="getError('name')"
-              name="name"
-              placeholder="Nome" 
-              maxlength='200'></base-input>
+              :error="getError('title')"
+              name="title"
+              placeholder="Titulo" 
+              maxlength='300'></base-input>
           </div>
         </div>
         <div class="row">
-          <label class="col-md-3 col-form-label">Ordem</label>
-          <div class="col-md-2">
+          <label class="col-md-3 col-form-label">Empresa</label>
+          <div class="col-md-9">
             <base-input 
               required
-              v-model="model.order"
-              v-validate="modelValidations.order"
+              v-model="model.companyName"
+              v-validate="modelValidations.companyName"
+              type="text"
+              :error="getError('companyName')"
+              name="companyName"
+              placeholder="Empresa" 
+              maxlength='300'></base-input>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-md-3 col-form-label">Documento</label>
+          <div class="col-md-9">
+            <base-input 
+              required
+              v-model="model.companyDoc"
+              v-validate="modelValidations.companyDoc"
+              type="text"
+              :error="getError('companyDoc')"
+              name="companyDoc"
+              placeholder="Documento" 
+              maxlength='18'
+              :inputMask="['##.###.###/####-##']"></base-input>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-md-3 col-form-label">Porcentagem</label>
+          <div class="col-md-3">
+            <base-input 
+              v-model="model.cachbackPercentage"
+              v-validate="modelValidations.cachbackPercentage"
               type="tel"
-              :error="getError('order')"
-              name="order"
-              placeholder="Ordem" 
+              :error="getError('cachbackPercentage')"
+              name="cachbackPercentage"
+              placeholder="Porcentagem" 
               maxlength='4' 
               :inputMask="['####']">
             </base-input>
           </div>
         </div>
         <div class="row">
-          <label class="col-md-3 col-form-label">Categoria pai</label>
+          <label class="col-md-3 col-form-label">Tipo</label>
           <div class="col-md-9">
             <el-select
                 class="select-info"
-                placeholder="Categoria pai"
-                v-model="model.idParent"
+                placeholder="Tipo de operação"
+                v-model="model.idOperationType"
                 v-loading.lock="selectLoading"
                 lock>
                 <el-option
-                  v-for="category in categoriesList"
+                  v-for="t in operationTypeList"
                   class="select-primary"
-                  :value="category.id"
-                  :label="category.name"
-                  :key="category.id"
+                  :value="t.id"
+                  :label="t.name"
+                  :key="t.id"
                 >
                 </el-option>
               </el-select>
@@ -73,7 +101,7 @@
               :loading="submitLoading">
               Salvar
             </base-button>
-            <base-link class="btn mt-3 btn-secondary" to="/categories">Voltar</base-link>
+            <base-link class="btn mt-3 btn-secondary" to="/operations">Voltar</base-link>
           </div>
         </div>
       </form>
@@ -83,7 +111,8 @@
 </template>
 <script>
 import { Select, Option } from 'element-ui';
-import categoryService from '../../services/Category/categoryService';
+import operationService from '../../services/Operation/operationService';
+import helperService from '../../services/Helper/helperService';
 import _ from 'lodash';
 
 export default {
@@ -100,27 +129,42 @@ export default {
       formLoading: false,
       submitLoading: false,
       model: {
-        name: '',
-        order: null,
-        idParent: null,
+        title: '',
+        companyName: '',
+        companyDoc: '',
+        domain: '',
+        idOperationType: 0,
+        cachbackPercentage: 0,
         active: false
       },
       modelValidations: {
-        name: {
+        title: {
+          required: true,
+          max: 300
+        },
+        companyName: {
+          required: true,
+          max: 300
+        },
+        companyDoc: {
+          required: true,
+          max: 18
+        },
+        domain: {
           required: true,
           max: 200
         },
-        order: {
+        idOperationType: {
           required: true,
           max: 4
         }
       },
-      categoriesList: []
+      operationTypeList: []
     };
   },
   computed: {
     viewAction() {
-      return this.$route.name == 'edit_category' ? 'edit' : 'new';
+      return this.$route.name == 'edit_operation' ? 'edit' : 'new';
     }
   },
   methods: {
@@ -133,14 +177,14 @@ export default {
         if (isValid) {
           self.submitLoading = true;
           if (self.viewAction == 'new') {
-            categoryService.create(self.model).then(
+            operationService.create(self.model).then(
               () => {
                 self.$notify({
                   type: 'primary',
-                  message: 'Categoria cadastrada com sucesso!',
+                  message: 'Operação cadastrada com sucesso!',
                   icon: 'tim-icons icon-bell-55'
                 });
-                self.$router.push('/categories');
+                self.$router.push('/operations');
                 self.submitLoading = false;
               },
               err => {
@@ -153,14 +197,14 @@ export default {
               }
             );
           } else {
-            categoryService.update(self.model).then(
+            operationService.update(self.model).then(
               response => {
                 self.$notify({
                   type: 'primary',
                   message: response.message,
                   icon: 'tim-icons icon-bell-55'
                 });
-                self.$router.push('/categories');
+                self.$router.push('/operations');
                 self.submitLoading = false;
               },
               err => {
@@ -180,7 +224,7 @@ export default {
       const self = this;
       if (this.viewAction == 'edit') {
         this.formLoading = true;
-        categoryService.get(self.id).then(
+        operationService.get(self.id).then(
           response => {
             self.model = response.data;
             self.formLoading = false;
@@ -190,13 +234,13 @@ export default {
           }
         );
       }
+
       this.selectLoading = true;
-      categoryService.getListTree().then(
+      helperService.findAllOperationTypes().then(
         response => {
-          self.categoriesList.push({ id: null, name: '' });
           _.each(response.data, function(el) {
             if (el.id != self.id) {
-              self.categoriesList.push({ id: el.id, name: el.name });
+              self.operationTypeList.push({ id: el.id, name: el.name });
             }
           });
           self.selectLoading = false;
