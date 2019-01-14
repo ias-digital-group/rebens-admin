@@ -58,21 +58,19 @@ const getters = {
 
 const actions = {
   setUser({ commit }, signinResponse) {
-    const jwtData = JSON.parse(
-      atob(signinResponse.token.accessToken.split('.')[1])
-    );
+    const jwtData = JSON.parse(atob(signinResponse.accessToken.split('.')[1]));
     const user = {
-      name: '',
+      name: jwtData.Name,
       email: jwtData.unique_name[0],
       id: jwtData.Id,
       role: jwtData.role
     };
     axios.defaults.headers.common['Authorization'] = `Bearer ${
-      signinResponse.token.accessToken
+      signinResponse.accessToken
     }`;
     commit(types.SAVE_AUTH_DATA, {
       user: user,
-      accessToken: signinResponse.token.accessToken
+      accessToken: signinResponse.accessToken
     });
   },
   removeUser({ commit }) {

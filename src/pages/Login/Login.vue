@@ -86,11 +86,7 @@ export default {
             )
             .then(
               response => {
-                if (
-                  response &&
-                  response.token &&
-                  response.token.authenticated
-                ) {
+                if (response && response.authenticated) {
                   self.$store.dispatch('setUser', response);
                   window.location = '/';
                   return;
