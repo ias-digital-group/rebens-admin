@@ -91,9 +91,9 @@ export default {
                   response.token &&
                   response.token.authenticated
                 ) {
-                  self.$store.dispatch('setUser', response).then(() => {
-                    self.$router.push('/');
-                  });
+                  self.$store.dispatch('setUser', response);
+                  window.location = '/';
+                  return;
                 }
                 self.$data.fullscreenLoading = false;
                 self.$notify({

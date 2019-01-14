@@ -12,7 +12,7 @@ const state = {
     pages: []
   },
   accessToken: localStorage.getItem('token') || '',
-  user: {}
+  user: localStorage.getItem('portal.user') || {}
 };
 const mutations = {
   setPageSetting(state, settings) {
@@ -21,12 +21,15 @@ const mutations = {
     });
     state.pageSettings.pages.push(settings);
   },
-  saveAuthData(state, user, accessToken) {
-    state.accessToken = accessToken;
-    state.user = user;
+  saveAuthData(state, payload) {
+    state.user = payload.user;
+    state.token = payload.accessToken;
+    localStorage.setItem('token', payload.accessToken);
+    localStorage.setItem('portal.user', JSON.stringify(payload.user));
   },
   clearAuthData(state) {
-    state.accessToken = '';
+    localStorage.removeItem('token');
+    localStorage.removeItem('portal.user');
     state.user = {};
     delete axios.defaults.headers.common['Authorization'];
   }
@@ -46,7 +49,7 @@ const getters = {
     return state.user;
   },
   isAuthenticated: state => {
-    return state.accessToken != '';
+    return !!state.accessToken;
   },
   accessToken: state => {
     return state.accessToken;
@@ -55,27 +58,22 @@ const getters = {
 
 const actions = {
   setUser({ commit }, signinResponse) {
-    return new Promise(resolve => {
-      const user = {
-        accessToken: signinResponse.token.accessToken,
-        name: signinResponse.user.name,
-        email: signinResponse.user.email,
-        id: signinResponse.user.id,
-        role: signinResponse.role
-      };
-      // axios.defaults.headers.common['Authorization'] = `Bearer ${
-      //   signinResponse.token.accessToken
-      // }`;
-      localStorage.setItem('token', signinResponse.token.accessToken);
-      commit(types.SAVE_AUTH_DATA, user);
-      resolve();
+    const user = {
+      name: signinResponse.user.name,
+      email: signinResponse.user.email,
+      id: signinResponse.user.id,
+      role: signinResponse.role
+    };
+    axios.defaults.headers.common['Authorization'] = `Bearer ${
+      signinResponse.token.accessToken
+    }`;
+    commit(types.SAVE_AUTH_DATA, {
+      user: user,
+      accessToken: signinResponse.token.accessToken
     });
   },
   removeUser({ commit }) {
-    return new Promise(resolve => {
-      commit(types.CLEAR_AUTH_DATA);
-      resolve();
-    });
+    commit(types.CLEAR_AUTH_DATA);
   }
 };
 

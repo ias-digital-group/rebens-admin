@@ -37,7 +37,7 @@
               :loading="submitLoading">
               Salvar
             </base-button>
-            <base-link class="btn mt-3 btn-secondary" to="/categories">Voltar</base-link>
+            <base-link class="btn mt-3 btn-secondary" to="/partners">Voltar</base-link>
           </div>
         </div>
       </form>

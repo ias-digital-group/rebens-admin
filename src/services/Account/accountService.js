@@ -1,5 +1,12 @@
-import { HTTP } from '../../http';
+import axios from 'axios';
 const accountUrl = process.env.VUE_APP_API_URI.concat('account/');
+
+const http = axios.create({
+  headers: {
+    Accept: 'application/json'
+  }
+});
+
 export default {
   signin: (email, password) => {
     return new Promise((resolve, reject) => {
@@ -7,7 +14,7 @@ export default {
         email: email,
         password: password
       };
-      HTTP.post(accountUrl.concat('login'), model).then(
+      http.post(accountUrl.concat('login'), model).then(
         response => {
           resolve(response.data);
         },

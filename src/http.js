@@ -7,19 +7,19 @@ const instance = axios.create({
     Accept: 'application/json'
   }
 });
-
-// Add a request interceptor
-instance.interceptors.request.use(
-  config => {
-    config.headers.common['Authorization'] = `Bearer ${
-      store.getters.accessToken
-    }`;
-    return config;
-  },
-  error => {
-    return Promise.reject(error);
-  }
-);
+// // Add a request interceptor
+// instance.interceptors.request.use(
+//   config => {
+//     console.log(store.getters.accessToken);
+//     config.headers.common['Authorization'] = `Bearer ${
+//       store.getters.accessToken
+//     }`;
+//     return config;
+//   },
+//   error => {
+//     return Promise.reject(error);
+//   }
+// );
 
 instance.interceptors.response.use(
   response => {

@@ -60,13 +60,13 @@
       <h4 slot="header" class="title title-up">Remover parceiro</h4>
       <form class="modal-form" ref="modalForm" @submit.prevent v-loading="modal.formLoading">
         <p>
-          Nome da categoria <strong>{{modal.model.name}}</strong>
+          Nome do parceiro <strong>{{modal.model.name}}</strong>
         </p>
         <input type="hidden" name="nome" v-model="modal.model.name" ref="nome">
         <base-input
           required
           v-model="modal.nameConfirmation"
-          label="Digite o nome da categoria para confirmar"
+          label="Digite o nome do parceiro para confirmar"
           placeholder="Confirme o nome"
           :error="getError('confirmação')"
           type="text"
