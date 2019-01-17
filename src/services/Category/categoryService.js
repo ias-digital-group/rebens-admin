@@ -1,5 +1,5 @@
 import { HTTP } from '../../http';
-const categoryUrl = process.env.VUE_APP_API_URI.concat('category/');
+import config from '../../config';
 export default {
   findAll: request => {
     return new Promise((resolve, reject) => {
@@ -7,7 +7,7 @@ export default {
         ? request
         : { page: 0, pageItems: 30, searchWord: '', sort: 'name ASC' };
       HTTP.get(
-        categoryUrl.concat(
+        config.apiEndpoints.categoryUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
             request.searchWord
           }&sort=${request.sort}`
@@ -24,7 +24,7 @@ export default {
   },
   get: id => {
     return new Promise((resolve, reject) => {
-      HTTP.get(categoryUrl.concat(id)).then(
+      HTTP.get(config.apiEndpoints.categoryUri.concat(id)).then(
         response => {
           resolve(response.data);
         },
@@ -36,7 +36,7 @@ export default {
   },
   getListTree: () => {
     return new Promise((resolve, reject) => {
-      HTTP.get(categoryUrl.concat('ListTree')).then(
+      HTTP.get(config.apiEndpoints.categoryUri.concat('ListTree')).then(
         response => {
           resolve(response.data);
         },
@@ -48,7 +48,7 @@ export default {
   },
   create: model => {
     return new Promise((resolve, reject) => {
-      HTTP.post(categoryUrl, model).then(
+      HTTP.post(config.apiEndpoints.categoryUri, model).then(
         response => {
           resolve(response.data);
         },
@@ -60,7 +60,7 @@ export default {
   },
   update: model => {
     return new Promise((resolve, reject) => {
-      HTTP.put(categoryUrl, model).then(
+      HTTP.put(config.apiEndpoints.categoryUri, model).then(
         response => {
           resolve(response.data);
         },
@@ -72,7 +72,7 @@ export default {
   },
   delete: id => {
     return new Promise((resolve, reject) => {
-      HTTP.delete(categoryUrl.concat(id)).then(
+      HTTP.delete(config.apiEndpoints.categoryUri.concat(id)).then(
         response => {
           resolve(response.data);
         },

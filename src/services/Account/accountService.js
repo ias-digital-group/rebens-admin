@@ -1,5 +1,5 @@
 import axios from 'axios';
-const accountUrl = process.env.VUE_APP_API_URI.concat('account/');
+import config from '../../config';
 
 const http = axios.create({
   headers: {
@@ -14,7 +14,7 @@ export default {
         email: email,
         password: password
       };
-      http.post(accountUrl.concat('login'), model).then(
+      http.post(config.apiEndpoints.accountUri.concat('login'), model).then(
         response => {
           resolve(response.data);
         },

@@ -1,7 +1,7 @@
 <template>
 <div class="row">
   <div class="col-md-12">
-    <card title="Horizontal Form">
+    <card :title="$t('pages.categories.title')">
       <h4 slot="header" class="card-title">{{$t('pages.categories.title')}}</h4>
       <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
         <div class="row">
@@ -62,6 +62,27 @@
               </div>
             </div>
         </div>
+        <template v-if="model.icon">
+          <div class="row">
+            <label class="col-md-3 col-form-label">Icone</label>
+            <div class="col-md-9">
+              <div>
+                <img :src="model.icon" class="img-preview" />
+                <base-button @click="model.icon = ''" class="btn-simple btn-file" type="danger">
+                  <i class="fas fa-times"></i>
+                </base-button>
+              </div>
+            </div>
+          </div>
+        </template>
+        <template v-else>
+          <div class="row">
+            <label class="col-md-3 col-form-label">Icone</label>
+            <div class="col-md-9">
+              <image-upload @change="onImageChange" change-text="Alterar" remove-text="Remover" select-text="Selecione uma imagem" />
+            </div>
+          </div>
+        </template>
         <div class="row">
           <label class="col-md-3 col-form-label"></label>
           <div class="col-md-9">
@@ -84,12 +105,14 @@
 <script>
 import { Select, Option } from 'element-ui';
 import categoryService from '../../services/Category/categoryService';
+import helperService from '../../services/Helper/helperService';
 import _ from 'lodash';
-
+import { ImageUpload } from 'src/components/index';
 export default {
   components: {
     [Option.name]: Option,
-    [Select.name]: Select
+    [Select.name]: Select,
+    ImageUpload
   },
   props: {
     id: String
@@ -99,11 +122,13 @@ export default {
       selectLoading: false,
       formLoading: false,
       submitLoading: false,
+      image: null,
       model: {
         name: '',
         order: null,
         idParent: null,
-        active: false
+        active: false,
+        icon: ''
       },
       modelValidations: {
         name: {
@@ -132,16 +157,20 @@ export default {
       this.$validator.validateAll().then(isValid => {
         if (isValid) {
           self.submitLoading = true;
-          if (self.viewAction == 'new') {
-            categoryService.create(self.model).then(
-              () => {
-                self.$notify({
-                  type: 'primary',
-                  message: 'Categoria cadastrada com sucesso!',
-                  icon: 'tim-icons icon-bell-55'
-                });
-                self.$router.push('/categories');
-                self.submitLoading = false;
+          if (self.image) {
+            helperService.uploadFile(self.image).then(
+              response => {
+                if (response.status != 200) {
+                  self.$notify({
+                    type: 'primary',
+                    message: response.message,
+                    icon: 'tim-icons icon-bell-55'
+                  });
+                  self.submitLoading = false;
+                  return;
+                }
+                self.model.icon = response.data.url;
+                self.saveCategory(self);
               },
               err => {
                 self.$notify({
@@ -153,28 +182,54 @@ export default {
               }
             );
           } else {
-            categoryService.update(self.model).then(
-              response => {
-                self.$notify({
-                  type: 'primary',
-                  message: response.message,
-                  icon: 'tim-icons icon-bell-55'
-                });
-                self.$router.push('/categories');
-                self.submitLoading = false;
-              },
-              err => {
-                self.$notify({
-                  type: 'primary',
-                  message: err.message,
-                  icon: 'tim-icons icon-bell-55'
-                });
-                self.submitLoading = false;
-              }
-            );
+            self.saveCategory(self);
           }
         }
       });
+    },
+    saveCategory(vm) {
+      vm = vm ? vm : this;
+      if (vm.viewAction == 'new') {
+        categoryService.create(vm.model).then(
+          () => {
+            vm.$notify({
+              type: 'primary',
+              message: 'Categoria cadastrada com sucesso!',
+              icon: 'tim-icons icon-bell-55'
+            });
+            vm.$router.push('/categories');
+            vm.submitLoading = false;
+          },
+          err => {
+            vm.$notify({
+              type: 'primary',
+              message: err.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+            vm.submitLoading = false;
+          }
+        );
+      } else {
+        categoryService.update(vm.model).then(
+          response => {
+            vm.$notify({
+              type: 'primary',
+              message: response.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+            vm.$router.push('/categories');
+            vm.submitLoading = false;
+          },
+          err => {
+            vm.$notify({
+              type: 'primary',
+              message: err.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+            vm.submitLoading = false;
+          }
+        );
+      }
     },
     fetchData() {
       const self = this;
@@ -205,6 +260,9 @@ export default {
           self.selectLoading = false;
         }
       );
+    },
+    onImageChange(file) {
+      this.image = file;
     }
   },
   created() {
@@ -212,5 +270,8 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
+.img-preview {
+  max-width: 100px;
+}
 </style>

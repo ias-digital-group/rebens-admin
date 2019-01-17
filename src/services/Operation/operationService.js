@@ -1,7 +1,7 @@
 import { HTTP } from '../../http';
 import _ from 'lodash';
+import config from '../../config';
 
-const operationUrl = process.env.VUE_APP_API_URI.concat('operation/');
 export default {
   findAll: request => {
     return new Promise((resolve, reject) => {
@@ -9,7 +9,7 @@ export default {
         ? request
         : { page: 0, pageItems: 30, searchWord: '', sort: 'name ASC' };
       HTTP.get(
-        operationUrl.concat(
+        config.apiEndpoints.operationUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
             request.searchWord
           }&sort=${request.sort}`
@@ -29,7 +29,7 @@ export default {
   },
   get: id => {
     return new Promise((resolve, reject) => {
-      HTTP.get(operationUrl.concat(id)).then(
+      HTTP.get(config.apiEndpoints.operationUri.concat(id)).then(
         response => {
           resolve(response.data);
         },
@@ -41,7 +41,7 @@ export default {
   },
   create: model => {
     return new Promise((resolve, reject) => {
-      HTTP.post(operationUrl, model).then(
+      HTTP.post(config.apiEndpoints.operationUri, model).then(
         response => {
           resolve(response.data);
         },
@@ -53,7 +53,7 @@ export default {
   },
   update: model => {
     return new Promise((resolve, reject) => {
-      HTTP.put(operationUrl, model).then(
+      HTTP.put(config.apiEndpoints.operationUri, model).then(
         response => {
           resolve(response.data);
         },
@@ -65,7 +65,7 @@ export default {
   },
   delete: id => {
     return new Promise((resolve, reject) => {
-      HTTP.delete(operationUrl.concat(id)).then(
+      HTTP.delete(config.apiEndpoints.operationUri.concat(id)).then(
         response => {
           resolve(response.data);
         },

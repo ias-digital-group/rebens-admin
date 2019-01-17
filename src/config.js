@@ -12,5 +12,14 @@ export default {
       'rgba(119,52,169,0)'
     ],
     purpleGradient: ['rgba(253,93,147,0.8)', 'rgba(253,93,147,0)']
+  },
+  apiEndpoints: {
+    accountUri: process.env.VUE_APP_API_URI.concat('account/'),
+    addressUri: process.env.VUE_APP_API_URI.concat('address/'),
+    categoryUri: process.env.VUE_APP_API_URI.concat('category/'),
+    contactUri: process.env.VUE_APP_API_URI.concat('contact/'),
+    helperUri: process.env.VUE_APP_API_URI.concat('helper/'),
+    operationUri: process.env.VUE_APP_API_URI.concat('operation/'),
+    partnerUri: process.env.VUE_APP_API_URI.concat('partner/')
   }
 };

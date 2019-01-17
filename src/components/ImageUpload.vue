@@ -7,7 +7,7 @@
       <img :src="image" alt="preview" />
     </div>
     <div>
-      <span class="btn btn-primary btn-simple btn-file">
+      <span class="btn btn-info   btn-simple btn-file">
         <span class="fileinput-new">{{
           fileExists ? changeText : selectText
         }}</span>
@@ -20,9 +20,10 @@
           class="valid"
           :multiple="false"
           aria-invalid="false"
+          ref="file"
         />
       </span>
-      <base-button v-if="fileExists" @click="removeFile" round type="danger">
+      <base-button v-if="fileExists" @click="removeFile" class="btn btn-simple" type="danger">
         <i class="fas fa-times"></i> {{ removeText }}
       </base-button>
     </div>
@@ -75,7 +76,7 @@ export default {
     handlePreview(event) {
       let file = event.target.files[0];
       this.imagePreview = URL.createObjectURL(file);
-      this.$emit('change', file);
+      this.$emit('change', this.$refs.file.files[0]);
     },
     removeFile() {
       this.imagePreview = null;
