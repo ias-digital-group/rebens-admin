@@ -99,9 +99,10 @@ export default {
                 });
               },
               err => {
+                const msg = err.response.status == 404 ? err.response.data.message : err.message;
                 self.$notify({
                   type: 'primary',
-                  message: err.message,
+                  message: msg,
                   icon: 'tim-icons icon-bell-55'
                 });
                 self.$data.fullscreenLoading = false;
