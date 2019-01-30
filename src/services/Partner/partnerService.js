@@ -25,14 +25,17 @@ export default {
   },
   get: id => {
     return new Promise((resolve, reject) => {
-      HTTP.get(config.apiEndpoints.partnerUri.concat(id)).then(
-        response => {
-          resolve(response.data);
-        },
-        error => {
+      Promise.all([
+        HTTP.get(config.apiEndpoints.partnerUri.concat(id)),
+        HTTP.get(config.apiEndpoints.partnerUri.concat(`${id}/contacts`)),
+        HTTP.get(config.apiEndpoints.partnerUri.concat(`${id}/address`))
+      ])
+        .then(response => {
+          resolve(response);
+        })
+        .catch(error => {
           reject(error);
-        }
-      );
+        });
     });
   },
   create: model => {

@@ -4,7 +4,7 @@
       <form @submit.prevent>
         <card class="card-login card-white">
           <template slot="header">
-            <img src="img/logo-login.png" alt="" />
+            <img src="img/card-primary.png" alt="" />
             
           </template>
 

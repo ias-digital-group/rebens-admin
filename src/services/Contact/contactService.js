@@ -38,7 +38,7 @@ export default {
   },
   get: id => {
     return new Promise((resolve, reject) => {
-      HTTP.get(config.apiEndpoints.addressUri.concat(id)).then(
+      HTTP.get(config.apiEndpoints.contactUri.concat(id)).then(
         response => {
           resolve(response.data);
         },
@@ -50,7 +50,22 @@ export default {
   },
   create: model => {
     return new Promise((resolve, reject) => {
-      HTTP.post(config.apiEndpoints.addressUri, model).then(
+      HTTP.post(config.apiEndpoints.contactUri, model).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  associatePartner: (id, partnerId) => {
+    return new Promise((resolve, reject) => {
+      HTTP.post(config.apiEndpoints.partnerUri.concat('addcontact'), {
+        idPartner: partnerId,
+        idContact: id
+      }).then(
         response => {
           resolve(response.data);
         },
@@ -62,7 +77,7 @@ export default {
   },
   update: model => {
     return new Promise((resolve, reject) => {
-      HTTP.put(config.apiEndpoints.addressUri, model).then(
+      HTTP.put(config.apiEndpoints.contactUri, model).then(
         response => {
           resolve(response.data);
         },
@@ -74,7 +89,7 @@ export default {
   },
   delete: id => {
     return new Promise((resolve, reject) => {
-      HTTP.delete(config.apiEndpoints.addressUri.concat(id)).then(
+      HTTP.delete(config.apiEndpoints.contactUri.concat(id)).then(
         response => {
           resolve(response.data);
         },

@@ -65,9 +65,9 @@ const actions = {
       id: jwtData.Id,
       role: jwtData.role
     };
-    axios.defaults.headers.common['Authorization'] = `Bearer ${
-      signinResponse.accessToken
-    }`;
+    // axios.defaults.headers.common['Authorization'] = `Bearer ${
+    //   signinResponse.accessToken
+    // }`;
     commit(types.SAVE_AUTH_DATA, {
       user: user,
       accessToken: signinResponse.accessToken

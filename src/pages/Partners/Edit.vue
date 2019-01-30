@@ -1,58 +1,72 @@
 <template>
-<div class="row">
-  <div class="col-md-12">
-    <card title="Horizontal Form">
-      <h4 slot="header" class="card-title">{{$t('pages.partners.title')}}</h4>
-      <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
-        <div class="row">
-          <label class="col-md-3 col-form-label">Nome</label>
-          <div class="col-md-9">
-            <base-input 
-              required
-              v-model="model.name"
-              v-validate="modelValidations.name"
-              type="text"
-              :error="getError('name')"
-              name="name"
-              placeholder="Nome" 
-              maxlength='200'></base-input>
-          </div>
-        </div>
-        <div class="row">
-            <label class="col-md-3 col-form-label"></label>
-            <div class="col-md-9">
-              <div class="form-group">
-                <base-checkbox v-model="model.active">Ativo</base-checkbox>
+  <div class="row">
+    <div class="col-md-12">
+      <card title="Parceiros">
+        <h4 slot="header" class="card-title">{{$t('pages.partners.title')}}</h4>
+        <el-tabs>
+          <el-tab-pane label="Parceiro">
+            <form class="form-horizontal mt-3" v-loading="formLoading" @submit.prevent>
+              <div class="row">
+                <label class="col-md-3 col-form-label">Nome</label>
+                <div class="col-md-9">
+                  <base-input 
+                    required
+                    v-model="model.name"
+                    v-validate="modelValidations.name"
+                    type="text"
+                    :error="getError('name')"
+                    name="name"
+                    placeholder="Nome" 
+                    maxlength='200'></base-input>
+                </div>
               </div>
-            </div>
-        </div>
-        <div class="row">
-          <label class="col-md-3 col-form-label"></label>
-          <div class="col-md-9">
-            <base-button 
-              class="mt-3" 
-              native-type="submit" 
-              type="info"
-              @click.native.prevent="validate"
-              :loading="submitLoading">
-              Salvar
-            </base-button>
-            <base-link class="btn mt-3 btn-secondary" to="/partners">Voltar</base-link>
-          </div>
-        </div>
-      </form>
-    </card>
+              <div class="row">
+                <label class="col-md-3 col-form-label"></label>
+                <div class="col-md-9">
+                  <div class="form-group">
+                    <base-checkbox v-model="model.active">Ativo</base-checkbox>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-md-3 col-form-label"></label>
+                <div class="col-md-9">
+                  <base-button 
+                    class="mt-3" 
+                    native-type="submit" 
+                    type="info"
+                    @click.native.prevent="validate"
+                    :loading="submitLoading">
+                    Salvar
+                  </base-button>
+                  <base-link class="btn mt-3 btn-secondary" to="/partners">Voltar</base-link>
+                </div>
+              </div>
+            </form>
+          </el-tab-pane>
+          <el-tab-pane label="Contatos">
+            <contacts :data="contactsData" v-loading="formLoading" parent="partners" ref="contacts"></contacts>
+            </el-tab-pane>
+          <el-tab-pane label="Endereços">
+          </el-tab-pane>
+        </el-tabs>
+      </card>
+    </div>
   </div>
-</div>
 </template>
 <script>
-import { Select, Option } from 'element-ui';
+import { Select, Option, Tabs, TabPane } from 'element-ui';
+import Contacts from 'src/components/Contacts';
 import partnerService from '../../services/Partner/partnerService';
-
+import contactService from '../../services/Contact/contactService';
+import eventbus from '../../eventbus.js';
 export default {
   components: {
     [Option.name]: Option,
-    [Select.name]: Select
+    [Select.name]: Select,
+    [Tabs.name]: Tabs,
+    [TabPane.name]: TabPane,
+    Contacts
   },
   props: {
     id: String
@@ -70,7 +84,8 @@ export default {
           required: true,
           max: 200
         }
-      }
+      },
+      contactsData: []
     };
   },
   computed: {
@@ -137,7 +152,10 @@ export default {
         this.formLoading = true;
         partnerService.get(self.id).then(
           response => {
-            self.model = response.data;
+            self.model = response[0].data.data;
+            if (response[1] && response[1].status == 200) {
+              self.contactsData = response[1].data.data;
+            }
             self.formLoading = false;
           },
           () => {
@@ -145,10 +163,42 @@ export default {
           }
         );
       }
+    },
+    fetchContactsData() {
+      const self = this;
+      contactService.findAllByPartner(self.id).then(
+        response => {
+          self.contactsData = response.data;
+          self.formLoading = false;
+        },
+        () => {
+          self.formLoading = false;
+        }
+      ); 
     }
   },
   created() {
     this.fetchData();
+  },
+  mounted() {
+    const self = this;
+    eventbus.$on('partners.contact.insert', data => {
+      contactService.associatePartner(data.id, self.id).then(
+        r => {
+          self.fetchContactsData();
+          eventbus.$emit('partners.contact.action.done', r);
+        },
+        e => {
+          console.log(e);
+          self.fetchData();
+        }
+      );
+    });
+
+    eventbus.$on('partners.contact.update', () => {
+      self.fetchContactsData();
+      eventbus.$emit('partners.contact.action.done', null);
+    });
   }
 };
 </script>

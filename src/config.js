@@ -20,6 +20,7 @@ export default {
     contactUri: process.env.VUE_APP_API_URI.concat('contact/'),
     helperUri: process.env.VUE_APP_API_URI.concat('helper/'),
     operationUri: process.env.VUE_APP_API_URI.concat('operation/'),
-    partnerUri: process.env.VUE_APP_API_URI.concat('partner/')
+    partnerUri: process.env.VUE_APP_API_URI.concat('partner/'),
+    viaCepUri: process.env.VUE_APP_VIACEP_URI
   }
 };
