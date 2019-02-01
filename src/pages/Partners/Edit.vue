@@ -44,10 +44,11 @@
               </div>
             </form>
           </el-tab-pane>
-          <el-tab-pane label="Contatos">
-            <contacts :data="contactsData" v-loading="formLoading" parent="partners" ref="contacts"></contacts>
+          <el-tab-pane label="Contatos" :disabled="viewAction == 'new' ? true : false">
+            <contacts v-loading="formLoading" parent="partners" :parentId="id" ref="contacts"></contacts>
             </el-tab-pane>
-          <el-tab-pane label="Endereços">
+          <el-tab-pane label="Endereços" :disabled="viewAction == 'new' ? true : false">
+            <addresses v-loading="formLoading" parent="partners" :parentId="id" ref="addresses"></addresses>
           </el-tab-pane>
         </el-tabs>
       </card>
@@ -57,16 +58,16 @@
 <script>
 import { Select, Option, Tabs, TabPane } from 'element-ui';
 import Contacts from 'src/components/Contacts';
+import Addresses from 'src/components/Addresses';
 import partnerService from '../../services/Partner/partnerService';
-import contactService from '../../services/Contact/contactService';
-import eventbus from '../../eventbus.js';
 export default {
   components: {
     [Option.name]: Option,
     [Select.name]: Select,
     [Tabs.name]: Tabs,
     [TabPane.name]: TabPane,
-    Contacts
+    Contacts,
+    Addresses
   },
   props: {
     id: String
@@ -84,8 +85,7 @@ export default {
           required: true,
           max: 200
         }
-      },
-      contactsData: []
+      }
     };
   },
   computed: {
@@ -104,13 +104,13 @@ export default {
           self.submitLoading = true;
           if (self.viewAction == 'new') {
             partnerService.create(self.model).then(
-              () => {
+              response => {
                 self.$notify({
                   type: 'primary',
                   message: 'Parceiro cadastrado com sucesso!',
                   icon: 'tim-icons icon-bell-55'
                 });
-                self.$router.push('/partners');
+                self.$router.push(`/partners/${response.id}/edit/`);
                 self.submitLoading = false;
               },
               err => {
@@ -152,10 +152,7 @@ export default {
         this.formLoading = true;
         partnerService.get(self.id).then(
           response => {
-            self.model = response[0].data.data;
-            if (response[1] && response[1].status == 200) {
-              self.contactsData = response[1].data.data;
-            }
+            self.model = response.data;
             self.formLoading = false;
           },
           () => {
@@ -163,42 +160,10 @@ export default {
           }
         );
       }
-    },
-    fetchContactsData() {
-      const self = this;
-      contactService.findAllByPartner(self.id).then(
-        response => {
-          self.contactsData = response.data;
-          self.formLoading = false;
-        },
-        () => {
-          self.formLoading = false;
-        }
-      ); 
     }
   },
   created() {
     this.fetchData();
-  },
-  mounted() {
-    const self = this;
-    eventbus.$on('partners.contact.insert', data => {
-      contactService.associatePartner(data.id, self.id).then(
-        r => {
-          self.fetchContactsData();
-          eventbus.$emit('partners.contact.action.done', r);
-        },
-        e => {
-          console.log(e);
-          self.fetchData();
-        }
-      );
-    });
-
-    eventbus.$on('partners.contact.update', () => {
-      self.fetchContactsData();
-      eventbus.$emit('partners.contact.action.done', null);
-    });
   }
 };
 </script>

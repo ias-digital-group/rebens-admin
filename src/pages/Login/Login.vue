@@ -99,7 +99,10 @@ export default {
                 });
               },
               err => {
-                const msg = err.response.status == 404 ? err.response.data.message : err.message;
+                const msg =
+                  err.response.status == 404
+                    ? err.response.data.message
+                    : err.message;
                 self.$notify({
                   type: 'primary',
                   message: msg,

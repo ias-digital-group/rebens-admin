@@ -17,21 +17,7 @@
       <div class="row">
         <label class="col-md-3 col-form-label">Cep</label>
         <div class="col-md-3 col-lg-2">
-          <div :class="{'form-group':true, 'has-danger': errors.has('cep'), 'input-group-focus': zipCodeFocused, 'has-success': !errors.has('cep') && zipCodeTouched}">
-            <the-mask 
-              v-validate="modelValidations.cep"
-              name="cep"
-              type="tel"
-              placeholder="Cep"
-              v-model="address.zipcode"
-              :mask="['#####-####']"
-              v-on="listeners"
-              ref="zipcode"
-              class="form-control" aria-describedby="addon-right addon-left">
-            </the-mask>
-            <label v-show="errors.has('cep')" class="error" v-html="getError('cep')"></label>
-          </div>
-          <!-- <base-input 
+          <base-input 
             required
             v-model="address.zipcode"
             v-validate="modelValidations.cep"
@@ -40,7 +26,8 @@
             name="cep"
             placeholder="Cep" 
             maxlength='9'
-            :inputMask="['#####-####']"></base-input> -->
+            ref="zipcode"
+            :inputMask="['#####-####']"></base-input>
         </div>
       </div>
       <div class="row">
@@ -154,6 +141,7 @@
 import helperService from '../services/Helper/helperService';
 import { Select, Option } from 'element-ui';
 export default {
+  name: 'address-form',
   inject: {
     $validator: '$validator'
   },
@@ -163,16 +151,6 @@ export default {
   },
   props: {
     address: Object
-  },
-  computed:{
-    listeners() {
-      return {
-        ...this.$listeners,
-        input: this.onInput,
-        blur: this.onBlur,
-        focus: this.onFocus
-      };
-    }
   },
   data() {
     return {
@@ -236,7 +214,6 @@ export default {
   },
   watch: {
     'address.zipcode': function(value) {
-      this.$refs.zipcode.refresh(value);
       if (value && value.length == 8) {
         this.getAddressData(value);
       }
@@ -263,17 +240,8 @@ export default {
         }
       );
     },
-    onInput(evt) {
-      if (!this.zipCodeTouched) {
-        this.zipCodeTouched = true;
-      }
-      this.$emit('input', evt.target ? evt.target.value : evt);
-    },
-    onFocus() {
-      this.zipCodeFocused = true;
-    },
-    onBlur() {
-      this.zipCodeFocused = false;
+    clearZipCodeValue() {
+      this.$refs.zipcode.clearValue();
     }
   }
 };

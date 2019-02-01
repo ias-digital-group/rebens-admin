@@ -16,7 +16,7 @@
     </slot>
     <slot>
       <template v-if="inputMask && inputMask.length > 0">
-        <the-mask :value="value" :mask='inputMask' v-bind="$attrs" v-on="listeners" class="form-control" aria-describedby="addon-right addon-left" />  
+        <the-mask :value="value" ref="maskedInput" :mask='inputMask' v-bind="$attrs" v-on="listeners" class="form-control" aria-describedby="addon-right addon-left" />  
       </template>
       <template v-else>
         <input :value="value" v-bind="$attrs" v-on="listeners" class="form-control" aria-describedby="addon-right addon-left" />
@@ -108,6 +108,11 @@ export default {
     },
     onBlur() {
       this.focused = false;
+    },
+    clearValue() {
+      if (this.$refs.maskedInput) {
+        this.$refs.maskedInput.$data.lastValue = null;
+      }
     }
   }
 };
