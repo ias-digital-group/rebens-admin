@@ -24,6 +24,7 @@ import ptBr from 'vee-validate/dist/locale/pt_BR';
 // library auto imports
 import 'es6-promise/auto';
 import VueTheMask from 'vue-the-mask';
+
 export default {
   install(Vue) {
     Vue.use(GlobalComponents);

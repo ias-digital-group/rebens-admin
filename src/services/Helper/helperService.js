@@ -1,17 +1,61 @@
-import { HTTP } from '../../http';
 import config from '../../config';
 import axios from 'axios';
+import { setupCache } from 'axios-cache-adapter';
+
+// Create `axios-cache-adapter` instance
+const cache = setupCache({
+  maxAge: 15 * 60 * 1000
+});
+
+// Create `axios` instance passing the newly created `cache.adapter`
+const cachedHttp = axios.create({
+  adapter: cache.adapter,
+  headers: {
+    Accept: 'application/json'
+  }
+});
+
 export default {
+  findAllBenefitsTypes: () => {
+    return new Promise((resolve, reject) => {
+      cachedHttp
+        .get(config.apiEndpoints.helperUri.concat('listBenefitType'))
+        .then(
+          response => {
+            resolve(response.data);
+          },
+          error => {
+            reject(error);
+          }
+        );
+    });
+  },
   findAllOperationTypes: () => {
     return new Promise((resolve, reject) => {
-      HTTP.get(config.apiEndpoints.helperUri.concat('listOperationType')).then(
-        response => {
-          resolve(response.data);
-        },
-        error => {
-          reject(error);
-        }
-      );
+      cachedHttp
+        .get(config.apiEndpoints.helperUri.concat('listOperationType'))
+        .then(
+          response => {
+            resolve(response.data);
+          },
+          error => {
+            reject(error);
+          }
+        );
+    });
+  },
+  findAllIntegrationTypes: () => {
+    return new Promise((resolve, reject) => {
+      cachedHttp
+        .get(config.apiEndpoints.helperUri.concat('listIntegrationType'))
+        .then(
+          response => {
+            resolve(response.data);
+          },
+          error => {
+            reject(error);
+          }
+        );
     });
   },
   uploadFile: file => {
@@ -49,7 +93,7 @@ export default {
       }
       const auth = axios.defaults.headers.common['Authorization'];
       delete axios.defaults.headers.common['Authorization'];
-      axios.get(config.apiEndpoints.viaCepUri.concat(`${n}/json`)).then(
+      cachedHttp.get(config.apiEndpoints.viaCepUri.concat(`${n}/json`)).then(
         response => {
           axios.defaults.headers.common['Authorization'] = auth;
           resolve(response.data);

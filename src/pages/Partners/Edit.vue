@@ -28,6 +28,27 @@
                   </div>
                 </div>
               </div>
+              <template v-if="model.logo">
+                <div class="row">
+                  <label class="col-md-3 col-form-label">Logo</label>
+                  <div class="col-md-9">
+                    <div>
+                      <img :src="model.logo" class="img-preview" />
+                      <base-button @click="model.logo = ''" class="btn-simple btn-file" type="danger">
+                        <i class="fas fa-times"></i>
+                      </base-button>
+                    </div>
+                  </div>
+                </div>
+              </template>
+              <template v-else>
+                <div class="row">
+                  <label class="col-md-3 col-form-label">Logo</label>
+                  <div class="col-md-9">
+                    <image-upload @change="onImageChange" change-text="Alterar" remove-text="Remover" select-text="Selecione uma imagem" />
+                  </div>
+                </div>
+              </template>
               <div class="row">
                 <label class="col-md-3 col-form-label"></label>
                 <div class="col-md-9">
@@ -60,6 +81,8 @@ import { Select, Option, Tabs, TabPane } from 'element-ui';
 import Contacts from 'src/components/Contacts';
 import Addresses from 'src/components/Addresses';
 import partnerService from '../../services/Partner/partnerService';
+import helperService from '../../services/Helper/helperService';
+import { ImageUpload } from 'src/components/index';
 export default {
   components: {
     [Option.name]: Option,
@@ -67,7 +90,8 @@ export default {
     [Tabs.name]: Tabs,
     [TabPane.name]: TabPane,
     Contacts,
-    Addresses
+    Addresses,
+    ImageUpload
   },
   props: {
     id: String
@@ -76,9 +100,11 @@ export default {
     return {
       formLoading: false,
       submitLoading: false,
+      image: null,
       model: {
         name: '',
-        active: false
+        active: false,
+        logo: ''
       },
       modelValidations: {
         name: {
@@ -102,16 +128,20 @@ export default {
       this.$validator.validateAll().then(isValid => {
         if (isValid) {
           self.submitLoading = true;
-          if (self.viewAction == 'new') {
-            partnerService.create(self.model).then(
+          if (self.image) {
+            helperService.uploadFile(self.image).then(
               response => {
-                self.$notify({
-                  type: 'primary',
-                  message: 'Parceiro cadastrado com sucesso!',
-                  icon: 'tim-icons icon-bell-55'
-                });
-                self.$router.push(`/partners/${response.id}/edit/`);
-                self.submitLoading = false;
+                if (response.status != 200) {
+                  self.$notify({
+                    type: 'primary',
+                    message: response.message,
+                    icon: 'tim-icons icon-bell-55'
+                  });
+                  self.submitLoading = false;
+                  return;
+                }
+                self.model.logo = response.data.url;
+                self.savePartner(self);
               },
               err => {
                 self.$notify({
@@ -123,28 +153,53 @@ export default {
               }
             );
           } else {
-            partnerService.update(self.model).then(
-              response => {
-                self.$notify({
-                  type: 'primary',
-                  message: response.message,
-                  icon: 'tim-icons icon-bell-55'
-                });
-                self.$router.push('/partners');
-                self.submitLoading = false;
-              },
-              err => {
-                self.$notify({
-                  type: 'primary',
-                  message: err.message,
-                  icon: 'tim-icons icon-bell-55'
-                });
-                self.submitLoading = false;
-              }
-            );
+            self.savePartner(self);
           }
         }
       });
+    },
+    savePartner(vw) {
+      if (vw.viewAction == 'new') {
+        partnerService.create(vw.model).then(
+          response => {
+            vw.$notify({
+              type: 'primary',
+              message: 'Parceiro cadastrado com sucesso!',
+              icon: 'tim-icons icon-bell-55'
+            });
+            vw.$router.push(`/partners/${response.id}/edit/`);
+            vw.submitLoading = false;
+          },
+          err => {
+            vw.$notify({
+              type: 'primary',
+              message: err.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+            vw.submitLoading = false;
+          }
+        );
+      } else {
+        partnerService.update(vw.model).then(
+          response => {
+            vw.$notify({
+              type: 'primary',
+              message: response.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+            vw.$router.push('/partners');
+            vw.submitLoading = false;
+          },
+          err => {
+            vw.$notify({
+              type: 'primary',
+              message: err.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+            vw.submitLoading = false;
+          }
+        );
+      }
     },
     fetchData() {
       const self = this;
@@ -160,6 +215,9 @@ export default {
           }
         );
       }
+    },
+    onImageChange(file) {
+      this.image = file;
     }
   },
   created() {
@@ -167,5 +225,8 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
+.img-preview {
+  max-width: 100px;
+}
 </style>

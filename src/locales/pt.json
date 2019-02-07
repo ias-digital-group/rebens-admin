@@ -38,6 +38,18 @@
           "actions": "Ações"
         }
       },
+      "benefits": {
+        "title": "Benefícios",
+        "perpage-placeholder": "Por página",
+        "emptytext": "...",
+        "recordcount-message": "Total de benefícios:",
+        "grid": {
+          "id": "ID",
+          "title": "Titulo",
+          "active": "Ativo",
+          "actions": "Ações"
+        }
+      },
       "access-denied": {
         "title": "Acesso negado"
       },

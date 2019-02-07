@@ -21,6 +21,7 @@ export default {
     helperUri: process.env.VUE_APP_API_URI.concat('helper/'),
     operationUri: process.env.VUE_APP_API_URI.concat('operation/'),
     partnerUri: process.env.VUE_APP_API_URI.concat('partner/'),
+    benefitUri: process.env.VUE_APP_API_URI.concat('benefit/'),
     viaCepUri: process.env.VUE_APP_VIACEP_URI
   }
 };
