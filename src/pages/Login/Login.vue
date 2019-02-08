@@ -4,7 +4,7 @@
       <form @submit.prevent>
         <card class="card-login card-white">
           <template slot="header">
-            <img src="img/logo-login.png" alt="" />
+            <img src="img/card-primary.png" alt="" />
             
           </template>
 
@@ -99,7 +99,10 @@ export default {
                 });
               },
               err => {
-                const msg = err.response.status == 404 ? err.response.data.message : err.message;
+                const msg =
+                  err.response.status == 404
+                    ? err.response.data.message
+                    : err.message;
                 self.$notify({
                   type: 'primary',
                   message: msg,

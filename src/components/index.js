@@ -40,7 +40,8 @@ import BaseRouterLink from './BaseRouterLink.vue';
 import SidebarPlugin from './SidebarPlugin';
 
 import AnimatedNumber from './AnimatedNumber';
-
+import AddressForm from './AddressForm';
+import Contacts from './Contacts';
 export {
   BaseCheckbox,
   IconCheckbox,
@@ -76,6 +77,8 @@ export {
   Collapse,
   CollapseItem,
   LoadingPanel,
-  BaseRouterLink
+  BaseRouterLink,
+  AddressForm,
+  Contacts
   // AsyncWorldMap
 };

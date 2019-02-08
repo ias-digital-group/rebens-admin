@@ -33,6 +33,12 @@ const OperationsList = () =>
 const OperationsEdit = () =>
   import(/* webpackChunkName: "dashboard" */ 'src/pages/Operations/Edit.vue');
 
+const BenefitsList = () =>
+  import(/* webpackChunkName: "dashboard" */ 'src/pages/Benefits/List.vue');
+
+const BenefitsEdit = () =>
+  import(/* webpackChunkName: "dashboard" */ 'src/pages/Benefits/Edit.vue');
+
 let categoriesPages = {
   path: '/categories',
   component: DashboardLayout,
@@ -150,6 +156,45 @@ let operationsPages = {
   ]
 };
 
+let benefitsPages = {
+  path: '/benefits',
+  component: DashboardLayout,
+  meta: {
+    requiresAuth: true,
+    title: i18n.t('pages.benefits.title')
+  },
+  children: [
+    {
+      path: '',
+      name: 'benefit',
+      component: BenefitsList,
+      meta: {
+        requiresAuth: true,
+        title: i18n.t('pages.benefits.title')
+      }
+    },
+    {
+      path: 'new',
+      name: `new_benefit`,
+      component: BenefitsEdit,
+      meta: {
+        requiresAuth: true,
+        title: i18n.t('pages.benefits.title')
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_benefit',
+      props: true,
+      component: BenefitsEdit,
+      meta: {
+        requiresAuth: true,
+        title: i18n.t('pages.benefits.title')
+      }
+    }
+  ]
+};
+
 const routes = [
   {
     path: '/',
@@ -207,7 +252,8 @@ const routes = [
   },
   categoriesPages,
   partnersPages,
-  operationsPages
+  operationsPages,
+  benefitsPages
 ];
 
 export default routes;

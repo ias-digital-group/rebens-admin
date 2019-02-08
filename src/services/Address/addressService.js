@@ -1,5 +1,6 @@
 import { HTTP } from '../../http';
 import config from '../../config';
+
 export default {
   findAll: request => {
     return new Promise((resolve, reject) => {
@@ -22,10 +23,53 @@ export default {
       );
     });
   },
-  findAllByPartner: partnerId => {
+  findAllbyAssociation: function(request) {
+    let ret;
+    switch (request.parent) {
+      case 'partners':
+        ret = this.findAllByPartner(request);
+        break;
+      case 'benefits':
+        ret = this.findAllByBenefit(request);
+        break;
+      default:
+        ret = null;
+        break;
+    }
+    return ret;
+  },
+  findAllByPartner: function(request) {
     return new Promise((resolve, reject) => {
+      if (!request || request.parentId == 0) {
+        reject(new Error('Objeto request invalido'));
+      }
       HTTP.get(
-        config.apiEndpoints.partnerUri.concat(`${partnerId}/address`)
+        config.apiEndpoints.partnerUri.concat(
+          `${request.parentId}/address?page=${request.page}&pageItems=${
+            request.pageItems
+          }&searchWord=${request.searchWord}&sort=${request.sort}`
+        )
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  findAllByBenefit: function(request) {
+    return new Promise((resolve, reject) => {
+      if (!request || request.parentId == 0) {
+        reject(new Error('Objeto request invalido'));
+      }
+      HTTP.get(
+        config.apiEndpoints.benefitUri.concat(
+          `${request.parentId}/address?page=${request.page}&pageItems=${
+            request.pageItems
+          }&searchWord=${request.searchWord}&sort=${request.sort}`
+        )
       ).then(
         response => {
           resolve(response.data);
@@ -51,6 +95,94 @@ export default {
   create: model => {
     return new Promise((resolve, reject) => {
       HTTP.post(config.apiEndpoints.addressUri, model).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  assiciateAddress: function(request) {
+    let ret;
+    switch (request.parent) {
+      case 'partners':
+        ret = this.associatePartner(request.id, request.parentId);
+        break;
+      case 'benefits':
+        ret = this.associateBenefit(request.id, request.parentId);
+        break;
+      default:
+        ret = null;
+        break;
+    }
+    return ret;
+  },
+  unlinkAddress: function(request) {
+    let ret;
+    switch (request.parent) {
+      case 'partners':
+        ret = this.deletePartner(request.id, request.parentId);
+        break;
+      case 'benefits':
+        ret = this.deleteBenefit(request.id, request.parentId);
+        break;
+      default:
+        ret = null;
+        break;
+    }
+    return ret;
+  },
+  deletePartner: function(id, partnerId) {
+    return new Promise((resolve, reject) => {
+      HTTP.delete(
+        config.apiEndpoints.partnerUri.concat(`${partnerId}/address/${id}`)
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  deleteBenefit: function(id, benefitId) {
+    return new Promise((resolve, reject) => {
+      HTTP.delete(
+        config.apiEndpoints.benefitUri.concat(`${benefitId}/address/${id}`)
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  associatePartner: function(id, partnerId) {
+    return new Promise((resolve, reject) => {
+      HTTP.post(config.apiEndpoints.partnerUri.concat('addaddress'), {
+        idPartner: partnerId,
+        idAddress: id
+      }).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  associateBenefit: function(id, benefitId) {
+    return new Promise((resolve, reject) => {
+      HTTP.post(config.apiEndpoints.benefitUri.concat('addaddress'), {
+        idBenefit: benefitId,
+        idAddress: id
+      }).then(
         response => {
           resolve(response.data);
         },
