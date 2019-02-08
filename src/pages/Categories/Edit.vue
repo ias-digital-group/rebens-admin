@@ -19,22 +19,6 @@
           </div>
         </div>
         <div class="row">
-          <label class="col-md-3 col-form-label">Ordem</label>
-          <div class="col-md-2">
-            <base-input 
-              required
-              v-model="model.order"
-              v-validate="modelValidations.order"
-              type="tel"
-              :error="getError('order')"
-              name="order"
-              placeholder="Ordem" 
-              maxlength='4' 
-              :inputMask="['####']">
-            </base-input>
-          </div>
-        </div>
-        <div class="row">
           <label class="col-md-3 col-form-label">Categoria pai</label>
           <div class="col-md-9">
             <el-select
@@ -62,39 +46,18 @@
               </div>
             </div>
         </div>
-        <template v-if="model.icon">
-          <div class="row">
-            <label class="col-md-3 col-form-label">Icone</label>
-            <div class="col-md-9">
-              <div>
-                <img :src="model.icon" class="img-preview" />
-                <base-button @click="model.icon = ''" class="btn-simple btn-file" type="danger">
-                  <i class="fas fa-times"></i>
-                </base-button>
-              </div>
-            </div>
-          </div>
-        </template>
-        <template v-else>
-          <div class="row">
-            <label class="col-md-3 col-form-label">Icone</label>
-            <div class="col-md-9">
-              <image-upload @change="onImageChange" change-text="Alterar" remove-text="Remover" select-text="Selecione uma imagem" />
-            </div>
-          </div>
-        </template>
         <div class="row">
-          <label class="col-md-3 col-form-label"></label>
-          <div class="col-md-9">
+          <div class="col-md-12">
+            <base-link class="btn mt-3 btn-simple btn-primary" to="/categories">Voltar</base-link>
             <base-button 
-              class="mt-3" 
+              class="mt-3 pull-right" 
               native-type="submit" 
               type="info"
               @click.native.prevent="validate"
               :loading="submitLoading">
               Salvar
             </base-button>
-            <base-link class="btn mt-3 btn-secondary" to="/categories">Voltar</base-link>
+            
           </div>
         </div>
       </form>
@@ -125,7 +88,7 @@ export default {
       image: null,
       model: {
         name: '',
-        order: null,
+        order: 1,
         idParent: null,
         active: false,
         icon: ''
@@ -157,33 +120,7 @@ export default {
       this.$validator.validateAll().then(isValid => {
         if (isValid) {
           self.submitLoading = true;
-          if (self.image) {
-            helperService.uploadFile(self.image).then(
-              response => {
-                if (response.status != 200) {
-                  self.$notify({
-                    type: 'primary',
-                    message: response.message,
-                    icon: 'tim-icons icon-bell-55'
-                  });
-                  self.submitLoading = false;
-                  return;
-                }
-                self.model.icon = response.data.url;
-                self.saveCategory(self);
-              },
-              err => {
-                self.$notify({
-                  type: 'primary',
-                  message: err.message,
-                  icon: 'tim-icons icon-bell-55'
-                });
-                self.submitLoading = false;
-              }
-            );
-          } else {
             self.saveCategory(self);
-          }
         }
       });
     },
@@ -248,7 +185,7 @@ export default {
       this.selectLoading = true;
       categoryService.getListTree().then(
         response => {
-          self.categoriesList.push({ id: null, name: '' });
+          self.categoriesList.push({ id: null, name: 'Raiz' });
           _.each(response.data, function(el) {
             if (el.id != self.id) {
               self.categoriesList.push({ id: el.id, name: el.name });
@@ -260,9 +197,6 @@ export default {
           self.selectLoading = false;
         }
       );
-    },
-    onImageChange(file) {
-      this.image = file;
     }
   },
   created() {
@@ -270,8 +204,3 @@ export default {
   }
 };
 </script>
-<style scoped>
-.img-preview {
-  max-width: 100px;
-}
-</style>

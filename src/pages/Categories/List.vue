@@ -4,11 +4,17 @@
       <card card-body-classes="table-full-width">
         <template slot="header">
           <h4 class="card-title">{{$t('pages.categories.title')}}
-            <base-link to="/categories/new" class="btn btn-icon btn-simple btn-twitter btn-sm"><i class="tim-icons icon-simple-add"></i></base-link>
+          <base-link to="/categories/new" class="btn btn-icon btn-simple btn-twitter btn-sm"><i class="tim-icons icon-simple-add"></i></base-link>  
           </h4>
+          
         </template>
         <div>
           <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
+            <el-select class="select-primary mb-3 pagination-select" v-model="pagination.perPage" :placeholder="$t('pages.categories.perpage-placeholder')" v-if="!loading">
+              <el-option class="select-primary" v-for="item in pagination.perPageOptions" :key="item" :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
             <base-input>
               <el-input
                 type="search"
@@ -40,12 +46,10 @@
           </el-table>
         </div>
         <div slot="footer" class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
-          <div class="">
-            <el-select class="select-primary mb-3 pagination-select" v-model="pagination.perPage" :placeholder="$t('pages.categories.perpage-placeholder')" v-if="!loading">
-              <el-option class="select-primary" v-for="item in pagination.perPageOptions" :key="item" :label="item"
-                :value="item">
-              </el-option>
-            </el-select>
+          <div>
+            <p class="card-category">
+                
+            </p>
           </div>
           <base-pagination class="pagination-no-border" v-model="pagination.currentPage" :per-page="pagination.perPage"
             :total="total" v-on:input="onPageChanged">

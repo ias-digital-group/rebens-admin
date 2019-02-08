@@ -50,17 +50,17 @@
                 </div>
               </template>
               <div class="row">
-                <label class="col-md-3 col-form-label"></label>
-                <div class="col-md-9">
+                <div class="col-md-12">
+                  <base-link class="btn mt-3 btn-primary btn-simple" to="/partners">Voltar</base-link>
                   <base-button 
-                    class="mt-3" 
+                    class="mt-3 pull-right" 
                     native-type="submit" 
                     type="info"
                     @click.native.prevent="validate"
                     :loading="submitLoading">
                     Salvar
                   </base-button>
-                  <base-link class="btn mt-3 btn-secondary" to="/partners">Voltar</base-link>
+                  
                 </div>
               </div>
             </form>

@@ -2,12 +2,8 @@
   <div class="sidebar" :data="backgroundColor">
     <div class="sidebar-wrapper" ref="sidebarScrollArea">
       <div class="logo">
-        <a href="/dashboard" class="simple-text logo-mini">
-          <img :src="logo" alt="app-logo" />
-        </a>
-        <a href="/dashboard" class="simple-text logo-normal">
-          {{ title }}
-        </a>
+        <base-link class="simple-text logo-mini" to="/dashboard"><img :src="logo" alt="app-logo" /></base-link>
+        <base-link class="simple-text logo-normal" to="/dashboard">{{ title }}</base-link>
       </div>
       <slot></slot>
       <ul class="nav">
