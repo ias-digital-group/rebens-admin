@@ -46,7 +46,7 @@
         "subtitle": "Identifique-se",
         "input-email": "e-mail",
         "input-password": "senha",
-        "signin-button": "Entrar"
+        "signin-button": "ENTRAR"
       }
     },
     "navbar":{
@@ -58,7 +58,7 @@
     "footer":{
       "aboutus": "Sobre nós",
       "blog": "Blog",
-      "company": "IAS Digital Group",
+      "company": "Rebens",
       "copyrightphrase1":"feito com ",
       "copyrightphrase2":"por ",
       "copyrightphrase3":""

@@ -15,7 +15,7 @@
     </div>
 
     <ul class="navbar-nav" :class="'ml-auto'">
-      <div class="search-bar input-group" @click="searchModalVisible = true;">
+      <div hidden class="search-bar input-group" @click="searchModalVisible = true;">
         <!--
           <input type="text" class="form-control" placeholder="Search...">
           <div class="input-group-addon"><i class="tim-icons icon-zoom-split"></i></div>
@@ -29,7 +29,7 @@
         <input slot="header" v-model="searchQuery" type="text" class="form-control" id="inlineFormInputGroup"
           placeholder="SEARCH" />
       </modal>
-      <base-dropdown tag="li" :menu-on-right="true" title-tag="a" class="nav-item">
+      <base-dropdown hidden tag="li" :menu-on-right="true" title-tag="a" class="nav-item">
         <a slot="title" href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="true">
           <div class="notification d-none d-lg-block d-xl-block"></div>
           <i class="tim-icons icon-sound-wave"></i>

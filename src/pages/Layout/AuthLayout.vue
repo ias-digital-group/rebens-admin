@@ -1,14 +1,14 @@
 <template>
   <div>
     <notifications></notifications>
-    <base-nav v-model="showMenu" type="white" :transparent="true" menu-classes="justify-content-end" class="auth-navbar fixed-top">
+    <!-- <base-nav v-model="showMenu" type="white" :transparent="true" menu-classes="justify-content-end" class="auth-navbar fixed-top">
       <div slot="brand" class="navbar-wrapper">
         <a class="navbar-brand" href="#">{{ $t('pages.login.title') }}</a>
       </div>
 
       <ul class="navbar-nav">
       </ul>
-    </base-nav>
+    </base-nav> -->
 
     <div class="wrapper wrapper-full-page">
       <div class="full-page" :class="pageClass">

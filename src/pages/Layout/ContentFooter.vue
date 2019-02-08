@@ -1,7 +1,7 @@
 <template>
   <footer class="footer">
     <div class="container-fluid">
-      <ul class="nav">
+      <!-- <ul class="nav">
         <li class="nav-item">
           <a href="http://iasdigitalgroup.com/" target="_blank" rel="noopener" class="nav-link">
             {{$t("footer.company")}}
@@ -12,10 +12,10 @@
             {{$t("footer.aboutus")}}
           </a>
         </li>
-      </ul>
+      </ul> -->
       <div class="copyright">
         &copy; {{ year }}, {{$t("footer.copyrightphrase1")}}<i class="tim-icons icon-heart-2"></i> {{$t("footer.copyrightphrase2")}}
-        <a href="https://iasdigitalgroup.com" target="_blank">{{$t("footer.company")}}</a>
+        <a href="http://rebens.com.br" target="_blank">{{$t("footer.company")}}</a>
         {{$t("footer.copyrightphrase3")}}
       </div>
     </div>

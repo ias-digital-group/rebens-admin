@@ -32,7 +32,7 @@
 
           <div slot="footer">
             <base-button 
-              type="primary" 
+              type="info" 
               class="mb-3" 
               size="lg" 
               native-type="submit"
