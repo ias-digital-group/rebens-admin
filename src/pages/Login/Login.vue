@@ -4,7 +4,7 @@
       <form @submit.prevent>
         <card class="card-login card-white">
           <template slot="header">
-            <img src="img/card-primary.png" alt="" />
+            <img src="img/logo-login2.png" alt="" />
             
           </template>
 
@@ -32,7 +32,7 @@
 
           <div slot="footer">
             <base-button 
-              type="primary" 
+              type="info" 
               class="mb-3" 
               size="lg" 
               native-type="submit"

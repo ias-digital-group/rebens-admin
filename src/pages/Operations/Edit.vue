@@ -5,6 +5,20 @@
       <h4 slot="header" class="card-title">{{$t('pages.operations.title')}}</h4>
       <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
         <div class="row">
+          <label class="col-md-3 col-form-label">Código</label>
+          <div class="col-md-9">
+            <base-input 
+              required
+              v-model="model.code"
+              v-validate="modelValidations.codigo"
+              type="text"
+              :error="getError('codigo')"
+              name="codigo"
+              placeholder="Codigo" 
+              maxlength='300'></base-input>
+          </div>
+        </div>
+        <div class="row">
           <label class="col-md-3 col-form-label">Titulo</label>
           <div class="col-md-9">
             <base-input 
