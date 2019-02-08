@@ -5,7 +5,6 @@
         <card class="card-login card-white">
           <template slot="header">
             <img src="img/logo-login.png" alt="" />
-            
           </template>
 
           <div>

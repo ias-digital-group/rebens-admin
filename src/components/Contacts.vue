@@ -159,7 +159,7 @@ export default {
     [TableColumn.name]: TableColumn,
     [Option.name]: Option,
     [Select.name]: Select,
-    [AddressForm.name]: AddressForm,
+    AddressForm,
     BasePagination,
     Modal
   },
@@ -294,8 +294,12 @@ export default {
                 self.formLoading = false;
                 self.fetchData();
               },
-              () => {
-                console.log('erro');
+              err => {
+                self.$notify({
+                  type: 'primary',
+                  message: err.message,
+                  icon: 'tim-icons icon-bell-55'
+                });
                 self.formLoading = false;
               }
             );
