@@ -6,8 +6,8 @@ import AccessDenied from 'src/pages/GeneralViews/AccessDenied.vue';
 import i18n from '../i18n';
 
 // Dashboard pages
-// const Dashboard = () =>
-//   import(/* webpackChunkName: "dashboard" */ 'src/pages/Dashboard/Dashboard.vue');
+const Dashboard = () =>
+  import(/* webpackChunkName: "dashboard" */ 'src/pages/Dashboard/Dashboard.vue');
 
 const Content = () =>
   import(/* webpackChunkName: "dashboard" */ 'src/pages/Layout/Content.vue');
@@ -205,7 +205,7 @@ const routes = [
       {
         path: '/dashboard',
         name: i18n.t('pages.dashboard.title'),
-        components: { default: Content },
+        components: { default: Dashboard },
         meta: {
           requiresAuth: true,
           title: i18n.t('pages.dashboard.title')
