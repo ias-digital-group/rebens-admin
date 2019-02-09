@@ -68,7 +68,6 @@
 <script>
 import { Select, Option } from 'element-ui';
 import categoryService from '../../services/Category/categoryService';
-import helperService from '../../services/Helper/helperService';
 import _ from 'lodash';
 import { ImageUpload } from 'src/components/index';
 export default {
@@ -120,7 +119,7 @@ export default {
       this.$validator.validateAll().then(isValid => {
         if (isValid) {
           self.submitLoading = true;
-            self.saveCategory(self);
+          self.saveCategory(self);
         }
       });
     },

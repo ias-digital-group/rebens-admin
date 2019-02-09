@@ -9,8 +9,8 @@ import i18n from '../i18n';
 const Dashboard = () =>
   import(/* webpackChunkName: "dashboard" */ 'src/pages/Dashboard/Dashboard.vue');
 
-const Content = () =>
-  import(/* webpackChunkName: "dashboard" */ 'src/pages/Layout/Content.vue');
+// const Content = () =>
+//   import(/* webpackChunkName: "dashboard" */ 'src/pages/Layout/Content.vue');
 
 const Login = () =>
   import(/* webpackChunkName: "dashboard" */ 'src/pages/Login/Login.vue');
