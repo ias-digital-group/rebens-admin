@@ -17,12 +17,7 @@
     &.active:focus,
     &.active:hover
      {
-        background-color: $btn-states-color !important;
-        background-image: linear-gradient(to bottom left, $btn-color, $btn-states-color, $btn-color) !important;
-        background-image: -webkit-linear-gradient(to bottom left, $btn-color, $btn-states-color, $btn-color) !important;
-        background-image: -o-linear-gradient(to bottom left, $btn-color, $btn-states-color, $btn-color) !important;
-        background-image: -moz-linear-gradient(to bottom left, $btn-color, $btn-states-color, $btn-color) !important;
-        color: $white;
+        
         box-shadow: none;
     }
 
@@ -49,7 +44,6 @@
         &.focus,
         &:active,
         &.active {
-            background-color: $btn-color;
             border-color: $btn-color;
         }
     }
@@ -221,8 +215,6 @@
     &:not(:disabled):not(.disabled):active,
     &:not(:disabled):not(.disabled).active,
     .show>&.dropdown-toggle {
-        color: color-yiq($active-background);
-        background-color: $active-background;
         @if $enable-gradients {
             background-image: none; // Remove the gradient for the pressed/active state
         }

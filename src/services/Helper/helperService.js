@@ -58,6 +58,20 @@ export default {
         );
     });
   },
+  findAllBannerTypes: () => {
+    return new Promise((resolve, reject) => {
+      cachedHttp
+        .get(config.apiEndpoints.helperUri.concat('listBannerType'))
+        .then(
+          response => {
+            resolve(response.data);
+          },
+          error => {
+            reject(error);
+          }
+        );
+    });
+  },
   uploadFile: file => {
     return new Promise((resolve, reject) => {
       var formData = new FormData();

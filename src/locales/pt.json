@@ -50,6 +50,20 @@
           "actions": "Ações"
         }
       },
+      "banners": {
+        "title": "Banners",
+        "perpage-placeholder": "Por página",
+        "emptytext": "...",
+        "recordcount-message": "Total de baners:",
+        "grid": {
+          "id": "ID",
+          "name": "Nome",
+          "type": "Tipo",
+          "order": "Ordem",
+          "actions": "Ações",
+          "active":"Status"
+        }
+      },
       "access-denied": {
         "title": "Acesso negado"
       },
@@ -81,6 +95,7 @@
       "dashboard": "Dashboard",
       "categories": "Categorias",
       "partners": "Parceiros",
+      "banners": "Banners",
       "benefits": "Benefícios",
       "operations": "Operações",
       "pages": "Pages",

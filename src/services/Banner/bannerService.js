@@ -1,7 +1,5 @@
 import { HTTP } from '../../http';
-import _ from 'lodash';
 import config from '../../config';
-
 export default {
   findAll: request => {
     return new Promise((resolve, reject) => {
@@ -9,16 +7,13 @@ export default {
         ? request
         : { page: 0, pageItems: 30, searchWord: '', sort: 'name ASC' };
       HTTP.get(
-        config.apiEndpoints.benefitUri.concat(
+        config.apiEndpoints.bannerUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
             request.searchWord
           }&sort=${request.sort}`
         )
       ).then(
         response => {
-          _.each(response.data.data, function(el) {
-            el.activeName = el.active ? 'Sim' : 'Não';
-          });
           resolve(response.data);
         },
         error => {
@@ -29,7 +24,7 @@ export default {
   },
   get: id => {
     return new Promise((resolve, reject) => {
-      HTTP.get(config.apiEndpoints.benefitUri.concat(id)).then(
+      HTTP.get(config.apiEndpoints.bannerUri.concat(id)).then(
         response => {
           resolve(response.data);
         },
@@ -41,7 +36,7 @@ export default {
   },
   create: model => {
     return new Promise((resolve, reject) => {
-      HTTP.post(config.apiEndpoints.benefitUri, model).then(
+      HTTP.post(config.apiEndpoints.bannerUri, model).then(
         response => {
           resolve(response.data);
         },
@@ -53,7 +48,7 @@ export default {
   },
   update: model => {
     return new Promise((resolve, reject) => {
-      HTTP.put(config.apiEndpoints.benefitUri, model).then(
+      HTTP.put(config.apiEndpoints.bannerUri, model).then(
         response => {
           resolve(response.data);
         },
@@ -65,7 +60,7 @@ export default {
   },
   delete: id => {
     return new Promise((resolve, reject) => {
-      HTTP.delete(config.apiEndpoints.benefitUri.concat(id)).then(
+      HTTP.delete(config.apiEndpoints.bannerUri.concat(id)).then(
         response => {
           resolve(response.data);
         },
@@ -73,21 +68,6 @@ export default {
           reject(error);
         }
       );
-    });
-  },
-  findAllActive: () => {
-    return new Promise((resolve, reject) => {
-        HTTP.get(config.apiEndpoints.benefitUri.concat('active'))
-        .then(
-          response => {
-            console.log('findAllActive.response', response);
-            resolve(response.data);
-          },
-          error => {
-            console.log('findAllActive.error', error);
-            reject(error);
-          }
-        );
     });
   }
 };

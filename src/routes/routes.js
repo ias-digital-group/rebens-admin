@@ -39,6 +39,9 @@ const BenefitsList = () =>
 const BenefitsEdit = () =>
   import(/* webpackChunkName: "dashboard" */ 'src/pages/Benefits/Edit.vue');
 
+const BannersList = () => import('src/pages/Banners/List.vue');
+const BannersEdit = () => import('src/pages/Banners/Edit.vue');
+
 let categoriesPages = {
   path: '/categories',
   component: DashboardLayout,
@@ -156,6 +159,45 @@ let operationsPages = {
   ]
 };
 
+let bannersPages = {
+  path: '/banners',
+  component: DashboardLayout,
+  meta:{
+    requiresAuth: true,
+    title: i18n.t('pages.banners.title')
+  },
+  children:[
+    {
+      path: '',
+      name:'banner',
+      component: BannersList,
+      meta:{
+        requiresAuth: true,
+        title:i18n.t('page.banners.title')
+      }
+    },
+    {
+      path: 'new',
+      name: `new_banner`,
+      component: BannersEdit,
+      meta: {
+        requiresAuth: true,
+        title: i18n.t('pages.banners.title')
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_banner',
+      props: true,
+      component: BannersEdit,
+      meta: {
+        requiresAuth: true,
+        title: i18n.t('pages.banners.title')
+      }
+    }
+  ]
+}
+
 let benefitsPages = {
   path: '/benefits',
   component: DashboardLayout,
@@ -251,6 +293,7 @@ const routes = [
     }
   },
   categoriesPages,
+  bannersPages,
   partnersPages,
   operationsPages,
   benefitsPages
