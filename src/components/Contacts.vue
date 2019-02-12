@@ -148,7 +148,9 @@
 </template>
 <script>
 import { Table, TableColumn, Select, Option } from 'element-ui';
-import { AddressForm, BasePagination, Modal } from 'src/components';
+import { BasePagination } from 'src/components';
+import AddressForm from 'src/components/AddressForm.vue';
+import Modal from 'src/components/Modal.vue';
 import contactService from '../services/Contact/contactService';
 import listPage from '../mixins/listPage';
 import _ from 'lodash';
@@ -159,9 +161,9 @@ export default {
     [TableColumn.name]: TableColumn,
     [Option.name]: Option,
     [Select.name]: Select,
-    AddressForm,
+    [AddressForm.name]: AddressForm,
     BasePagination,
-    Modal
+    [Modal.name]: Modal
   },
   props: {
     parent: String,
@@ -169,7 +171,6 @@ export default {
   },
   data() {
     return {
-      loading: false,
       formLoading: false,
       internalName: 'components.contacts.list',
       sortField: 'name',
