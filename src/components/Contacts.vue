@@ -417,6 +417,9 @@ export default {
       this.model.address.name = '';
       this.model.address.id = 0;
       this.$validator.reset();
+    },
+    created() {
+      this.modal.visible = false;
     }
   }
 };

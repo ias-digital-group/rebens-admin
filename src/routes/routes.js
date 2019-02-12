@@ -173,7 +173,7 @@ let bannersPages = {
       component: BannersList,
       meta:{
         requiresAuth: true,
-        title:i18n.t('page.banners.title')
+        title: i18n.t('pages.banners.title')
       }
     },
     {
