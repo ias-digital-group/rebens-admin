@@ -77,17 +77,16 @@ export default {
   },
   findAllActive: () => {
     return new Promise((resolve, reject) => {
-        HTTP.get(config.apiEndpoints.benefitUri.concat('active'))
-        .then(
-          response => {
-            console.log('findAllActive.response', response);
-            resolve(response.data);
-          },
-          error => {
-            console.log('findAllActive.error', error);
-            reject(error);
-          }
-        );
+      HTTP.get(config.apiEndpoints.benefitUri.concat('active')).then(
+        response => {
+          console.log('findAllActive.response', response);
+          resolve(response.data);
+        },
+        error => {
+          console.log('findAllActive.error', error);
+          reject(error);
+        }
+      );
     });
   }
 };

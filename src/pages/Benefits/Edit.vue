@@ -252,6 +252,9 @@
           <el-tab-pane label="Endereços" :disabled="viewAction == 'new' ? true : false">
             <addresses v-loading="formLoading" parent="benefits" :parentId="id" ref="addresses"></addresses>
           </el-tab-pane>
+          <el-tab-pane label="Operações" :disabled="viewAction == 'new' ? true : false">
+            <operations v-loading="formLoading" parent="benefits" :parentId="id"></operations>
+          </el-tab-pane>
         </el-tabs>
       </card>
     </div>
@@ -260,6 +263,7 @@
 <script>
 import { Select, Option, Tabs, TabPane, DatePicker } from 'element-ui';
 import Addresses from 'src/components/Addresses';
+import Operations from 'src/components/Operations';
 import benefitService from '../../services/Benefit/benefitService';
 import helperService from '../../services/Helper/helperService';
 import partnerService from '../../services/Partner/partnerService';
@@ -275,7 +279,8 @@ export default {
     [DatePicker.name]: DatePicker,
     Addresses,
     ImageUpload,
-    Money
+    Money,
+    Operations
   },
   props: {
     id: String
