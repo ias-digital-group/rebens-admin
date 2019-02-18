@@ -45,11 +45,6 @@ export default {
           prop: 'operationName',
           label: 'Nome',
           minWidth: 200
-        },
-        {
-          prop: 'zipcode',
-          label: 'Cep',
-          minWidth: 200
         }
       ]
     }
