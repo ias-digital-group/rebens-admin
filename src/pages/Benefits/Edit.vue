@@ -195,10 +195,10 @@
                 </div>
               </template>
               <div class="row">
-                <label class="col-md-3 col-form-label">Teaser do benefício</label>
+                <label class="col-md-3 col-form-label">Detalhes</label>
                 <div class="col-md-9">
                   <base-input>
-                    <textarea class="form-control" v-model="model.teaser" cols="30" rows="3"></textarea>
+                    <textarea class="form-control" v-model="model.detail" cols="30" rows="3"></textarea>
                   </base-input>
                 </div>
               </div>
@@ -211,26 +211,10 @@
                 </div>
               </div>
               <div class="row">
-                <label class="col-md-3 col-form-label">Descrição do funcionamento on-line</label>
+                <label class="col-md-3 col-form-label">Como usar</label>
                 <div class="col-md-9">
                   <base-input>
-                    <textarea class="form-control" v-model="model.descriptionOnLine" cols="30" rows="3"></textarea>
-                  </base-input>
-                </div>
-              </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label">Descrição do funcionamento off-line</label>
-                <div class="col-md-9">
-                  <base-input>
-                    <textarea class="form-control" v-model="model.descriptionOffLine" cols="30" rows="3"></textarea>
-                  </base-input>
-                </div>
-              </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label">Funcionamento voucher</label>
-                <div class="col-md-9">
-                  <base-input>
-                    <textarea class="form-control" v-model="model.voucherOperation" cols="30" rows="3"></textarea>
+                    <textarea class="form-control" v-model="model.howToUse" cols="30" rows="3"></textarea>
                   </base-input>
                 </div>
               </div>
@@ -320,10 +304,8 @@ export default {
         idIntegrationType: 0,
         idPartner: 0,
         benefitCall: '',
-        teaser: '',
-        descriptionOnLine: '',
-        descriptionOffLine: '',
-        voucherOperation: '',
+        detail: '',
+        howToUse: '',
         active: false
       },
       modelValidations: {
