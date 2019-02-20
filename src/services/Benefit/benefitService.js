@@ -27,6 +27,47 @@ export default {
       );
     });
   },
+  getCategories: id => {
+    return new Promise((resolve, reject) => {
+      HTTP.get(config.apiEndpoints.benefitUri.concat(`${id}/category`)).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  addcategory: function(id, categoryId) {
+    return new Promise((resolve, reject) => {
+      HTTP.post(config.apiEndpoints.benefitUri.concat('addcategory'), {
+        idCategory: categoryId,
+        idBenefit: id
+      }).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  deleteCategory: function(id, categoryId) {
+    return new Promise((resolve, reject) => {
+      HTTP.delete(
+        config.apiEndpoints.benefitUri.concat(`${id}/category/${categoryId}`)
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
   get: id => {
     return new Promise((resolve, reject) => {
       HTTP.get(config.apiEndpoints.benefitUri.concat(id)).then(

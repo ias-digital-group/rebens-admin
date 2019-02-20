@@ -233,11 +233,14 @@
               </div>
             </form>
           </el-tab-pane>
-          <el-tab-pane label="Endereços" :disabled="viewAction == 'new' ? true : false">
-            <addresses v-loading="formLoading" parent="benefits" :parentId="id" ref="addresses"></addresses>
-          </el-tab-pane>
           <el-tab-pane label="Operações" :disabled="viewAction == 'new' ? true : false">
             <operations v-loading="formLoading" parent="benefits" :parentId="id"></operations>
+          </el-tab-pane>
+          <el-tab-pane label="Categorias" :disabled="viewAction == 'new' ? true : false">
+            <categories v-loading="formLoading" parent="benefits" :parentId="id"></categories>
+          </el-tab-pane>
+          <el-tab-pane label="Endereços" :disabled="viewAction == 'new' ? true : false">
+            <addresses v-loading="formLoading" parent="benefits" :parentId="id" ref="addresses"></addresses>
           </el-tab-pane>
         </el-tabs>
       </card>
@@ -247,6 +250,7 @@
 <script>
 import { Select, Option, Tabs, TabPane, DatePicker } from 'element-ui';
 import Addresses from 'src/components/Addresses';
+import Categories from 'src/components/Categories';
 import Operations from 'src/components/Operations';
 import benefitService from '../../services/Benefit/benefitService';
 import helperService from '../../services/Helper/helperService';
@@ -264,7 +268,8 @@ export default {
     Addresses,
     ImageUpload,
     Money,
-    Operations
+    Operations,
+    Categories
   },
   props: {
     id: String
