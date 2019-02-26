@@ -53,7 +53,7 @@
       </base-dropdown>
       <base-dropdown tag="li" :menu-on-right="true" title-tag="a" class="nav-item" menu-classes="dropdown-navbar">
         <a slot="title" href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="true">
-          <div class="photo"><img src="img/mike.jpg" /></div>
+          <div class="photo"><img src="img/default-avatar.png" /></div>
           <b class="caret d-none d-lg-block d-xl-block"></b>
           <p class="d-lg-none">{{$t('navbar.user.logout')}}</p>
         </a>

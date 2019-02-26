@@ -102,16 +102,15 @@
         <h4>Endereço</h4>
         <address-form ref="addressForm" :address.sync="model.address"></address-form>
         <div class="row">
-          <label class="col-md-3 col-form-label"></label>
-          <div class="col-md-9">
+          <div class="col-md-12">
+            <a class="btn mt-3 btn-secondary btn-simple" @click="clearModel()">Cancelar</a>
             <base-button 
-              class="mt-3" 
+              class="mt-3 pull-right" 
               native-type="submit" 
               type="info"
               @click.native.prevent="saveContact">
               Salvar
             </base-button>
-            <a class="btn mt-3 btn-secondary" @click="clearModel()">Cancelar</a>
           </div>
         </div>
       </form>

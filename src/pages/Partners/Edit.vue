@@ -21,6 +21,14 @@
                 </div>
               </div>
               <div class="row">
+                <label class="col-md-3 col-form-label">Descrição</label>
+                <div class="col-md-9">
+                  <base-input>
+                    <textarea class="form-control" v-model="model.description" cols="30" rows="3"></textarea>
+                  </base-input>
+                </div>
+              </div>
+              <div class="row">
                 <label class="col-md-3 col-form-label"></label>
                 <div class="col-md-9">
                   <div class="form-group">
@@ -104,7 +112,8 @@ export default {
       model: {
         name: '',
         active: false,
-        logo: ''
+        logo: '',
+        description:''
       },
       modelValidations: {
         name: {

@@ -10,17 +10,19 @@
             <el-table-column v-for="column in tableColumns" :key="column.label" :min-width="column.minWidth" :prop="column.prop"
                 :label="column.label">
             </el-table-column>
-            <el-table-column :min-width="135" align="right" label="Ações">
-                <div slot-scope="props">
-                    <base-button @click.native="handleEdit(props.$index, props.row);" class="edit btn-link" type="success"
-                        size="sm" icon>
-                        <i class="tim-icons icon-pencil"></i>
-                    </base-button>
-                </div>
-            </el-table-column>
             </el-table>
         </div>
+        <div class="col-md-12">
+          <base-button 
+            class="mt-3 pull-right" 
+            native-type="submit" 
+            type="info"
+            @click.native.prevent="saveOperations">
+            Salvar
+          </base-button>
+        </div>
     </div>
+    
 </template>
 <script>
 import { Table, TableColumn, Select, Option } from 'element-ui';
@@ -69,25 +71,32 @@ export default {
         }
       );     
     },
-    handleEdit(index, row) {
+    saveOperations(){
       const self = this;
       this.$data.loading = true;
-      if (row.checked) {
+      var count = self.$data.tableData.length
+      for(var i=0;i<self.$data.tableData.length ; i++)
+      {
+        const row = self.$data.tableData[i];
+        if (row.checked) {
         operationService.associateOperation({
         parent: self.parent,
         parentId: self.parentId,
         id: row.idOperation,
         positionId: 1
         }).then(response => {
-          self.$notify({
-            type: 'primary',
-            message: response
-            ? response.message
-            : 'Operação atualizada com sucesso.',
-            icon: 'tim-icons icon-bell-55'
-          });
-          self.loading = false;
-          self.fetchData();
+          count --;
+          if(count == 0){
+            self.$notify({
+              type: 'primary',
+              message: response
+              ? response.message
+              : 'Associações atualizadas com sucesso.',
+              icon: 'tim-icons icon-bell-55'
+            });
+            self.loading = false;
+            self.fetchData();
+          }
         });
       } else {
         operationService.unlinkAssociation({
@@ -95,17 +104,22 @@ export default {
         parentId: self.parentId,
         id: row.idOperation
         }).then(response => {
-          self.$notify({
-            type: 'primary',
-            message: response
-            ? response.message
-            : 'Operação atualizada com sucesso.',
-            icon: 'tim-icons icon-bell-55'
-          });
-          self.loading = false;
-          self.fetchData();
+          count --;
+          if(count == 0){
+            self.$notify({
+              type: 'primary',
+              message: response
+              ? response.message
+              : 'Associações atualizadas com sucesso.',
+              icon: 'tim-icons icon-bell-55'
+            });
+            self.loading = false;
+            self.fetchData();
+          }
         })
       }
+      }
+      
     }
   }
 }
