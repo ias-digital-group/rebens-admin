@@ -20,6 +20,7 @@
         <sidebar-item :link="{ name: $t('sidebar.partners'), icon: 'fas fa-handshake', path: '/partners' }"></sidebar-item>
         <!-- <sidebar-item :link="{ name: $t('sidebar.operations'), icon: 'tim-icons icon-spaceship', path: '/operations' }"></sidebar-item> -->
         <sidebar-item :link="{ name: $t('sidebar.benefits'), icon: 'tim-icons icon-money-coins', path: '/benefits' }"></sidebar-item>
+        <sidebar-item :link="{ name: $t('sidebar.faqs'), icon: 'tim-icons icon-notes', path: '/faqs' }"></sidebar-item>
       </template>
     </side-bar>
     <div class="main-panel" :data="sidebarBackground">

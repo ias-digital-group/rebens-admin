@@ -42,6 +42,9 @@ const BenefitsEdit = () =>
 const BannersList = () => import('src/pages/Banners/List.vue');
 const BannersEdit = () => import('src/pages/Banners/Edit.vue');
 
+const FaqsList = () => import('src/pages/Faq/List.vue');
+const FaqsEdit = () => import('src/pages/Faq/Edit.vue');
+
 let categoriesPages = {
   path: '/categories',
   component: DashboardLayout,
@@ -237,6 +240,45 @@ let benefitsPages = {
   ]
 };
 
+let faqsPages = {
+  path: '/faqs',
+  component: DashboardLayout,
+  meta:{
+    requiresAuth: true,
+    title: i18n.t('pages.faqs.title')
+  },
+  children:[
+    {
+      path: '',
+      name:'faq',
+      component: FaqsList,
+      meta:{
+        requiresAuth: true,
+        title: i18n.t('pages.faqs.title')
+      }
+    },
+    {
+      path: 'new',
+      name: `new_faq`,
+      component: FaqsEdit,
+      meta: {
+        requiresAuth: true,
+        title: i18n.t('pages.faqs.title')
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_faq',
+      props: true,
+      component: FaqsEdit,
+      meta: {
+        requiresAuth: true,
+        title: i18n.t('pages.faqs.title')
+      }
+    }
+  ]
+}
+
 const routes = [
   {
     path: '/',
@@ -296,7 +338,8 @@ const routes = [
   bannersPages,
   partnersPages,
   operationsPages,
-  benefitsPages
+  benefitsPages,
+  faqsPages
 ];
 
 export default routes;

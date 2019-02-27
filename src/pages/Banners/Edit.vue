@@ -3,8 +3,8 @@
   <div class="col-md-12">
     <card :title="$t('pages.banners.title')">
       <h4 slot="header" class="card-title">{{$t('pages.banners.title')}}</h4>
-      <el-tabs>
-          <el-tab-pane label="Banner">
+      <el-tabs v-model="activeName">
+          <el-tab-pane name="banner" label="Banner">
             <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
               <div class="row">
                 <label class="col-md-3 col-form-label">Nome</label>
@@ -119,11 +119,16 @@
                 <div class="row">
                   <label class="col-md-3 col-form-label">Imagem</label>
                   <div class="col-md-9">
-                    <div>
-                      <img :src="model.image" class="img-preview" />
-                      <base-button @click="model.image = ''" class="btn-simple btn-file" type="danger">
-                        <i class="fas fa-times"></i>
-                      </base-button>
+                    <div class="fileinput">
+                      <div class="thumbnail">
+                        <img :src="model.image" class="img-preview" />
+                        
+                      </div>
+                      <div>
+                        <base-button @click="model.image = ''" class="btn-simple btn-file" type="danger">
+                          <i class="fas fa-times"></i> {{ removeText }}
+                        </base-button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -160,8 +165,8 @@
               </div>
             </form>
           </el-tab-pane>
-          <el-tab-pane label="Operações" :disabled="viewAction == 'new' ? true : false">
-            <operations v-loading="formLoading" parent="banners" :parentId="id"></operations>
+          <el-tab-pane name="operations" label="Operações" :disabled="viewAction == 'new' ? true : false">
+            <operations v-loading="formLoading" parent="banners" :parentId="id" :key="operationKey"></operations>
           </el-tab-pane>
       </el-tabs>
     </card>
@@ -187,7 +192,11 @@ export default {
     Operations
   },
   props: {
-    id: String
+    id: String,
+     removeText: {
+      type: String,
+      default: 'Remove'
+    }
   },
   data() {
     return {
@@ -195,6 +204,7 @@ export default {
       formLoading: false,
       submitLoading: false,
       image: null,
+      operationKey: 0,
       model: {
         name: '',
         order: 1,
@@ -234,6 +244,16 @@ export default {
   computed: {
     viewAction() {
       return this.$route.name == 'edit_banner' ? 'edit' : 'new';
+    },
+    activeName:{
+      get:function(){
+      if(this.$route.query && this.$route.query.tab)
+        return this.$route.query.tab == 'op' ? 'operations' : 'banner';
+      return 'banner';
+      },
+      set:function(){
+
+      }
     }
   },
   methods: {
@@ -279,13 +299,16 @@ export default {
       vm = vm ? vm : this;
       if (vm.viewAction == 'new') {
         bannerService.create(vm.model).then(
-          () => {
+          res => {
             vm.$notify({
-              type: 'primary',
+              type: 'success',
               message: 'Banner cadastrado com sucesso!',
               icon: 'tim-icons icon-bell-55'
             });
-            vm.$router.push('/banners');
+            //vm.$router.push('/banners');
+            vm.$router.push({path: `/banners/${res.id}/edit/`, query:{tab:'op'}});
+            vm.operationKey++;
+            vm.id = res.id;
             vm.submitLoading = false;
           },
           err => {
@@ -348,10 +371,8 @@ export default {
           self.selectLoading = false;
         }
       );
-      console.log('benefitService.findAllActive');
       benefitService.findAllActive().then(
         response => {
-          console.log('ok');
           self.benefits.push({ id: null, name: 'selecione' });
           _.each(response.data, function(el) {
             if (el.id != self.id) {
@@ -361,7 +382,6 @@ export default {
           self.selectLoading = false;
         },
         () => {
-          console.log('error');
           self.selectLoading = false;
         }
       );

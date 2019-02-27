@@ -57,9 +57,9 @@
           <b class="caret d-none d-lg-block d-xl-block"></b>
           <p class="d-lg-none">{{$t('navbar.user.logout')}}</p>
         </a>
-        <li class="nav-link">
+        <!-- <li class="nav-link">
           <a href="#" class="nav-item dropdown-item">{{$t('navbar.user.profile')}}</a>
-        </li>
+        </li> -->
         <div class="dropdown-divider"></div>
         <li class="nav-link">
           <a href="javascript:void(0);" @click="signout" class="nav-item dropdown-item">{{$t('navbar.user.logout')}}</a>

@@ -116,25 +116,6 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <label class="col-md-3 col-form-label mt-3">Posição</label>
-        <div class="col-md-9 col-lg-4 mt-3">
-          <base-input 
-            label="Latidude"
-            v-model="address.latitude"
-            type="text"
-            name="Latitude"
-            placeholder="Latitude"></base-input>
-        </div>
-        <div class="col-md-9 offset-md-3 offset-lg-0 col-lg-5 mt-3">
-            <base-input 
-              label="Longitude"
-              v-model="address.longitude"
-              type="text"
-              name="longitude"
-              placeholder="Longiture"></base-input>
-        </div>
-      </div>
     </div>
 </template>
 <script>

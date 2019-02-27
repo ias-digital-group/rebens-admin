@@ -161,14 +161,6 @@
                 <label class="col-md-3 col-form-label"></label>
                 <div class="col-md-9">
                   <div class="form-group">
-                    <base-checkbox v-model="model.exclusive">Exclusivo</base-checkbox>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label"></label>
-                <div class="col-md-9">
-                  <div class="form-group">
                     <base-checkbox v-model="model.active">Ativo</base-checkbox>
                   </div>
                 </div>
@@ -177,9 +169,13 @@
                 <div class="row">
                   <label class="col-md-3 col-form-label">Imagem</label>
                   <div class="col-md-9">
-                    <div>
+                    <div class="fileinput">
+                      <div class="thumbnail">
                       <img :src="model.image" class="img-preview" />
-                      <base-button @click="model.image = ''" class="btn-simple btn-file" type="danger">
+                      </div>
+                    </div>
+                    <div>
+                    <base-button @click="model.image = ''" class="btn-simple btn-file" type="danger">
                         <i class="fas fa-times"></i>
                       </base-button>
                     </div>
@@ -197,25 +193,19 @@
               <div class="row">
                 <label class="col-md-3 col-form-label">Detalhes</label>
                 <div class="col-md-9">
-                  <base-input>
-                    <textarea class="form-control" v-model="model.detail" cols="30" rows="3"></textarea>
-                  </base-input>
+                  <wysiwyg v-model="model.detail" />
                 </div>
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Chamada do benefício</label>
                 <div class="col-md-9">
-                  <base-input>
-                    <textarea class="form-control" v-model="model.benefitCall" cols="30" rows="3"></textarea>
-                  </base-input>
+                  <wysiwyg v-model="model.benefitCall" />
                 </div>
               </div>
-              <div class="row">
+              <div class="row m-b-20">
                 <label class="col-md-3 col-form-label">Como usar</label>
                 <div class="col-md-9">
-                  <base-input>
-                    <textarea class="form-control" v-model="model.howToUse" cols="30" rows="3"></textarea>
-                  </base-input>
+                  <wysiwyg v-model="model.howToUse" />
                 </div>
               </div>
               <div class="row">
@@ -426,7 +416,7 @@ export default {
       this.benefitTypeLoading = true;
       helperService.findAllBenefitsTypes().then(
         response => {
-          self.benefitTypeList.push({ id: null, name: '' });
+          //self.benefitTypeList.push({ id: null, name: 'selecione' });
           _.each(response.data, function(el) {
             self.benefitTypeList.push(el);
           });
@@ -439,7 +429,7 @@ export default {
       this.integrationTypeLoading = true;
       helperService.findAllIntegrationTypes().then(
         response => {
-          self.integrationTypeList.push({ id: null, name: '' });
+          //self.integrationTypeList.push({ id: null, name: 'selecione' });
           _.each(response.data, function(el) {
             self.integrationTypeList.push(el);
           });
@@ -452,7 +442,7 @@ export default {
       this.partnerLoading = true;
       partnerService.findAll(null).then(
         response => {
-          self.partnerList.push({ id: null, name: '' });
+          //self.partnerList.push({ id: null, name: 'selecione' });
           _.each(response.data, function(el) {
             self.partnerList.push(el);
           });

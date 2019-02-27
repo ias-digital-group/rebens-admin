@@ -64,6 +64,19 @@
           "active":"Status"
         }
       },
+      "faqs": {
+        "title": "Perguntas Frequentes",
+        "perpage-placeholder": "Por página",
+        "emptytext": "...",
+        "recordcount-message": "Total de perguntas:",
+        "grid": {
+          "id": "ID",
+          "name": "Pergunta",
+          "order": "Ordem",
+          "actions": "Ações",
+          "active":"Status"
+        }
+      },
       "access-denied": {
         "title": "Acesso negado"
       },
@@ -96,6 +109,7 @@
       "categories": "Categorias",
       "partners": "Parceiros",
       "banners": "Banners",
+      "faqs": "Perguntas Frequentes",
       "benefits": "Benefícios",
       "operations": "Operações",
       "pages": "Pages",

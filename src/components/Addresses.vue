@@ -1,13 +1,13 @@
 <template>
   <div class="row">
-    <div class="col-12">
+    <div class="col-12" v-if="showTable">
       <el-table ref="addressTable" :data="tableData" v-loading="loading" empty-text="...">
         <el-table-column v-for="column in tableColumns" :key="column.label" :min-width="column.minWidth" :prop="column.prop"
           :label="column.label">
         </el-table-column>
         <el-table-column :min-width="135" align="right" label="Ações">
           <div slot-scope="props">
-            <base-button @click.native="handleEdit(props.$index, props.row);" class="edit btn-link" type="warning"
+            <base-button @click.native="handleEdit(props.$index, props.row);" class="edit btn-link" type="info"
               size="sm" icon>
               <i class="tim-icons icon-pencil"></i>
             </base-button>
@@ -19,7 +19,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
+    <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"  v-if="showTable">
       <div class="">
         <el-select class="select-primary mb-3 pagination-select" v-model="pagination.perPage" placeholder="Por página" v-if="!loading">
           <el-option class="select-primary" v-for="item in pagination.perPageOptions" :key="item" :label="item"
@@ -30,13 +30,17 @@
       <base-pagination class="pagination-no-border" v-model="pagination.currentPage" :per-page="pagination.perPage"
         :total="total" v-on:input="onPageChanged">
       </base-pagination>
+      
     </div>
-    <div class="col-12">
+    <div class="col-12" v-if="!showForm">
+      <a class="btn mt-3 btn-success btn-simple pull-right" @click="showForm = true">Adicionar</a>
+    </div>
+
+    <div class="col-12" v-if="showForm">
       <hr>
       <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
         <address-form ref="addressForm" :address.sync="model"></address-form>
         <div class="row">
-          
           <div class="col-md-12">
             <a class="btn mt-3 btn-secondary btn-simple" @click="clearModel()">Cancelar</a>
             <base-button 
@@ -46,7 +50,6 @@
               @click.native.prevent="saveAddress">
               Salvar
             </base-button>
-            
           </div>
         </div>
       </form>
@@ -110,6 +113,8 @@ export default {
       formLoading: false,
       internalName: 'components.addresses.list',
       sortField: 'name',
+      showForm: false,
+      showTable: false,
       tableColumns: [
         {
           prop: 'name',
@@ -166,6 +171,14 @@ export default {
       addressService.findAllbyAssociation(request).then(
         response => {
           self.$data.tableData = response.data;
+          if(response.data){
+            self.showForm = response.data.length == 0;
+            self.showTable = response.data.length > 0;
+          }
+          else{
+            self.showForm = true;
+            self.showTable = false;
+          }
           self.savePageSettings(self, response.totalItems);
           self.$data.loading = false;
         },
@@ -325,6 +338,7 @@ export default {
       this.model.name = '';
       this.model.id = 0;
       this.$validator.reset();
+      this.showForm = false;
     }
   }
 };

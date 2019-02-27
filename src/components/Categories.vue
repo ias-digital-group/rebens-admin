@@ -16,6 +16,15 @@
             </div>
         </div>
     </div>
+    <div class="col-md-12">
+      <base-button 
+        class="mt-3 pull-right" 
+        native-type="submit" 
+        type="info"
+        @click.native.prevent="saveCategories">
+        Salvar
+      </base-button>
+    </div>
   </div>
 </template>
 <script>
@@ -48,9 +57,11 @@ export default {
     handleCheckChange(data, checked) {
       const self = this;
       if (checked) {
-        benefitService.addcategory(this.parentId, data.id).then(()=> self.fetchData());
-      } else {
-        benefitService.deleteCategory(this.parentId, data.id).then(()=> self.fetchData());
+        if(self.selectedCategories.indexOf(data.id) < 0){
+          self.selectedCategories.push(data.id);
+        }
+      } else if(self.selectedCategories.indexOf(data.id) >= 0){
+        self.selectedCategories.splice(self.selectedCategories.indexOf(data.id), 1);
       }
     },
     fetchData() {
@@ -62,6 +73,23 @@ export default {
       benefitService.getCategories(this.parentId).then(response => {
         self.selectedCategories = response.data;
         this.loading = false;
+      });
+    },
+    saveCategories(){
+      var ids = '';
+      for(var i=0;i<this.selectedCategories.length ; i++){
+        ids += this.selectedCategories[i] + ',';
+      }
+      ids = ids.substring(0, ids.length-1)
+      benefitService.saveCategories(this.parentId, ids).then(response => {
+        this.$notify({
+          type: 'primary',
+          message: response
+          ? response.message
+          : 'Categorias atualizadas com sucesso.',
+          icon: 'tim-icons icon-bell-55'
+        });
+        this.fetchData();
       });
     }
   }

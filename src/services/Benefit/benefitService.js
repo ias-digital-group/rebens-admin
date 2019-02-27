@@ -39,6 +39,21 @@ export default {
       );
     });
   },
+  saveCategories: function(id, categoryIds) {
+    return new Promise((resolve, reject) => {
+      HTTP.post(config.apiEndpoints.benefitUri.concat('SaveCategories'), {
+        CategoryIds: categoryIds,
+        idBenefit: id
+      }).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
   addcategory: function(id, categoryId) {
     return new Promise((resolve, reject) => {
       HTTP.post(config.apiEndpoints.benefitUri.concat('addcategory'), {
