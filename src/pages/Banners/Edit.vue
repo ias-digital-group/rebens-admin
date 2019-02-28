@@ -22,42 +22,46 @@
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Tipo</label>
+                <div class="col-md-9">
+                  <div class="form-group">
+                    <base-radio v-model="model.idType" :name="1" value="1" :inline="true">Banner Full</base-radio>
+                    <base-radio v-model="model.idType" :name="3" value="3" :inline="true">Banner Full</base-radio>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-md-3 col-form-label">É de benefício?</label>
+                <div class="col-md-9">
+                  <div class="form-group">
+                    <base-checkbox v-model="model.isBenefit">&nbsp;</base-checkbox>
+                  </div>
+                </div>
+              </div>
+              <div class="row" v-if="model.isBenefit">
+                <label class="col-md-3 col-form-label">Benefício</label>
                 <div class="col-md-2">
                   <div class="form-group">
                   <el-select
                       class="select-info"
-                      placeholder="Tipo"
-                      v-model="model.idType"
+                      placeholder="Benefício"
+                      v-model="model.idBenefit"
+                      v-validate="modelValidations.benefit"
                       v-loading.lock="selectLoading"
-                      v-validate="modelValidations.type"
+                      :error="getError('benefit')"
                       lock>
                       <el-option
-                        v-for="type in bannersTypes"
+                        v-for="b in benefits"
                         class="select-primary"
-                        :value="type.id"
-                        :label="type.name"
-                        :key="type.id"
+                        :value="b.id"
+                        :label="b.name"
+                        :key="b.id"
                       >
                       </el-option>
                     </el-select>
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label">Ordem</label>
-                <div class="col-md-2">
-                  <base-input 
-                    required
-                    v-model="model.order"
-                    v-validate="modelValidations.order"
-                    type="number"
-                    :error="getError('order')"
-                    name="order"
-                    placeholder="Ordem" 
-                    maxlength='3'></base-input>
-                </div>
-              </div>
-              <div class="row">
+              <div class="row" v-if="!model.isBenefit">
                 <label class="col-md-3 col-form-label">Link</label>
                 <div class="col-md-9">
                   <base-input 
@@ -72,35 +76,16 @@
                 </div>
               </div>
               <div class="row">
-                <label class="col-md-3 col-form-label">Benefício</label>
-                <div class="col-md-2">
-                  <div class="form-group">
-                  <el-select
-                      class="select-info"
-                      placeholder="Benefício"
-                      v-model="model.idBenefit"
-                      v-loading.lock="selectLoading"
-                      v-validate="modelValidations.benefit"
-                      lock>
-                      <el-option
-                        v-for="b in benefits"
-                        class="select-primary"
-                        :value="b.id"
-                        :label="b.name"
-                        :key="b.id"
-                      >
-                      </el-option>
-                    </el-select>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
                 <label class="col-md-3 col-form-label">Data</label>
                 <div class="col-md-9 col-lg-4">
                   <base-input label="Início">
                     <el-date-picker
                       type="date"
+                      name="start"
+                      data-vv-name="start"
+                      v-validate="modelValidations.start"
                       placeholder="Início"
+                      :error="getError('start')"
                       v-model="model.start">
                     </el-date-picker>
                   </base-input>
@@ -109,7 +94,11 @@
                   <base-input label="Fim">
                     <el-date-picker
                       type="date"
+                      name="end"
+                      data-vv-name="end"
                       placeholder="Fim"
+                      v-validate="modelValidations.end"
+                      :error="getError('end')"
                       v-model="model.end">
                     </el-date-picker>
                   </base-input>
@@ -122,7 +111,6 @@
                     <div class="fileinput">
                       <div class="thumbnail">
                         <img :src="model.image" class="img-preview" />
-                        
                       </div>
                       <div>
                         <base-button @click="model.image = ''" class="btn-simple btn-file" type="danger">
@@ -141,6 +129,21 @@
                   </div>
                 </div>
               </template>
+              
+              <div class="row">
+                <label class="col-md-3 col-form-label">Ordem</label>
+                <div class="col-md-2">
+                  <base-input 
+                    required
+                    v-model="model.order"
+                    v-validate="modelValidations.order"
+                    type="number"
+                    :error="getError('order')"
+                    name="order"
+                    placeholder="Ordem" 
+                    maxlength='3'></base-input>
+                </div>
+              </div>
               <div class="row">
                   <label class="col-md-3 col-form-label"></label>
                   <div class="col-md-9">
@@ -211,9 +214,10 @@ export default {
         image: '',
         active: false,
         link: '',
-        idType: null,
+        idType: 1,
         backgroundColor:null, 
         idBenefit:null,
+        isBenefit:false,
         start: null,
         end: null
       },
@@ -229,15 +233,19 @@ export default {
         type:{
           required:true
         },
-        link:{
-          required:true,
-          max:500
+        start:{
+          required:true
+        },
+        end:{
+          required:true
         },
         benefit:{
-          required:true
+          required:this.isBenefit
+        },
+        link:{
+          required:!this.isBenefit
         }
       },
-      bannersTypes: [],
       benefits:[]
     };
   },
@@ -263,7 +271,22 @@ export default {
     validate() {
       const self = this;
       this.$validator.validateAll().then(isValid => {
-        if (isValid) {
+        if(!self.model.start || !self.model.end)
+        {
+          self.$notify({
+            type: 'danger',
+            message: 'A data é obrigatória',
+            icon: 'tim-icons icon-bell-55'
+          });
+        }
+        else if(self.model.isBenefit && !self.model.idBenefit){
+          self.$notify({
+            type: 'danger',
+            message: 'O benefício é obrigatório',
+            icon: 'tim-icons icon-bell-55'
+          });
+        }
+        else if (isValid) {
           self.submitLoading = true;
           if (self.image) {
             helperService.uploadFile(self.image).then(
@@ -282,21 +305,32 @@ export default {
               },
               err => {
                 self.$notify({
-                  type: 'primary',
+                  type: 'warning',
                   message: err.message,
                   icon: 'tim-icons icon-bell-55'
                 });
                 self.submitLoading = false;
               }
             );
-          } else {
+          } else if(self.model.image){
             self.saveBanner(self);
+          }
+          else{
+            self.$notify({
+              type: 'danger',
+              message: 'A imagem é obrigatória',
+              icon: 'tim-icons icon-bell-55'
+            });
+            self.submitLoading = false;
           }
         }
       });
     },
     saveBanner(vm) {
       vm = vm ? vm : this;
+      if(!vm.model.isBenefit){
+        vm.model.idBenefit = undefined;
+      }
       if (vm.viewAction == 'new') {
         bannerService.create(vm.model).then(
           res => {
@@ -357,20 +391,6 @@ export default {
         );
       }
       this.selectLoading = true;
-      helperService.findAllBannerTypes().then(
-        response => {
-          self.bannersTypes.push({ id: null, name: 'selecione' });
-          _.each(response.data, function(el) {
-            if (el.id != self.id) {
-              self.bannersTypes.push({ id: el.id, name: el.name });
-            }
-          });
-          self.selectLoading = false;
-        },
-        () => {
-          self.selectLoading = false;
-        }
-      );
       benefitService.findAllActive().then(
         response => {
           self.benefits.push({ id: null, name: 'selecione' });

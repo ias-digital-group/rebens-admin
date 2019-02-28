@@ -24,6 +24,7 @@ export default {
     benefitUri: process.env.VUE_APP_API_URI.concat('benefit/'),
     bannerUri: process.env.VUE_APP_API_URI.concat('banner/'),
     faqUri: process.env.VUE_APP_API_URI.concat('faq/'),
+    userUri: process.env.VUE_APP_API_URI.concat('adminuser/'),
     viaCepUri: process.env.VUE_APP_VIACEP_URI
   }
 };

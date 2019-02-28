@@ -3,8 +3,8 @@
     <div class="col-md-12">
       <card title="Benefícios">
         <h4 slot="header" class="card-title">{{$t('pages.benefits.title')}}</h4>
-        <el-tabs>
-          <el-tab-pane label="Benefício">
+        <el-tabs v-model="activeName">
+          <el-tab-pane label="Benefício" name="benefit">
             <form class="form-horizontal mt-3" v-loading="formLoading" @submit.prevent>
               <div class="row">
                 <label class="col-md-3 col-form-label">Titulo</label>
@@ -113,7 +113,7 @@
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Integração</label>
-                <div class="col-md-2">
+                <div class="col-md-9">
                   <div class="form-group">
                     <el-select
                       :class="{'select-info': true, 'has-danger': errors.has('integração')}"
@@ -223,14 +223,14 @@
               </div>
             </form>
           </el-tab-pane>
-          <el-tab-pane label="Operações" :disabled="viewAction == 'new' ? true : false">
-            <operations v-loading="formLoading" parent="benefits" :parentId="id"></operations>
+          <el-tab-pane label="Operações"  name="operations" :disabled="viewAction == 'new' ? true : false">
+            <operations v-loading="formLoading" parent="benefits" :parentId="id" :key="operationKey"></operations>
           </el-tab-pane>
-          <el-tab-pane label="Categorias" :disabled="viewAction == 'new' ? true : false">
-            <categories v-loading="formLoading" parent="benefits" :parentId="id"></categories>
+          <el-tab-pane label="Categorias" name="categories" :disabled="viewAction == 'new' ? true : false">
+            <categories v-loading="formLoading" parent="benefits" :parentId="id" :key="operationKey"></categories>
           </el-tab-pane>
-          <el-tab-pane label="Endereços" :disabled="viewAction == 'new' ? true : false">
-            <addresses v-loading="formLoading" parent="benefits" :parentId="id" ref="addresses"></addresses>
+          <el-tab-pane label="Endereços" name="addresses" :disabled="viewAction == 'new' ? true : false">
+            <addresses v-loading="formLoading" parent="benefits" :parentId="id" ref="addresses" :key="operationKey"></addresses>
           </el-tab-pane>
         </el-tabs>
       </card>
@@ -275,6 +275,7 @@ export default {
       benefitTypeList: [],
       integrationTypeList: [],
       partnerList: [],
+      operationKey: 0,
       money: {
         decimal: ',',
         thousands: '.',
@@ -314,6 +315,16 @@ export default {
   computed: {
     viewAction() {
       return this.$route.name == 'edit_benefit' ? 'edit' : 'new';
+    },
+    activeName:{
+      get:function(){
+      if(this.$route.query && this.$route.query.tab)
+        return this.$route.query.tab == 'op' ? 'operations' : 'benefit';
+      return 'benefit';
+      },
+      set:function(){
+
+      }
     }
   },
   methods: {
@@ -365,7 +376,9 @@ export default {
               message: 'Beneficio cadastrado com sucesso!',
               icon: 'tim-icons icon-bell-55'
             });
-            vw.$router.push(`/benefits/${response.id}/edit/`);
+            vw.$router.push({path: `/benefits/${response.id}/edit/`, query:{tab:'op'}});
+            vw.operationKey++;
+            vw.id = response.id;
             vw.submitLoading = false;
           },
           err => {

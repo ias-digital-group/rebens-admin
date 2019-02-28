@@ -71,7 +71,8 @@ export default {
         self.categoryList = response.data;
       });
       benefitService.getCategories(this.parentId).then(response => {
-        self.selectedCategories = response.data;
+        if(response && response.data)
+          self.selectedCategories = response.data;
         this.loading = false;
       });
     },
@@ -90,6 +91,7 @@ export default {
           icon: 'tim-icons icon-bell-55'
         });
         this.fetchData();
+        this.loading = false;
       });
     }
   }

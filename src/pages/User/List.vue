@@ -3,14 +3,14 @@
     <div class="col-12">
       <card card-body-classes="table-full-width">
         <template slot="header">
-          <h4 class="card-title">{{$t('pages.banners.title')}}
-          <base-link to="/banners/new" class="btn btn-icon btn-simple btn-twitter btn-sm"><i class="tim-icons icon-simple-add"></i></base-link>  
+          <h4 class="card-title">{{$t('pages.users.title')}}
+          <base-link to="/users/new" class="btn btn-icon btn-simple btn-twitter btn-sm"><i class="tim-icons icon-simple-add"></i></base-link>  
           </h4>
           
         </template>
         <div>
           <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
-            <el-select class="select-primary mb-3 pagination-select" v-model="pagination.perPage" :placeholder="$t('pages.banners.perpage-placeholder')" v-if="!loading">
+            <el-select class="select-primary mb-3 pagination-select" v-model="pagination.perPage" :placeholder="$t('pages.faqs.perpage-placeholder')" v-if="!loading">
               <el-option class="select-primary" v-for="item in pagination.perPageOptions" :key="item" :label="item"
                 :value="item">
               </el-option>
@@ -21,17 +21,17 @@
                 class="mb-3 search-input"
                 clearable
                 prefix-icon="el-icon-search"
-                placeholder="Procurar categorias"
+                placeholder="Usuários"
                 aria-controls="datatables"
                 v-model="searchQuery">
               </el-input>
             </base-input>
           </div>
-          <el-table ref="table" :data="tableData" v-loading="loading" :empty-text="$t('pages.banners.emptytext')" @sort-change="onSortChanged" :default-sort="{prop: sortField, order: sortOrder}">
+          <el-table ref="table" :data="tableData" v-loading="loading" :empty-text="$t('pages.users.emptytext')" @sort-change="onSortChanged" :default-sort="{prop: sortField, order: sortOrder}">
             <el-table-column v-for="column in tableColumns" :key="column.label" :min-width="column.minWidth" :prop="column.prop"
               :label="column.label" sortable="custom">
             </el-table-column>
-            <el-table-column :min-width="135" align="right" :label="$t('pages.banners.grid.actions')">
+            <el-table-column :min-width="135" align="right" :label="$t('pages.users.grid.actions')">
               <div slot-scope="props">
                 <base-button @click.native="handleEdit(props.$index, props.row);" class="edit btn-link" type="info"
                   size="sm" icon>
@@ -61,14 +61,17 @@
     <modal
       :show.sync="modal.visible"
       headerClasses="justify-content-center">
-      <h4 slot="header" class="title title-up">Remover banner</h4>
+      <h4 slot="header" class="title title-up">Remover usuário</h4>
       <form class="modal-form" ref="modalForm" @submit.prevent v-loading="modal.formLoading">
-        <input type="hidden" name="nome" value="DELETE" ref="nome">
+        <p>
+          Nome do usuário <strong>{{modal.model.name}}</strong>
+        </p>
+        <input type="hidden" name="nome" v-model="modal.model.name" ref="nome">
         <base-input
           required
           v-model="modal.nameConfirmation"
-          label="Digite DELETE para confirmar"
-          placeholder="Digite DELETE para confirmar"
+          label="Digite a pergunta para confirmar"
+          placeholder="Confirme a pergunta"
           :error="getError('confirmação')"
           type="text"
           v-validate="modal.modelValidations.name_confirm" name="confirmação">
@@ -86,7 +89,7 @@
 <script>
 import { Table, TableColumn, Select, Option } from 'element-ui';
 import { BasePagination, Modal } from 'src/components';
-import bannerService from '../../services/Banner/bannerService';
+import userService from '../../services/User/userService';
 import listPage from '../../mixins/listPage';
 export default {
   mixins: [listPage],
@@ -100,32 +103,27 @@ export default {
   },
   data() {
     return {
-      internalName: 'pages.banners.list',
+      internalName: 'pages.users.list',
       sortField: 'name',
       tableColumns: [
         {
           prop: 'id',
-          label: this.$i18n.t('pages.banners.grid.id'),
+          label: this.$i18n.t('pages.users.grid.id'),
           minWidth: 0
         },
         {
           prop: 'name',
-          label: this.$i18n.t('pages.banners.grid.name'),
+          label: this.$i18n.t('pages.users.grid.name'),
           minWidth: 200
         },
         {
-          prop: 'type',
-          label: this.$i18n.t('pages.banners.grid.type'),
-          minWidth: 200
-        },
-        {
-          prop: 'order',
-          label: this.$i18n.t('pages.banners.grid.order'),
-          minWidth: 0
+          prop: 'email',
+          label: this.$i18n.t('pages.users.grid.email'),
+          minWidth: 250
         },
         {
           prop: 'statusName',
-          label: this.$i18n.t('pages.banners.grid.active'),
+          label: this.$i18n.t('pages.users.grid.status'),
           minWidth: 0
         }
       ]
@@ -133,7 +131,7 @@ export default {
   },
   methods: {
     handleEdit(index, row) {
-      this.$router.push(`/banners/${row.id}/edit/`);
+      this.$router.push(`/users/${row.id}/edit/`);
     },
     fetchData() {
       const self = this;
@@ -144,7 +142,7 @@ export default {
         sort: this.formatSortFieldParam
       };
       this.$data.loading = true;
-      bannerService.findAll(request).then(
+      userService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems);
@@ -160,7 +158,7 @@ export default {
       this.$validator.validateAll().then(isValid => {
         if (isValid) {
           self.modal.formLoading = true;
-          bannerService.delete(self.modal.model.id).then(
+          userService.delete(self.modal.model.id).then(
             response => {
               self.$notify({
                 type: 'primary',

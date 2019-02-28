@@ -77,6 +77,19 @@
           "active":"Status"
         }
       },
+      "users": {
+        "title": "Usuários",
+        "perpage-placeholder": "Por página",
+        "emptytext": "...",
+        "recordcount-message": "Total de usuários:",
+        "grid": {
+          "id": "ID",
+          "name": "Nome",
+          "email": "Email",
+          "actions": "Ações",
+          "status":"Status"
+        }
+      },
       "access-denied": {
         "title": "Acesso negado"
       },
@@ -110,6 +123,7 @@
       "partners": "Parceiros",
       "banners": "Banners",
       "faqs": "Perguntas Frequentes",
+      "users": "Usuários",
       "benefits": "Benefícios",
       "operations": "Operações",
       "pages": "Pages",

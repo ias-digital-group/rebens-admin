@@ -14,7 +14,20 @@ if (token) {
 }
 // plugin setup
 Vue.use(DashboardPlugin);
-Vue.use(wysiwyg, {hideModules:{"code":true, "image":true, "link":true, "table":true, "removeFormat":true }});
+Vue.use(wysiwyg, {
+  forcePlainTextOnPaste: true,
+  hideModules:{
+    "code":true, 
+    "image":true, 
+    "link":true, 
+    "table":true, 
+    "removeFormat":true, 
+    "justifyLeft": true,
+    "justifyCenter": true,
+    "justifyRight": true,
+    "headings": true
+  }
+});
 
 /* eslint-disable no-new */
 new Vue({

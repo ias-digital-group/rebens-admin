@@ -3,6 +3,7 @@ import BaseDropdown from 'src/components/BaseDropdown.vue';
 import Card from 'src/components/Cards/Card.vue';
 import BaseButton from 'src/components/BaseButton.vue';
 import BaseCheckbox from 'src/components/Inputs/BaseCheckbox.vue';
+import BaseRadio from 'src/components/Inputs/BaseRadio.vue';
 import { Input, InputNumber, Tooltip, Popover } from 'element-ui';
 import BaseRouterLink from 'src/components/BaseRouterLink.vue';
 /**
@@ -15,6 +16,7 @@ const GlobalComponents = {
     Vue.component(BaseDropdown.name, BaseDropdown);
     Vue.component(Card.name, Card);
     Vue.component(BaseCheckbox.name, BaseCheckbox);
+    Vue.component(BaseRadio.name, BaseRadio);
     Vue.component(BaseButton.name, BaseButton);
     Vue.component(Input.name, Input);
     Vue.component(InputNumber.name, InputNumber);
