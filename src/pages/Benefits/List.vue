@@ -60,15 +60,12 @@
       headerClasses="justify-content-center">
       <h4 slot="header" class="title title-up">Remover benefício</h4>
       <form class="modal-form" ref="modalForm" @submit.prevent v-loading="modal.formLoading">
-        <p>
-          Nome do benefício <strong>{{modal.model.title}}</strong>
-        </p>
-        <input type="hidden" name="nome" v-model="modal.model.title" ref="nome">
+        <input type="hidden" name="nome" v-model="DELETE" ref="nome">
         <base-input
           required
           v-model="modal.nameConfirmation"
-          label="Digite o nome do benefício para confirmar"
-          placeholder="Confirme o nome"
+          label="Digite DELETE para confirmar"
+          placeholder="Digite DELETE para confirmar"
           :error="getError('confirmação')"
           type="text"
           v-validate="modal.modelValidations.name_confirm" name="confirmação">
@@ -109,9 +106,24 @@ export default {
           minWidth: 0
         },
         {
+          prop: 'name',
+          label: this.$i18n.t('pages.benefits.grid.name'),
+          minWidth: 200
+        },
+        {
           prop: 'title',
           label: this.$i18n.t('pages.benefits.grid.title'),
           minWidth: 200
+        },
+        {
+          prop: 'benefitType',
+          label: this.$i18n.t('pages.benefits.grid.benefitType'),
+          minWidth: 100
+        },
+        {
+          prop: 'statusName',
+          label: this.$i18n.t('pages.benefits.grid.status'),
+          minWidth: 0
         }
       ]
     };

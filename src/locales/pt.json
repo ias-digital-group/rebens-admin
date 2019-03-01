@@ -45,8 +45,10 @@
         "recordcount-message": "Total de benefícios:",
         "grid": {
           "id": "ID",
+          "name": "Nome",
           "title": "Titulo",
-          "active": "Ativo",
+          "status": "Status",
+          "benefitType":"Tipo",
           "actions": "Ações"
         }
       },
