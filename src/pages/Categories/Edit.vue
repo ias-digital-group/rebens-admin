@@ -39,10 +39,10 @@
           </div>
         </div>
         <div class="row">
-            <label class="col-md-3 col-form-label"></label>
+            <label class="col-md-3 col-form-label">Ativo</label>
             <div class="col-md-9">
               <div class="form-group">
-                <base-checkbox v-model="model.active">Ativo</base-checkbox>
+                <base-checkbox v-model="model.active">&nbsp;</base-checkbox>
               </div>
             </div>
         </div>

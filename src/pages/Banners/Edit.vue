@@ -25,7 +25,17 @@
                 <div class="col-md-9">
                   <div class="form-group">
                     <base-radio v-model="model.idType" :name="1" value="1" :inline="true">Banner Full</base-radio>
-                    <base-radio v-model="model.idType" :name="3" value="3" :inline="true">Banner Full</base-radio>
+                    <base-radio v-model="model.idType" :name="3" value="3" :inline="true">Imperdíveis</base-radio>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-md-3 col-form-label">Onde aparece?</label>
+                <div class="col-md-9">
+                  <div class="form-group">
+                    <base-checkbox v-model="model.bannerShowHome" :inline="true">Home</base-checkbox>
+                    <base-checkbox v-model="model.bannerShowHomeLogged" :inline="true">Home Logada</base-checkbox>
+                    <base-checkbox v-model="model.bannerShowBenefit" :inline="true">Home de benefícios</base-checkbox>
                   </div>
                 </div>
               </div>
@@ -145,10 +155,10 @@
                 </div>
               </div>
               <div class="row">
-                  <label class="col-md-3 col-form-label"></label>
+                  <label class="col-md-3 col-form-label">Ativo</label>
                   <div class="col-md-9">
                     <div class="form-group">
-                      <base-checkbox v-model="model.active">Ativo</base-checkbox>
+                      <base-checkbox v-model="model.active">&nbsp;</base-checkbox>
                     </div>
                   </div>
               </div>
@@ -219,7 +229,10 @@ export default {
         idBenefit:null,
         isBenefit:false,
         start: null,
-        end: null
+        end: null,
+        bannerShowHome: false,
+        bannerShowHomeLogged: false,
+        bannerShowBenefit: false
       },
       modelValidations: {
         name: {

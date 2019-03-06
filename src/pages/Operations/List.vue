@@ -59,15 +59,12 @@
       headerClasses="justify-content-center">
       <h4 slot="header" class="title title-up">Remover operação</h4>
       <form class="modal-form" ref="modalForm" @submit.prevent v-loading="modal.formLoading">
-        <p>
-          Nome da operação <strong>{{modal.model.title}}</strong>
-        </p>
-        <input type="hidden" name="nome" v-model="modal.model.title" ref="nome">
+        <input type="hidden" name="nome" value="DELETE" ref="nome">
         <base-input
           required
           v-model="modal.nameConfirmation"
-          label="Digite o title da operação para confirmar"
-          placeholder="Confirme o titulo"
+          label="Digite DELETE para confirmar"
+          placeholder="Digite DELETE para confirmar"
           :error="getError('confirmação')"
           type="text"
           v-validate="modal.modelValidations.name_confirm" name="confirmação">

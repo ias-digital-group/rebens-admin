@@ -12,6 +12,7 @@
           "id": "ID",
           "name": "Nome",
           "order": "Ordem",
+          "status": "Status",
           "actions": "Ações"
         }
       },
@@ -23,6 +24,7 @@
         "grid": {
           "id": "ID",
           "name": "Nome",
+          "status": "Status",
           "actions": "Ações"
         }
       },

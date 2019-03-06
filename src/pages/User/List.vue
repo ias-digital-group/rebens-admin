@@ -63,15 +63,12 @@
       headerClasses="justify-content-center">
       <h4 slot="header" class="title title-up">Remover usuário</h4>
       <form class="modal-form" ref="modalForm" @submit.prevent v-loading="modal.formLoading">
-        <p>
-          Nome do usuário <strong>{{modal.model.name}}</strong>
-        </p>
-        <input type="hidden" name="nome" v-model="modal.model.name" ref="nome">
+        <input type="hidden" name="nome" value="DELETE" ref="nome">
         <base-input
           required
           v-model="modal.nameConfirmation"
-          label="Digite a pergunta para confirmar"
-          placeholder="Confirme a pergunta"
+          label="Digite DELETE para confirmar"
+          placeholder="Digite DELETE para confirmar"
           :error="getError('confirmação')"
           type="text"
           v-validate="modal.modelValidations.name_confirm" name="confirmação">

@@ -37,12 +37,12 @@
                 <div class="col-md-9">
                   <base-input 
                     required
-                    v-model="model.benefitCall"
+                    v-model="model.call"
                     type="text"
                     name="benefitCall"
                     placeholder="Chamada do benefício" 
                     maxlength='500'></base-input>
-                  <label v-show="customErros.includes('benefitCall')" class="text-danger">O campo Chamada do Benefício é obrigatório!</label>
+                  <label v-show="customErros.includes('call')" class="text-danger">O campo Chamada do Benefício é obrigatório!</label>
                 </div>
               </div>
               <div class="row">
@@ -95,17 +95,17 @@
                   </div>
                 </div>
               </div>
-              <div class="row">
+              <div class="row" v-if="model.idBenefitType != 3">
                 <label class="col-md-3 col-form-label">% Desconto *</label>
                 <div class="col-md-9 col-lg-4">
                   <base-input label="Máximo *">
-                    <money class="form-control" v-model="model.maxDiscountPercentageOnline" v-bind="money"></money>
+                    <money class="form-control" v-model="model.maxDiscountPercentage" v-bind="money"></money>
                   </base-input>
                   <label v-show="customErros.includes('maxDiscount')" class="text-danger">O campo Desconto Máximo é obrigatório!</label>
                 </div>
                 <div class="col-md-9 offset-md-3 offset-lg-0 col-lg-5">
                   <base-input label="Mínimo *">
-                    <money class="form-control" v-model="model.maxDiscountPercentageOffline" v-bind="money"></money>
+                    <money class="form-control" v-model="model.minDiscountPercentage" v-bind="money"></money>
                   </base-input>
                   <label v-show="customErros.includes('minDiscount')" class="text-danger">O campo Desconto Mínimo é obrigatório!</label>
                 </div>
@@ -114,7 +114,7 @@
                 <label class="col-md-3 col-form-label">CPV *</label>
                 <div class="col-md-9 col-lg-4">
                   <base-input>
-                    <money class="form-control" v-model="model.cpvpercentageOnline" v-bind="money"></money>
+                    <money class="form-control" v-model="model.cpvPercentage" v-bind="money"></money>
                   </base-input>
                   <label v-show="customErros.includes('cpv')" class="text-danger">O campo CPV é obrigatório</label>
                 </div>
@@ -127,6 +127,24 @@
                     placeholder="Link" 
                     maxlength='500'></base-input>
                   <label v-show="customErros.includes('link')" class="text-danger">O campo Link é obrigatório!</label>
+                </div>
+              </div>
+              <div class="row" v-if="model.idBenefitType == 3">
+                <label class="col-md-3 col-form-label">Valor do cashback *</label>
+                <div class="col-md-9">
+                  <base-input>
+                    <money class="form-control" v-model="model.cashbackAmount" v-bind="money"></money>
+                  </base-input>
+                  <label v-show="customErros.includes('cashbackAmount')" class="text-danger">O campo Valor do cashback é obrigatório!</label>
+                </div>
+              </div>
+              <div class="row" v-if="model.idBenefitType == 2">
+                <label class="col-md-3 col-form-label">Texto do voucher *</label>
+                <div class="col-md-9">
+                  <base-input>
+                    <textarea class="form-control" v-model="model.voucherText" cols="30" rows="3"></textarea>
+                  </base-input>
+                  <label v-show="customErros.includes('voucherText')" class="text-danger">O campo Texto do voucher é obrigatório!</label>
                 </div>
               </div>
               <div class="row">
@@ -205,15 +223,48 @@
                 </div>
               </div>
               <div class="row">
-                <label class="col-md-3 col-form-label"></label>
+                <label class="col-md-3 col-form-label">Exclusivo</label>
                 <div class="col-md-9">
                   <div class="form-group">
-                    <base-checkbox v-model="model.active">Ativo</base-checkbox>
+                    <base-checkbox v-model="model.exclusive">&nbsp;</base-checkbox>
                   </div>
                 </div>
               </div>
-              
-              
+              <div class="row" v-show="model.exclusive">
+                <label class="col-md-3 col-form-label">Operação</label>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <div class="form-group">
+                    <el-select
+                      :class="{'select-info': true, 'has-danger': errors.has('operation')}"
+                      placeholder="Operação"
+                      v-model="model.idOperation"
+                      v-validate="modelValidations.operation"
+                      name="operation"
+                      v-loading.lock="operationLoading">
+                      <el-option
+                        v-for="operation in operationList"
+                        class="select-primary"
+                        :value="operation.id"
+                        :label="operation.title"
+                        :key="operation.id">
+                      </el-option>
+                    </el-select>
+                  </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label v-show="customErros.includes('operation')" class="text-danger">O campo Operação é obrigatório!</label>
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-md-3 col-form-label">Ativo</label>
+                <div class="col-md-9">
+                  <div class="form-group">
+                    <base-checkbox v-model="model.active">&nbsp;</base-checkbox>
+                  </div>
+                </div>
+              </div>
               <div class="row">
                 <div class="col-md-12">
                   <base-link class="btn btn-primary btn-simple mt-3" to="/benefits">Voltar</base-link>
@@ -250,6 +301,7 @@ import Categories from 'src/components/Categories';
 import Operations from 'src/components/Operations';
 import benefitService from '../../services/Benefit/benefitService';
 import helperService from '../../services/Helper/helperService';
+import operationService from '../../services/Operation/operationService';
 import partnerService from '../../services/Partner/partnerService';
 import _ from 'lodash';
 import { ImageUpload } from 'src/components/index';
@@ -277,9 +329,11 @@ export default {
       benefitTypeLoading: false,
       integrationTypeLoading: false,
       partnerLoading: false,
+      operationLoading: false,
       image: null,
       partnerList: [],
       customErros: [],
+      operationList: [],
       operationKey: 0,
       money: {
         decimal: ',',
@@ -294,21 +348,24 @@ export default {
         title: '',
         image: '',
         dueDate: null,
-        webSite: '',
-        maxDiscountPercentageOnline: 0,
-        cpvpercentageOnline: 0,
-        maxDiscountPercentageOffline: 0,
-        cpvpercentageOffline: 0,
+        link: '',
+        maxDiscountPercentage: 0,
+        cpvpercentage: 0,
+        minDiscountPercentage: 0,
+        cashbackAmount: 0,
         start: null,
         end: null,
         idBenefitType: 0,
         exclusive: false,
         idIntegrationType: 0,
         idPartner: 0,
-        benefitCall: '',
+        call: '',
         detail: '',
         howToUse: '',
-        active: false
+        idOperation:null,
+        voucherText:'',
+        active: false,
+        exclusive: false
       },
       modelValidations: {
       }
@@ -342,8 +399,8 @@ export default {
         self.customErros.push('name');
       if(!self.model.title)
         self.customErros.push('title');
-      if(!self.model.benefitCall)
-        self.customErros.push('benefitCall');
+      if(!self.model.call)
+        self.customErros.push('call');
       if(!self.model.detail)
         self.customErros.push('detail');
       if(!self.model.howToUse)
@@ -352,25 +409,35 @@ export default {
         self.customErros.push('partner');
       if(!self.model.idBenefitType)
         self.customErros.push('benefitType');
-      if(!self.model.maxDiscountPercentageOnline)
-        self.customErros.push('maxDiscount');
-      if(!self.model.maxDiscountPercentageOffline)
-        self.customErros.push('minDiscount');
-      if(!self.model.cpvpercentageOnline)
-        self.customErros.push('cpv');
-      if(self.model.idBenefitType != 2 && !self.model.webSite)
-        self.customErros.push('link');
+      if(self.model.idBenefitType == 2){
+        if(!self.model.voucherText)
+          self.customErros.push('voucherText');
+      }
+      else{ 
+        if(!self.model.link || self.model.link == '')
+          self.customErros.push('link');
+      }
+
+      if(self.model.idBenefitType != 3){
+        if(!self.model.maxDiscountPercentage)
+            self.customErros.push('maxDiscount');
+        if(!self.model.minDiscountPercentage)
+          self.customErros.push('minDiscount');
+      }
+      else{
+        if(!self.model.cashbackAmount)
+          self.customErros.push('cashbackAmount');
+      }
+      if(!self.model.cpvPercentage)
+          self.customErros.push('cpv');
       if(!self.model.idIntegrationType)
         self.customErros.push('integrationType');
       if(!self.model.image && !self.image)
         self.customErros.push('image');
       if(!self.model.dueDate)
         self.customErros.push('dueDate');
-      if(!self.model.start)
-        self.customErros.push('start');
-      if(!self.model.end)
-        self.customErros.push('end');
-      
+      if(self.model.exclusive && !self.model.idOperation)
+        self.customErros.push('operation');
 
       this.$validator.validateAll().then(isValid => {
         if (isValid && self.customErros.length == 0) {
@@ -476,6 +543,18 @@ export default {
         },
         () => {
           self.partnerLoading = false;
+        }
+      );
+      this.operationLoading = true;
+      operationService.findAll(null).then(
+        response => {
+          _.each(response.data, function(el){
+            self.operationList.push(el);
+          });
+          self.operationLoading = false;
+        },
+        () => {
+          self.operationLoading = false;
         }
       );
     },

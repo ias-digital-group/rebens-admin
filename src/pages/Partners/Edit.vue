@@ -23,15 +23,7 @@
               <div class="row">
                 <label class="col-md-3 col-form-label">Descrição</label>
                 <div class="col-md-9">
-                  <wysiwyg v-model="model.description" />
-                </div>
-              </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label"></label>
-                <div class="col-md-9">
-                  <div class="form-group">
-                    <base-checkbox v-model="model.active">Ativo</base-checkbox>
-                  </div>
+                  <wysiwyg v-model="model.description"  />
                 </div>
               </div>
               <template v-if="model.logo">
@@ -55,6 +47,14 @@
                   </div>
                 </div>
               </template>
+              <div class="row">
+                <label class="col-md-3 col-form-label">Ativo</label>
+                <div class="col-md-9">
+                  <div class="form-group">
+                    <base-checkbox v-model="model.active">&nbsp;</base-checkbox>
+                  </div>
+                </div>
+              </div>
               <div class="row">
                 <div class="col-md-12">
                   <base-link class="btn mt-3 btn-primary btn-simple" to="/partners">Voltar</base-link>

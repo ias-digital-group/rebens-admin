@@ -63,15 +63,12 @@
       headerClasses="justify-content-center">
       <h4 slot="header" class="title title-up">Remover categoria</h4>
       <form class="modal-form" ref="modalForm" @submit.prevent v-loading="modal.formLoading">
-        <p>
-          Nome da categoria <strong>{{modal.model.name}}</strong>
-        </p>
-        <input type="hidden" name="nome" v-model="modal.model.name" ref="nome">
+        <input type="hidden" name="nome" value="DELETE" ref="nome">
         <base-input
           required
           v-model="modal.nameConfirmation"
-          label="Digite o nome da categoria para confirmar"
-          placeholder="Confirme o nome"
+          label="Digite DELETE para confirmar"
+          placeholder="Digite DELETE para confirmar"
           :error="getError('confirmação')"
           type="text"
           v-validate="modal.modelValidations.name_confirm" name="confirmação">
@@ -114,6 +111,11 @@ export default {
         {
           prop: 'name',
           label: this.$i18n.t('pages.categories.grid.name'),
+          minWidth: 200
+        },
+        {
+          prop: 'statusName',
+          label: this.$i18n.t('pages.categories.grid.status'),
           minWidth: 200
         },
         {
