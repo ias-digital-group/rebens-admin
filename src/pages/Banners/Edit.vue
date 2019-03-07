@@ -24,8 +24,8 @@
                 <label class="col-md-3 col-form-label">Tipo</label>
                 <div class="col-md-9">
                   <div class="form-group">
-                    <base-radio v-model="model.idType" :name="1" value="1" :inline="true">Banner Full</base-radio>
-                    <base-radio v-model="model.idType" :name="3" value="3" :inline="true">Imperdíveis</base-radio>
+                    <base-radio v-model="model.idType" :name="1" :value="1" :inline="true">Banner Full</base-radio>
+                    <base-radio v-model="model.idType" :name="3" :value="3" :inline="true">Imperdíveis</base-radio>
                   </div>
                 </div>
               </div>
@@ -49,25 +49,16 @@
               </div>
               <div class="row" v-if="model.isBenefit">
                 <label class="col-md-3 col-form-label">Benefício</label>
-                <div class="col-md-2">
+                <div class="col-md-3">
                   <div class="form-group">
-                  <el-select
-                      class="select-info"
-                      placeholder="Benefício"
-                      v-model="model.idBenefit"
-                      v-validate="modelValidations.benefit"
-                      v-loading.lock="selectLoading"
-                      :error="getError('benefit')"
-                      lock>
-                      <el-option
-                        v-for="b in benefits"
-                        class="select-primary"
-                        :value="b.id"
-                        :label="b.name"
-                        :key="b.id"
-                      >
-                      </el-option>
-                    </el-select>
+                    <el-autocomplete 
+                      :fetch-suggestions="querySearch"
+                      @select="handleSelect"
+                      placeholder=""
+                      v-model="benefitName"
+                      :trigger-on-focus="false">
+                    </el-autocomplete>
+                    <input type="hidden" v-model="model.idBenefit" />
                   </div>
                 </div>
               </div>
@@ -218,6 +209,7 @@ export default {
       submitLoading: false,
       image: null,
       operationKey: 0,
+      benefitName: '',
       model: {
         name: '',
         order: 1,
@@ -280,6 +272,20 @@ export default {
   methods: {
     getError(fieldName) {
       return this.errors.first(fieldName);
+    },
+    querySearch(query, cb) {
+      var list = this.benefits;
+      var results = query ? list.filter(this.createFilter(query)) : list;
+      var top3 = results.slice(0, 3);
+      cb(top3);
+    },
+    createFilter(query) {
+      return (partner) => {
+        return partner.value.toLowerCase().includes(query.toLowerCase());
+      };
+    },
+    handleSelect(item){
+      this.model.idBenefit = item.id;
     },
     validate() {
       const self = this;
@@ -397,6 +403,7 @@ export default {
           response => {
             self.model = response.data;
             self.formLoading = false;
+            self.populateBenefit();
           },
           () => {
             self.formLoading = false;
@@ -406,18 +413,23 @@ export default {
       this.selectLoading = true;
       benefitService.findAllActive().then(
         response => {
-          self.benefits.push({ id: null, name: 'selecione' });
           _.each(response.data, function(el) {
-            if (el.id != self.id) {
-              self.benefits.push({ id: el.id, name: el.title });
-            }
+            self.benefits.push({ id: el.id, value: el.title });
           });
           self.selectLoading = false;
+          self.populateBenefit();
         },
         () => {
           self.selectLoading = false;
         }
       );
+    },
+    populateBenefit(){
+      if(!this.formLoading && !this.selectLoading && this.model.idBenefit){
+        var b = this.benefits.filter(o => o.id == this.model.idBenefit);
+        if(b.length == 1)
+          this.benefitName = op[0].value;
+      }
     },
     onImageChange(file) {
       this.image = file;

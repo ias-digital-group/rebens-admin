@@ -61,36 +61,29 @@
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Parceiro *</label>
-                <div class="col-md-2">
+                <div class="col-md-3">
                   <div class="form-group">
-                    <el-select
-                      :class="{'select-info': true, 'has-danger': errors.has('parceiro')}"
-                      placeholder="Parceiro"
-                      v-model="model.idPartner"
-                      v-validate="modelValidations.parceiro"
-                      name="parceiro"
-                      v-loading.lock="partnerLoading">
-                      <el-option
-                        v-for="partner in partnerList"
-                        class="select-primary"
-                        :value="partner.id"
-                        :label="partner.name"
-                        :key="partner.id">
-                      </el-option>
-                    </el-select>
+                    <el-autocomplete 
+                      :fetch-suggestions="querySearch"
+                      @select="handleSelect"
+                      placeholder=""
+                      v-model="partnerName"
+                      :trigger-on-focus="false">
+                    </el-autocomplete>
+                    <input type="hidden" v-model="model.idPartner" />
                   </div>
                 </div>
-                  <div class="col-md-7">
+                <div class="col-md-6">
                   <label v-show="customErros.includes('partner')" class="text-danger">O campo Parceiro é obrigatório!</label>
-                  </div>
+                </div>
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Tipo *</label>
                 <div class="col-md-9">
                   <div class="form-group">
-                    <base-radio v-model="model.idBenefitType" :name="1" value="1" :inline="true">E-commerce</base-radio>
-                    <base-radio v-model="model.idBenefitType" :name="2" value="2" :inline="true">Varejo Local</base-radio>
-                    <base-radio v-model="model.idBenefitType" :name="3" value="3" :inline="true">Cashback</base-radio>
+                    <base-radio v-model="model.idBenefitType" :name="1" :value="1" :inline="true">E-commerce</base-radio>
+                    <base-radio v-model="model.idBenefitType" :name="2" :value="2" :inline="true">Varejo Local</base-radio>
+                    <base-radio v-model="model.idBenefitType" :name="3" :value="3" :inline="true">Cashback</base-radio>
                     <label v-show="customErros.includes('benefitType')" class="text-danger">O campo Tipo é obrigatório</label>
                   </div>
                 </div>
@@ -110,7 +103,7 @@
                   <label v-show="customErros.includes('minDiscount')" class="text-danger">O campo Desconto Mínimo é obrigatório!</label>
                 </div>
               </div>
-              <div class="row">
+              <div class="row" v-if="model.idBenefitType != 3">
                 <label class="col-md-3 col-form-label">CPV *</label>
                 <div class="col-md-9 col-lg-4">
                   <base-input>
@@ -151,8 +144,8 @@
                 <label class="col-md-3 col-form-label">Integração *</label>
                 <div class="col-md-9">
                   <div class="form-group">
-                    <base-radio v-model="model.idIntegrationType" :name="1" value="1" :inline="true">Rebens</base-radio>
-                    <base-radio v-model="model.idIntegrationType" :name="2" value="2" :inline="true">Zanox</base-radio>
+                    <base-radio v-model="model.idIntegrationType" :name="1" :value="1" :inline="true">Rebens</base-radio>
+                    <base-radio v-model="model.idIntegrationType" :name="2" :value="2" :inline="true">Zanox</base-radio>
                     <label v-show="customErros.includes('integrationType')" class="text-danger">O campo Integração é obrigatório!</label>
                   </div>
                 </div>
@@ -200,9 +193,9 @@
                 </div>
               </div>
               <div class="row">
-                <label class="col-md-3 col-form-label">Data *</label>
+                <label class="col-md-3 col-form-label">Data</label>
                 <div class="col-md-9 col-lg-4">
-                  <base-input label="Início *">
+                  <base-input label="Início">
                     <el-date-picker
                       type="date"
                       placeholder="Início"
@@ -212,7 +205,7 @@
                   <label v-show="customErros.includes('start')" class="text-danger">O campo Início é obrigatório!</label>
                 </div>
                 <div class="col-md-9 offset-md-3 offset-lg-0 col-lg-5">
-                  <base-input label="Fim *">
+                  <base-input label="Fim">
                     <el-date-picker
                       type="date"
                       placeholder="Fim"
@@ -234,23 +227,15 @@
                 <label class="col-md-3 col-form-label">Operação</label>
                 <div class="col-md-3">
                   <div class="form-group">
-                    <div class="form-group">
-                    <el-select
-                      :class="{'select-info': true, 'has-danger': errors.has('operation')}"
-                      placeholder="Operação"
-                      v-model="model.idOperation"
-                      v-validate="modelValidations.operation"
-                      name="operation"
-                      v-loading.lock="operationLoading">
-                      <el-option
-                        v-for="operation in operationList"
-                        class="select-primary"
-                        :value="operation.id"
-                        :label="operation.title"
-                        :key="operation.id">
-                      </el-option>
-                    </el-select>
-                  </div>
+                    <el-autocomplete 
+                      :fetch-suggestions="querySearchOp"
+                      @select="handleSelectOp"
+                      placeholder=""
+                      v-model="operationName"
+                      :trigger-on-focus="false">
+                    </el-autocomplete>
+                    <input type="hidden" v-model="model.idOperation" />
+
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -335,6 +320,8 @@ export default {
       customErros: [],
       operationList: [],
       operationKey: 0,
+      partnerName:'',
+      operationName:'',
       money: {
         decimal: ',',
         thousands: '.',
@@ -350,7 +337,7 @@ export default {
         dueDate: null,
         link: '',
         maxDiscountPercentage: 0,
-        cpvpercentage: 0,
+        cpvPercentage: 0,
         minDiscountPercentage: 0,
         cashbackAmount: 0,
         start: null,
@@ -387,6 +374,29 @@ export default {
     }
   },
   methods: {
+    querySearch(query, cb) {
+      var list = this.partnerList;
+      var results = query ? list.filter(this.createFilter(query)) : list;
+      var top3 = results.slice(0, 3);
+      cb(top3);
+    },
+    querySearchOp(query, cb) {
+      var list = this.operationList;
+      var results = query ? list.filter(this.createFilter(query)) : list;
+      var top3 = results.slice(0, 3);
+      cb(top3);
+    },
+    createFilter(query) {
+      return (partner) => {
+        return partner.value.toLowerCase().includes(query.toLowerCase());
+      };
+    },
+    handleSelect(item){
+      this.model.idPartner = item.id;
+    },
+    handleSelectOp(item){
+      this.model.idOperation = item.id;
+    },
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
@@ -423,13 +433,14 @@ export default {
             self.customErros.push('maxDiscount');
         if(!self.model.minDiscountPercentage)
           self.customErros.push('minDiscount');
+        if(!self.model.cpvPercentage)
+          self.customErros.push('cpv');
       }
       else{
         if(!self.model.cashbackAmount)
           self.customErros.push('cashbackAmount');
       }
-      if(!self.model.cpvPercentage)
-          self.customErros.push('cpv');
+      
       if(!self.model.idIntegrationType)
         self.customErros.push('integrationType');
       if(!self.model.image && !self.image)
@@ -526,6 +537,8 @@ export default {
           response => {
             self.model = response.data;
             self.formLoading = false;
+            this.populatePartner();
+            this.populateOperation();
           },
           () => {
             self.formLoading = false;
@@ -535,11 +548,11 @@ export default {
       this.partnerLoading = true;
       partnerService.findAll(null).then(
         response => {
-          //self.partnerList.push({ id: null, name: 'selecione' });
           _.each(response.data, function(el) {
-            self.partnerList.push(el);
+            self.partnerList.push({ value: el.name, id: el.id });
           });
           self.partnerLoading = false;
+          this.populatePartner();
         },
         () => {
           self.partnerLoading = false;
@@ -549,14 +562,29 @@ export default {
       operationService.findAll(null).then(
         response => {
           _.each(response.data, function(el){
-            self.operationList.push(el);
+            self.operationList.push({ value: el.title, id: el.id });
           });
           self.operationLoading = false;
+          this.populateOperation();
         },
         () => {
           self.operationLoading = false;
         }
       );
+    },
+    populatePartner(){
+      if(!this.formLoading && !this.partnerLoading){
+        var part = this.partnerList.filter(o => o.id == this.model.idPartner);
+        if(part.length == 1)
+          this.partnerName = part[0].value;
+      }
+    },
+    populateOperation(){
+      if(!this.formLoading && !this.operationLoading && this.model.idOperation){
+        var op = this.operationList.filter(o => o.id == this.model.idOperation);
+        if(op.length == 1)
+          this.operationName = op[0].value;
+      }
     },
     onImageChange(file) {
       this.image = file;

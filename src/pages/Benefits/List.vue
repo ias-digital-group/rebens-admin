@@ -60,7 +60,7 @@
       headerClasses="justify-content-center">
       <h4 slot="header" class="title title-up">Remover benefício</h4>
       <form class="modal-form" ref="modalForm" @submit.prevent v-loading="modal.formLoading">
-        <input type="hidden" name="nome" v-model="DELETE" ref="nome">
+        <input type="hidden" name="nome" value="DELETE" ref="nome">
         <base-input
           required
           v-model="modal.nameConfirmation"
