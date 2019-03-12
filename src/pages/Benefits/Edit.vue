@@ -116,7 +116,7 @@
                 <label class="col-md-3 col-form-label">Link *</label>
                 <div class="col-md-9">
                   <base-input 
-                    v-model="model.webSite"
+                    v-model="model.link"
                     placeholder="Link" 
                     maxlength='500'></base-input>
                   <label v-show="customErros.includes('link')" class="text-danger">O campo Link é obrigatório!</label>
