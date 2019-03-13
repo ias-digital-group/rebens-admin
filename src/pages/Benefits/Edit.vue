@@ -37,12 +37,12 @@
                 <div class="col-md-9">
                   <base-input 
                     required
-                    v-model="model.call"
+                    v-model="model.benefitCall"
                     type="text"
                     name="benefitCall"
                     placeholder="Chamada do benefício" 
                     maxlength='500'></base-input>
-                  <label v-show="customErros.includes('call')" class="text-danger">O campo Chamada do Benefício é obrigatório!</label>
+                  <label v-show="customErros.includes('benefitCall')" class="text-danger">O campo Chamada do Benefício é obrigatório!</label>
                 </div>
               </div>
               <div class="row">
@@ -346,7 +346,7 @@ export default {
         exclusive: false,
         idIntegrationType: 0,
         idPartner: 0,
-        call: '',
+        benefitCall: '',
         detail: '',
         howToUse: '',
         idOperation:null,
@@ -409,8 +409,8 @@ export default {
         self.customErros.push('name');
       if(!self.model.title)
         self.customErros.push('title');
-      if(!self.model.call)
-        self.customErros.push('call');
+      if(!self.model.benefitCall)
+        self.customErros.push('benefitCall');
       if(!self.model.detail)
         self.customErros.push('detail');
       if(!self.model.howToUse)

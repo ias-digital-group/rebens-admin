@@ -15,7 +15,6 @@ if (token) {
 // plugin setup
 Vue.use(DashboardPlugin);
 Vue.use(wysiwyg, {
-  forcePlainTextOnPaste: true,
   hideModules:{
     "code":true, 
     "image":true, 
@@ -26,7 +25,8 @@ Vue.use(wysiwyg, {
     "justifyCenter": true,
     "justifyRight": true,
     "headings": true
-  }
+  },
+  forcePlainTextOnPaste: true
 });
 
 /* eslint-disable no-new */
