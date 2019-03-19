@@ -27,7 +27,7 @@
             </el-table-column>
             <el-table-column :min-width="135" align="right" :label="$t('pages.operations.grid.actions')">
               <div slot-scope="props">
-                <base-button @click.native="handleEdit(props.$index, props.row);" class="edit btn-link" type="warning"
+                <base-button @click.native="handleEdit(props.$index, props.row);" class="edit btn-link" type="info"
                   size="sm" icon>
                   <i class="tim-icons icon-pencil"></i>
                 </base-button>
