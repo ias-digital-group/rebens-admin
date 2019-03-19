@@ -23,6 +23,27 @@ export default {
       );
     });
   },
+  findAllActive: request => {
+    return new Promise((resolve, reject) => {
+      request = request
+        ? request
+        : { page: 0, pageItems: 1000, searchWord: '', sort: 'name ASC' };
+      HTTP.get(
+        config.apiEndpoints.partnerUri.concat(
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
+            request.searchWord
+          }&sort=${request.sort}`
+        )
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
   get: id => {
     return new Promise((resolve, reject) => {
       HTTP.get(config.apiEndpoints.partnerUri.concat(id)).then(
