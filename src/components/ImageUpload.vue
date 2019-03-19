@@ -78,13 +78,16 @@ export default {
   },
   methods: {
     handlePreview(event) {
+      if (event.target.files.length == 0) {
+        return;
+      }
       let file = event.target.files[0];
       this.imagePreview = URL.createObjectURL(file);
       this.$emit('change', this.$refs.file.files[0], this.optionalData);
     },
     removeFile() {
       this.imagePreview = null;
-      this.$emit('change', null);
+      this.$emit('change', null, this.optionalData);
     }
   }
 };

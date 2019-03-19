@@ -39,7 +39,7 @@
               class="mt-3 pull-right" 
               native-type="submit" 
               type="info"
-              @click.native.prevent="saveStaticText">
+              @click.native.prevent="validateForm">
               Salvar
             </base-button>
           </div>
@@ -54,6 +54,7 @@ import { BasePagination } from 'src/components';
 import StaticTextForm from 'src/components/StaticTextForm.vue';
 import Modal from 'src/components/Modal.vue';
 import staticTextService from '../services/StaticText/staticTextService';
+import helperService from '../services/Helper/helperService';
 import listPage from '../mixins/listPage';
 import _ from 'lodash';
 export default {
@@ -97,7 +98,8 @@ export default {
         name: '',
         data: {},
         idOperation: 0,
-        active: true
+        active: true,
+        images: []
       }
     };
   },
@@ -142,10 +144,37 @@ export default {
       this.model.page = obj.page;
       this.model.name = obj.name;
       this.model.id = obj.id;
+      this.model.images = [];
       this.formLoading = false;
     },
-    saveStaticText() {
+    validateForm() {
       const self = this;
+      self.submitLoading = true;
+      if (self.model.images && self.model.images.length > 0) {
+        let promises = new Array(self.model.images.length);
+        for(var i = 0; i <= self.model.images.length - 1; i++) {
+          promises[i] = helperService.uploadFile(self.model.images[i].img);
+        }
+        Promise.all(promises).then(values => {
+          for(var j = 0; j<= values.length - 1; j++) {
+            const fieldIndex = self.model.images[j].index;
+            self.model.data.fields[fieldIndex].data = values[j].data.url;
+          }
+          self.saveStaticText(self);
+        })
+        .catch(reason => {
+          self.$notify({
+            type: 'primary',
+            message: reason.message,
+            icon: 'tim-icons icon-bell-55'
+          });
+          self.submitLoading = false;
+        });
+      } else {
+        self.saveStaticText(self);
+      }
+    },
+    saveStaticText(self) {
       self.formLoading = true;
       staticTextService.update(self.model).then(
         response => {

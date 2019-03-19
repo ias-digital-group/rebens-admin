@@ -10,35 +10,29 @@
               :placeholder="field.name"></base-input>
             </div>
           </template>
-          <template v-else-if="field.type='html'">
+          <template v-else-if="field.type == 'html'">
             <div class="col-md-9">
               <wysiwyg v-model="field.data" style="margin-bottom:10px;" />
             </div>
           </template>
           <template v-else>
             <template v-if="field.data">
-              <div class="row">
-                <label class="col-md-3 col-form-label">Imagem</label>
-                <div class="col-md-9">
-                  <div class="fileinput">
-                    <div class="thumbnail">
-                      <img :src="field.data" class="img-preview" />
-                    </div>
+              <div class="col-md-9">
+                <div class="fileinput">
+                  <div class="thumbnail">
+                    <img :src="field.data" class="img-preview" />
                   </div>
-                  <div>
-                    <base-button @click="field.data = ''" class="btn-simple btn-file" type="danger">
-                      <i class="fas fa-times"></i>
-                    </base-button>
-                  </div>
+                </div>
+                <div>
+                  <base-button @click="removeImage(field, idx)" class="btn-simple btn-file" type="danger">
+                    <i class="fas fa-times"></i>
+                  </base-button>
                 </div>
               </div>
             </template>
             <template v-else>
-              <div class="row">
-                <label class="col-md-3 col-form-label">Imagem *</label>
-                <div class="col-md-9">
-                  <image-upload @change="onImageChange" :optionalData="field" change-text="Alterar" remove-text="Remover" select-text="Selecione uma imagem" />
-                </div>
+              <div class="col-md-9">
+                <image-upload @change="onImageChange" :optionalData="staticText.images[idx]" change-text="Alterar" remove-text="Remover" select-text="Selecione uma imagem" />
               </div>
             </template>
           </template>
@@ -47,6 +41,7 @@
 </template>
 <script>
 import { ImageUpload } from 'src/components/index';
+import _ from 'lodash';
 export default {
   name: 'static-text-form',
   inject: {
@@ -60,16 +55,29 @@ export default {
   },
   data() {
     return {
-      staticTextFormLoading: false,
-      selectedField: 0
+      staticTextFormLoading: false
     };
   },
   methods: {
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
-    onImageChange(file, field) {
-      field.data = file;
+    removeImage(field, idx) {
+      this.staticText.images.push({field: field, index: idx, data: field.data, img: null});
+      field.data = '';
+    },
+    onImageChange(file, element) {
+      if (file == null) {
+        const f = this.staticText.images[element.index];
+        this.staticText.data.fields[element.index].data = f.data;
+        _.pullAt(this.staticText.images, element.index); 
+        return;
+      }
+      _.forEach(this.staticText.images, el => {
+        if (el.index == element.index) {
+          el.img = file;
+        }
+      });
     }
   }
 };
