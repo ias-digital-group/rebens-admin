@@ -18,7 +18,7 @@
         <sidebar-item :link="{ name: $t('sidebar.categories'), icon: 'tim-icons icon-book-bookmark', path: '/categories' }"></sidebar-item>
         <sidebar-item :link="{ name: $t('sidebar.banners'), icon: 'fas fa-file-image', path: '/banners' }"></sidebar-item>
         <sidebar-item :link="{ name: $t('sidebar.partners'), icon: 'fas fa-handshake', path: '/partners' }"></sidebar-item>
-        <!-- <sidebar-item :link="{ name: $t('sidebar.operations'), icon: 'tim-icons icon-spaceship', path: '/operations' }"></sidebar-item> -->
+        <sidebar-item :link="{ name: $t('sidebar.operations'), icon: 'tim-icons icon-spaceship', path: '/operations' }"></sidebar-item>
         <sidebar-item :link="{ name: $t('sidebar.benefits'), icon: 'tim-icons icon-money-coins', path: '/benefits' }"></sidebar-item>
         <sidebar-item :link="{ name: $t('sidebar.faqs'), icon: 'tim-icons icon-notes', path: '/faqs' }"></sidebar-item>
         <!-- <sidebar-item :link="{ name: $t('sidebar.users'), icon: 'tim-icons icon-single-02', path: '/users' }"></sidebar-item> -->
