@@ -177,6 +177,56 @@
                   </div>
                 </div>
               </template>
+              <div class="row m-b-10">
+                <label class="col-md-3 col-form-label">Destaque Home?</label>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <el-select
+                      class="select-info"
+                      v-model="model.homeHighlight"
+                      v-loading.lock="selectLoading"
+                      lock>
+                      <el-option class="select-primary" :value="-1" :key="-1" label="Sem Destaque"></el-option>
+                      <el-option class="select-primary" :value="0" :key="0" label="Randomico"></el-option>
+                      <el-option class="select-primary" :value="1" :key="1" label="Posição 1"></el-option>
+                      <el-option class="select-primary" :value="2" :key="2" label="Posição 2"></el-option>
+                      <el-option class="select-primary" :value="3" :key="3" label="Posição 3"></el-option>
+                      <el-option class="select-primary" :value="4" :key="4" label="Posição 4"></el-option>
+                      <el-option class="select-primary" :value="5" :key="5" label="Posição 5"></el-option>
+                      <el-option class="select-primary" :value="6" :key="6" label="Posição 6"></el-option>
+                      <el-option class="select-primary" :value="7" :key="7" label="Posição 7"></el-option>
+                      <el-option class="select-primary" :value="8" :key="8" label="Posição 8"></el-option>
+                    </el-select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-md-3 col-form-label">Destaque Home Benefício?</label>
+                <div class="col-md-3">
+                  <div class="form-group">
+                  <el-select
+                    class="select-info"
+                    v-model="model.homeBenefitHighlight"
+                    v-loading.lock="selectLoading"
+                    lock>
+                    <el-option class="select-primary" :value="-1" :key="-1" label="Sem Destaque"></el-option>
+                      <el-option class="select-primary" :value="0" :key="0" label="Randomico"></el-option>
+                      <el-option class="select-primary" :value="1" :key="1" label="Posição 1"></el-option>
+                      <el-option class="select-primary" :value="2" :key="2" label="Posição 2"></el-option>
+                      <el-option class="select-primary" :value="3" :key="3" label="Posição 3"></el-option>
+                      <el-option class="select-primary" :value="4" :key="4" label="Posição 4"></el-option>
+                      <el-option class="select-primary" :value="5" :key="5" label="Posição 5"></el-option>
+                      <el-option class="select-primary" :value="6" :key="6" label="Posição 6"></el-option>
+                      <el-option class="select-primary" :value="7" :key="7" label="Posição 7"></el-option>
+                      <el-option class="select-primary" :value="8" :key="8" label="Posição 8"></el-option>
+                      <el-option class="select-primary" :value="9" :key="9" label="Posição 9"></el-option>
+                      <el-option class="select-primary" :value="10" :key="10" label="Posição 10"></el-option>
+                      <el-option class="select-primary" :value="11" :key="11" label="Posição 11"></el-option>
+                      <el-option class="select-primary" :value="12" :key="12" label="Posição 12"></el-option>
+                  </el-select>
+                  </div>
+                </div>
+              </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Validade *</label>
                 <div class="col-md-2">
@@ -352,7 +402,9 @@ export default {
         idOperation:null,
         voucherText:'',
         active: false,
-        exclusive: false
+        exclusive: false,
+        homeHighlight:null,
+        homeBenefitHighlight:null
       },
       modelValidations: {
       }
