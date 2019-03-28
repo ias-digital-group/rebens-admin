@@ -206,5 +206,31 @@ export default {
         }
       );
     });
+  },
+  getConfiguration: function(id) {
+    return new Promise((resolve, reject) => {
+      HTTP.get(
+        config.apiEndpoints.operationUri.concat(`${id}/Configuration`)
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  saveConfiguration: function(id, data) {
+    return new Promise((resolve, reject) => {
+      HTTP.post(config.apiEndpoints.operationUri.concat(`${id}/Configuration`), data).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
   }
 };

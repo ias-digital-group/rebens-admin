@@ -10,6 +10,11 @@
               :placeholder="field.name"></base-input>
             </div>
           </template>
+          <template v-else-if="field.type == 'boolean'">
+            <div class="col-md-9">
+              <base-checkbox v-model="field.data">&nbsp;</base-checkbox>
+            </div>
+          </template>
           <template v-else-if="field.type == 'html'">
             <div class="col-md-9">
               <wysiwyg v-model="field.data" style="margin-bottom:10px;" />

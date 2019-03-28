@@ -122,6 +122,9 @@
             </div>
           </form>
         </el-tab-pane>
+        <el-tab-pane label="Configurações" :disabled="viewAction == 'new' ? true : false">
+          <operation-config v-loading="formLoading" parent="operations" :parentId="id" ref="operationconfig"></operation-config>
+        </el-tab-pane>
         <el-tab-pane  label="Páginas" :disabled="viewAction == 'new' ? true : false">
           <static-texts v-loading="formLoading" parent="operations" :parentId="id" ref="statictexts"></static-texts>
         </el-tab-pane>
@@ -135,6 +138,7 @@ import { Select, Option, Tabs, TabPane } from 'element-ui';
 import operationService from '../../services/Operation/operationService';
 import helperService from '../../services/Helper/helperService';
 import StaticTexts from 'src/components/StaticTexts';
+import OperationConfig from 'src/components/OperationConfig';
 import _ from 'lodash';
 
 export default {
@@ -143,7 +147,8 @@ export default {
     [Select.name]: Select,
     [Tabs.name]: Tabs,
     [TabPane.name]: TabPane,
-    StaticTexts
+    StaticTexts,
+    OperationConfig
   },
   props: {
     id: String
