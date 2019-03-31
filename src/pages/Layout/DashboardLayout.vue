@@ -7,21 +7,21 @@
       :short-title="$t('sidebar.shortTitle')"
       :title="$t('sidebar.title')">
       <template slot="links">
-        <sidebar-item
-          :link="{
-            name: $t('sidebar.dashboard'),
-            icon: 'tim-icons icon-chart-pie-36',
-            path: '/dashboard'
-          }"
-        >
-        </sidebar-item>
-        <sidebar-item :link="{ name: $t('sidebar.categories'), icon: 'tim-icons icon-book-bookmark', path: '/categories' }"></sidebar-item>
-        <sidebar-item :link="{ name: $t('sidebar.banners'), icon: 'fas fa-file-image', path: '/banners' }"></sidebar-item>
-        <sidebar-item :link="{ name: $t('sidebar.partners'), icon: 'fas fa-handshake', path: '/partners' }"></sidebar-item>
-        <sidebar-item :link="{ name: $t('sidebar.operations'), icon: 'tim-icons icon-spaceship', path: '/operations' }"></sidebar-item>
+        <sidebar-item :link="{ name: $t('sidebar.dashboard'), icon: 'tim-icons icon-chart-pie-36', path: '/dashboard' }" > </sidebar-item>
         <sidebar-item :link="{ name: $t('sidebar.benefits'), icon: 'tim-icons icon-money-coins', path: '/benefits' }"></sidebar-item>
+        <sidebar-item :link="{ name: $t('sidebar.banners'), icon: 'fas fa-file-image', path: '/banners' }"></sidebar-item>
         <sidebar-item :link="{ name: $t('sidebar.faqs'), icon: 'tim-icons icon-notes', path: '/faqs' }"></sidebar-item>
-        <sidebar-item :link="{ name: $t('sidebar.users'), icon: 'tim-icons icon-single-02', path: '/users' }"></sidebar-item>
+        <sidebar-item :link="{ name: $t('sidebar.admin'), icon: 'tim-icons icon-spaceship', }">
+          <sidebar-item :link="{ name: $t('sidebar.categories'), path: '/categories' }"></sidebar-item>
+          <sidebar-item :link="{ name: $t('sidebar.partners'), path: '/partners' }"></sidebar-item>
+          <sidebar-item :link="{ name: $t('sidebar.operations'), path: '/operations' }"></sidebar-item>
+          <sidebar-item :link="{ name: $t('sidebar.users'), path: '/users' }"></sidebar-item>    
+        </sidebar-item>
+        <sidebar-item :link="{ name: $t('sidebar.report'), icon: 'fas fa-chart-pie' }">
+          <sidebar-item :link="{ name: $t('sidebar.customer'), path: '/report/customer' }"></sidebar-item>
+          <sidebar-item :link="{ name: $t('sidebar.benefitUse'), path: '/report/benefit-use' }"></sidebar-item>
+        </sidebar-item>
+        
       </template>
     </side-bar>
     <div class="main-panel" :data="sidebarBackground">

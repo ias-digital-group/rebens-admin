@@ -1,12 +1,10 @@
 <template>
-<div class="row">
-  <div class="col-md-12">
-    <card :title="$t('pages.users.title')">
-      <h4 slot="header" class="card-title">{{$t('pages.users.title')}}</h4>
-      
-      
+  <div class="row">
+    <div class="col-md-12">
+      <card :title="$t('pages.users.title')">
+        <h4 slot="header" class="card-title">{{$t('pages.users.title')}}</h4>
         <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
-            <div class="row">
+          <div class="row">
             <label class="col-md-3 col-form-label">Nome</label>
             <div class="col-md-9">
                 <base-input 
@@ -19,22 +17,51 @@
                 placeholder="Nome" 
                 maxlength='300'></base-input>
             </div>
-            </div>
-            <div class="row">
-                <label class="col-md-3 col-form-label">Email</label>
-                <div class="col-md-9">
-                  <base-input 
-                    required
-                    v-model="model.email"
-                    v-validate="modelValidations.email"
-                    type="email"
-                    :error="getError('email')"
-                    name="email"
-                    placeholder="Email" 
-                    maxlength='300'></base-input>
+          </div>
+          <div class="row">
+              <label class="col-md-3 col-form-label">Email</label>
+              <div class="col-md-9">
+                <base-input 
+                  required
+                  v-model="model.email"
+                  v-validate="modelValidations.email"
+                  type="email"
+                  :error="getError('email')"
+                  name="email"
+                  placeholder="Email" 
+                  maxlength='300'></base-input>
+              </div>
+          </div>
+          <div class="row">
+            <label class="col-md-3 col-form-label">Papel</label>
+            <div class="col-md-2">
+                <div class="form-group">
+                <el-select
+                    class="select-info"
+                    placeholder="Papel"
+                    v-model="model.roles"
+                    v-loading.lock="selectLoading"
+                    v-validate="modelValidations.roles"
+                    lock>
+                    <el-option
+                    class="select-primary"
+                    value="master"
+                    label="Master"
+                    >
+                    </el-option>
+                    <el-option
+                    class="select-primary"
+                    value="publisher"
+                    label="Publicador"
+                    >
+                    </el-option>
+                    <el-option class="select-primary" value="administrator" label="Administrador">
+                    </el-option>
+                </el-select>
                 </div>
             </div>
-            <div class="row">
+          </div>
+          <div class="row" v-if="model.roles == 'administrator'">
             <label class="col-md-3 col-form-label">Operação</label>
             <div class="col-md-2">
                 <div class="form-group">
@@ -56,16 +83,16 @@
                 </el-select>
                 </div>
             </div>
-            </div>
-            <div class="row">
-                <label class="col-md-3 col-form-label"></label>
-                <div class="col-md-9">
-                <div class="form-group">
-                    <base-checkbox v-model="model.status">Ativo</base-checkbox>
-                </div>
-                </div>
-            </div>
-            <div class="row">
+          </div>
+          <div class="row">
+              <label class="col-md-3 col-form-label"></label>
+              <div class="col-md-9">
+              <div class="form-group">
+                  <base-checkbox v-model="model.active">Ativo</base-checkbox>
+              </div>
+              </div>
+          </div>
+          <div class="row">
             <div class="col-md-12">
                 <base-link class="btn mt-3 btn-simple btn-primary" to="/users">Voltar</base-link>
                 <base-button 
@@ -78,15 +105,15 @@
                 </base-button>
                 
             </div>
-            </div>
+          </div>
         </form>
-    </card>
+      </card>
+    </div>
   </div>
-</div>
 </template>
 <script>
 import { Select, Option, Tabs, TabPane, DatePicker } from 'element-ui';
-import faqService from '../../services/User/userService';
+import userService from '../../services/User/userService';
 import operationService from '../../services/Operation/operationService';
 import _ from 'lodash';
 export default {
@@ -110,7 +137,8 @@ export default {
         name: '',
         email:'',
         status: false,
-        idOperation:null
+        idOperation:null,
+        roles:''
       },
       modelValidations: {
         name: {
@@ -122,6 +150,9 @@ export default {
           max: 300
         },
         operation:{
+          required:true
+        },
+        roles:{
           required:true
         }
       },

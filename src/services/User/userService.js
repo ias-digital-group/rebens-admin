@@ -14,6 +14,9 @@ export default {
         )
       ).then(
         response => {
+          _.each(response.data.data, function(el) {
+            el.activeName = el.active ? 'Sim' : 'Não';
+          });
           resolve(response.data);
         },
         error => {

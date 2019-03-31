@@ -7,7 +7,7 @@ export default {
       sortField: '',
       sortOrder: 'ascending',
       pagination: {
-        perPage: 5,
+        perPage: 10,
         currentPage: 1,
         perPageOptions: [5, 10, 25, 50],
         total: 0
@@ -99,8 +99,8 @@ export default {
       vm.$store.commit('setPageSetting', {
         name: vm.internalName,
         pagination: {
-          perPage: vm.pagination.perPage,
-          currentPage: vm.pagination.currentPage
+          perPage: vm.$data.pagination.perPage,
+          currentPage: vm.$data.pagination.currentPage
         },
         searchQuery: vm.searchQuery,
         sortField: vm.sortField,

@@ -119,8 +119,8 @@ export default {
           minWidth: 250
         },
         {
-          prop: 'statusName',
-          label: this.$i18n.t('pages.users.grid.status'),
+          prop: 'activeName',
+          label: this.$i18n.t('pages.users.grid.active'),
           minWidth: 0
         }
       ]

@@ -26,6 +26,7 @@ export default {
     staticTextUri: process.env.VUE_APP_API_URI.concat('statictext/'),
     faqUri: process.env.VUE_APP_API_URI.concat('faq/'),
     userUri: process.env.VUE_APP_API_URI.concat('adminuser/'),
+    reportUri: process.env.VUE_APP_API_URI.concat('report/'),
     viaCepUri: process.env.VUE_APP_VIACEP_URI
   }
 };

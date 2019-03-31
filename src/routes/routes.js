@@ -48,6 +48,9 @@ const FaqsEdit = () => import('src/pages/Faq/Edit.vue');
 const UsersList = () => import('src/pages/User/List.vue');
 const UsersEdit = () => import('src/pages/User/Edit.vue');
 
+const CustomerReport = () => import('src/pages/Report/Customer.vue');
+const BenefitUseReport = () => import('src/pages/Report/BenefitUse.vue');
+
 let categoriesPages = {
   path: '/categories',
   component: DashboardLayout,
@@ -328,7 +331,7 @@ let usersPages = {
     {
       path: 'new',
       name: `new_user`,
-      component: FaqsEdit,
+      component: UsersEdit,
       meta: {
         requiresAuth: true,
         roles: ['master'],
@@ -344,6 +347,39 @@ let usersPages = {
         requiresAuth:true,
         roles: ['master'],
         title: i18n.t('pages.users.title')
+      }
+    }
+  ]
+}
+
+let reportPages = {
+  path: '/report',
+  component: DashboardLayout,
+  meta:{
+    requiresAuth: true,
+    roles: ['master', 'administrator', 'publisher'],
+    title: i18n.t('pages.report.title')
+  },
+  children:[
+    {
+      path: 'customer',
+      name: `customer`,
+      component: CustomerReport,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'administrator', 'publisher'],
+        title: i18n.t('pages.report.customer.title')
+      }
+    },
+    {
+      path: 'benefit-use',
+      name: 'benefit_use',
+      props: true,
+      component: BenefitUseReport,
+      meta: {
+        requiresAuth:true,
+        roles: ['master', 'administrator', 'publisher'],
+        title: i18n.t('pages.report.benefit-use.title')
       }
     }
   ]
@@ -411,7 +447,8 @@ const routes = [
   operationsPages,
   benefitsPages,
   faqsPages,
-  usersPages
+  usersPages,
+  reportPages
 ];
 
 export default routes;
