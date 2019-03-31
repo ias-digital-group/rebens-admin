@@ -12,7 +12,7 @@ const state = {
     pages: []
   },
   accessToken: localStorage.getItem('token') || '',
-  user: localStorage.getItem('portal.user') || {}
+  user: JSON.parse(localStorage.getItem('portal.user')) || {}
 };
 const mutations = {
   setPageSetting(state, settings) {

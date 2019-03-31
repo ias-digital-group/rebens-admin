@@ -15,7 +15,19 @@ router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   if (requiresAuth) {
     if (store.getters.isAuthenticated) {
-      next();
+      const matchedRole = to.meta.roles.find(function(role) {
+        return store.getters.currentUser.role === role
+      })
+      if(matchedRole) {
+        next()
+      }
+      else {
+        next({
+          path: '/access-denied'
+        })
+      }
+      
+      //next();
     } else {
       next({
         path: '/login'
