@@ -7,20 +7,6 @@
         <el-tab-pane label="Operação">
           <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
             <div class="row">
-              <label class="col-md-3 col-form-label">Código</label>
-              <div class="col-md-9">
-                <base-input 
-                  required
-                  v-model="model.code"
-                  v-validate="modelValidations.codigo"
-                  type="text"
-                  :error="getError('codigo')"
-                  name="codigo"
-                  placeholder="Codigo" 
-                  maxlength='300'></base-input>
-              </div>
-            </div>
-            <div class="row">
               <label class="col-md-3 col-form-label">Titulo</label>
               <div class="col-md-9">
                 <base-input 
@@ -64,6 +50,20 @@
               </div>
             </div>
             <div class="row">
+              <label class="col-md-3 col-form-label">Domínio</label>
+              <div class="col-md-9">
+                <base-input 
+                  required
+                  v-model="model.domain"
+                  v-validate="modelValidations.domain"
+                  type="text"
+                  :error="getError('domain')"
+                  name="domain"
+                  placeholder="domínio" 
+                  maxlength='200'></base-input>
+              </div>
+            </div>
+            <div class="row">
               <label class="col-md-3 col-form-label">Porcentagem</label>
               <div class="col-md-3">
                 <base-input 
@@ -98,6 +98,27 @@
                   </el-select>
               </div>
             </div>
+            <template v-if="model.logo">
+                <div class="row">
+                  <label class="col-md-3 col-form-label">Logo</label>
+                  <div class="col-md-9">
+                    <div>
+                      <img :src="model.logo" class="img-preview" />
+                      <base-button @click="model.image = ''" class="btn-simple btn-file" type="danger">
+                        <i class="fas fa-times"></i>
+                      </base-button>
+                    </div>
+                  </div>
+                </div>
+              </template>
+              <template v-else>
+                <div class="row">
+                  <label class="col-md-3 col-form-label">Logo</label>
+                  <div class="col-md-9">
+                    <image-upload @change="onImageChange" change-text="Alterar" remove-text="Remover" select-text="Selecione uma imagem" />
+                  </div>
+                </div>
+              </template>
             <div class="row">
                 <label class="col-md-3 col-form-label">Ativo</label>
                 <div class="col-md-9">
@@ -118,6 +139,12 @@
                   Salvar
                 </base-button>
                 <base-link class="btn mt-3 btn-secondary" to="/operations">Voltar</base-link>
+                <base-button class="mt-3 btn-success pull-right" 
+                  native-type="button"
+                  @click="publish"
+                  :disabled="!canPublish"
+                  :loading="publishLoading">
+                  {{publishLabel}}</base-button>
               </div>
             </div>
           </form>
@@ -139,6 +166,7 @@ import operationService from '../../services/Operation/operationService';
 import helperService from '../../services/Helper/helperService';
 import StaticTexts from 'src/components/StaticTexts';
 import OperationConfig from 'src/components/OperationConfig';
+import { ImageUpload } from 'src/components/index';
 import _ from 'lodash';
 
 export default {
@@ -148,7 +176,8 @@ export default {
     [Tabs.name]: Tabs,
     [TabPane.name]: TabPane,
     StaticTexts,
-    OperationConfig
+    OperationConfig,
+    ImageUpload
   },
   props: {
     id: String
@@ -158,6 +187,10 @@ export default {
       selectLoading: false,
       formLoading: false,
       submitLoading: false,
+      publishLoading: false,
+      canPublish: false,
+      publishLabel:"Publicar",
+      image: null,
       model: {
         title: '',
         companyName: '',
@@ -165,7 +198,8 @@ export default {
         domain: '',
         idOperationType: 0,
         cachbackPercentage: 0,
-        active: false
+        active: false,
+        image: ''
       },
       modelValidations: {
         title: {
@@ -206,16 +240,20 @@ export default {
       this.$validator.validateAll().then(isValid => {
         if (isValid) {
           self.submitLoading = true;
-          if (self.viewAction == 'new') {
-            operationService.create(self.model).then(
-              () => {
-                self.$notify({
-                  type: 'primary',
-                  message: 'Operação cadastrada com sucesso!',
-                  icon: 'tim-icons icon-bell-55'
-                });
-                self.$router.push('/operations');
-                self.submitLoading = false;
+          if (self.image) {
+            helperService.uploadFile(self.image).then(
+              response => {
+                if (response.status != 200) {
+                  self.$notify({
+                    type: 'primary',
+                    message: response.message,
+                    icon: 'tim-icons icon-bell-55'
+                  });
+                  self.submitLoading = false;
+                  return;
+                }
+                self.model.logo = response.data.url;
+                self.saveOperation(self);
               },
               err => {
                 self.$notify({
@@ -227,28 +265,58 @@ export default {
               }
             );
           } else {
-            operationService.update(self.model).then(
-              response => {
-                self.$notify({
-                  type: 'primary',
-                  message: response.message,
-                  icon: 'tim-icons icon-bell-55'
-                });
-                self.$router.push('/operations');
-                self.submitLoading = false;
-              },
-              err => {
-                self.$notify({
-                  type: 'primary',
-                  message: err.message,
-                  icon: 'tim-icons icon-bell-55'
-                });
-                self.submitLoading = false;
-              }
-            );
+            self.saveOperation(self);
           }
         }
       });
+    },
+    saveOperation(vw){
+      if (vw.viewAction == 'new') {
+        operationService.create(vw.model).then(
+          () => {
+            vw.$notify({
+              type: 'primary',
+              message: 'Operação cadastrada com sucesso!',
+              icon: 'tim-icons icon-bell-55'
+            });
+            vw.$router.push('/operations');
+            vw.submitLoading = false;
+          },
+          err => {
+            vw.$notify({
+              type: 'primary',
+              message: err.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+            vw.submitLoading = false;
+          }
+        );
+      } else {
+        operationService.update(vw.model).then(
+          response => {
+            vw.$notify({
+              type: 'primary',
+              message: response.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+            vw.$router.push('/operations');
+            vw.submitLoading = false;
+          },
+          err => {
+            vw.$notify({
+              type: 'primary',
+              message: err.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+            vw.submitLoading = false;
+          }
+        );
+      }
+    },
+    publish(){
+      const self = this;
+      self.publishLoading = true;
+      self.publishLabel = "Publicando";
     },
     fetchData() {
       const self = this;
@@ -257,6 +325,9 @@ export default {
         operationService.get(self.id).then(
           response => {
             self.model = response.data;
+            self.publishLabel = response.data.publishStatus;
+            self.canPublish = response.data.canPublish;
+            self.publishLoading = response.data.publishStatus === "Processando";
             self.formLoading = false;
           },
           () => {
@@ -279,6 +350,9 @@ export default {
           self.selectLoading = false;
         }
       );
+    },
+    onImageChange(file) {
+      this.image = file;
     }
   },
   created() {

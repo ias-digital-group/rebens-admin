@@ -232,5 +232,17 @@ export default {
         }
       );
     });
+  },
+  publish: function(id, data) {
+    return new Promise((resolve, reject) => {
+      HTTP.post(config.apiEndpoints.operationUri.concat(`${id}/Publish`)).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
   }
 };
