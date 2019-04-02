@@ -1,313 +1,224 @@
 <template>
   <div class="row">
-    <!-- Big Chart -->
-    <div class="col-12">
+    <div class="col-lg-12">
+      <h2>Benefícios</h2>
+    </div>
+    <div class="col-lg-6">
       <card type="chart">
         <template slot="header">
-          <div class="row">
-            <div class="col-sm-6" :class="'text-left'">
-              <h5 class="card-category">Total shipments</h5>
-              <h2 class="card-title">Performance</h2>
-            </div>
-            <div class="col-sm-6">
-              <div
-                class="btn-group btn-group-toggle"
-                :class="'float-right'"
-                data-toggle="buttons"
-              >
-                <label
-                  v-for="(option, index) in bigLineChartCategories"
-                  :key="option"
-                  class="btn btn-sm btn-primary btn-simple"
-                  :class="{ active: bigLineChart.activeIndex === index }"
-                  :id="index"
-                >
-                  <input
-                    type="radio"
-                    @click="initBigChart(index);"
-                    name="options"
-                    autocomplete="off"
-                    :checked="bigLineChart.activeIndex === index"
-                  />
-                  {{ option }}
-                </label>
-              </div>
-            </div>
-          </div>
-        </template>
-        <div class="chart-area">
-          <line-chart
-            style="height: 100%"
-            ref="bigChart"
-            :chart-data="bigLineChart.chartData"
-            :gradient-colors="bigLineChart.gradientColors"
-            :gradient-stops="bigLineChart.gradientStops"
-            :extra-options="bigLineChart.extraOptions"
-          >
-          </line-chart>
-        </div>
-      </card>
-    </div>
-    <!-- Stats Cards -->
-    <div class="col-lg-3 col-md-6" v-for="card in statsCards" :key="card.title">
-      <stats-card
-        :title="card.title"
-        :sub-title="card.subTitle"
-        :type="card.type"
-        :icon="card.icon"
-      >
-        <div slot="footer" v-html="card.footer"></div>
-      </stats-card>
-    </div>
-
-    <!-- Small charts -->
-    <div class="col-lg-4">
-      <card type="chart">
-        <template slot="header">
-          <h5 class="card-category">Total Shipments</h5>
-          <h3 class="card-title">
-            <i class="tim-icons icon-bell-55 text-primary "></i> 763,215
-          </h3>
-        </template>
-        <div class="chart-area">
-          <line-chart
-            style="height: 100%"
-            :chart-data="purpleLineChart.chartData"
-            :gradient-colors="purpleLineChart.gradientColors"
-            :gradient-stops="purpleLineChart.gradientStops"
-            :extra-options="purpleLineChart.extraOptions"
-          >
-          </line-chart>
-        </div>
-      </card>
-    </div>
-    <div class="col-lg-4">
-      <card type="chart">
-        <template slot="header">
-          <h5 class="card-category">Daily Sales</h5>
-          <h3 class="card-title">
-            <i class="tim-icons icon-delivery-fast text-info "></i> 3,500€
-          </h3>
+          <h3 class="card-title">Mais Vistos</h3>
         </template>
         <div class="chart-area">
           <bar-chart
             style="height: 100%"
-            :chart-data="blueBarChart.chartData"
-            :gradient-stops="blueBarChart.gradientStops"
-            :extra-options="blueBarChart.extraOptions"
+            :chart-data="benefitViewChart.chartData"
+            :gradient-stops="benefitViewChart.gradientStops"
+            :extra-options="benefitViewChart.extraOptions"
           >
           </bar-chart>
         </div>
       </card>
     </div>
-    <div class="col-lg-4">
+    <div class="col-lg-6">
       <card type="chart">
         <template slot="header">
-          <h5 class="card-category">Completed tasks</h5>
-          <h3 class="card-title">
-            <i class="tim-icons icon-send text-success "></i> 12,100K
-          </h3>
+          <h3 class="card-title">Mais Utilizados</h3>
         </template>
         <div class="chart-area">
-          <line-chart
+          <bar-chart
             style="height: 100%"
-            :chart-data="greenLineChart.chartData"
-            :gradient-stops="greenLineChart.gradientStops"
-            :extra-options="greenLineChart.extraOptions"
+            :chart-data="benefitUseChart.chartData"
+            :gradient-stops="benefitUseChart.gradientStops"
+            :extra-options="benefitUseChart.extraOptions"
           >
-          </line-chart>
+          </bar-chart>
         </div>
       </card>
     </div>
+    <dashboard-pie-chart v-for="(operation, index) in operationsPieCharts" :key="index" v-bind:operation="operation"></dashboard-pie-chart>
   </div>
 </template>
 <script>
-import LineChart from '@/components/Charts/LineChart';
+import DashboardPieChart from '@/components/DashboardPieChart';
 import BarChart from '@/components/Charts/BarChart';
+import PieChart from '@/components/Charts/PieChart';
 import * as chartConfigs from '@/components/Charts/config';
-import TaskList from './TaskList';
-import UserTable from './UserTable';
-import StatsCard from 'src/components/Cards/StatsCard';
 import config from '@/config';
+import reportService from '../../services/Report/reportService';
 
 export default {
   components: {
-    LineChart,
     BarChart,
-    StatsCard,
-    TaskList,
-    UserTable
+    PieChart,
+    DashboardPieChart
   },
   data() {
     return {
-      statsCards: [
-        {
-          title: '150GB',
-          subTitle: 'Number',
-          type: 'warning',
-          icon: 'tim-icons icon-chat-33',
-          footer: '<i class="tim-icons icon-refresh-01"></i> Update Now'
-        },
-        {
-          title: '+45K',
-          subTitle: 'Followers',
-          type: 'primary',
-          icon: 'tim-icons icon-shape-star',
-          footer: '<i class="tim-icons icon-sound-wave"></i></i> Last Research'
-        },
-        {
-          title: '150,000',
-          subTitle: 'Users',
-          type: 'info',
-          icon: 'tim-icons icon-single-02',
-          footer: '<i class="tim-icons icon-trophy"></i> Customer feedback'
-        },
-        {
-          title: '23',
-          subTitle: 'Errors',
-          type: 'danger',
-          icon: 'tim-icons icon-molecule-40',
-          footer: '<i class="tim-icons icon-watch-time"></i> In the last hours'
-        }
-      ],
-      bigLineChart: {
-        allData: [
-          [100, 70, 90, 70, 85, 60, 75, 60, 90, 80, 110, 100],
-          [80, 120, 105, 110, 95, 105, 90, 100, 80, 95, 70, 120],
-          [60, 80, 65, 130, 80, 105, 90, 130, 70, 115, 60, 130]
-        ],
-        activeIndex: 0,
+      operationsPieCharts: [],
+      benefitViewChart:{
+        extraOptions: chartConfigs.barChartOptions,
         chartData: null,
-        extraOptions: chartConfigs.purpleChartOptions,
         gradientColors: config.colors.primaryGradient,
-        gradientStops: [1, 0.4, 0],
-        categories: []
-      },
-      purpleLineChart: {
-        extraOptions: chartConfigs.purpleChartOptions,
-        chartData: {
-          labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
-          datasets: [
-            {
-              label: 'Data',
-              fill: true,
-              borderColor: config.colors.primary,
-              borderWidth: 2,
-              borderDash: [],
-              borderDashOffset: 0.0,
-              pointBackgroundColor: config.colors.primary,
-              pointBorderColor: 'rgba(255,255,255,0)',
-              pointHoverBackgroundColor: config.colors.primary,
-              pointBorderWidth: 20,
-              pointHoverRadius: 4,
-              pointHoverBorderWidth: 15,
-              pointRadius: 4,
-              data: [80, 100, 70, 80, 120, 80]
-            }
-          ]
-        },
-        gradientColors: config.colors.primaryGradient,
-        gradientStops: [1, 0.2, 0]
-      },
-      greenLineChart: {
-        extraOptions: chartConfigs.greenChartOptions,
-        chartData: {
-          labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV'],
-          datasets: [
-            {
-              label: 'My First dataset',
-              fill: true,
-              borderColor: config.colors.danger,
-              borderWidth: 2,
-              borderDash: [],
-              borderDashOffset: 0.0,
-              pointBackgroundColor: config.colors.danger,
-              pointBorderColor: 'rgba(255,255,255,0)',
-              pointHoverBackgroundColor: config.colors.danger,
-              pointBorderWidth: 20,
-              pointHoverRadius: 4,
-              pointHoverBorderWidth: 15,
-              pointRadius: 4,
-              data: [90, 27, 60, 12, 80]
-            }
-          ]
-        },
-        gradientColors: [
-          'rgba(66,134,121,0.15)',
-          'rgba(66,134,121,0.0)',
-          'rgba(66,134,121,0)'
-        ],
         gradientStops: [1, 0.4, 0]
       },
-      blueBarChart: {
+      benefitUseChart: {
         extraOptions: chartConfigs.barChartOptions,
-        chartData: {
-          labels: ['USA', 'GER', 'AUS', 'UK', 'RO', 'BR'],
-          datasets: [
-            {
-              label: 'Countries',
-              fill: true,
-              borderColor: config.colors.info,
-              borderWidth: 2,
-              borderDash: [],
-              borderDashOffset: 0.0,
-              data: [53, 20, 10, 80, 100, 45]
-            }
-          ]
-        },
+        chartData: null,
         gradientColors: config.colors.primaryGradient,
         gradientStops: [1, 0.4, 0]
       }
     };
   },
-  computed: {
-    bigLineChartCategories() {
-      return ['Accounts', 'Purchases', 'Sessions'];
-    }
-  },
   methods: {
-    initBigChart(index) {
-      let chartData = {
-        datasets: [
-          {
-            fill: true,
-            borderColor: config.colors.primary,
-            borderWidth: 2,
-            borderDash: [],
-            borderDashOffset: 0.0,
-            pointBackgroundColor: config.colors.primary,
-            pointBorderColor: 'rgba(255,255,255,0)',
-            pointHoverBackgroundColor: config.colors.primary,
-            pointBorderWidth: 20,
-            pointHoverRadius: 4,
-            pointHoverBorderWidth: 15,
-            pointRadius: 4,
-            data: this.bigLineChart.allData[index]
+    fetchData(){
+      const self = this;
+
+      reportService.loadDashboard().then(
+        response => {
+          if(response.data){
+            if(response.data.benefitUse)
+            {
+              self.benefitUseChart.chartData = {
+                labels: response.data.benefitUse.labels,
+                datasets: [{
+                  label: response.data.benefitUse.title,
+                  fill: true,
+                  borderColor: config.colors.info,
+                  borderWidth: 2,
+                  borderDash: [],
+                  borderDashOffset: 0.0,
+                  data: response.data.benefitUse.data
+                }]
+              };
+            }
+            if(response.data.benefitView)
+            {
+              self.benefitViewChart.chartData = {
+                labels: response.data.benefitView.labels,
+                datasets: [{
+                  label: response.data.benefitView.title,
+                  fill: true,
+                  borderColor: config.colors.info,
+                  borderWidth: 2,
+                  borderDash: [],
+                  borderDashOffset: 0.0,
+                  data: response.data.benefitView.data
+                }]
+              };
+            }
+
+            if(response.data.operations)
+            {
+              response.data.operations.forEach(element => {
+                let op = {
+                  name: element.operation,
+                  charts: []
+                };
+                if(element.users){
+                  let chart = {
+                    title: element.users.title,
+                    chartData: {
+                      labels: element.users.labels,
+                      datasets: [
+                        {
+                          label: element.users.title,
+                          fill: true,
+                          borderColor: config.colors.info,
+                          borderWidth: 2,
+                          borderDash: [],
+                          borderDashOffset: 0.0,
+                          data: element.users.data
+                        }
+                      ]
+                    },
+                    extraOptions: chartConfigs.pieChartOptions,
+                    gradientStops: [1, 0.4, 0]
+                  }
+                  op.charts.push(chart);
+                }
+                if(element.regionState){
+                  let chart = {
+                    title: element.regionState.title,
+                    chartData: {
+                      labels: element.regionState.labels,
+                      datasets: [
+                        {
+                          label: element.regionState.title,
+                          fill: true,
+                          borderColor: config.colors.info,
+                          borderWidth: 2,
+                          borderDash: [],
+                          borderDashOffset: 0.0,
+                          data: element.regionState.data
+                        }
+                      ]
+                    },
+                    extraOptions: chartConfigs.pieChartOptions,
+                    gradientStops: [1, 0.4, 0]
+                  }
+                  op.charts.push(chart);
+                }
+                if(element.regionCity){
+                  let chart = {
+                    title: element.regionCity.title,
+                    chartData: {
+                      labels: element.regionCity.labels,
+                      datasets: [
+                        {
+                          label: element.regionCity.title,
+                          fill: true,
+                          borderColor: config.colors.info,
+                          borderWidth: 2,
+                          borderDash: [],
+                          borderDashOffset: 0.0,
+                          data: element.regionCity.data
+                        }
+                      ]
+                    },
+                    extraOptions: chartConfigs.pieChartOptions,
+                    gradientStops: [1, 0.4, 0]
+                  }
+                  op.charts.push(chart);
+                }
+                if(element.regionNeighborhood){
+                  let chart = {
+                    title: element.regionNeighborhood.title,
+                    chartData: {
+                      labels: element.regionNeighborhood.labels,
+                      datasets: [
+                        {
+                          label: element.regionNeighborhood.title,
+                          fill: true,
+                          borderColor: config.colors.info,
+                          borderWidth: 2,
+                          borderDash: [],
+                          borderDashOffset: 0.0,
+                          data: element.regionNeighborhood.data
+                        }
+                      ]
+                    },
+                    extraOptions: chartConfigs.pieChartOptions,
+                    gradientStops: [1, 0.4, 0]
+                  }
+                  op.charts.push(chart);
+                }
+
+                self.operationsPieCharts.push(op);
+              });
+            }
           }
-        ],
-        labels: [
-          'JAN',
-          'FEB',
-          'MAR',
-          'APR',
-          'MAY',
-          'JUN',
-          'JUL',
-          'AUG',
-          'SEP',
-          'OCT',
-          'NOV',
-          'DEC'
-        ]
-      };
-      this.$refs.bigChart.updateGradients(chartData);
-      this.bigLineChart.chartData = chartData;
-      this.bigLineChart.activeIndex = index;
+//          self.$data.loading = false;
+        },
+        () => {
+  //        self.$data.loading = false;
+        }
+      );
     }
   },
   mounted() {
     this.i18n = this.$i18n;
-    this.initBigChart(0);
+    //this.initBigChart(0);
+    this.fetchData();
   }
 };
 </script>

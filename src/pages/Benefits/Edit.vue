@@ -61,7 +61,7 @@
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Parceiro *</label>
-                <div class="col-md-3">
+                <div class="col-md-6">
                   <div class="form-group">
                     <el-autocomplete 
                       :fetch-suggestions="querySearch"
@@ -73,7 +73,7 @@
                     <input type="hidden" v-model="model.idPartner" />
                   </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-3">
                   <label v-show="customErros.includes('partner')" class="text-danger">O campo Parceiro é obrigatório!</label>
                 </div>
               </div>

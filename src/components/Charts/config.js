@@ -155,7 +155,7 @@ export let pieChartOptions = {
     bodyFontColor: '#666',
     bodySpacing: 4,
     xPadding: 12,
-    mode: 'nearest',
+    //mode: 'nearest',
     intersect: 0,
     position: 'nearest'
   },

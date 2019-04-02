@@ -233,7 +233,7 @@ export default {
       );
     });
   },
-  publish: function(id, data) {
+  publish: function(id) {
     return new Promise((resolve, reject) => {
       HTTP.post(config.apiEndpoints.operationUri.concat(`${id}/Publish`)).then(
         response => {

@@ -2,7 +2,17 @@
 <div class="row">
   <div class="col-md-12">
     <card title="Horizontal Form">
-      <h4 slot="header" class="card-title">{{$t('pages.operations.title')}}</h4>
+      <h4 slot="header" class="card-title col-md-12">
+        {{$t('pages.operations.title')}}
+        <base-button class="pull-right" 
+          native-type="button"
+          type="info"
+          @click="publish"
+          :disabled="!canPublish"
+          :loading="publishLoading">
+          {{publishLabel}}</base-button>
+      </h4>
+      
       <el-tabs>
         <el-tab-pane label="Operação">
           <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
@@ -44,7 +54,7 @@
                   type="text"
                   :error="getError('companyDoc')"
                   name="companyDoc"
-                  placeholder="Documento" 
+                  placeholder="CNPJ" 
                   maxlength='18'
                   :inputMask="['##.###.###/####-##']"></base-input>
               </div>
@@ -59,7 +69,7 @@
                   type="text"
                   :error="getError('domain')"
                   name="domain"
-                  placeholder="domínio" 
+                  placeholder="www.seudominio.com.br" 
                   maxlength='200'></base-input>
               </div>
             </div>
@@ -78,7 +88,7 @@
                 </base-input>
               </div>
             </div>
-            <div class="row">
+            <div class="row mb-2">
               <label class="col-md-3 col-form-label">Tipo</label>
               <div class="col-md-9">
                 <el-select
@@ -99,12 +109,12 @@
               </div>
             </div>
             <template v-if="model.logo">
-                <div class="row">
-                  <label class="col-md-3 col-form-label">Logo</label>
+                <div class="row mb-3">
+                  <label class="col-md-3 col-form-label">Logo (160px X 68px)</label>
                   <div class="col-md-9">
                     <div>
-                      <img :src="model.logo" class="img-preview" />
-                      <base-button @click="model.image = ''" class="btn-simple btn-file" type="danger">
+                      <img style="max-width:160px;max-height:68px;" :src="model.logo" class="img-preview" />
+                      <base-button @click="model.logo = ''" class="btn-simple btn-file" type="danger">
                         <i class="fas fa-times"></i>
                       </base-button>
                     </div>
@@ -112,10 +122,10 @@
                 </div>
               </template>
               <template v-else>
-                <div class="row">
-                  <label class="col-md-3 col-form-label">Logo</label>
+                <div class="row mb-3">
+                  <label class="col-md-3 col-form-label">Logo (160px X 68px)</label>
                   <div class="col-md-9">
-                    <image-upload @change="onImageChange" change-text="Alterar" remove-text="Remover" select-text="Selecione uma imagem" />
+                    <image-upload @change="onImageChange" style="max-width:160px;max-height:68px;" change-text="Alterar" remove-text="Remover" select-text="Selecione uma imagem" />
                   </div>
                 </div>
               </template>
@@ -128,23 +138,18 @@
                 </div>
             </div>
             <div class="row">
-              <label class="col-md-3 col-form-label"></label>
-              <div class="col-md-9">
+              <div class="col-md-12">
+                <base-link class="btn mt-3 btn-simple btn-primary" to="/operations">Voltar</base-link>
                 <base-button 
-                  class="mt-3" 
+                  class="mt-3 pull-right" 
                   native-type="submit" 
                   type="info"
                   @click.native.prevent="validate"
                   :loading="submitLoading">
                   Salvar
                 </base-button>
-                <base-link class="btn mt-3 btn-secondary" to="/operations">Voltar</base-link>
-                <base-button class="mt-3 btn-success pull-right" 
-                  native-type="button"
-                  @click="publish"
-                  :disabled="!canPublish"
-                  :loading="publishLoading">
-                  {{publishLabel}}</base-button>
+                
+                
               </div>
             </div>
           </form>
@@ -316,7 +321,24 @@ export default {
     publish(){
       const self = this;
       self.publishLoading = true;
-      self.publishLabel = "Publicando";
+      self.publishLabel = "Processando";
+      operationService.publish(self.id).then(
+        response => {
+            self.$notify({
+              type: 'primary',
+              message: 'A operação está sendo publicada, e assim que estiver concluído você verá aqui.',
+              icon: 'tim-icons icon-bell-55'
+            });
+          },
+          err => {
+            self.$notify({
+              type: 'primary',
+              message: err.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+            self.publishLoading = false;
+          }
+      );
     },
     fetchData() {
       const self = this;
