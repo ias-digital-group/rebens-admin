@@ -37,7 +37,7 @@
             </template>
             <template v-else>
               <div class="col-md-9">
-                <image-upload @change="onImageChange" :optionalData="staticText.images[idx]" change-text="Alterar" remove-text="Remover" select-text="Selecione uma imagem" />
+                <image-upload @change="onImageChange" :optionalData="getOptionalData(field, idx)" change-text="Alterar" remove-text="Remover" select-text="Selecione uma imagem" />
               </div>
             </template>
           </template>
@@ -67,22 +67,34 @@ export default {
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
+    getOptionalData(field, idx) {
+      return {field: field, index: idx, data: field.data, img: null};
+    },
     removeImage(field, idx) {
-      this.staticText.images.push({field: field, index: idx, data: field.data, img: null});
+      //this.staticText.images.push({field: field, index: idx, data: field.data, img: null});
       field.data = '';
+      _.remove(this.staticText.images, el => {
+        return el.index == idx;
+      });  
     },
     onImageChange(file, element) {
       if (file == null) {
-        const f = this.staticText.images[element.index];
-        this.staticText.data.fields[element.index].data = f.data;
-        _.pullAt(this.staticText.images, element.index); 
+        //const f = this.staticText.images[element.index];
+        //this.staticText.data.fields[element.index].data = '';
+        //_.pullAt(this.staticText.images, i); 
         return;
       }
-      _.forEach(this.staticText.images, el => {
-        if (el.index == element.index) {
-          el.img = file;
-        }
-      });
+      if(this.staticText.images.length == 0) {
+        element.img = file;
+        this.staticText.images.push(element);
+      } else {
+        _.forEach(this.staticText.images, el => {
+          if (el.index == element.index) {
+            el.img = file;
+          }
+        });
+      }
+      
     }
   }
 };
