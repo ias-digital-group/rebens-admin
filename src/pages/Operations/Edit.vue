@@ -21,6 +21,7 @@
               <div class="col-md-9">
                 <base-input 
                   required
+                  :readonly="publishLabel == 'Publicado'"
                   v-model="model.title"
                   v-validate="modelValidations.title"
                   type="text"
@@ -64,6 +65,7 @@
               <div class="col-md-9">
                 <base-input 
                   required
+                  :readonly="publishLabel == 'Publicado'"
                   v-model="model.domain"
                   v-validate="modelValidations.domain"
                   type="text"
@@ -114,7 +116,7 @@
                   <div class="col-md-9">
                     <div>
                       <img style="max-width:160px;max-height:68px;" :src="model.logo" class="img-preview" />
-                      <base-button @click="model.logo = ''" class="btn-simple btn-file" type="danger">
+                      <base-button v-if="publishLabel != 'Publicado'" @click="model.logo = ''" class="btn-simple btn-file" type="danger">
                         <i class="fas fa-times"></i>
                       </base-button>
                     </div>
@@ -144,6 +146,7 @@
                   class="mt-3 pull-right" 
                   native-type="submit" 
                   type="info"
+                  :disabled="publishLabel == 'Processando'"
                   @click.native.prevent="validate"
                   :loading="submitLoading">
                   Salvar
@@ -154,7 +157,7 @@
             </div>
           </form>
         </el-tab-pane>
-        <el-tab-pane label="Configurações" :disabled="viewAction == 'new' ? true : false">
+        <el-tab-pane v-if="publishLabel != 'Publicado'" label="Configurações" :disabled="viewAction == 'new' ? true : false">
           <operation-config v-loading="formLoading" parent="operations" :parentId="id" ref="operationconfig"></operation-config>
         </el-tab-pane>
         <el-tab-pane  label="Páginas" :disabled="viewAction == 'new' ? true : false">
