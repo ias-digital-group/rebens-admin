@@ -82,11 +82,6 @@ export default {
       showTable: false,
       tableColumns: [
         {
-          prop: 'page',
-          label: 'Pagina',
-          minWidth: 200
-        },
-        {
           prop: 'name',
           label: 'Nome',
           minWidth: 200
