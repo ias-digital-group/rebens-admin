@@ -414,7 +414,7 @@ export default {
       benefitService.findAllActive().then(
         response => {
           _.each(response.data, function(el) {
-            self.benefits.push({ id: el.id, value: el.title });
+            self.benefits.push({ id: el.id, value: el.name });
           });
           self.selectLoading = false;
           self.populateBenefit();
