@@ -163,6 +163,9 @@
         <el-tab-pane  label="Páginas" :disabled="viewAction == 'new' ? true : false">
           <static-texts v-loading="formLoading" parent="operations" :parentId="id" ref="statictexts"></static-texts>
         </el-tab-pane>
+        <el-tab-pane label="Perguntas Frequentes" :disabled="viewAction == 'new'">
+          <faq v-loading="formLoading" parent="operations" :parentId="id" ref="faq"></faq>
+        </el-tab-pane>
       </el-tabs>
     </card>
   </div>
@@ -173,6 +176,7 @@ import { Select, Option, Tabs, TabPane } from 'element-ui';
 import operationService from '../../services/Operation/operationService';
 import helperService from '../../services/Helper/helperService';
 import StaticTexts from 'src/components/StaticTexts';
+import Faq from 'src/components/Faq';
 import OperationConfig from 'src/components/OperationConfig';
 import { ImageUpload } from 'src/components/index';
 import _ from 'lodash';
@@ -184,6 +188,7 @@ export default {
     [Tabs.name]: Tabs,
     [TabPane.name]: TabPane,
     StaticTexts,
+    Faq,
     OperationConfig,
     ImageUpload
   },
@@ -352,7 +357,7 @@ export default {
             self.model = response.data;
             self.publishLabel = response.data.publishStatus;
             self.canPublish = response.data.canPublish;
-            self.publishLoading = response.data.publishStatus === "Processando";
+            self.publishLoading = response.data.publishStatus === 'Processando';
             self.formLoading = false;
           },
           () => {

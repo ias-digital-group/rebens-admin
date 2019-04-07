@@ -42,9 +42,6 @@ const BenefitsEdit = () =>
 const BannersList = () => import('src/pages/Banners/List.vue');
 const BannersEdit = () => import('src/pages/Banners/Edit.vue');
 
-const FaqsList = () => import('src/pages/Faq/List.vue');
-const FaqsEdit = () => import('src/pages/Faq/Edit.vue');
-
 const UsersList = () => import('src/pages/User/List.vue');
 const UsersEdit = () => import('src/pages/User/Edit.vue');
 
@@ -265,50 +262,6 @@ let benefitsPages = {
     }
   ]
 };
-
-let faqsPages = {
-  path: '/faqs',
-  component: DashboardLayout,
-  meta:{
-    requiresAuth: true,
-    roles: ['master', 'administrator', 'publisher'],
-    title: i18n.t('pages.faqs.title')
-  },
-  children:[
-    {
-      path: '',
-      name:'faq',
-      component: FaqsList,
-      meta:{
-        requiresAuth: true,
-        roles: ['master', 'administrator', 'publisher'],
-        title: i18n.t('pages.faqs.title')
-      }
-    },
-    {
-      path: 'new',
-      name: `new_faq`,
-      component: FaqsEdit,
-      meta: {
-        requiresAuth: true,
-        roles: ['master', 'administrator', 'publisher'],
-        title: i18n.t('pages.faqs.title')
-      }
-    },
-    {
-      path: ':id/edit',
-      name: 'edit_faq',
-      props: true,
-      component: FaqsEdit,
-      meta: {
-        requiresAuth: true,
-        roles: ['master', 'administrator', 'publisher'],
-        title: i18n.t('pages.faqs.title')
-      }
-    }
-  ]
-}
-
 let usersPages = {
   path: '/users',
   component: DashboardLayout,
@@ -446,7 +399,6 @@ const routes = [
   partnersPages,
   operationsPages,
   benefitsPages,
-  faqsPages,
   usersPages,
   reportPages
 ];

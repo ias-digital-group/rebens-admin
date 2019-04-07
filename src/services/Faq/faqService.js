@@ -10,7 +10,7 @@ export default {
         config.apiEndpoints.faqUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
             request.searchWord
-          }&sort=${request.sort}`
+          }&sort=${request.sort}&idOperation=${request.idOperation}`
         )
       ).then(
         response => {
