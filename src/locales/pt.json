@@ -104,6 +104,16 @@
         "input-password": "senha",
         "signin-button": "ENTRAR"
       },
+      "account":{
+        "title":"Conta"
+      },
+      "change-password": {
+        "title": "Trocar Senha",
+        "input-actual": "senha atual",
+        "input-password": "nova senha",
+        "input-confirm": "confirmação da senha",
+        "signin-button": "SALVAR"
+      },
       "report":{
         "title":"Relatórios",
         "emptytext": "...",
@@ -132,6 +142,7 @@
     "navbar":{
       "user":{
         "profile":"Perfil",
+        "changePass":"Trocar senha",
         "logout":"Sair"
       }
     },

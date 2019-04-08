@@ -151,13 +151,11 @@
                   :loading="submitLoading">
                   Salvar
                 </base-button>
-                
-                
               </div>
             </div>
           </form>
         </el-tab-pane>
-        <el-tab-pane v-if="publishLabel != 'Publicado'" label="Configurações" :disabled="viewAction == 'new' ? true : false">
+        <el-tab-pane label="Configurações" :disabled="viewAction == 'new' ? true : false">
           <operation-config v-loading="formLoading" parent="operations" :parentId="id" ref="operationconfig"></operation-config>
         </el-tab-pane>
         <el-tab-pane  label="Páginas" :disabled="viewAction == 'new' ? true : false">
@@ -314,6 +312,7 @@ export default {
             });
             vw.$router.push('/operations');
             vw.submitLoading = false;
+            vm.fetchData();
           },
           err => {
             vw.$notify({

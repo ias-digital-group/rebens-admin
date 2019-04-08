@@ -61,7 +61,7 @@
                 </div>
             </div>
           </div>
-          <div class="row" v-if="model.roles == 'administrator'">
+          <div class="row" v-if="model.roles != 'master'">
             <label class="col-md-3 col-form-label">Operação</label>
             <div class="col-md-2">
                 <div class="form-group">
@@ -70,7 +70,6 @@
                     placeholder="Operação"
                     v-model="model.idOperation"
                     v-loading.lock="selectLoading"
-                    v-validate="modelValidations.operation"
                     lock>
                     <el-option
                     v-for="type in operations"
@@ -148,9 +147,6 @@ export default {
         email: {
           required: true,
           max: 300
-        },
-        operation:{
-          required:true
         },
         roles:{
           required:true

@@ -67,6 +67,7 @@
                       :fetch-suggestions="querySearch"
                       @select="handleSelect"
                       placeholder=""
+                      style="width:100%"
                       v-model="partnerName"
                       :trigger-on-focus="false">
                     </el-autocomplete>
@@ -152,7 +153,7 @@
               </div>
               <template v-if="model.image">
                 <div class="row">
-                  <label class="col-md-3 col-form-label">Imagem *</label>
+                  <label class="col-md-3 col-form-label">Imagem * <br />(1200x500)</label>
                   <div class="col-md-9">
                     <div class="fileinput">
                       <div class="thumbnail">

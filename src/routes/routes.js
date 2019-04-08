@@ -12,8 +12,7 @@ const Dashboard = () =>
 // const Content = () =>
 //   import(/* webpackChunkName: "dashboard" */ 'src/pages/Layout/Content.vue');
 
-const Login = () =>
-  import(/* webpackChunkName: "dashboard" */ 'src/pages/Login/Login.vue');
+const Login = () => import(/* webpackChunkName: "dashboard" */ 'src/pages/Login/Login.vue');
 
 const CategoriesList = () =>
   import(/* webpackChunkName: "dashboard" */ 'src/pages/Categories/List.vue');
@@ -47,6 +46,8 @@ const UsersEdit = () => import('src/pages/User/Edit.vue');
 
 const CustomerReport = () => import('src/pages/Report/Customer.vue');
 const BenefitUseReport = () => import('src/pages/Report/BenefitUse.vue');
+
+const ChangePassword = () => import('src/pages/Account/ChangePassword.vue');
 
 let categoriesPages = {
   path: '/categories',
@@ -333,6 +334,27 @@ let reportPages = {
         requiresAuth:true,
         roles: ['master', 'administrator', 'publisher'],
         title: i18n.t('pages.report.benefit-use.title')
+      }
+    }
+  ]
+}
+let accountPages = {
+  path:'/account',
+  component: DashboardLayout,
+  meta:{
+    requiresAuth: true,
+    roles: ['master', 'administrator', 'publisher'],
+    title: i18n.t('pages.account.title')
+  },
+  children:[
+    {
+      path: 'changePassword',
+      name: `changePassword`,
+      component: ChangePassword,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'administrator', 'publisher'],
+        title: i18n.t('pages.change-password.title')
       }
     }
   ]

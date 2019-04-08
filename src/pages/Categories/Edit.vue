@@ -21,21 +21,15 @@
         <div class="row">
           <label class="col-md-3 col-form-label">Categoria pai</label>
           <div class="col-md-9">
-            <el-select
-                class="select-info"
-                placeholder="Categoria pai"
-                v-model="model.idParent"
-                v-loading.lock="selectLoading"
-                lock>
-                <el-option
-                  v-for="category in categoriesList"
-                  class="select-primary"
-                  :value="category.id"
-                  :label="category.name"
-                  :key="category.id"
-                >
-                </el-option>
-              </el-select>
+            <el-autocomplete 
+                :fetch-suggestions="querySearch"
+                @select="handleSelect"
+                placeholder=""
+                style="width:100%"
+                v-model="parentName"
+                :trigger-on-focus="false">
+            </el-autocomplete>
+            <input type="hidden" v-model="model.idParent" />
           </div>
         </div>
         <div class="row">
@@ -102,7 +96,8 @@ export default {
           max: 4
         }
       },
-      categoriesList: []
+      categoriesList: [],
+      parentName:''
     };
   },
   computed: {
@@ -111,6 +106,20 @@ export default {
     }
   },
   methods: {
+    querySearch(query, cb) {
+      var list = this.categoriesList;
+      var results = query ? list.filter(this.createFilter(query)) : list;
+      var top3 = results.slice(0, 3);
+      cb(top3);
+    },
+    createFilter(query) {
+      return (category) => {
+        return category.value.toLowerCase().includes(query.toLowerCase());
+      };
+    },
+    handleSelect(item){
+      this.model.idParent = item.id;
+    },
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
@@ -184,10 +193,14 @@ export default {
       this.selectLoading = true;
       categoryService.getListTree().then(
         response => {
-          self.categoriesList.push({ id: null, name: 'Raiz' });
+          self.categoriesList.push({ id: null, value: 'Raiz' });
           _.each(response.data, function(el) {
             if (el.id != self.id) {
-              self.categoriesList.push({ id: el.id, name: el.name });
+              self.categoriesList.push({ id: el.id, value: el.name });
+              if(self.model.idParent == el.id){
+                self.parentName = el.name;
+              }
+
             }
           });
           self.selectLoading = false;

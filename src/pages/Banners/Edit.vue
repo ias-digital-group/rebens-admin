@@ -76,6 +76,14 @@
                     maxlength='500'></base-input>
                 </div>
               </div>
+              <div class="row" v-if="!model.isBenefit">
+                <label class="col-md-3 col-form-label">Abrir em nova aba?</label>
+                <div class="col-md-9">
+                    <div class="form-group">
+                      <base-checkbox v-model="model.targetBlank">&nbsp;</base-checkbox>
+                    </div>
+                  </div>
+              </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Data</label>
                 <div class="col-md-9 col-lg-4">
@@ -107,7 +115,10 @@
               </div>
               <template v-if="model.image">
                 <div class="row">
-                  <label class="col-md-3 col-form-label">Imagem <span class="sp-image-size"></span></label>
+                  <label class="col-md-3 col-form-label">Imagem <br />
+                    <span v-show="model.idType == 1">(1200x500)</span>
+                    <span v-show="model.idType == 3">(578x578)</span>
+                  </label>
                   <div class="col-md-9">
                     <div class="fileinput">
                       <div class="thumbnail">
@@ -222,6 +233,7 @@ export default {
         isBenefit:false,
         start: null,
         end: null,
+        targetBlank:false,
         bannerShowHome: false,
         bannerShowHomeLogged: false,
         bannerShowBenefit: false

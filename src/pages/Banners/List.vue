@@ -6,7 +6,6 @@
           <h4 class="card-title">{{$t('pages.banners.title')}}
           <base-link to="/banners/new" class="btn btn-icon btn-simple btn-twitter btn-sm"><i class="tim-icons icon-simple-add"></i></base-link>  
           </h4>
-          
         </template>
         <div>
           <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">

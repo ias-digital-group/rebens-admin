@@ -23,5 +23,17 @@ export default {
         }
       );
     });
+  },
+  changePassword: (request) => {
+    return new Promise((resolve, reject) => {
+      http.post(config.apiEndpoints.accountUri.concat('ChangePassword'), request).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
   }
 };

@@ -89,9 +89,7 @@ export default {
           if(count == 0){
             self.$notify({
               type: 'primary',
-              message: response
-              ? response.message
-              : 'Associações atualizadas com sucesso.',
+              message: 'Associações atualizadas com sucesso.',
               icon: 'tim-icons icon-bell-55'
             });
             self.loading = false;
@@ -108,9 +106,7 @@ export default {
           if(count == 0){
             self.$notify({
               type: 'primary',
-              message: response
-              ? response.message
-              : 'Associações atualizadas com sucesso.',
+              message: 'Associações atualizadas com sucesso.',
               icon: 'tim-icons icon-bell-55'
             });
             self.loading = false;

@@ -28,7 +28,7 @@
               </div>
               <template v-if="model.logo">
                 <div class="row">
-                  <label class="col-md-3 col-form-label">Logo</label>
+                  <label class="col-md-3 col-form-label">Logo (250x250)</label>
                   <div class="col-md-9">
                     <div>
                       <img :src="model.logo" class="img-preview" />
