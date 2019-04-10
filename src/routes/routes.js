@@ -6,37 +6,25 @@ import AccessDenied from 'src/pages/GeneralViews/AccessDenied.vue';
 import i18n from '../i18n';
 
 // Dashboard pages
-const Dashboard = () =>
-  import(/* webpackChunkName: "dashboard" */ 'src/pages/Dashboard/Dashboard.vue');
+const Dashboard = () => import('src/pages/Dashboard/Dashboard.vue');
 
 // const Content = () =>
-//   import(/* webpackChunkName: "dashboard" */ 'src/pages/Layout/Content.vue');
+//   import('src/pages/Layout/Content.vue');
 
-const Login = () => import(/* webpackChunkName: "dashboard" */ 'src/pages/Login/Login.vue');
+const Login = () => import('src/pages/Login/Login.vue');
+const Validate = () => import('src/pages/Validate/Validate.vue');
 
-const CategoriesList = () =>
-  import(/* webpackChunkName: "dashboard" */ 'src/pages/Categories/List.vue');
+const CategoriesList = () => import('src/pages/Categories/List.vue');
+const CategoriesEdit = () => import('src/pages/Categories/Edit.vue');
 
-const CategoriesEdit = () =>
-  import(/* webpackChunkName: "dashboard" */ 'src/pages/Categories/Edit.vue');
+const PartnersList = () => import('src/pages/Partners/List.vue');
+const PartnersEdit = () => import('src/pages/Partners/Edit.vue');
 
-const PartnersList = () =>
-  import(/* webpackChunkName: "dashboard" */ 'src/pages/Partners/List.vue');
+const OperationsList = () => import('src/pages/Operations/List.vue');
+const OperationsEdit = () => import('src/pages/Operations/Edit.vue');
 
-const PartnersEdit = () =>
-  import(/* webpackChunkName: "dashboard" */ 'src/pages/Partners/Edit.vue');
-
-const OperationsList = () =>
-  import(/* webpackChunkName: "dashboard" */ 'src/pages/Operations/List.vue');
-
-const OperationsEdit = () =>
-  import(/* webpackChunkName: "dashboard" */ 'src/pages/Operations/Edit.vue');
-
-const BenefitsList = () =>
-  import(/* webpackChunkName: "dashboard" */ 'src/pages/Benefits/List.vue');
-
-const BenefitsEdit = () =>
-  import(/* webpackChunkName: "dashboard" */ 'src/pages/Benefits/Edit.vue');
+const BenefitsList = () => import('src/pages/Benefits/List.vue');
+const BenefitsEdit = () => import('src/pages/Benefits/Edit.vue');
 
 const BannersList = () => import('src/pages/Banners/List.vue');
 const BannersEdit = () => import('src/pages/Banners/Edit.vue');
@@ -400,6 +388,26 @@ const routes = [
     ]
   },
   {
+    path: '/',
+    component: AuthLayout,
+    name: 'Authentication',
+    meta: {
+      requiresAuth: false,
+      title: 'Validação'
+    },
+    children: [
+      {
+        path: '/validate',
+        name: 'Validação',
+        component: Validate,
+        meta: {
+          requiresAuth: false,
+          title: 'Validação'
+        }
+      }
+    ]
+  },
+  {
     path: '*',
     component: NotFound,
     meta: {
@@ -416,6 +424,7 @@ const routes = [
       title: i18n.t('pages.access-denied.title')
     }
   },
+  accountPages,
   categoriesPages,
   bannersPages,
   partnersPages,

@@ -24,6 +24,23 @@ export default {
       );
     });
   },
+  validate: (code, password, passwordConfirm) => {
+    return new Promise((resolve, reject) => {
+      const model = {
+        code: code, 
+        password: password,
+        passwordConfirm: passwordConfirm
+      };
+      http.post(config.apiEndpoints.accountUri.concat('validate'), model).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
   changePassword: (request) => {
     return new Promise((resolve, reject) => {
       http.post(config.apiEndpoints.accountUri.concat('ChangePassword'), request).then(

@@ -10,7 +10,6 @@
         <sidebar-item :link="{ name: $t('sidebar.dashboard'), icon: 'tim-icons icon-chart-pie-36', path: '/dashboard' }" > </sidebar-item>
         <sidebar-item :link="{ name: $t('sidebar.benefits'), icon: 'tim-icons icon-money-coins', path: '/benefits' }"></sidebar-item>
         <sidebar-item :link="{ name: $t('sidebar.banners'), icon: 'fas fa-file-image', path: '/banners' }"></sidebar-item>
-        <sidebar-item :link="{ name: $t('sidebar.faqs'), icon: 'tim-icons icon-notes', path: '/faqs' }"></sidebar-item>
         <sidebar-item :link="{ name: $t('sidebar.admin'), icon: 'tim-icons icon-spaceship', }">
           <sidebar-item :link="{ name: $t('sidebar.categories'), path: '/categories' }"></sidebar-item>
           <sidebar-item :link="{ name: $t('sidebar.partners'), path: '/partners' }"></sidebar-item>

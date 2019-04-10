@@ -19,7 +19,7 @@
                 </el-table-column>
           </el-table>
         </div>
-        <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap" v-if="showTable">
+        <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
             <base-button 
               class="mt-3 pull-right" 
               native-type="button" 
@@ -29,7 +29,7 @@
               >
               Novo
             </base-button>
-            <base-pagination class="pagination-no-border" v-model="pagination.currentPage" :per-page="pagination.perPage"
+            <base-pagination v-show="showTable" class="pagination-no-border" v-model="pagination.currentPage" :per-page="pagination.perPage"
                 :total="total" v-on:input="onPageChanged">
             </base-pagination>
         </div>
