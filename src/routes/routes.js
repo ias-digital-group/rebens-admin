@@ -214,7 +214,7 @@ let benefitsPages = {
   component: DashboardLayout,
   meta: {
     requiresAuth: true,
-    roles: ['master', 'publisher'],
+    roles: ['master', 'administrator', 'publisher'],
     title: i18n.t('pages.benefits.title')
   },
   children: [
@@ -224,7 +224,7 @@ let benefitsPages = {
       component: BenefitsList,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'publisher'],
+        roles: ['master', 'administrator', 'publisher'],
         title: i18n.t('pages.benefits.title')
       }
     },
@@ -234,7 +234,7 @@ let benefitsPages = {
       component: BenefitsEdit,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'publisher'],
+        roles: ['master', 'administrator', 'publisher'],
         title: i18n.t('pages.benefits.title')
       }
     },
@@ -245,7 +245,7 @@ let benefitsPages = {
       component: BenefitsEdit,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'publisher'],
+        roles: ['master', 'administrator', 'publisher'],
         title: i18n.t('pages.benefits.title')
       }
     }
@@ -266,7 +266,7 @@ let usersPages = {
       component: UsersList,
       meta:{
         requiresAuth: true,
-        roles: ['master'],
+        roles: ['master', 'administrator'],
         title: i18n.t('pages.users.title')
       }
     },
@@ -276,7 +276,7 @@ let usersPages = {
       component: UsersEdit,
       meta: {
         requiresAuth: true,
-        roles: ['master'],
+        roles: ['master', 'administrator'],
         title: i18n.t('pages.users.title')
       }
     },
@@ -287,7 +287,7 @@ let usersPages = {
       component: UsersEdit,
       meta: {
         requiresAuth:true,
-        roles: ['master'],
+        roles: ['master', 'administrator'],
         title: i18n.t('pages.users.title')
       }
     }
