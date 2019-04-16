@@ -171,7 +171,7 @@
               </template>
               <template v-else>
                 <div class="row">
-                  <label class="col-md-3 col-form-label">Imagem *</label>
+                  <label class="col-md-3 col-form-label">Imagem * (1200x500)</label>
                   <div class="col-md-9">
                     <image-upload @change="onImageChange" change-text="Alterar" remove-text="Remover" select-text="Selecione uma imagem" />
                     <label v-show="customErros.includes('image')" class="text-danger">O campo Imagem é obrigatório!</label>
@@ -276,7 +276,7 @@
               </div>
               <div class="row" v-show="model.exclusive">
                 <label class="col-md-3 col-form-label">Operação</label>
-                <div class="col-md-3">
+                <div class="col-md-6">
                   <div class="form-group">
                     <el-autocomplete 
                       :fetch-suggestions="querySearchOp"
@@ -289,7 +289,7 @@
 
                   </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-3">
                   <label v-show="customErros.includes('operation')" class="text-danger">O campo Operação é obrigatório!</label>
                 </div>
               </div>
@@ -486,8 +486,6 @@ export default {
             self.customErros.push('maxDiscount');
         if(!self.model.minDiscountPercentage)
           self.customErros.push('minDiscount');
-        if(!self.model.cpvPercentage)
-          self.customErros.push('cpv');
       }
       else{
         if(!self.model.cashbackAmount)
@@ -502,6 +500,10 @@ export default {
         self.customErros.push('dueDate');
       if(self.model.exclusive && !self.model.idOperation)
         self.customErros.push('operation');
+      if(!self.model.homeHighlight)
+        self.customErros.push('homeHighlight');
+      if(!self.model.homeBenefitHighlight)
+        self.customErros.push('homeBenefitHighlight');
 
       this.$validator.validateAll().then(isValid => {
         if (isValid && self.customErros.length == 0) {

@@ -9,13 +9,13 @@
           <div class="col-md-9">
             <base-input 
               required
-              v-model="model.name"
-              v-validate="modelValidations.name"
+              v-model="model.oldPassword"
+              v-validate="modelValidations.oldPassword"
               type="text"
-              :error="getError('name')"
-              name="name"
-              placeholder="Nome" 
-              maxlength='200'></base-input>
+              :error="getError('oldPassword')"
+              name="oldPassword"
+              placeholder="Senha atual" 
+              maxlength='50'></base-input>
           </div>
         </div>
          <div class="row">
@@ -23,13 +23,13 @@
           <div class="col-md-9">
             <base-input 
               required
-              v-model="model.name"
-              v-validate="modelValidations.name"
+              v-model="model.newPassword"
+              v-validate="modelValidations.newPassword"
               type="text"
-              :error="getError('new')"
-              name="name"
-              placeholder="Nome" 
-              maxlength='200'></base-input>
+              :error="getError('newPassword')"
+              name="newPassword"
+              placeholder="Nova senha" 
+              maxlength='50'></base-input>
           </div>
         </div>
          <div class="row">
@@ -37,13 +37,13 @@
           <div class="col-md-9">
             <base-input 
               required
-              v-model="model.name"
-              v-validate="modelValidations.name"
+              v-model="model.newPasswordConfirm"
+              v-validate="modelValidations.newPasswordConfirm"
               type="text"
-              :error="getError('name')"
-              name="name"
-              placeholder="Nome" 
-              maxlength='200'></base-input>
+              :error="getError('newPasswordConfirm')"
+              name="newPasswordConfirm"
+              placeholder="Confirmação da senha" 
+              maxlength='50'></base-input>
           </div>
         </div>
        
@@ -95,6 +95,9 @@ export default {
     };
   },
   methods: {
+    getError(fieldName) {
+      return this.errors.first(fieldName);
+    },
     validate() {
       const self = this;
       this.$validator.validateAll().then(isValid => {
