@@ -200,6 +200,9 @@
                     </el-select>
                   </div>
                 </div>
+                <div class="col-md-6">
+                <label v-show="customErros.includes('homeHighlight')" class="text-danger">O campo Destaque Home? é obrigatório!</label>
+                </div>
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Destaque Home Benefício?</label>
@@ -226,6 +229,9 @@
                       <el-option class="select-primary" :value="12" :key="12" label="Posição 12"></el-option>
                   </el-select>
                   </div>
+                </div>
+                <div class="col-md-6">
+                <label v-show="customErros.includes('homeBenefitHighlight')" class="text-danger">O campo Destaque Home Benefício? é obrigatório!</label>
                 </div>
               </div>
               <div class="row">

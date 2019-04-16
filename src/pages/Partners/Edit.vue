@@ -41,7 +41,7 @@
               </template>
               <template v-else>
                 <div class="row">
-                  <label class="col-md-3 col-form-label">Logo</label>
+                  <label class="col-md-3 col-form-label">Logo (250x250)</label>
                   <div class="col-md-9">
                     <image-upload @change="onImageChange" change-text="Alterar" remove-text="Remover" select-text="Selecione uma imagem" />
                   </div>

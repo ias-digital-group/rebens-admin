@@ -135,7 +135,9 @@
               </template>
               <template v-else>
                 <div class="row">
-                  <label class="col-md-3 col-form-label">Imagem <span class="sp-image-size"></span></label>
+                  <label class="col-md-3 col-form-label">Imagem <br />
+                    <span v-show="model.idType == 1">(1200x500)</span>
+                    <span v-show="model.idType == 3">(578x578)</span></label>
                   <div class="col-md-9">
                     <image-upload @change="onImageChange" change-text="Alterar" remove-text="Remover" select-text="Selecione uma imagem" />
                   </div>
