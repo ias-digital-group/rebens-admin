@@ -289,7 +289,7 @@
                       @select="handleSelectOp"
                       placeholder=""
                       v-model="operationName"
-                      :trigger-on-focus="false">
+                      :trigger-on-focus="false" style="width:100%">
                     </el-autocomplete>
                     <input type="hidden" v-model="model.idOperation" />
 
@@ -506,9 +506,9 @@ export default {
         self.customErros.push('dueDate');
       if(self.model.exclusive && !self.model.idOperation)
         self.customErros.push('operation');
-      if(!self.model.homeHighlight)
+      if(!self.model.homeHighlight && self.model.homeHighlight != 0)
         self.customErros.push('homeHighlight');
-      if(!self.model.homeBenefitHighlight)
+      if(!self.model.homeBenefitHighlight && self.model.homeBenefitHighlight != 0)
         self.customErros.push('homeBenefitHighlight');
 
       this.$validator.validateAll().then(isValid => {
