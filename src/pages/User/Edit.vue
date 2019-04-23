@@ -34,7 +34,7 @@
           </div>
           <div class="row">
             <label class="col-md-3 col-form-label">Papel</label>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="form-group">
                 <el-select
                     class="select-info"
@@ -43,27 +43,18 @@
                     v-loading.lock="selectLoading"
                     v-validate="modelValidations.roles"
                     lock>
-                    <el-option
-                    class="select-primary"
-                    value="master"
-                    label="Master"
-                    >
-                    </el-option>
-                    <el-option
-                    class="select-primary"
-                    value="publisher"
-                    label="Publicador"
-                    >
-                    </el-option>
-                    <el-option class="select-primary" value="administrator" label="Administrador">
-                    </el-option>
+                    <el-option class="select-primary" value="master" label="Master"></el-option>
+                    <el-option class="select-primary" value="publisher" label="Publicador" ></el-option>
+                    <el-option class="select-primary" value="administrator" label="Administrador"></el-option>
+                    <el-option class="select-primary" value="publisherRebens" label="Publicador Rebens"></el-option>
+                    <el-option class="select-primary" value="administratorRebens" label="Administrador Rebens"></el-option>
                 </el-select>
                 </div>
             </div>
           </div>
-          <div class="row" v-if="model.roles != 'master'">
+          <div class="row" v-if="model.roles == 'administrator' || model.roles == 'publisher'">
             <label class="col-md-3 col-form-label">Operação</label>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="form-group">
                 <el-select
                     class="select-info"
@@ -71,9 +62,8 @@
                     v-model="model.idOperation"
                     v-loading.lock="selectLoading"
                     lock>
-                    <el-option
+                    <el-option class="select-primary"
                     v-for="type in operations"
-                    class="select-primary"
                     :value="type.id"
                     :label="type.title"
                     :key="type.id"

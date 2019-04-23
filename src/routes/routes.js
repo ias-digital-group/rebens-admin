@@ -17,6 +17,12 @@ const Validate = () => import('src/pages/Validate/Validate.vue');
 const CategoriesList = () => import('src/pages/Categories/List.vue');
 const CategoriesEdit = () => import('src/pages/Categories/Edit.vue');
 
+const FaqsList = () => import('src/pages/Faqs/List.vue');
+const FaqsEdit = () => import('src/pages/Faqs/Edit.vue');
+
+const PagesList = () => import('src/pages/Pages/List.vue');
+const PagesEdit = () => import('src/pages/Pages/Edit.vue');
+
 const PartnersList = () => import('src/pages/Partners/List.vue');
 const PartnersEdit = () => import('src/pages/Partners/Edit.vue');
 
@@ -42,7 +48,7 @@ let categoriesPages = {
   component: DashboardLayout,
   meta: {
     requiresAuth: true,
-    roles: ['master', 'publisher'],
+    roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
     title: i18n.t('pages.categories.title')
   },
   children: [
@@ -52,7 +58,7 @@ let categoriesPages = {
       component: CategoriesList,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'publisher'],
+        roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
         title: i18n.t('pages.categories.title')
       }
     },
@@ -62,7 +68,7 @@ let categoriesPages = {
       component: CategoriesEdit,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'publisher'],
+        roles: ['master', 'administrator', 'publisherRebens', 'administratorRebens'],
         title: i18n.t('pages.categories.title')
       }
     },
@@ -73,7 +79,7 @@ let categoriesPages = {
       component: CategoriesEdit,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'publisher'],
+        roles: ['master', 'administrator', 'publisherRebens', 'administratorRebens'],
         title: i18n.t('pages.categories.title')
       }
     }
@@ -85,7 +91,7 @@ let partnersPages = {
   component: DashboardLayout,
   meta: {
     requiresAuth: true,
-    roles: ['master', 'publisher'],
+    roles: ['master', 'publisherRebens', 'administratorRebens'],
     title: i18n.t('pages.partners.title')
   },
   children: [
@@ -95,7 +101,7 @@ let partnersPages = {
       component: PartnersList,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'publisher'],
+        roles: ['master', 'publisherRebens', 'administratorRebens'],
         title: i18n.t('pages.partners.title')
       }
     },
@@ -105,7 +111,7 @@ let partnersPages = {
       component: PartnersEdit,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'publisher'],
+        roles: ['master', 'publisherRebens', 'administratorRebens'],
         title: i18n.t('pages.partners.title')
       }
     },
@@ -116,7 +122,7 @@ let partnersPages = {
       component: PartnersEdit,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'publisher'],
+        roles: ['master', 'publisherRebens', 'administratorRebens'],
         title: i18n.t('pages.partners.title')
       }
     }
@@ -171,7 +177,7 @@ let bannersPages = {
   component: DashboardLayout,
   meta:{
     requiresAuth: true,
-    roles: ['master', 'administrator', 'publisher'],
+    roles: ['master', 'administrator', 'publisher','publisherRebens', 'administratorRebens'],
     title: i18n.t('pages.banners.title')
   },
   children:[
@@ -181,7 +187,7 @@ let bannersPages = {
       component: BannersList,
       meta:{
         requiresAuth: true,
-        roles: ['master', 'administrator', 'publisher'],
+        roles: ['master', 'administrator', 'publisher','publisherRebens', 'administratorRebens'],
         title: i18n.t('pages.banners.title')
       }
     },
@@ -191,7 +197,7 @@ let bannersPages = {
       component: BannersEdit,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'administrator', 'publisher'],
+        roles: ['master', 'administrator', 'publisher','publisherRebens', 'administratorRebens'],
         title: i18n.t('pages.banners.title')
       }
     },
@@ -202,8 +208,94 @@ let bannersPages = {
       component: BannersEdit,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'administrator', 'publisher'],
+        roles: ['master', 'administrator', 'publisher','publisherRebens', 'administratorRebens'],
         title: i18n.t('pages.banners.title')
+      }
+    }
+  ]
+}
+
+let faqsPages = {
+  path: '/faqs',
+  component: DashboardLayout,
+  meta:{
+    requiresAuth: true,
+    roles: ['publisherRebens', 'administratorRebens'],
+    title: i18n.t('pages.faqs.title')
+  },
+  children:[
+    {
+      path: '',
+      name:'faq',
+      component: FaqsList,
+      meta:{
+        requiresAuth: true,
+        roles: ['publisherRebens', 'administratorRebens'],
+        title: i18n.t('pages.faqs.title')
+      }
+    },
+    {
+      path: 'new',
+      name: `new_faq`,
+      component: FaqsEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['publisherRebens', 'administratorRebens'],
+        title: i18n.t('pages.faqs.title')
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_faq',
+      props: true,
+      component: FaqsEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['publisherRebens', 'administratorRebens'],
+        title: i18n.t('pages.faqs.title')
+      }
+    }
+  ]
+}
+
+let pagesPages = {
+  path: '/pages',
+  component: DashboardLayout,
+  meta:{
+    requiresAuth: true,
+    roles: ['publisherRebens', 'administratorRebens'],
+    title: i18n.t('pages.pages.title')
+  },
+  children:[
+    {
+      path: '',
+      name:'page',
+      component: PagesList,
+      meta:{
+        requiresAuth: true,
+        roles: ['publisherRebens', 'administratorRebens'],
+        title: i18n.t('pages.pages.title')
+      }
+    },
+    {
+      path: 'new',
+      name: `new_page`,
+      component: PagesEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['publisherRebens', 'administratorRebens'],
+        title: i18n.t('pages.pages.title')
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_page',
+      props: true,
+      component: PagesEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['publisherRebens', 'administratorRebens'],
+        title: i18n.t('pages.pages.title')
       }
     }
   ]
@@ -214,7 +306,7 @@ let benefitsPages = {
   component: DashboardLayout,
   meta: {
     requiresAuth: true,
-    roles: ['master', 'administrator', 'publisher'],
+    roles: ['master', 'administrator', 'publisher','publisherRebens', 'administratorRebens'],
     title: i18n.t('pages.benefits.title')
   },
   children: [
@@ -224,7 +316,7 @@ let benefitsPages = {
       component: BenefitsList,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'administrator', 'publisher'],
+        roles: ['master', 'administrator', 'publisher','publisherRebens', 'administratorRebens'],
         title: i18n.t('pages.benefits.title')
       }
     },
@@ -234,7 +326,7 @@ let benefitsPages = {
       component: BenefitsEdit,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'administrator', 'publisher'],
+        roles: ['master', 'administrator', 'publisher','publisherRebens', 'administratorRebens'],
         title: i18n.t('pages.benefits.title')
       }
     },
@@ -245,7 +337,7 @@ let benefitsPages = {
       component: BenefitsEdit,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'administrator', 'publisher'],
+        roles: ['master', 'administrator', 'publisher','publisherRebens', 'administratorRebens'],
         title: i18n.t('pages.benefits.title')
       }
     }
@@ -256,7 +348,7 @@ let usersPages = {
   component: DashboardLayout,
   meta:{
     requiresAuth: true,
-    roles: ['master'],
+    roles: ['master','administrator', 'administratorRebens'],
     title: i18n.t('pages.users.title')
   },
   children:[
@@ -266,7 +358,7 @@ let usersPages = {
       component: UsersList,
       meta:{
         requiresAuth: true,
-        roles: ['master', 'administrator'],
+        roles: ['master','administrator', 'administratorRebens'],
         title: i18n.t('pages.users.title')
       }
     },
@@ -276,7 +368,7 @@ let usersPages = {
       component: UsersEdit,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'administrator'],
+        roles: ['master','administrator', 'administratorRebens'],
         title: i18n.t('pages.users.title')
       }
     },
@@ -287,7 +379,7 @@ let usersPages = {
       component: UsersEdit,
       meta: {
         requiresAuth:true,
-        roles: ['master', 'administrator'],
+        roles: ['master','administrator', 'administratorRebens'],
         title: i18n.t('pages.users.title')
       }
     }
@@ -299,7 +391,7 @@ let reportPages = {
   component: DashboardLayout,
   meta:{
     requiresAuth: true,
-    roles: ['master', 'administrator', 'publisher'],
+    roles: ['master', 'administrator', 'administratorRebens'],
     title: i18n.t('pages.report.title')
   },
   children:[
@@ -309,7 +401,7 @@ let reportPages = {
       component: CustomerReport,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'administrator', 'publisher'],
+        roles: ['master', 'administrator', 'administratorRebens'],
         title: i18n.t('pages.report.customer.title')
       }
     },
@@ -320,7 +412,7 @@ let reportPages = {
       component: BenefitUseReport,
       meta: {
         requiresAuth:true,
-        roles: ['master', 'administrator', 'publisher'],
+        roles: ['master', 'administrator', 'administratorRebens'],
         title: i18n.t('pages.report.benefit-use.title')
       }
     }
@@ -331,7 +423,7 @@ let accountPages = {
   component: DashboardLayout,
   meta:{
     requiresAuth: true,
-    roles: ['master', 'administrator', 'publisher'],
+    roles: ['master', 'administrator', 'publisher', 'publisherRebens', 'administratorRebens'],
     title: i18n.t('pages.account.title')
   },
   children:[
@@ -341,7 +433,7 @@ let accountPages = {
       component: ChangePassword,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'administrator', 'publisher'],
+        roles: ['master', 'administrator', 'publisher', 'publisherRebens', 'administratorRebens'],
         title: i18n.t('pages.change-password.title')
       }
     }
@@ -361,7 +453,7 @@ const routes = [
         components: { default: Dashboard },
         meta: {
           requiresAuth: true,
-          roles: ['master', 'administrator', 'publisher'],
+          roles: ['master', 'administrator', 'publisher', 'publisherRebens', 'administratorRebens'],
           title: i18n.t('pages.dashboard.title')
         }
       }
@@ -431,7 +523,9 @@ const routes = [
   operationsPages,
   benefitsPages,
   usersPages,
-  reportPages
+  reportPages,
+  pagesPages,
+  faqsPages
 ];
 
 export default routes;
