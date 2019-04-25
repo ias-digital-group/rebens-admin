@@ -11,7 +11,7 @@
               required
               v-model="model.oldPassword"
               v-validate="modelValidations.oldPassword"
-              type="text"
+              type="password"
               :error="getError($t('pages.change-password.input-actual'))"
               :name="$t('pages.change-password.input-actual')"
               :placeholder="$t('pages.change-password.input-actual')" 
@@ -25,7 +25,7 @@
               required
               v-model="model.newPassword"
               v-validate="modelValidations.newPassword"
-              type="text"
+              type="password"
               :error="getError($t('pages.change-password.input-password'))"
               :name="$t('pages.change-password.input-password')"
               :placeholder="$t('pages.change-password.input-password')" 
@@ -39,7 +39,7 @@
               required
               v-model="model.newPasswordConfirm"
               v-validate="modelValidations.newPasswordConfirm"
-              type="text"
+              type="password"
               :error="getError($t('pages.change-password.input-confirm'))"
               :name="$t('pages.change-password.input-confirm')"
               :placeholder="$t('pages.change-password.input-confirm')" 
@@ -124,7 +124,7 @@ export default {
             err => {
                 vm.$notify({
                     type: 'primary',
-                    message: err.message,
+                    message: err.response && err.response.data ? err.response.data.message : err.message,
                     icon: 'tim-icons icon-bell-55'
                 });
                 vm.submitLoading = false;

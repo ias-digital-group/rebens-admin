@@ -18,30 +18,20 @@
               :placeholder="$t('pages.login.input-email')" 
             >
             </base-input>
-            <base-input 
-              :placeholder="$t('pages.login.input-password')" 
-              required
-              :name="$t('pages.login.input-password')"
-              v-model="credentials.password"
-              v-validate="modelValidations.password"
-              :error="getError($t('pages.login.input-password'))"
-              type="password">
-            </base-input>
           </div>
 
           <div slot="footer">
+            <base-link class="mb-3 btn btn-simple" to="/Login">voltar</base-link>
             <base-button 
               type="info" 
-              class="mb-3" 
-              size="lg" 
+              class="mb-3 pull-right" 
               native-type="submit"
               @click.native.prevent="validate"
-              :loading="fullscreenLoading"
-              block>
-              {{$t('pages.login.signin-button')}}
+              :loading="fullscreenLoading">
+              {{$t('pages.password-recovery.signin-button')}}
             </base-button>
           </div>
-          <base-link class="mt-3" to="/passwordRecovery">esqueci minha senha</base-link>
+          
         </card>
       </form>
     </div>
@@ -54,17 +44,12 @@ export default {
     return {
       fullscreenLoading: false,
       credentials: {
-        email: '',
-        password: ''
+        email: ''
       },
       modelValidations: {
         email: {
           required: true,
           email: true
-        },
-        password: {
-          required: true,
-          min: 8
         }
       }
     };
@@ -80,17 +65,11 @@ export default {
         //R3bens#123
         if (isValid) {
           accountService
-            .signin(
-              self.$data.credentials.email,
-              self.$data.credentials.password
+            .rememberPassword(
+              self.$data.credentials.email
             )
             .then(
               response => {
-                if (response && response.authenticated) {
-                  self.$store.dispatch('setUser', response);
-                  window.location = '/';
-                  return;
-                }
                 self.$data.fullscreenLoading = false;
                 self.$notify({
                   type: 'primary',

@@ -107,6 +107,11 @@
         "input-password": "senha",
         "signin-button": "ENTRAR"
       },
+      "password-recovery": {
+        "title": "Recuperação da Senha",
+        "input-email": "e-mail",
+        "signin-button": "ENVIAR"
+      },
       "account":{
         "title":"Conta"
       },

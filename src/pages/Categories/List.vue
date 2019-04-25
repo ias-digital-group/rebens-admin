@@ -176,9 +176,10 @@ export default {
               self.fetchData();
             },
             err => {
+              
               self.$notify({
                 type: 'primary',
-                message: err.message,
+                message: err.response && err.response.data ? err.response.data.message : err.message,
                 icon: 'tim-icons icon-bell-55'
               });
               self.modal.formLoading = false;

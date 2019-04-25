@@ -12,6 +12,7 @@ const Dashboard = () => import('src/pages/Dashboard/Dashboard.vue');
 //   import('src/pages/Layout/Content.vue');
 
 const Login = () => import('src/pages/Login/Login.vue');
+const PasswordRecovery = () => import('src/pages/Login/PasswordRecovery.vue');
 const Validate = () => import('src/pages/Validate/Validate.vue');
 
 const CategoriesList = () => import('src/pages/Categories/List.vue');
@@ -475,6 +476,15 @@ const routes = [
         meta: {
           requiresAuth: false,
           title: i18n.t('pages.login.title')
+        }
+      },
+      {
+        path: '/passwordRecovery',
+        name: i18n.t('pages.password-recovery.title'),
+        component: PasswordRecovery,
+        meta: {
+          requiresAuth: false,
+          title: i18n.t('pages.password-recovery.title')
         }
       }
     ]
