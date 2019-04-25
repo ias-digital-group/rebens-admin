@@ -89,7 +89,7 @@
                   </div>
                 </div>
               </div>
-              <div class="row" v-if="model.idBenefitType != 3">
+              <div class="row" v-if="isRebens && model.idBenefitType != 3">
                 <label class="col-md-3 col-form-label">% Desconto *</label>
                 <div class="col-md-9 col-lg-4">
                   <base-input label="Máximo *">
@@ -104,7 +104,7 @@
                   <label v-show="customErros.includes('minDiscount')" class="text-danger">O campo Desconto Mínimo é obrigatório!</label>
                 </div>
               </div>
-              <div class="row" v-if="model.idBenefitType != 3">
+              <div class="row" v-if="isRebens && model.idBenefitType != 3">
                 <label class="col-md-3 col-form-label">CPV *</label>
                 <div class="col-md-9 col-lg-4">
                   <base-input>
@@ -123,7 +123,7 @@
                   <label v-show="customErros.includes('link')" class="text-danger">O campo Link é obrigatório!</label>
                 </div>
               </div>
-              <div class="row" v-if="model.idBenefitType == 3">
+              <div class="row" v-if="isRebens && model.idBenefitType == 3">
                 <label class="col-md-3 col-form-label">Valor do cashback *</label>
                 <div class="col-md-9">
                   <base-input>
@@ -141,7 +141,7 @@
                   <label v-show="customErros.includes('voucherText')" class="text-danger">O campo Texto do voucher é obrigatório!</label>
                 </div>
               </div>
-              <div class="row">
+              <div class="row" v-show="isRebens">
                 <label class="col-md-3 col-form-label">Integração *</label>
                 <div class="col-md-9">
                   <div class="form-group">
@@ -491,18 +491,18 @@ export default {
           self.customErros.push('link');
       }
 
-      if(self.model.idBenefitType != 3){
+      if(self.isRebens && self.model.idBenefitType != 3){
         if(!self.model.maxDiscountPercentage)
             self.customErros.push('maxDiscount');
         if(!self.model.minDiscountPercentage)
           self.customErros.push('minDiscount');
       }
       else{
-        if(!self.model.cashbackAmount)
+        if(self.isRebens && !self.model.cashbackAmount)
           self.customErros.push('cashbackAmount');
       }
       
-      if(!self.model.idIntegrationType)
+      if(self.isRebens && !self.model.idIntegrationType)
         self.customErros.push('integrationType');
       if(!self.model.image && !self.image)
         self.customErros.push('image');
