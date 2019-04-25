@@ -117,6 +117,12 @@
         "input-confirm": "confirmação da senha",
         "signin-button": "SALVAR"
       },
+      "validate":{
+        "info":"Crie sua senha, para validar seu cadastro!",
+        "input-password": "Senha",
+        "input-confirm": "Confirmação da senha",
+        "button": "Validar"
+      },
       "report":{
         "title":"Relatórios",
         "emptytext": "...",

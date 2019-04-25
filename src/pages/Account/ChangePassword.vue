@@ -3,7 +3,7 @@
   <div class="col-md-12">
     <card :title="$t('pages.change-password.title')">
       <h4 slot="header" class="card-title">{{$t('pages.change-password.title')}}</h4>
-      <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
+      <form class="form-horizontal" @submit.prevent>
         <div class="row">
           <label class="col-md-3 col-form-label">Senha atual</label>
           <div class="col-md-9">
@@ -12,9 +12,9 @@
               v-model="model.oldPassword"
               v-validate="modelValidations.oldPassword"
               type="text"
-              :error="getError('oldPassword')"
-              name="oldPassword"
-              placeholder="Senha atual" 
+              :error="getError($t('pages.change-password.input-actual'))"
+              :name="$t('pages.change-password.input-actual')"
+              :placeholder="$t('pages.change-password.input-actual')" 
               maxlength='50'></base-input>
           </div>
         </div>
@@ -26,9 +26,9 @@
               v-model="model.newPassword"
               v-validate="modelValidations.newPassword"
               type="text"
-              :error="getError('newPassword')"
-              name="newPassword"
-              placeholder="Nova senha" 
+              :error="getError($t('pages.change-password.input-password'))"
+              :name="$t('pages.change-password.input-password')"
+              :placeholder="$t('pages.change-password.input-password')" 
               maxlength='50'></base-input>
           </div>
         </div>
@@ -40,9 +40,9 @@
               v-model="model.newPasswordConfirm"
               v-validate="modelValidations.newPasswordConfirm"
               type="text"
-              :error="getError('newPasswordConfirm')"
-              name="newPasswordConfirm"
-              placeholder="Confirmação da senha" 
+              :error="getError($t('pages.change-password.input-confirm'))"
+              :name="$t('pages.change-password.input-confirm')"
+              :placeholder="$t('pages.change-password.input-confirm')" 
               maxlength='50'></base-input>
           </div>
         </div>
@@ -81,15 +81,18 @@ export default {
       modelValidations: {
         oldPassword: {
           required: true,
-          max: 50
+          max: 50,
+          min: 8
         },
         newPassword: {
           required: true,
-          max: 50
+          max: 50,
+          min: 8
         },
         newPasswordConfirm: {
           required: true,
-          max: 50
+          max: 50,
+          min: 8
         }
       }
     };

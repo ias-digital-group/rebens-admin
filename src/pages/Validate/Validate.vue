@@ -6,23 +6,25 @@
           <template slot="header">
             <img src="img/logo-login.png" alt="" />
           </template>
-          <p style="text-align:center">Crie sua senha, para validar seu cadastro!</p>
+          <p style="text-align:center">{{$t('pages.validate.info')}}</p>
           <hr>
           <div>
             <base-input 
-              placeholder="Senha" 
+              :placeholder="$t('pages.validate.input-password')" 
               required
-              name="password"
+              :name="$t('pages.validate.input-password')"
               v-model="credentials.password"
               v-validate="modelValidations.password"
+              :error="getError($t('pages.validate.input-password'))"
               type="password">
             </base-input>
             <base-input 
-              placeholder="Confirmação da senha" 
+              :placeholder="$t('pages.validate.input-confirm')" 
               required
-              name="passwordConfirm"
+              :name="$t('pages.validate.input-confirm')"
               v-model="credentials.passwordConfirm"
               v-validate="modelValidations.passwordConfirm"
+              :error="getError($t('pages.validate.input-confirm'))"
               type="password">
             </base-input>
           </div>
@@ -36,7 +38,7 @@
               @click.native.prevent="validate"
               :loading="fullscreenLoading"
               block>
-              Validar
+              {{$t('pages.validate.button')}}
             </base-button>
           </div>
         </card>
