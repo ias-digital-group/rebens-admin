@@ -60,6 +60,7 @@
                       :trigger-on-focus="false">
                     </el-autocomplete>
                     <input type="hidden" v-model="model.idBenefit" />
+                  <label v-show="customErros.includes('benefit')" class="text-danger">Este campo é obrigatório!</label>
                   </div>
                 </div>
               </div>
@@ -91,6 +92,7 @@
                   <base-input label="Início">
                     <el-date-picker
                       type="date"
+                      required
                       name="start"
                       data-vv-name="start"
                       v-validate="modelValidations.start"
@@ -99,12 +101,14 @@
                       v-model="model.start">
                     </el-date-picker>
                   </base-input>
+                  <label v-show="customErros.includes('start')" class="text-danger">Este campo é obrigatório!</label>
                 </div>
                 <div class="col-md-9 offset-md-3 offset-lg-0 col-lg-4">
                   <base-input label="Fim">
                     <el-date-picker
                       type="date"
                       name="end"
+                      required
                       data-vv-name="end"
                       placeholder="Fim"
                       v-validate="modelValidations.end"
@@ -112,6 +116,7 @@
                       v-model="model.end">
                     </el-date-picker>
                   </base-input>
+                  <label v-show="customErros.includes('end')" class="text-danger">Este campo é obrigatório!</label>
                 </div>
               </div>
               <template v-if="model.image">
@@ -224,6 +229,7 @@ export default {
       image: null,
       operationKey: 0,
       benefitName: '',
+      customErros: [],
       model: {
         name: '',
         order: 1,
@@ -304,23 +310,16 @@ export default {
     },
     validate() {
       const self = this;
+      self.customErros = [];
+      if(!self.model.start)
+        self.customErros.push('start');
+      if(!self.model.end)
+        self.customErros.push('end');
+      if(self.model.isBenefit && !self.model.idBenefit)
+        self.customErros.push('benefit');
+
       this.$validator.validateAll().then(isValid => {
-        if(!self.model.start || !self.model.end)
-        {
-          self.$notify({
-            type: 'danger',
-            message: 'A data é obrigatória',
-            icon: 'tim-icons icon-bell-55'
-          });
-        }
-        else if(self.model.isBenefit && !self.model.idBenefit){
-          self.$notify({
-            type: 'danger',
-            message: 'O benefício é obrigatório',
-            icon: 'tim-icons icon-bell-55'
-          });
-        }
-        else if (isValid) {
+        if (isValid && self.customErros.length == 0) {
           self.submitLoading = true;
           if (self.image) {
             helperService.uploadFile(self.image).then(
