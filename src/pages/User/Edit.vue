@@ -10,12 +10,12 @@
                 <base-input 
                 required
                 v-model="model.name"
-                v-validate="modelValidations.name"
                 type="text"
-                :error="getError('name')"
                 name="name"
                 placeholder="Nome" 
                 maxlength='300'></base-input>
+                <label v-show="customErros.includes('name')" class="text-danger">O campo Nome é obrigatório</label>
+                <label v-show="customErros.includes('name-length')" class="text-danger">O campo Nome possui um limite de 300 caracteres</label>
             </div>
           </div>
           <div class="row">
@@ -24,12 +24,13 @@
                 <base-input 
                   required
                   v-model="model.email"
-                  v-validate="modelValidations.email"
                   type="email"
-                  :error="getError('email')"
                   name="email"
                   placeholder="Email" 
                   maxlength='300'></base-input>
+                  <label v-show="customErros.includes('email')" class="text-danger">O campo E-mail é obrigatório</label>
+                  <label v-show="customErros.includes('email-length')" class="text-danger">O campo E-mail possui um limite de 300 caracteres</label>
+                  <label v-show="customErros.includes('email-format')" class="text-danger">O E-mail digitado não é válido</label>
               </div>
           </div>
           <div class="row">
@@ -49,10 +50,11 @@
                     <el-option v-show="isRebens" class="select-primary" value="publisherRebens" label="Publicador Rebens"></el-option>
                     <el-option v-show="isRebens" class="select-primary" value="administratorRebens" label="Administrador Rebens"></el-option>
                 </el-select>
+                <label v-show="customErros.includes('roles')" class="text-danger">O campo Papel é obrigatório</label>
                 </div>
             </div>
           </div>
-          <div class="row" v-if="(model.roles == 'administrator' || model.roles == 'publisher') && isRebens">
+          <div class="row" v-if="showOperations">
             <label class="col-md-3 col-form-label">Operação</label>
             <div class="col-md-3">
                 <div class="form-group">
@@ -125,6 +127,8 @@ export default {
       submitLoading: false,
       isMaster:false,
       isRebens:false,
+      customErros: [],
+      reg: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
       model: {
         name: '',
         email:'',
@@ -151,6 +155,9 @@ export default {
   computed: {
     viewAction() {
       return this.$route.name == 'edit_user' ? 'edit' : 'new';
+    },
+    showOperations(){
+      return (this.model.roles == 'administrator' || this.model.roles == 'publisher') && this.isRebens;
     }
   },
   methods: {
@@ -159,14 +166,30 @@ export default {
     },
     validate() {
       const self = this;
-      if(self.isRebens && (self.model.roles === 'publiser' || self.model.roles === 'administrator') && self.model.idOperation == '')
-      {
+      let error = false;
+      self.customErros = [];
+
+      if(!self.model.name)
         self.customErros.push('name');
-      }
+      else if(!self.model.name.length > 300)
+        self.customErros.push('name-length');
+      if(!self.model.email)
+        self.customErros.push('email');
+      else if(!self.reg.test(self.model.email))
+        self.customErros.push('email-format');
+      else if(!self.model.email.length > 300)
+        self.customErros.push('email-length');
+      if(self.model.roles == '')
+        self.customErros.push('roles');
+      if(self.isRebens && (self.model.roles === 'publisher' || self.model.roles === 'administrator') && self.model.idOperation == null)
+          self.customErros.push('operation');
+      
+        
+
       this.$validator.validateAll().then(isValid => {
-        if (isValid) {
+        if (isValid && self.customErros.length == 0) {
           self.submitLoading = true;
-          self.saveUser(self);
+          //self.saveUser(self);
         }
       });
     },
