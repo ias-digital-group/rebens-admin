@@ -6,12 +6,12 @@ export default {
     return new Promise((resolve, reject) => {
       request = request
         ? request
-        : { page: 0, pageItems: 30, searchWord: '', sort: 'name ASC' };
+        : { page: 0, pageItems: 30, searchWord: '', sort: 'name ASC', active:'' };
       HTTP.get(
         config.apiEndpoints.partnerUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
             request.searchWord
-          }&sort=${request.sort}`
+          }&sort=${request.sort}&active=${request.active}`
         )
       ).then(
         response => {

@@ -6,7 +6,6 @@
           <h4 class="card-title">{{$t('pages.categories.title')}}
           <base-link to="/categories/new" class="btn btn-icon btn-simple btn-twitter btn-sm"><i class="tim-icons icon-simple-add"></i></base-link>  
           </h4>
-          
         </template>
         <div>
           <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
@@ -14,6 +13,11 @@
               <el-option class="select-primary" v-for="item in pagination.perPageOptions" :key="item" :label="item"
                 :value="item">
               </el-option>
+            </el-select>
+            <el-select class="select-primary mb-3 pagination-select" v-model="activeFilter" v-if="!loading">
+              <el-option class="select-primary" value="" label="Todas"></el-option>
+              <el-option class="select-primary" value="true" label="Ativas"></el-option>
+              <el-option class="select-primary" value="false" label="Inativas"></el-option>
             </el-select>
             <base-input>
               <el-input
@@ -103,6 +107,8 @@ export default {
     return {
       internalName: 'pages.categories.list',
       sortField: 'name',
+      activeFilter: '',
+      parentFilter: '',
       tableColumns: [
         {
           prop: 'id',
@@ -137,7 +143,9 @@ export default {
         page: this.$data.pagination.currentPage - 1,
         pageItems: this.$data.pagination.perPage,
         searchWord: this.searchQuery,
-        sort: this.formatSortFieldParam
+        sort: this.formatSortFieldParam,
+        active: this.activeFilter,
+        idParent: this.parentFilter
       };
       this.$data.loading = true;
       categoryService.findAll(request).then(
@@ -178,6 +186,11 @@ export default {
           );
         }
       });
+    }
+  },
+  watch:{
+    activeFilter(){
+      this.fetchData(); 
     }
   }
 };

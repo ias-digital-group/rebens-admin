@@ -189,7 +189,7 @@ export default {
       this.$validator.validateAll().then(isValid => {
         if (isValid && self.customErros.length == 0) {
           self.submitLoading = true;
-          //self.saveUser(self);
+          self.saveUser(self);
         }
       });
     },

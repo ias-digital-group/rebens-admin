@@ -14,6 +14,17 @@
                 :value="item">
               </el-option>
             </el-select>
+            <el-select class="select-primary mb-3 pagination-select" v-model="typeFilter" v-if="!loading">
+              <el-option class="select-primary" value="" label="Todos"></el-option>
+              <el-option class="select-primary" value="1" label="E-commerce"></el-option>
+              <el-option class="select-primary" value="2" label="Varejo Local"></el-option>
+              <el-option class="select-primary" value="3" label="Cashback"></el-option>
+            </el-select>
+            <el-select class="select-primary mb-3 pagination-select" v-model="activeFilter" v-if="!loading">
+              <el-option class="select-primary" value="" label="Todos"></el-option>
+              <el-option class="select-primary" value="true" label="Ativos"></el-option>
+              <el-option class="select-primary" value="false" label="Inativos"></el-option>
+            </el-select>
             <base-input>
               <el-input
                 type="search"
@@ -100,6 +111,9 @@ export default {
     return {
       internalName: 'pages.benefits.list',
       sortField: 'name',
+      activeFilter: '',
+      typeFilter:'',
+      operationFilter:'',
       tableColumns: [
         {
           prop: 'id',
@@ -139,7 +153,10 @@ export default {
         page: this.$data.pagination.currentPage - 1,
         pageItems: this.$data.pagination.perPage,
         searchWord: this.searchQuery,
-        sort: this.formatSortFieldParam
+        sort: this.formatSortFieldParam,
+        active: this.activeFilter,
+        type:this.typeFilter,
+        idOperation:this.operationFilter
       };
       this.$data.loading = true;
       benefitService.findAll(request).then(
@@ -180,6 +197,14 @@ export default {
           );
         }
       });
+    }
+  },
+  watch:{
+    activeFilter(){
+      this.fetchData(); 
+    },
+    typeFilter(){
+      this.fetchData();
     }
   }
 };

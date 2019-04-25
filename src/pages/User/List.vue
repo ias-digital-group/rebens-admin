@@ -15,6 +15,19 @@
                 :value="item">
               </el-option>
             </el-select>
+            <el-select class="select-primary mb-3 pagination-select" v-model="roleFilter" v-if="!loading" v-show="isRebens">
+              <el-option class="select-primary" value="" label="Todos"></el-option>
+              <el-option class="select-primary" v-show="isMaster" value="master" label="Master"></el-option>
+              <el-option class="select-primary" value="publisher" label="Publicador"></el-option>
+              <el-option class="select-primary" value="administrator" label="Administrador"></el-option>
+              <el-option class="select-primary" value="publisherRebens" label="Publicador Rebens"></el-option>
+              <el-option class="select-primary" value="administratorRebens" label="Administrador Rebens"></el-option>
+            </el-select>
+            <el-select class="select-primary mb-3 pagination-select" v-model="activeFilter" v-if="!loading">
+              <el-option class="select-primary" value="" label="Todos"></el-option>
+              <el-option class="select-primary" value="true" label="Ativos"></el-option>
+              <el-option class="select-primary" value="false" label="Inativos"></el-option>
+            </el-select>
             <base-input>
               <el-input
                 type="search"
@@ -103,6 +116,11 @@ export default {
     return {
       internalName: 'pages.users.list',
       sortField: 'name',
+      activeFilter: '',
+      roleFilter:'',
+      operationFilter:'',
+      isMaster:false,
+      isRebens:false,
       tableColumns: [
         {
           prop: 'id',
@@ -137,7 +155,10 @@ export default {
         page: this.$data.pagination.currentPage - 1,
         pageItems: this.$data.pagination.perPage,
         searchWord: this.searchQuery,
-        sort: this.formatSortFieldParam
+        sort: this.formatSortFieldParam,
+        active: this.activeFilter,
+        role:this.roleFilter,
+        idOperation:this.operationFilter
       };
       this.$data.loading = true;
       userService.findAll(request).then(
@@ -178,6 +199,18 @@ export default {
           );
         }
       });
+    }
+  },
+  created() {
+    this.isMaster = this.$store.getters.currentUser.role == "master";
+    this.isRebens = this.$store.getters.currentUser.role == "administratorRebens" || this.$store.getters.currentUser.role == "master";
+  },
+  watch:{
+    activeFilter(){
+      this.fetchData(); 
+    },
+    roleFilter(){
+      this.fetchData(); 
     }
   }
 };

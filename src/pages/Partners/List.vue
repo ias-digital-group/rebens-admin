@@ -14,6 +14,11 @@
                 :value="item">
               </el-option>
             </el-select>
+            <el-select class="select-primary mb-3 pagination-select" v-model="activeFilter" v-if="!loading">
+              <el-option class="select-primary" value="" label="Todos"></el-option>
+              <el-option class="select-primary" value="true" label="Ativos"></el-option>
+              <el-option class="select-primary" value="false" label="Inativos"></el-option>
+            </el-select>
             <base-input>
               <el-input
                 type="search"
@@ -100,6 +105,7 @@ export default {
     return {
       internalName: 'pages.partners.list',
       sortField: 'name',
+      activeFilter: '',
       tableColumns: [
         {
           prop: 'id',
@@ -129,7 +135,8 @@ export default {
         page: this.$data.pagination.currentPage - 1,
         pageItems: this.$data.pagination.perPage,
         searchWord: this.searchQuery,
-        sort: this.formatSortFieldParam
+        sort: this.formatSortFieldParam,
+        active: this.activeFilter
       };
       this.$data.loading = true;
       partnerService.findAll(request).then(
@@ -171,7 +178,13 @@ export default {
         }
       });
     }
+  },
+  watch:{
+    activeFilter(){
+      this.fetchData(); 
+    }
   }
+
 };
 </script>
 <style lang="scss" scoped>

@@ -14,6 +14,11 @@
                 :value="item">
               </el-option>
             </el-select>
+            <el-select class="select-primary mb-3 pagination-select" v-model="activeFilter" v-if="!loading">
+              <el-option class="select-primary" value="" label="Todas"></el-option>
+              <el-option class="select-primary" value="true" label="Ativas"></el-option>
+              <el-option class="select-primary" value="false" label="Inativas"></el-option>
+            </el-select>
             <base-input>
               <el-input
                 type="search"
@@ -101,6 +106,7 @@ export default {
       internalName: 'pages.operations.list',
       sortField: 'name',
       isMaster:false,
+      activeFilter: '',
       tableColumns: [
         {
           prop: 'id',
@@ -130,7 +136,8 @@ export default {
         page: this.$data.pagination.currentPage - 1,
         pageItems: this.$data.pagination.perPage,
         searchWord: this.searchQuery,
-        sort: this.formatSortFieldParam
+        sort: this.formatSortFieldParam,
+        active: this.activeFilter
       };
       this.$data.loading = true;
       operationService.findAll(request).then(
@@ -176,6 +183,11 @@ export default {
   created() {
     this.isMaster = this.$store.getters.currentUser.role == "master";
     this.fetchData();
+  },
+  watch:{
+    activeFilter(){
+      this.fetchData(); 
+    }
   }
 };
 </script>
