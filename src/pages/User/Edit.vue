@@ -252,7 +252,7 @@ export default {
   created() {
     this.fetchData();
     this.isMaster = this.$store.getters.currentUser.role == "master";
-    this.isRebens = this.$store.getters.currentUser.role == "administratorRebens";
+    this.isRebens = this.$store.getters.currentUser.role == "administratorRebens" || this.$store.getters.currentUser.role == "master";
   }
 };
 </script>
