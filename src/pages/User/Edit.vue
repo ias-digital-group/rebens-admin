@@ -43,16 +43,16 @@
                     v-loading.lock="selectLoading"
                     v-validate="modelValidations.roles"
                     lock>
-                    <el-option class="select-primary" value="master" label="Master"></el-option>
+                    <el-option v-show="isMaster" class="select-primary" value="master" label="Master"></el-option>
                     <el-option class="select-primary" value="publisher" label="Publicador" ></el-option>
                     <el-option class="select-primary" value="administrator" label="Administrador"></el-option>
-                    <el-option class="select-primary" value="publisherRebens" label="Publicador Rebens"></el-option>
-                    <el-option class="select-primary" value="administratorRebens" label="Administrador Rebens"></el-option>
+                    <el-option v-show="isRebens" class="select-primary" value="publisherRebens" label="Publicador Rebens"></el-option>
+                    <el-option v-show="isRebens" class="select-primary" value="administratorRebens" label="Administrador Rebens"></el-option>
                 </el-select>
                 </div>
             </div>
           </div>
-          <div class="row" v-if="model.roles == 'administrator' || model.roles == 'publisher'">
+          <div class="row" v-if="(model.roles == 'administrator' || model.roles == 'publisher') && isRebens">
             <label class="col-md-3 col-form-label">Operação</label>
             <div class="col-md-3">
                 <div class="form-group">
@@ -70,6 +70,7 @@
                     >
                     </el-option>
                 </el-select>
+                <label v-show="customErros.includes('operation')" class="text-danger">O campo Operação é obrigatório</label>
                 </div>
             </div>
           </div>
@@ -122,6 +123,8 @@ export default {
       selectLoading: false,
       formLoading: false,
       submitLoading: false,
+      isMaster:false,
+      isRebens:false,
       model: {
         name: '',
         email:'',
@@ -156,6 +159,10 @@ export default {
     },
     validate() {
       const self = this;
+      if(self.isRebens && (self.model.roles === 'publiser' || self.model.roles === 'administrator') && self.model.idOperation == '')
+      {
+        self.customErros.push('name');
+      }
       this.$validator.validateAll().then(isValid => {
         if (isValid) {
           self.submitLoading = true;
@@ -165,6 +172,10 @@ export default {
     },
     saveUser(vm) {
       vm = vm ? vm : this;
+      if(!vm.isRebens)
+      {
+        vm.model.idOperation = vm.$store.getters.currentUser.idOperation;
+      }
       if (vm.viewAction == 'new') {
         userService.create(vm.model).then(
           res => {
@@ -240,6 +251,8 @@ export default {
   },
   created() {
     this.fetchData();
+    this.isMaster = this.$store.getters.currentUser.role == "master";
+    this.isRebens = this.$store.getters.currentUser.role == "administratorRebens";
   }
 };
 </script>

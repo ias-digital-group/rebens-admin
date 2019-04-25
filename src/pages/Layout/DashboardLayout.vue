@@ -7,18 +7,18 @@
       :short-title="$t('sidebar.shortTitle')"
       :title="$t('sidebar.title')">
       <template slot="links">
-        <sidebar-item :link="{ name: $t('sidebar.dashboard'), icon: 'tim-icons icon-chart-pie-36', path: '/dashboard' }" > </sidebar-item>
+        <sidebar-item :link="{ name: $t('sidebar.dashboard'), icon: 'tim-icons icon-chart-pie-36', path: '/dashboard' }"></sidebar-item>
         <sidebar-item :link="{ name: $t('sidebar.benefits'), icon: 'tim-icons icon-money-coins', path: '/benefits' }"></sidebar-item>
         <sidebar-item :link="{ name: $t('sidebar.banners'), icon: 'fas fa-file-image', path: '/banners' }"></sidebar-item>
         <sidebar-item v-show="isRebens" :link="{ name: $t('sidebar.categories'), icon: 'tim-icons icon-single-copy-04', path: '/categories' }"></sidebar-item>
         <sidebar-item v-show="isRebens" :link="{ name: $t('sidebar.partners'), icon: 'tim-icons icon-link-72', path: '/partners' }"></sidebar-item>
         <sidebar-item v-show="isRebens" :link="{ name: $t('sidebar.operations'), icon: 'tim-icons icon-bank', path: '/operations' }"></sidebar-item>
-        <sidebar-item v-show="!isRebens" :link="{ name: $t('sidebar.faq'), icon: 'tim-icons icon-bulb-63', path: '/faqs' }"></sidebar-item>    
+        <sidebar-item v-show="!isRebens" :link="{ name: $t('sidebar.faqs'), icon: 'tim-icons icon-bulb-63', path: '/faqs' }"></sidebar-item>    
         <sidebar-item v-show="!isRebens" :link="{ name: $t('sidebar.pages'), icon: 'tim-icons icon-paper', path: '/pages' }"></sidebar-item>    
-        <sidebar-item :link="{ name: $t('sidebar.users'), path: '/users', icon: 'tim-icons icon-single-02' }"></sidebar-item>    
-        <sidebar-item :link="{ name: $t('sidebar.report'), icon: 'fas fa-chart-pie' }">
-          <sidebar-item :link="{ name: $t('sidebar.customer'), path: '/report/customer' }"></sidebar-item>
-          <sidebar-item :link="{ name: $t('sidebar.benefitUse'), path: '/report/benefit-use' }"></sidebar-item>
+        <sidebar-item v-show="!isPublisher" :link="{ name: $t('sidebar.users'), path: '/users', icon: 'tim-icons icon-single-02' }"></sidebar-item>    
+        <sidebar-item v-show="!isPublisher" :link="{ name: $t('sidebar.report'), icon: 'fas fa-chart-pie' }">
+          <sidebar-item v-show="!isPublisher" :link="{ name: $t('sidebar.customer'), path: '/report/customer' }"></sidebar-item>
+          <sidebar-item v-show="!isPublisher" :link="{ name: $t('sidebar.benefitUse'), path: '/report/benefit-use' }"></sidebar-item>
         </sidebar-item>
         
       </template>
@@ -78,7 +78,7 @@ export default {
   data() {
     return {
       isRebens: false,
-      showReports: false,
+      isPublisher: false,
       sidebarBackground: 'blue' //vue|blue|orange|green|red|primary
     };
   },
@@ -104,7 +104,7 @@ export default {
   },
   created() {
     this.isRebens = this.$store.getters.currentUser.role != "publisher" && this.$store.getters.currentUser.role != "administrator";
-    this.showReports = this.$store.getters.currentUser.role != "publisher" && this.$store.getters.currentUser.role != "publisherRebens";
+    this.isPublisher = this.$store.getters.currentUser.role == "publisher" || this.$store.getters.currentUser.role == "publisherRebens";
   }
 };
 </script>

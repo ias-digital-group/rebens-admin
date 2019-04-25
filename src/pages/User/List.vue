@@ -19,6 +19,7 @@
               <el-input
                 type="search"
                 class="mb-3 search-input"
+                style="width:300px"
                 clearable
                 prefix-icon="el-icon-search"
                 placeholder="Usuários"

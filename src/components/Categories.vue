@@ -7,7 +7,7 @@
                     :data="categoryList"
                     show-checkbox
                     node-key="id"
-                    :default-expand-all="true"
+                    :default-expand-all="false"
                     :default-checked-keys="selectedCategories"
                     :props="defaultProps"
                     v-loading="loading"

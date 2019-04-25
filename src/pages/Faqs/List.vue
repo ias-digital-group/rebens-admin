@@ -18,6 +18,7 @@
               <el-input
                 type="search"
                 class="mb-3 search-input"
+                style="width:300px"
                 clearable
                 prefix-icon="el-icon-search"
                 placeholder="Procurar categorias"
@@ -85,7 +86,7 @@
 <script>
 import { Table, TableColumn, Select, Option } from 'element-ui';
 import { BasePagination, Modal } from 'src/components';
-import bannerService from '../../services/Faq/faqService';
+import faqService from '../../services/Faq/faqService';
 import listPage from '../../mixins/listPage';
 export default {
   mixins: [listPage],

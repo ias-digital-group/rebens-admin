@@ -48,20 +48,20 @@
               <div class="row">
                 <label class="col-md-3 col-form-label">Detalhes *</label>
                 <div class="col-md-9">
-                  <wysiwyg v-model="model.detail" />
+                  <wysiwyg v-model="model.detail" placeholder="Detalhes" />
                   <label v-show="customErros.includes('detail')" class="text-danger">O campo Detalhes é obrigatório!</label>
                 </div>
               </div>
               <div class="row m-b-20">
                 <label class="col-md-3 col-form-label">Como usar *</label>
                 <div class="col-md-9">
-                  <wysiwyg v-model="model.howToUse" />
+                  <wysiwyg v-model="model.howToUse" placeholder="Como usar" />
                   <label v-show="customErros.includes('howToUse')" class="text-danger">O campo Como Usar é obrigatório</label>
                 </div>
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Parceiro *</label>
-                <div class="col-md-6">
+                <div class="col-md-9 col-lg-4">
                   <div class="form-group">
                     <el-autocomplete 
                       :fetch-suggestions="querySearch"
@@ -97,7 +97,7 @@
                   </base-input>
                   <label v-show="customErros.includes('maxDiscount')" class="text-danger">O campo Desconto Máximo é obrigatório!</label>
                 </div>
-                <div class="col-md-9 offset-md-3 offset-lg-0 col-lg-5">
+                <div class="col-md-9 offset-md-3 offset-lg-0 col-lg-4">
                   <base-input label="Mínimo *">
                     <money class="form-control" v-model="model.minDiscountPercentage" v-bind="money"></money>
                   </base-input>
@@ -184,6 +184,7 @@
                   <div class="form-group">
                     <el-select
                       class="select-info"
+                      placeholder="selecione"
                       v-model="model.homeHighlight"
                       v-loading.lock="selectLoading"
                       lock>
@@ -210,6 +211,7 @@
                   <div class="form-group">
                   <el-select
                     class="select-info"
+                    placeholder="selecione"
                     v-model="model.homeBenefitHighlight"
                     v-loading.lock="selectLoading"
                     lock>
@@ -261,7 +263,7 @@
                   </base-input>
                   <label v-show="customErros.includes('start')" class="text-danger">O campo Início é obrigatório!</label>
                 </div>
-                <div class="col-md-9 offset-md-3 offset-lg-0 col-lg-5">
+                <div class="col-md-9 offset-md-3 offset-lg-0 col-lg-4">
                   <base-input label="Fim">
                     <el-date-picker
                       type="date"
@@ -272,7 +274,7 @@
                   <label v-show="customErros.includes('end')" class="text-danger">O campo Fim é obrigatório!</label>
                 </div>
               </div>
-              <div class="row">
+              <div class="row" v-show="isRebens">
                 <label class="col-md-3 col-form-label">Exclusivo</label>
                 <div class="col-md-9">
                   <div class="form-group">
@@ -280,9 +282,9 @@
                   </div>
                 </div>
               </div>
-              <div class="row" v-show="model.exclusive">
+              <div class="row" v-show="model.exclusive && isRebens">
                 <label class="col-md-3 col-form-label">Operação</label>
-                <div class="col-md-6">
+                <div class="col-md-9 col-lg-4">
                   <div class="form-group">
                     <el-autocomplete 
                       :fetch-suggestions="querySearchOp"
@@ -322,7 +324,7 @@
               </div>
             </form>
           </el-tab-pane>
-          <el-tab-pane label="Operações"  name="operations" :disabled="viewAction == 'new' ? true : false">
+          <el-tab-pane label="Operações" v-if="isRebens"  name="operations" :disabled="viewAction == 'new' ? true : false">
             <operations v-loading="formLoading" parent="benefits" :parentId="id" :key="operationKey"></operations>
           </el-tab-pane>
           <el-tab-pane label="Categorias" name="categories" :disabled="viewAction == 'new' ? true : false">
@@ -379,6 +381,8 @@ export default {
       operationKey: 0,
       partnerName:'',
       operationName:'',
+      isRebens: false,
+      selectLoading:false,
       money: {
         decimal: ',',
         thousands: '.',
@@ -424,7 +428,7 @@ export default {
     activeName:{
       get:function(){
       if(this.$route.query && this.$route.query.tab)
-        return this.$route.query.tab == 'op' ? 'operations' : 'benefit';
+        return this.$route.query.tab == 'op' ? (this.isRebens ? 'operations' : 'categories') : 'benefit';
       return 'benefit';
       },
       set:function(){
@@ -546,6 +550,10 @@ export default {
     },
     saveBenefit(vw) {
       vw = vw ? vw : this;
+      if(!vw.isRebens){
+        vw.model.exclusive = true;
+        vw.model.idOperation = vw.$store.getters.currentUser.idOperation;
+      }
       if (vw.viewAction == 'new') {
         benefitService.create(vw.model).then(
           response => {
@@ -653,6 +661,7 @@ export default {
   },
   created() {
     this.fetchData();
+    this.isRebens = this.$store.getters.currentUser.role != "administrator" && this.$store.getters.currentUser.role != "publisher";
   }
 };
 </script>

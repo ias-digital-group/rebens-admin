@@ -17,7 +17,7 @@
           </template>
           <template v-else-if="field.type == 'html'">
             <div class="col-md-9">
-              <wysiwyg v-model="field.data" style="margin-bottom:10px;" />
+              <wysiwyg v-model="field.data" placeholder="Digite o texto ..." style="margin-bottom:10px;" />
             </div>
           </template>
           <template v-else>

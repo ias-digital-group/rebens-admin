@@ -52,7 +52,7 @@
         <div class="row">
             <label class="col-md-3 col-form-label">Resposta</label>
             <div class="col-md-9">
-                <wysiwyg v-model="model.answer" />
+                <wysiwyg v-model="model.answer" placeholder="Resposta" />
             </div>
         </div>
         <div class="row">

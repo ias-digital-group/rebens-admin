@@ -4,15 +4,21 @@
       <card card-body-classes="table-full-width">
         <template slot="header">
           <h4 class="card-title">{{$t('pages.operations.title')}}
-            <base-link to="/operations/new" class="btn btn-icon btn-simple btn-twitter btn-sm"><i class="tim-icons icon-simple-add"></i></base-link>
+            <base-link v-show="isMaster" to="/operations/new" class="btn btn-icon btn-simple btn-twitter btn-sm"><i class="tim-icons icon-simple-add"></i></base-link>
           </h4>
         </template>
         <div>
           <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
+            <el-select class="select-primary mb-3 pagination-select" v-model="pagination.perPage" :placeholder="$t('pages.operations.perpage-placeholder')" v-if="!loading">
+              <el-option class="select-primary" v-for="item in pagination.perPageOptions" :key="item" :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
             <base-input>
               <el-input
                 type="search"
                 class="mb-3 search-input"
+                style="width:300px"
                 clearable
                 prefix-icon="el-icon-search"
                 placeholder="Procurar operações"
@@ -41,11 +47,7 @@
         </div>
         <div slot="footer" class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
           <div class="">
-            <el-select class="select-primary mb-3 pagination-select" v-model="pagination.perPage" :placeholder="$t('pages.operations.perpage-placeholder')" v-if="!loading">
-              <el-option class="select-primary" v-for="item in pagination.perPageOptions" :key="item" :label="item"
-                :value="item">
-              </el-option>
-            </el-select>
+            
           </div>
           <base-pagination class="pagination-no-border" v-model="pagination.currentPage" :per-page="pagination.perPage"
             :total="total" v-on:input="onPageChanged">
@@ -98,6 +100,7 @@ export default {
     return {
       internalName: 'pages.operations.list',
       sortField: 'name',
+      isMaster:false,
       tableColumns: [
         {
           prop: 'id',
@@ -169,6 +172,10 @@ export default {
         }
       });
     }
+  },
+  created() {
+    this.isMaster = this.$store.getters.currentUser.role == "master";
+    this.fetchData();
   }
 };
 </script>

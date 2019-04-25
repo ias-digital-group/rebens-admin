@@ -23,7 +23,7 @@
               <div class="row">
                 <label class="col-md-3 col-form-label">Descrição</label>
                 <div class="col-md-9">
-                  <wysiwyg v-model="model.description"  />
+                  <wysiwyg v-model="model.description" placeholder="Descrição"  />
                 </div>
               </div>
               <template v-if="model.logo">

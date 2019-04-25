@@ -35,7 +35,7 @@
                   <div class="form-group">
                     <base-checkbox v-model="model.bannerShowHome" :inline="true">Home</base-checkbox>
                     <base-checkbox v-model="model.bannerShowHomeLogged" :inline="true">Home Logada</base-checkbox>
-                    <base-checkbox v-model="model.bannerShowBenefit" :inline="true">Home de benefícios</base-checkbox>
+                    <base-checkbox v-show="model.idType == 3" v-model="model.bannerShowBenefit" :inline="true">Home de benefícios</base-checkbox>
                   </div>
                 </div>
               </div>
@@ -49,9 +49,10 @@
               </div>
               <div class="row" v-if="model.isBenefit">
                 <label class="col-md-3 col-form-label">Benefício</label>
-                <div class="col-md-3">
+                <div class="col-md-9 col-lg-4">
                   <div class="form-group">
                     <el-autocomplete 
+                      style="width:100%"
                       :fetch-suggestions="querySearch"
                       @select="handleSelect"
                       placeholder=""
@@ -99,7 +100,7 @@
                     </el-date-picker>
                   </base-input>
                 </div>
-                <div class="col-md-9 offset-md-3 offset-lg-0 col-lg-5">
+                <div class="col-md-9 offset-md-3 offset-lg-0 col-lg-4">
                   <base-input label="Fim">
                     <el-date-picker
                       type="date"

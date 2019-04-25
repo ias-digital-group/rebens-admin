@@ -3,9 +3,7 @@
     <div class="col-12">
       <card card-body-classes="table-full-width">
         <template slot="header">
-          <h4 class="card-title">{{$t('pages.pages.title')}}
-          <base-link to="/pages/new" class="btn btn-icon btn-simple btn-twitter btn-sm"><i class="tim-icons icon-simple-add"></i></base-link>  
-          </h4>
+          <h4 class="card-title">{{$t('pages.pages.title')}}</h4>
         </template>
         <div>
           <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
@@ -18,6 +16,7 @@
               <el-input
                 type="search"
                 class="mb-3 search-input"
+                style="width:300px"
                 clearable
                 prefix-icon="el-icon-search"
                 placeholder="Procurar Página"
@@ -57,7 +56,7 @@
 <script>
 import { Table, TableColumn, Select, Option } from 'element-ui';
 import { BasePagination, Modal } from 'src/components';
-import bannerService from '../../services/StaticText/staticTextService';
+import staticTextService from '../../services/StaticText/staticTextService';
 import listPage from '../../mixins/listPage';
 export default {
   mixins: [listPage],
@@ -84,7 +83,7 @@ export default {
   },
   methods: {
     handleEdit(index, row) {
-      this.$router.push(`/banners/${row.id}/edit/`);
+      this.$router.push(`/pages/${row.id}/edit/`);
     },
     fetchData() {
       const self = this;

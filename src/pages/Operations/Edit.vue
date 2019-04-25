@@ -21,13 +21,13 @@
               <div class="col-md-9">
                 <base-input 
                   required
-                  :readonly="publishLabel == 'Publicado'"
                   v-model="model.title"
                   v-validate="modelValidations.title"
                   type="text"
                   :error="getError('title')"
                   name="title"
                   placeholder="Titulo" 
+                  :disabled="!isMaster"
                   maxlength='300'></base-input>
               </div>
             </div>
@@ -42,6 +42,7 @@
                   :error="getError('companyName')"
                   name="companyName"
                   placeholder="Empresa" 
+                  :disabled="!isMaster"
                   maxlength='300'></base-input>
               </div>
             </div>
@@ -57,6 +58,7 @@
                   name="companyDoc"
                   placeholder="CNPJ" 
                   maxlength='18'
+                  :disabled="!isMaster"
                   :inputMask="['##.###.###/####-##']"></base-input>
               </div>
             </div>
@@ -65,12 +67,12 @@
               <div class="col-md-9">
                 <base-input 
                   required
-                  :readonly="publishLabel == 'Publicado'"
                   v-model="model.domain"
                   v-validate="modelValidations.domain"
                   type="text"
                   :error="getError('domain')"
                   name="domain"
+                  :disabled="!isMaster"
                   placeholder="www.seudominio.com.br" 
                   maxlength='200'></base-input>
               </div>
@@ -86,6 +88,7 @@
                   name="cachbackPercentage"
                   placeholder="Porcentagem" 
                   maxlength='4' 
+                  :disabled="!isMaster"
                   :inputMask="['####']">
                 </base-input>
               </div>
@@ -98,6 +101,7 @@
                     placeholder="Tipo de operação"
                     v-model="model.idOperationType"
                     v-loading.lock="selectLoading"
+                    :disabled="!isMaster"
                     lock>
                     <el-option
                       v-for="t in operationTypeList"
@@ -116,7 +120,7 @@
                   <div class="col-md-9">
                     <div>
                       <img style="max-width:160px;max-height:68px;" :src="model.logo" class="img-preview" />
-                      <base-button v-if="publishLabel != 'Publicado'" @click="model.logo = ''" class="btn-simple btn-file" type="danger">
+                      <base-button v-if="publishLabel != 'Publicado'" @click="model.logo = ''" class="btn-simple btn-file" :disabled="!isMaster" type="danger">
                         <i class="fas fa-times"></i>
                       </base-button>
                     </div>
@@ -127,7 +131,7 @@
                 <div class="row mb-3">
                   <label class="col-md-3 col-form-label">Logo (160px X 68px)</label>
                   <div class="col-md-9">
-                    <image-upload @change="onImageChange" style="max-width:160px;max-height:68px;" change-text="Alterar" remove-text="Remover" select-text="Selecione uma imagem" />
+                    <image-upload @change="onImageChange" style="max-width:160px;max-height:68px;" change-text="Alterar" :disabled="!isMaster" remove-text="Remover" select-text="Selecione uma imagem" />
                   </div>
                 </div>
               </template>
@@ -135,7 +139,7 @@
                 <label class="col-md-3 col-form-label">Ativo</label>
                 <div class="col-md-9">
                   <div class="form-group">
-                    <base-checkbox v-model="model.active">&nbsp;</base-checkbox>
+                    <base-checkbox v-model="model.active" :disabled="!isMaster">&nbsp;</base-checkbox>
                   </div>
                 </div>
             </div>
@@ -146,6 +150,7 @@
                   class="mt-3 pull-right" 
                   native-type="submit" 
                   type="info"
+                  v-show="isMaster"
                   :disabled="publishLabel == 'Processando'"
                   @click.native.prevent="validate"
                   :loading="submitLoading">
@@ -155,7 +160,7 @@
             </div>
           </form>
         </el-tab-pane>
-        <el-tab-pane label="Configurações" :disabled="viewAction == 'new' ? true : false">
+        <el-tab-pane label="Configurações" :disabled="viewAction == 'new' || !isMaster ? true : false">
           <operation-config v-loading="formLoading" parent="operations" :parentId="id" ref="operationconfig"></operation-config>
         </el-tab-pane>
         <el-tab-pane  label="Páginas" :disabled="viewAction == 'new' ? true : false">
@@ -202,6 +207,7 @@ export default {
       canPublish: false,
       publishLabel:"Publicar",
       image: null,
+      isMaster:false,
       model: {
         title: '',
         companyName: '',
@@ -385,7 +391,9 @@ export default {
     }
   },
   created() {
+    this.isMaster = this.$store.getters.currentUser.role == "master";
     this.fetchData();
+    
   }
 };
 </script>

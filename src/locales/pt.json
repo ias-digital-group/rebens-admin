@@ -3,6 +3,9 @@
       "dashboard": {
         "title": "Dashboard"
       },
+      "pages":{
+        "title":"Páginas"
+      },
       "categories": {
         "title": "Categorias",
         "perpage-placeholder": "Por página",
@@ -168,7 +171,8 @@
       "admin": "Administrativo",
       "report": "Relatórios",
       "customer":"Clientes",
-      "benefitUse":"Utilização"
+      "benefitUse":"Utilização",
+      "pages":"Páginas"
     }
   }
   
