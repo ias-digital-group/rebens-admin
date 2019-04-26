@@ -161,7 +161,7 @@
           </form>
         </el-tab-pane>
         <el-tab-pane label="Configurações" :disabled="viewAction == 'new' || !isMaster ? true : false">
-          <operation-config v-loading="formLoading" parent="operations" :parentId="id" ref="operationconfig"></operation-config>
+          <operation-config @updateCanPublish="updateCanPublish" v-loading="formLoading" parent="operations" :parentId="id" ref="operationconfig"></operation-config>
         </el-tab-pane>
         <el-tab-pane  label="Páginas" :disabled="viewAction == 'new' ? true : false">
           <static-texts v-loading="formLoading" parent="operations" :parentId="id" ref="statictexts"></static-texts>
@@ -296,7 +296,7 @@ export default {
               message: 'Operação cadastrada com sucesso!',
               icon: 'tim-icons icon-bell-55'
             });
-            vw.$router.push('/operations');
+            //vw.$router.push('/operations');
             vw.submitLoading = false;
           },
           err => {
@@ -318,6 +318,7 @@ export default {
             });
             vw.$router.push('/operations');
             vw.submitLoading = false;
+            vw.canPublish = response.data;
             vm.fetchData();
           },
           err => {
@@ -388,6 +389,12 @@ export default {
     },
     onImageChange(file) {
       this.image = file;
+    },
+    updateCanPublish(isValid) {
+      if(!this.canPublish && this.publishLabel !== "Processando"){
+        this.canPublish = isValid;
+        this.publishLabel = "Válido";
+      }
     }
   },
   created() {
@@ -397,5 +404,3 @@ export default {
   }
 };
 </script>
-<style>
-</style>

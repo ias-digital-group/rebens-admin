@@ -7,6 +7,14 @@
           <div class="col-md-12">
             <base-button 
               class="mt-3 pull-right" 
+              native-type="button" 
+              type="info"
+              @click="updateParent">
+              Alterar Pai
+            </base-button>
+
+            <base-button 
+              class="mt-3 pull-right" 
               native-type="submit" 
               type="info"
               @click.native.prevent="validateForm">
@@ -120,6 +128,9 @@ export default {
     },
     getError(fieldName) {
       return this.errors.first(fieldName);
+    },
+    updateParent(){
+      this.$emit('updateCanPublish', true);
     }
   },
   created() {
