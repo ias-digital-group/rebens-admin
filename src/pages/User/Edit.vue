@@ -85,8 +85,16 @@
               </div>
           </div>
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
                 <base-link class="btn mt-3 btn-simple btn-primary" to="/users">Voltar</base-link>
+                <base-button 
+                class="mt-3" 
+                native-type="button" 
+                type="info"
+                @click="resendValidation"
+                :loading="sendingLoading">
+                Reenviar o email de validação
+                </base-button>
                 <base-button 
                 class="mt-3 pull-right" 
                 native-type="submit" 
@@ -95,7 +103,6 @@
                 :loading="submitLoading">
                 Salvar
                 </base-button>
-                
             </div>
           </div>
         </form>
@@ -125,6 +132,7 @@ export default {
       selectLoading: false,
       formLoading: false,
       submitLoading: false,
+      sendingLoading:false,
       isMaster:false,
       isRebens:false,
       customErros: [],
@@ -183,8 +191,6 @@ export default {
         self.customErros.push('roles');
       if(self.isRebens && (self.model.roles === 'publisher' || self.model.roles === 'administrator') && self.model.idOperation == null)
           self.customErros.push('operation');
-      
-        
 
       this.$validator.validateAll().then(isValid => {
         if (isValid && self.customErros.length == 0) {
@@ -192,6 +198,23 @@ export default {
           self.saveUser(self);
         }
       });
+    },
+    resendValidation(){
+      const self = this;
+      self.sendingLoading = true;
+      userService.resendValidation(self.id).then(
+          response => {
+            self.$notify({
+              type: 'success',
+              message: 'E-mail reenviado com sucesso!',
+              icon: 'tim-icons icon-bell-55'
+            });
+            self.sendingLoading = false;
+          },
+          () => {
+            self.sendingLoading = false;
+          }
+        );
     },
     saveUser(vm) {
       vm = vm ? vm : this;

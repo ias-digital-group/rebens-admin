@@ -72,5 +72,17 @@ export default {
         }
       );
     });
+  },
+  resendValidation: id => {
+    return new Promise((resolve, reject) => {
+      HTTP.get(config.apiEndpoints.userUri.concat(`ResendValidation/${id}`)).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
   }
 };
