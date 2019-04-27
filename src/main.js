@@ -18,7 +18,6 @@ Vue.use(wysiwyg, {
   hideModules:{
     "code":true, 
     "image":true, 
-    "link":true, 
     "table":true, 
     "removeFormat":true, 
     "justifyLeft": true,
