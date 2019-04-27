@@ -169,6 +169,9 @@
         <el-tab-pane label="Perguntas Frequentes" :disabled="viewAction == 'new'">
           <faq v-loading="formLoading" parent="operations" :parentId="id" ref="faq"></faq>
         </el-tab-pane>
+        <el-tab-pane label="Pré cadastro" :disabled="viewAction == 'new'">
+          <customers v-loading="formLoading" parent="operations" :parentId="id" ref="customers"></customers>
+        </el-tab-pane>
       </el-tabs>
     </card>
   </div>
@@ -180,6 +183,7 @@ import operationService from '../../services/Operation/operationService';
 import helperService from '../../services/Helper/helperService';
 import StaticTexts from 'src/components/StaticTexts';
 import Faq from 'src/components/Faq';
+import Customers from 'src/components/Customers';
 import OperationConfig from 'src/components/OperationConfig';
 import { ImageUpload } from 'src/components/index';
 import _ from 'lodash';
@@ -192,6 +196,7 @@ export default {
     [TabPane.name]: TabPane,
     StaticTexts,
     Faq,
+    Customers,
     OperationConfig,
     ImageUpload
   },

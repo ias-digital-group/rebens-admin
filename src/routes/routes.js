@@ -21,6 +21,9 @@ const CategoriesEdit = () => import('src/pages/Categories/Edit.vue');
 const FaqsList = () => import('src/pages/Faqs/List.vue');
 const FaqsEdit = () => import('src/pages/Faqs/Edit.vue');
 
+const CustomerList = () => import('src/pages/Customers/List.vue');
+const CustomerEdit = () => import('src/pages/Customers/Edit.vue');
+
 const PagesList = () => import('src/pages/Pages/List.vue');
 const PagesEdit = () => import('src/pages/Pages/Edit.vue');
 
@@ -254,6 +257,38 @@ let faqsPages = {
         requiresAuth: true,
         roles: ['publisher', 'administrator','master'],
         title: i18n.t('pages.faqs.title')
+      }
+    }
+  ]
+}
+
+let customersPages = {
+  path: '/customers',
+  component: DashboardLayout,
+  meta:{
+    requiresAuth: true,
+    roles: ['publisher', 'administrator','master'],
+    title: 'Pré-cadastro'
+  },
+  children:[
+    {
+      path: '',
+      name:'customer',
+      component: CustomerList,
+      meta:{
+        requiresAuth: true,
+        roles: ['publisher', 'administrator','master'],
+        title: 'Pré-cadastro'
+      }
+    },
+    {
+      path: 'new',
+      name: `new_customer`,
+      component: CustomerEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['publisher', 'administrator','master'],
+        title: 'Pré-cadastro'
       }
     }
   ]
@@ -535,7 +570,8 @@ const routes = [
   usersPages,
   reportPages,
   pagesPages,
-  faqsPages
+  faqsPages,
+  customersPages
 ];
 
 export default routes;

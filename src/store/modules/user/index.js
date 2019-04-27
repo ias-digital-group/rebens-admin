@@ -63,7 +63,8 @@ const actions = {
       name: jwtData.Name,
       email: jwtData.unique_name[0],
       id: jwtData.Id,
-      role: jwtData.role
+      role: jwtData.role,
+      idOperation: jwtData.operationId
     };
     // axios.defaults.headers.common['Authorization'] = `Bearer ${
     //   signinResponse.accessToken
