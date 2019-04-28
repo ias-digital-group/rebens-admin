@@ -11,7 +11,7 @@ export default {
         config.apiEndpoints.staticTextUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
             request.searchWord
-          }&sort=${request.sort}${(request.idOperation ? '&idOperation=' + request.parentId : '')}`
+          }&sort=${request.sort}${(request.parentId ? '&idOperation=' + request.parentId : '')}`
         )
       ).then(
         response => {
