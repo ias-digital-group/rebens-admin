@@ -1,15 +1,15 @@
 <template>
     <div class="row">
         <div class="col-12">
-            <el-table ref="addressTable" :data="tableData" v-loading="loading" empty-text="...">
-            <el-table-column prop="checked" min-width="100">
-                <div slot-scope="props">
-                  <input type="checkbox" v-model="props.row.checked" />
-                </div>
-            </el-table-column>
-            <el-table-column v-for="column in tableColumns" :key="column.label" :min-width="column.minWidth" :prop="column.prop"
-                :label="column.label">
-            </el-table-column>
+            <el-table ref="operationsTable" :data="tableData" v-loading="loading" empty-text="..." @selection-change="handleSelectionChange">
+              <el-table-column
+                type="selection"
+                width="55"
+                prop="checked">
+              </el-table-column>
+              <el-table-column v-for="column in tableColumns" :key="column.label" :min-width="column.minWidth" :prop="column.prop"
+                  :label="column.label">
+              </el-table-column>
             </el-table>
         </div>
         <div class="col-md-12">
@@ -27,6 +27,7 @@
 <script>
 import { Table, TableColumn, Select, Option } from 'element-ui';
 import operationService from '../services/Operation/operationService';
+import _ from 'lodash';
 export default {
   components: {
     [Table.name]: Table,
@@ -48,13 +49,28 @@ export default {
           label: 'Nome',
           minWidth: 200
         }
-      ]
+      ],
+      multipleSelection: []
     }
   },
   created() {
     this.fetchData();
   },
+  updated() {
+    const rowsToToggle = this.tableData.filter(row => row.checked);
+    this.toggleSelection(rowsToToggle);
+  },
   methods: {
+    toggleSelection(rows) {
+      if (rows) {
+        const self = this;
+        rows.forEach(row => {
+          self.$refs.operationsTable.toggleRowSelection(row, true);
+        });
+      } else {
+        self.$refs.operationsTable.clearSelection();
+      }
+    },
     fetchData() {
       const self = this;
       this.$data.loading = true;
@@ -71,13 +87,23 @@ export default {
         }
       );     
     },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
     saveOperations(){
       const self = this;
       this.$data.loading = true;
-      var count = self.$data.tableData.length
+      var count = self.$data.tableData.length;
       for(var i=0;i<self.$data.tableData.length ; i++)
       {
-        const row = self.$data.tableData[i];
+        const row = self.tableData[i];
+        if(self.multipleSelection && self.multipleSelection.length > 0) {
+          var selected = _.find(self.multipleSelection, function(o) { return o.idOperation == row.idOperation; });
+          row.checked = selected ? true : false;
+        } else {
+          row.checked = false;
+        }
+        
         if (row.checked) {
         operationService.associateOperation({
         parent: self.parent,

@@ -178,7 +178,6 @@ export default {
           self.fetchData();
         },
         () => {
-          console.log('erro');
           self.formLoading = false;
         }
       );
