@@ -302,9 +302,9 @@ export default {
         );
     });
   },
-  publish: function(id) {
+  publish: function(id, isTemporary) {
     return new Promise((resolve, reject) => {
-      HTTP.post(config.apiEndpoints.operationUri.concat(`${id}/Publish`)).then(
+      HTTP.post(config.apiEndpoints.operationUri.concat(`${id}/Publish/?isTemporary=${isTemporary}`)).then(
         response => {
           resolve(response.data);
         },

@@ -8,9 +8,16 @@
           native-type="button"
           type="info"
           @click="publish"
-          :disabled="!canPublish"
+          v-if="viewAction != 'new'"
+          :disabled="!model.canPublish"
           :loading="publishLoading">
-          {{publishLabel}}</base-button>
+          {{model.publishStatus}}</base-button>
+          <base-button class="pull-right" 
+          native-type="button"
+          type="info"
+          v-if="showTempPublishBtn"
+          @click="publishTemp"
+          :loading="publishTempLoading">{{model.temporaryPublishStatus}}</base-button>
       </h4>
       
       <el-tabs>
@@ -66,7 +73,6 @@
               <label class="col-md-3 col-form-label">Domínio</label>
               <div class="col-md-9">
                 <base-input 
-                  required
                   v-model="model.domain"
                   v-validate="modelValidations.domain"
                   type="text"
@@ -76,6 +82,21 @@
                   placeholder="www.seudominio.com.br" 
                   maxlength='200'></base-input>
               </div>
+            </div>
+            <div class="row">
+              <label class="col-md-3 col-form-label">Subdomínio temporário</label>
+              <div class="col-md-5">
+                <base-input 
+                  v-model="model.temporarySubdomain"
+                  type="text"
+                  :error="getError('temporarySubdomain')"
+                  name="temporarySubdomain"
+                  :disabled="!isMaster"
+                  placeholder="" 
+                  maxlength='50'></base-input>
+                  <label style="position:absolute;top:11px;right:30px;">.sistemarebens.com.br</label>
+              </div>
+              <a :href="temporaryUrl" v-show="model.subdomainCreated" class="col-md-4 col-form-label text-left" target="_blank">uol</a>
             </div>
             <div class="row">
               <label class="col-md-3 col-form-label">Porcentagem</label>
@@ -120,7 +141,7 @@
                   <div class="col-md-9">
                     <div>
                       <img style="max-width:160px;max-height:68px;" :src="model.logo" class="img-preview" />
-                      <base-button v-if="publishLabel != 'Publicado'" @click="model.logo = ''" class="btn-simple btn-file" :disabled="!isMaster" type="danger">
+                      <base-button @click="model.logo = ''" class="btn-simple btn-file" :disabled="!isMaster" type="danger">
                         <i class="fas fa-times"></i>
                       </base-button>
                     </div>
@@ -151,7 +172,7 @@
                   native-type="submit" 
                   type="info"
                   v-show="isMaster"
-                  :disabled="publishLabel == 'Processando'"
+                  :disabled="model.publishStatus == 'Processando' || model.temporaryPublishStatus == 'Processando'"
                   @click.native.prevent="validate"
                   :loading="submitLoading">
                   Salvar
@@ -161,7 +182,7 @@
           </form>
         </el-tab-pane>
         <el-tab-pane label="Configurações" :disabled="viewAction == 'new' || !isMaster ? true : false">
-          <operation-config @updateCanPublish="updateCanPublish" v-loading="formLoading" parent="operations" :parentId="id" ref="operationconfig"></operation-config>
+          <operation-config v-loading="formLoading" parent="operations" :parentId="id" :key="configKey" ref="operationconfig"></operation-config>
         </el-tab-pane>
         <el-tab-pane  label="Páginas" :disabled="viewAction == 'new' ? true : false">
           <static-texts v-loading="formLoading" parent="operations" :parentId="id" ref="statictexts"></static-texts>
@@ -209,10 +230,11 @@ export default {
       formLoading: false,
       submitLoading: false,
       publishLoading: false,
-      canPublish: false,
-      publishLabel:"Publicar",
+      publishTempLoading: false,
+      showTempPublishBtn: false,
       image: null,
       isMaster:false,
+      configKey:0,
       model: {
         title: '',
         companyName: '',
@@ -221,7 +243,13 @@ export default {
         idOperationType: 0,
         cachbackPercentage: 0,
         active: false,
-        image: ''
+        image: '',
+        temporarySubdomain:'',
+        subdomainCreated:false,
+        canPublish:false,
+        temporaryPublishStatus:'',
+        publishStatus:'',
+        canPublishTemporary:false
       },
       modelValidations: {
         title: {
@@ -232,12 +260,14 @@ export default {
           required: true,
           max: 300
         },
+        temporarySubdomain:{
+          max:20
+        },
         companyDoc: {
           required: true,
           max: 18
         },
         domain: {
-          required: true,
           max: 200
         },
         idOperationType: {
@@ -251,7 +281,11 @@ export default {
   computed: {
     viewAction() {
       return this.$route.name == 'edit_operation' ? 'edit' : 'new';
+    },
+    temporaryUrl(){
+      return 'http://' + this.temporarySubdomain + '.sistemarebens.com.br';
     }
+
   },
   methods: {
     getError(fieldName) {
@@ -295,14 +329,18 @@ export default {
     saveOperation(vw){
       if (vw.viewAction == 'new') {
         operationService.create(vw.model).then(
-          () => {
+          response => {
             vw.$notify({
               type: 'primary',
               message: 'Operação cadastrada com sucesso!',
               icon: 'tim-icons icon-bell-55'
             });
-            //vw.$router.push('/operations');
-            vw.submitLoading = false;
+            vw.$router.push(`/operations/${response.id}/edit/`);
+            setTimeout(() => {
+              vw.fetchData();  
+              vw.configKey++;
+            }, 500);
+            
           },
           err => {
             vw.$notify({
@@ -321,10 +359,13 @@ export default {
               message: response.message,
               icon: 'tim-icons icon-bell-55'
             });
-            vw.$router.push('/operations');
-            vw.submitLoading = false;
-            vw.canPublish = response.data;
-            vm.fetchData();
+            vw.$router.go();
+
+            //window.location.reload(true);
+            // vw.$router.push(`/operations/${vw.model.id}/edit/`);
+            // vw.submitLoading = false;
+            //vw.canPublish = response.data;
+            //vw.fetchData();
           },
           err => {
             vw.$notify({
@@ -340,14 +381,14 @@ export default {
     publish(){
       const self = this;
       self.publishLoading = true;
-      self.publishLabel = "Processando";
-      operationService.publish(self.id).then(
-        response => {
+      operationService.publish(self.id, false).then(
+        () => {
             self.$notify({
               type: 'primary',
               message: 'A operação está sendo publicada, e assim que estiver concluído você verá aqui.',
               icon: 'tim-icons icon-bell-55'
             });
+            self.model.publishStatus = "Processando";
           },
           err => {
             self.$notify({
@@ -359,6 +400,28 @@ export default {
           }
       );
     },
+    publishTemp(){
+      const self = this;
+      self.publishTempLoading = true;
+      operationService.publish(self.id, true).then(
+        () => {
+            self.$notify({
+              type: 'primary',
+              message: 'A operação está sendo publicada, e assim que estiver concluído você verá aqui.',
+              icon: 'tim-icons icon-bell-55'
+            });
+            self.model.temporaryPublishStatus = "Processando";
+          },
+          err => {
+            self.$notify({
+              type: 'primary',
+              message: err.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+            self.publishTempLoading = false;
+          }
+      );
+    },
     fetchData() {
       const self = this;
       if (this.viewAction == 'edit') {
@@ -366,17 +429,16 @@ export default {
         operationService.get(self.id).then(
           response => {
             self.model = response.data;
-            self.publishLabel = response.data.publishStatus;
-            self.canPublish = response.data.canPublish;
             self.publishLoading = response.data.publishStatus === 'Processando';
             self.formLoading = false;
+            self.publishTempLoading = response.data.temporaryPublishStatus === 'Processando Temporário';
+            self.showTempPublishBtn = response.data.temporaryPublishStatus !== 'Incompleto Temporário';
           },
           () => {
             self.formLoading = false;
           }
         );
       }
-
       this.selectLoading = true;
       helperService.findAllOperationTypes().then(
         response => {
@@ -394,18 +456,11 @@ export default {
     },
     onImageChange(file) {
       this.image = file;
-    },
-    updateCanPublish(isValid) {
-      if(!this.canPublish && this.publishLabel !== "Processando"){
-        this.canPublish = isValid;
-        this.publishLabel = "Válido";
-      }
     }
   },
   created() {
     this.isMaster = this.$store.getters.currentUser.role == "master";
     this.fetchData();
-    
   }
 };
 </script>
