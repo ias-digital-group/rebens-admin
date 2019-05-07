@@ -16,6 +16,7 @@
                 type="tel"
                 :placeholder="field.name"
                 v-model="field.data"
+                masked="true"
                 :inputMask="['(##) ####-####', '(##) #####-####']">
               </base-input>
             </div>

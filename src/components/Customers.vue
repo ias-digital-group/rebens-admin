@@ -73,6 +73,7 @@
               :error="getError('cpf')"
               name="cpf"
               placeholder="CPF" 
+              masked="true"
               :inputMask="['###.###.###-##']"
               maxlength='50'></base-input>
           </div>
@@ -86,6 +87,7 @@
               placeholder="Telefone"
               v-model="model.phone"
               ref="phone"
+              masked="true"
               :inputMask="['(##) ####-####']">
             </base-input>
           </div>
@@ -100,6 +102,7 @@
             ref="cellPhone"
             placeholder="Celular"
             v-model="model.cellPhone"
+            masked="true"
             :inputMask="['(##) ####-####', '(##) #####-####']">
             </base-input>
           </div>

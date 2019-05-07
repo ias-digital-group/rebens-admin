@@ -16,6 +16,7 @@
           native-type="button"
           type="info"
           v-if="showTempPublishBtn"
+          :disabled="model.temporaryPublishStatus == 'Publicado Temporário'"
           @click="publishTemp"
           :loading="publishTempLoading">{{model.temporaryPublishStatus}}</base-button>
       </h4>
