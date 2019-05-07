@@ -10,6 +10,16 @@
               :placeholder="field.name"></base-input>
             </div>
           </template>
+          <template v-else-if="field.type == 'tel'">
+            <div class="col-md-9">
+              <base-input 
+                type="tel"
+                :placeholder="field.name"
+                v-model="field.data"
+                :inputMask="['(##) ####-####', '(##) #####-####']">
+              </base-input>
+            </div>
+          </template>
           <template v-else-if="field.type == 'boolean'">
             <div class="col-md-9">
               <base-checkbox v-model="field.data">&nbsp;</base-checkbox>

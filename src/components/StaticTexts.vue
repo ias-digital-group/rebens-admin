@@ -24,6 +24,7 @@
     <div class="col-12" v-if="showForm">
       <hr>
       <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
+        <h3 class="text-center">{{model.name}}</h3>
         <static-text-form ref="staticTextForm" :staticText.sync="model"></static-text-form>
         <div class="row">
           <div class="col-md-12">

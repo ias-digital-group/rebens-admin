@@ -96,7 +96,7 @@
                   maxlength='50'></base-input>
                   <label style="position:absolute;top:11px;right:30px;">.sistemarebens.com.br</label>
               </div>
-              <a :href="temporaryUrl" v-show="model.subdomainCreated" class="col-md-4 col-form-label text-left" target="_blank">uol</a>
+              <a :href="temporaryUrl" v-show="model.subdomainCreated" class="col-md-4 col-form-label text-left" target="_blank">preview</a>
             </div>
             <div class="row">
               <label class="col-md-3 col-form-label">Porcentagem</label>
@@ -283,7 +283,7 @@ export default {
       return this.$route.name == 'edit_operation' ? 'edit' : 'new';
     },
     temporaryUrl(){
-      return 'http://' + this.temporarySubdomain + '.sistemarebens.com.br';
+      return 'http://' + this.model.temporarySubdomain + '.sistemarebens.com.br';
     }
 
   },
