@@ -50,21 +50,19 @@ export default {
   },
   watch: {
     searchQuery(value) {
-      if (this.searchQuery != value) {
-        this.pagination.currentPage = 1;
-      }
+      this.pagination.currentPage = 1;
       this.fetchData();
     }
   },
   created() {
-    const c = this.$store.getters.getPageSettings(this.internalName);
-    if (c) {
-      this.pagination.perPage = c.pagination.perPage;
-      this.pagination.currentPage = c.pagination.currentPage;
-      this.searchQuery = c.searchQuery;
-      this.sortField = c.sortField;
-      this.sortOrder = c.sortOrder;
-    }
+    // const c = this.$store.getters.getPageSettings(this.internalName);
+    // if (c) {
+    //   this.pagination.perPage = c.pagination.perPage;
+    //   this.pagination.currentPage = c.pagination.currentPage;
+    //   this.searchQuery = c.searchQuery;
+    //   this.sortField = c.sortField;
+    //   this.sortOrder = c.sortOrder;
+    // }
     this.fetchData();
   },
   methods: {
