@@ -117,12 +117,15 @@
             </div>
             <div class="row mb-2">
               <label class="col-md-3 col-form-label">Tipo</label>
-              <div class="col-md-9">
+              <div class="col-md-9" :class="idOperationTypeError ? 'has-danger' : ''">
                 <el-select
                     class="select-info"
+                    required
                     placeholder="Tipo de operação"
                     v-model="model.idOperationType"
                     v-loading.lock="selectLoading"
+                    v-validate="modelValidations.idOperationType"
+                    :error="getError('idOperationType')"
                     :disabled="!isMaster"
                     lock>
                     <el-option
@@ -134,6 +137,7 @@
                     >
                     </el-option>
                   </el-select>
+                  <label v-show="idOperationTypeError" class="error">&nbsp;&nbsp;O campo Tipo é obrigatório.</label>
               </div>
             </div>
             <template v-if="model.logo">
@@ -236,6 +240,7 @@ export default {
       image: null,
       isMaster:false,
       configKey:0,
+      idOperationTypeError:false,
       model: {
         title: '',
         companyName: '',
@@ -272,8 +277,7 @@ export default {
           max: 200
         },
         idOperationType: {
-          required: true,
-          max: 4
+          required: true
         }
       },
       operationTypeList: []
@@ -294,6 +298,9 @@ export default {
     },
     validate() {
       const self = this;
+      if(!self.idOperationType || self.idOperationType === '' || self.idOperationType === 0){
+        self.idOperationTypeError = true;
+      }
       this.$validator.validateAll().then(isValid => {
         if (isValid) {
           self.submitLoading = true;

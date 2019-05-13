@@ -61,7 +61,7 @@
 
   @include form-control-placeholder(rgba($black,0.4), 1);
     .has-danger{
-      .form-control, .input-group-prepend .input-group-text{
+      .form-control, .input-group-prepend .input-group-text, .select-info input[type=text]{
         border-color: $danger-states;
       }
     }
