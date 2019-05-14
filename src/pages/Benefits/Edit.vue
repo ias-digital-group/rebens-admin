@@ -135,9 +135,7 @@
               <div class="row" v-if="model.idBenefitType == 2">
                 <label class="col-md-3 col-form-label">Texto do voucher *</label>
                 <div class="col-md-9">
-                  <base-input>
-                    <textarea class="form-control" v-model="model.voucherText" cols="30" rows="3"></textarea>
-                  </base-input>
+                  <wysiwyg v-model="model.voucherText" placeholder="Texto do voucher" />
                   <label v-show="customErros.includes('voucherText')" class="text-danger">O campo Texto do voucher é obrigatório!</label>
                 </div>
               </div>
@@ -379,10 +377,10 @@ export default {
       customErros: [],
       operationList: [],
       operationKey: 0,
-      partnerName:'',
-      operationName:'',
+      partnerName: '',
+      operationName: '',
       isRebens: false,
-      selectLoading:false,
+      selectLoading: false,
       money: {
         decimal: ',',
         thousands: '.',
@@ -410,30 +408,30 @@ export default {
         benefitCall: '',
         detail: '',
         howToUse: '',
-        idOperation:null,
-        voucherText:'',
+        idOperation: null,
+        voucherText: '',
         active: false,
-        exclusive: false,
-        homeHighlight:null,
-        homeBenefitHighlight:null
+        homeHighlight: null,
+        homeBenefitHighlight: null
       },
-      modelValidations: {
-      }
+      modelValidations: {}
     };
   },
   computed: {
     viewAction() {
       return this.$route.name == 'edit_benefit' ? 'edit' : 'new';
     },
-    activeName:{
-      get:function(){
-      if(this.$route.query && this.$route.query.tab)
-        return this.$route.query.tab == 'op' ? (this.isRebens ? 'operations' : 'categories') : 'benefit';
-      return 'benefit';
+    activeName: {
+      get: function() {
+        if (this.$route.query && this.$route.query.tab)
+          return this.$route.query.tab == 'op'
+            ? this.isRebens
+              ? 'operations'
+              : 'categories'
+            : 'benefit';
+        return 'benefit';
       },
-      set:function(){
-
-      }
+      set: function() {}
     }
   },
   methods: {
@@ -450,14 +448,14 @@ export default {
       cb(top3);
     },
     createFilter(query) {
-      return (partner) => {
+      return partner => {
         return partner.value.toLowerCase().includes(query.toLowerCase());
       };
     },
-    handleSelect(item){
+    handleSelect(item) {
       this.model.idPartner = item.id;
     },
-    handleSelectOp(item){
+    handleSelectOp(item) {
       this.model.idOperation = item.id;
     },
     getError(fieldName) {
@@ -465,54 +463,43 @@ export default {
     },
     validate() {
       const self = this;
-      let error = false;
       self.customErros = [];
 
-      if(!self.model.name)
-        self.customErros.push('name');
-      if(!self.model.title)
-        self.customErros.push('title');
-      if(!self.model.benefitCall)
-        self.customErros.push('benefitCall');
-      if(!self.model.detail)
-        self.customErros.push('detail');
-      if(!self.model.howToUse)
-        self.customErros.push('howToUse');
-      if(!self.model.idPartner)
-        self.customErros.push('partner');
-      if(!self.model.idBenefitType)
-        self.customErros.push('benefitType');
-      if(self.model.idBenefitType == 2){
-        if(!self.model.voucherText)
-          self.customErros.push('voucherText');
-      }
-      else{ 
-        if(!self.model.link || self.model.link == '')
+      if (!self.model.name) self.customErros.push('name');
+      if (!self.model.title) self.customErros.push('title');
+      if (!self.model.benefitCall) self.customErros.push('benefitCall');
+      if (!self.model.detail) self.customErros.push('detail');
+      if (!self.model.howToUse) self.customErros.push('howToUse');
+      if (!self.model.idPartner) self.customErros.push('partner');
+      if (!self.model.idBenefitType) self.customErros.push('benefitType');
+      if (self.model.idBenefitType == 2) {
+        if (!self.model.voucherText) self.customErros.push('voucherText');
+      } else {
+        if (!self.model.link || self.model.link == '')
           self.customErros.push('link');
       }
 
-      if(self.isRebens && self.model.idBenefitType != 3){
-        if(!self.model.maxDiscountPercentage)
-            self.customErros.push('maxDiscount');
-        if(!self.model.minDiscountPercentage)
+      if (self.isRebens && self.model.idBenefitType != 3) {
+        if (!self.model.maxDiscountPercentage)
+          self.customErros.push('maxDiscount');
+        if (!self.model.minDiscountPercentage)
           self.customErros.push('minDiscount');
-      }
-      else{
-        if(self.isRebens && !self.model.cashbackAmount)
+      } else {
+        if (self.isRebens && !self.model.cashbackAmount)
           self.customErros.push('cashbackAmount');
       }
-      
-      if(self.isRebens && !self.model.idIntegrationType)
+      if (self.isRebens && !self.model.idIntegrationType)
         self.customErros.push('integrationType');
-      if(!self.model.image && !self.image)
-        self.customErros.push('image');
-      if(!self.model.dueDate)
-        self.customErros.push('dueDate');
-      if(self.model.exclusive && !self.model.idOperation)
+      if (!self.model.image && !self.image) self.customErros.push('image');
+      if (!self.model.dueDate) self.customErros.push('dueDate');
+      if (self.model.exclusive && !self.model.idOperation)
         self.customErros.push('operation');
-      if(!self.model.homeHighlight && self.model.homeHighlight != 0)
+      if (!self.model.homeHighlight && self.model.homeHighlight != 0)
         self.customErros.push('homeHighlight');
-      if(!self.model.homeBenefitHighlight && self.model.homeBenefitHighlight != 0)
+      if (
+        !self.model.homeBenefitHighlight &&
+        self.model.homeBenefitHighlight != 0
+      )
         self.customErros.push('homeBenefitHighlight');
 
       this.$validator.validateAll().then(isValid => {
@@ -550,7 +537,7 @@ export default {
     },
     saveBenefit(vw) {
       vw = vw ? vw : this;
-      if(!vw.isRebens){
+      if (!vw.isRebens) {
         vw.model.exclusive = true;
         vw.model.idOperation = vw.$store.getters.currentUser.idOperation;
       }
@@ -562,7 +549,10 @@ export default {
               message: 'Beneficio cadastrado com sucesso!',
               icon: 'tim-icons icon-bell-55'
             });
-            vw.$router.push({path: `/benefits/${response.id}/edit/`, query:{tab:'op'}});
+            vw.$router.push({
+              path: `/benefits/${response.id}/edit/`,
+              query: { tab: 'op' }
+            });
             vw.operationKey++;
             vw.id = response.id;
             vw.submitLoading = false;
@@ -630,7 +620,7 @@ export default {
       this.operationLoading = true;
       operationService.findAll(null).then(
         response => {
-          _.each(response.data, function(el){
+          _.each(response.data, function(el) {
             self.operationList.push({ value: el.title, id: el.id });
           });
           self.operationLoading = false;
@@ -641,18 +631,20 @@ export default {
         }
       );
     },
-    populatePartner(){
-      if(!this.formLoading && !this.partnerLoading){
+    populatePartner() {
+      if (!this.formLoading && !this.partnerLoading) {
         var part = this.partnerList.filter(o => o.id == this.model.idPartner);
-        if(part.length == 1)
-          this.partnerName = part[0].value;
+        if (part.length == 1) this.partnerName = part[0].value;
       }
     },
-    populateOperation(){
-      if(!this.formLoading && !this.operationLoading && this.model.idOperation){
+    populateOperation() {
+      if (
+        !this.formLoading &&
+        !this.operationLoading &&
+        this.model.idOperation
+      ) {
         var op = this.operationList.filter(o => o.id == this.model.idOperation);
-        if(op.length == 1)
-          this.operationName = op[0].value;
+        if (op.length == 1) this.operationName = op[0].value;
       }
     },
     onImageChange(file) {
@@ -661,7 +653,9 @@ export default {
   },
   created() {
     this.fetchData();
-    this.isRebens = this.$store.getters.currentUser.role != "administrator" && this.$store.getters.currentUser.role != "publisher";
+    this.isRebens =
+      this.$store.getters.currentUser.role != 'administrator' &&
+      this.$store.getters.currentUser.role != 'publisher';
   }
 };
 </script>
