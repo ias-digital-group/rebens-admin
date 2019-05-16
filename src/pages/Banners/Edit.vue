@@ -188,7 +188,7 @@
               </div>
             </form>
           </el-tab-pane>
-          <el-tab-pane name="operations" label="Operações" :disabled="viewAction == 'new' ? true : false">
+          <el-tab-pane name="operations" label="Operações" v-if="isRebens" :disabled="viewAction == 'new' ? true : false">
             <operations v-loading="formLoading" parent="banners" :parentId="id" :key="operationKey"></operations>
           </el-tab-pane>
       </el-tabs>
@@ -230,6 +230,7 @@ export default {
       operationKey: 0,
       benefitName: '',
       customErros: [],
+      isRebens: false,
       model: {
         name: '',
         order: 1,
@@ -451,6 +452,9 @@ export default {
   },
   created() {
     this.fetchData();
+    this.isRebens =
+      this.$store.getters.currentUser.role != 'administrator' &&
+      this.$store.getters.currentUser.role != 'publisher';
   }
 };
 </script>
