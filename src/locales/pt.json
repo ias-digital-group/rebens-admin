@@ -97,6 +97,18 @@
           "active":"Ativo"
         }
       },
+      "operationPartners": {
+        "title": "Parceiros",
+        "perpage-placeholder": "Por página",
+        "emptytext": "...",
+        "recordcount-message": "Total de parceiros:",
+        "grid": {
+          "id": "ID",
+          "name": "Nome",
+          "active":"Status",
+          "actions": "Ações"
+        }
+      },
       "access-denied": {
         "title": "Acesso negado"
       },

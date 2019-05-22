@@ -45,6 +45,9 @@ const UsersEdit = () => import('src/pages/User/Edit.vue');
 const CustomerReport = () => import('src/pages/Report/Customer.vue');
 const BenefitUseReport = () => import('src/pages/Report/BenefitUse.vue');
 
+const OperationPartnerList = () => import('src/pages/OperationPartner/List.vue');
+const OperationPartnerEdit = () => import('src/pages/OperationPartner/Edit.vue');
+
 const ChangePassword = () => import('src/pages/Account/ChangePassword.vue');
 
 let categoriesPages = {
@@ -454,6 +457,50 @@ let reportPages = {
     }
   ]
 }
+
+let operationPartnerPages = {
+  path: '/operationPartner',
+  component: DashboardLayout,
+  meta:{
+    requiresAuth: true,
+    roles: ['publisher', 'administrator','partnerAdministrator', 'partnerApprover'],
+    title: 'Parceiros'
+  },
+  children:[
+    {
+      path: '',
+      name:'operationPartner',
+      component: OperationPartnerList,
+      meta:{
+        requiresAuth: true,
+        roles: ['publisher', 'administrator','partnerAdministrator', 'partnerApprover'],
+        title: 'Parceiros'
+      }
+    },
+    {
+      path: 'new',
+      name: `new_operationPartner`,
+      component: OperationPartnerEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['publisher', 'administrator','partnerAdministrator', 'partnerApprover'],
+        title: 'Parceiros'
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_operationPartner',
+      props: true,
+      component: OperationPartnerEdit,
+      meta: {
+        requiresAuth:true,
+        roles: ['publisher', 'administrator','partnerAdministrator', 'partnerApprover'],
+        title: 'Parceiros'
+      }
+    }
+  ]
+}
+
 let accountPages = {
   path:'/account',
   component: DashboardLayout,
@@ -489,7 +536,7 @@ const routes = [
         components: { default: Dashboard },
         meta: {
           requiresAuth: true,
-          roles: ['master', 'administrator', 'publisher', 'publisherRebens', 'administratorRebens'],
+          roles: ['master', 'administrator', 'publisher', 'publisherRebens', 'administratorRebens', 'partnerAdministrator', 'partnerApprover'],
           title: i18n.t('pages.dashboard.title')
         }
       }
@@ -571,7 +618,8 @@ const routes = [
   reportPages,
   pagesPages,
   faqsPages,
-  customersPages
+  customersPages,
+  operationPartnerPages
 ];
 
 export default routes;

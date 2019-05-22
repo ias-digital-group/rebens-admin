@@ -27,6 +27,7 @@ export default {
     faqUri: process.env.VUE_APP_API_URI.concat('faq/'),
     userUri: process.env.VUE_APP_API_URI.concat('adminuser/'),
     reportUri: process.env.VUE_APP_API_URI.concat('report/'),
+    operationPartnerUri: process.env.VUE_APP_API_URI.concat('operationPartner/'),
     viaCepUri: process.env.VUE_APP_VIACEP_URI
   }
 };
