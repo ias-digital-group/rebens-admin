@@ -24,7 +24,7 @@
               class="mt-3 pull-right" 
               native-type="button" 
               type="info"
-              @click.native.prevent="newFaq"
+              @click.native.prevent="newPartner"
                 v-show="!showForm"
               >
               Novo
