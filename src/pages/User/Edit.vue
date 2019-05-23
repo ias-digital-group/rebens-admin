@@ -331,7 +331,7 @@ export default {
         userService.get(self.id).then(
           response => {
             self.model = response.data;
-            self.formLoading = false;
+            self.loadOperationPartner(self);
           },
           () => {
             self.formLoading = false;
@@ -353,31 +353,50 @@ export default {
           self.selectLoading = false;
         }
       );
-
-      if(!self.isPartnerUser && !self.isRebens){
-        operationPartnerService.findAll({ page: 0, pageItems: 1000, searchWord: '', sort: 'name ASC', idOperation: self.$store.getters.currentUser.idOperation }).then(
-          response => {
-            self.operationPartners.push({ id: null, title: 'selecione' });
-            _.each(response.data, function(el) {
-              if (el.id != self.id) {
-                self.operationPartners.push({ id: el.id, title: el.name });
-              }
-            });
-            self.selectLoading = false;
-          },
-          () => {
-            self.selectLoading = false;
+    },
+    loadOperationPartner(self){
+      self.formLoading = true;
+      if(!self.isPartnerUser){
+        let operationId = 0;
+        if(self.isRebens){
+          if((self.model.roles == 'partnerAdministrator' || self.model.roles == 'partnerApprover'))
+          {
+            operationId = self.model.idOperation;
           }
-        );
+        }
+        else{
+          operationId = self.$store.getters.currentUser.idOperation;
+        }
+        if(operationId > 0){
+          operationPartnerService.findAll({ page: 0, pageItems: 1000, searchWord: '', sort: 'name ASC', idOperation: operationId }).then(
+            response => {
+              self.operationPartners.push({ id: null, title: 'selecione' });
+              _.each(response.data, function(el) {
+                if (el.id != self.id) {
+                  self.operationPartners.push({ id: el.id, title: el.name });
+                }
+              });
+              self.formLoading = false;
+            },
+            () => {
+              self.formLoading = false;
+            }
+          );
+        }
+        else{
+          self.formLoading = false;
+        }
       }
-
+      else{
+        self.formLoading = false;
+      }
     }
   },
   created() {
-    this.fetchData();
     this.isMaster = this.$store.getters.currentUser.role == "master";
     this.isPartnerUser = this.$store.getters.currentUser.role == "partnerAdministrator";
     this.isRebens = this.$store.getters.currentUser.role == "administratorRebens" || this.$store.getters.currentUser.role == "master";
+    this.fetchData();
   }
 };
 </script>

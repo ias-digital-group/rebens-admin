@@ -202,7 +202,7 @@
           <partners v-loading="formLoading" parent="operations" :parentId="id" ref="partners"></partners>
         </el-tab-pane>
         <el-tab-pane label="Aprovação de Clientes" :disabled="viewAction == 'new'">
-          <operationPartnerCustomer v-loading="formLoading" parent="operations" :parentId="id" ref="operationPartnerCustomer"></operationPartnerCustomer>
+          <operationPartnerCustomer v-loading="formLoading" status="1" parent="operations" :parentId="id" ref="operationPartnerCustomer"></operationPartnerCustomer>
         </el-tab-pane>
       </el-tabs>
     </card>

@@ -48,6 +48,7 @@ const BenefitUseReport = () => import('src/pages/Report/BenefitUse.vue');
 const OperationPartnerList = () => import('src/pages/OperationPartner/List.vue');
 const OperationPartnerEdit = () => import('src/pages/OperationPartner/Edit.vue');
 const OperationPartnerApprove = () => import('src/pages/OperationPartner/Approve.vue');
+const OperationPartnerCustomers = () => import('src/pages/OperationPartner/Customers.vue');
 
 const ChangePassword = () => import('src/pages/Account/ChangePassword.vue');
 
@@ -508,6 +509,17 @@ let operationPartnerPages = {
         requiresAuth:true,
         roles: ['publisher', 'administrator','partnerAdministrator', 'partnerApprover'],
         title: 'Aprovação de Clientes'
+      }
+    },
+    {
+      path: 'customers',
+      name: 'customers_operationPartnerCustomer',
+      props: true,
+      component: OperationPartnerCustomers,
+      meta: {
+        requiresAuth:true,
+        roles: ['publisher', 'administrator','partnerAdministrator'],
+        title: 'Clientes'
       }
     }
   ]
