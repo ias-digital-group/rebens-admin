@@ -80,8 +80,11 @@ export default {
         config.apiEndpoints.operationPartnerUri.concat(
           `ListCustomers?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
             request.searchWord
-          }&sort=${request.sort}&idOperation=${(request.idOperation ? request.idOperation : '')}
-          &status=${(request.status ? request.status : '')}&idOperationPartner=${(request.idOperationPartner ? request.idOperationPartner : '')}`
+          }&sort=${request.sort}&idOperation=${
+            (request.idOperation ? request.idOperation : '')
+          }&status=${(request.status ? request.status : '')}&idOperationPartner=${
+            (request.idOperationPartner ? request.idOperationPartner : '')
+          }`
         )
       ).then(
         response => {
