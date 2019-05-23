@@ -201,6 +201,9 @@
         <el-tab-pane label="Parceiros" :disabled="viewAction == 'new'">
           <partners v-loading="formLoading" parent="operations" :parentId="id" ref="partners"></partners>
         </el-tab-pane>
+        <el-tab-pane label="Aprovação de Clientes" :disabled="viewAction == 'new'">
+          <operationPartnerCustomer v-loading="formLoading" parent="operations" :parentId="id" ref="operationPartnerCustomer"></operationPartnerCustomer>
+        </el-tab-pane>
       </el-tabs>
     </card>
   </div>
@@ -213,6 +216,7 @@ import helperService from '../../services/Helper/helperService';
 import StaticTexts from 'src/components/StaticTexts';
 import Faq from 'src/components/Faq';
 import Partners from 'src/components/OperationPartner';
+import OperationPartnerCustomer from 'src/components/OperationPartnerCustomer';
 import Customers from 'src/components/Customers';
 import OperationConfig from 'src/components/OperationConfig';
 import { ImageUpload } from 'src/components/index';
@@ -229,7 +233,8 @@ export default {
     Customers,
     Partners,
     OperationConfig,
-    ImageUpload
+    ImageUpload,
+    OperationPartnerCustomer
   },
   props: {
     id: String

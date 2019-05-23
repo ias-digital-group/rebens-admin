@@ -355,7 +355,7 @@ export default {
       );
 
       if(!self.isPartnerUser && !self.isRebens){
-        operationPartnerService.findAll({ page: 0, pageItems: 30, searchWord: '', sort: 'name ASC', idOperation: self.$store.getters.currentUser.idOperation }).then(
+        operationPartnerService.findAll({ page: 0, pageItems: 1000, searchWord: '', sort: 'name ASC', idOperation: self.$store.getters.currentUser.idOperation }).then(
           response => {
             self.operationPartners.push({ id: null, title: 'selecione' });
             _.each(response.data, function(el) {

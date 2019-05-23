@@ -17,6 +17,7 @@
         <sidebar-item v-show="!isRebens && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.customers'), icon: 'tim-icons icon-single-02', path: '/customers' }"></sidebar-item>    
         <sidebar-item v-show="!isRebens && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.pages'), icon: 'tim-icons icon-paper', path: '/pages' }"></sidebar-item>    
         <sidebar-item v-show="!isRebens && !isPartnerApprover && !isPartnerAdmin" :link="{ name: $t('sidebar.partners'), icon: 'tim-icons icon-link-72', path: '/operationPartner' }"></sidebar-item>    
+        <sidebar-item v-show="!isPublisher && !isRebens" :link="{ name: $t('sidebar.partnersApprove'), path: '/operationPartner/approve', icon: 'tim-icons icon-single-02' }"></sidebar-item>    
         <sidebar-item v-show="!isPublisher && !isPartnerApprover" :link="{ name: $t('sidebar.users'), path: '/users', icon: 'tim-icons icon-single-02' }"></sidebar-item>    
         <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.report'), icon: 'fas fa-chart-pie' }">
           <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.customer'), path: '/report/customer' }"></sidebar-item>

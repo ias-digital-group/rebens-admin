@@ -114,7 +114,7 @@ export default {
         idOperation: this.$store.getters.currentUser.idOperation,
       };
       this.$data.loading = true;
-      operationPartnerService.listPage(request).then(
+      operationPartnerService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;
           if(response.data)

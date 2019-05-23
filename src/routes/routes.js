@@ -47,6 +47,7 @@ const BenefitUseReport = () => import('src/pages/Report/BenefitUse.vue');
 
 const OperationPartnerList = () => import('src/pages/OperationPartner/List.vue');
 const OperationPartnerEdit = () => import('src/pages/OperationPartner/Edit.vue');
+const OperationPartnerApprove = () => import('src/pages/OperationPartner/Approve.vue');
 
 const ChangePassword = () => import('src/pages/Account/ChangePassword.vue');
 
@@ -387,7 +388,7 @@ let usersPages = {
   component: DashboardLayout,
   meta:{
     requiresAuth: true,
-    roles: ['master','administrator', 'administratorRebens'],
+    roles: ['master','administrator', 'administratorRebens', 'partnerAdministrator'],
     title: i18n.t('pages.users.title')
   },
   children:[
@@ -397,7 +398,7 @@ let usersPages = {
       component: UsersList,
       meta:{
         requiresAuth: true,
-        roles: ['master','administrator', 'administratorRebens'],
+        roles: ['master','administrator', 'administratorRebens', 'partnerAdministrator'],
         title: i18n.t('pages.users.title')
       }
     },
@@ -407,7 +408,7 @@ let usersPages = {
       component: UsersEdit,
       meta: {
         requiresAuth: true,
-        roles: ['master','administrator', 'administratorRebens'],
+        roles: ['master','administrator', 'administratorRebens', 'partnerAdministrator'],
         title: i18n.t('pages.users.title')
       }
     },
@@ -418,7 +419,7 @@ let usersPages = {
       component: UsersEdit,
       meta: {
         requiresAuth:true,
-        roles: ['master','administrator', 'administratorRebens'],
+        roles: ['master','administrator', 'administratorRebens', 'partnerAdministrator'],
         title: i18n.t('pages.users.title')
       }
     }
@@ -496,6 +497,17 @@ let operationPartnerPages = {
         requiresAuth:true,
         roles: ['publisher', 'administrator','partnerAdministrator', 'partnerApprover'],
         title: 'Parceiros'
+      }
+    },
+    {
+      path: 'approve',
+      name: 'approve_operationPartnerCustomer',
+      props: true,
+      component: OperationPartnerApprove,
+      meta: {
+        requiresAuth:true,
+        roles: ['publisher', 'administrator','partnerAdministrator', 'partnerApprover'],
+        title: 'Aprovação de Clientes'
       }
     }
   ]

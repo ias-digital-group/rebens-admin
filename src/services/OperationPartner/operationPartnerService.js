@@ -70,5 +70,41 @@ export default {
         }
       );
     });
+  },
+  findAllCustomers: request => {
+    return new Promise((resolve, reject) => {
+      request = request
+        ? request
+        : { page: 0, pageItems: 30, searchWord: '', sort: 'name ASC', idOperation: undefined, status: undefined, idOperationPartner: undefined };
+      HTTP.get(
+        config.apiEndpoints.operationPartnerUri.concat(
+          `ListCustomers?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
+            request.searchWord
+          }&sort=${request.sort}&idOperation=${(request.idOperation ? request.idOperation : '')}
+          &status=${(request.status ? request.status : '')}&idOperationPartner=${(request.idOperationPartner ? request.idOperationPartner : '')}`
+        )
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  changeCustomerStatus: request => {
+    return new Promise((resolve, reject) => {
+      HTTP.put(
+        config.apiEndpoints.operationPartnerUri.concat(`UpdateCustomerStatus?idCustomer=${request.id}&status=${request.status}`)
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
   }
 };
