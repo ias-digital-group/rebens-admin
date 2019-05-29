@@ -91,17 +91,17 @@
               </div>
               <div class="row" v-if="isRebens && model.idBenefitType != 3">
                 <label class="col-md-3 col-form-label">% Desconto *</label>
-                <div class="col-md-9 col-lg-4">
-                  <base-input label="Máximo *">
-                    <money class="form-control" v-model="model.maxDiscountPercentage" v-bind="money"></money>
-                  </base-input>
-                  <label v-show="customErros.includes('maxDiscount')" class="text-danger">O campo Desconto Máximo é obrigatório!</label>
-                </div>
                 <div class="col-md-9 offset-md-3 offset-lg-0 col-lg-4">
                   <base-input label="Mínimo *">
                     <money class="form-control" v-model="model.minDiscountPercentage" v-bind="money"></money>
                   </base-input>
                   <label v-show="customErros.includes('minDiscount')" class="text-danger">O campo Desconto Mínimo é obrigatório!</label>
+                </div>
+                <div class="col-md-9 col-lg-4">
+                  <base-input label="Máximo *">
+                    <money class="form-control" v-model="model.maxDiscountPercentage" v-bind="money"></money>
+                  </base-input>
+                  <label v-show="customErros.includes('maxDiscount')" class="text-danger">O campo Desconto Máximo é obrigatório!</label>
                 </div>
               </div>
               <div class="row" v-if="isRebens && model.idBenefitType != 3">
