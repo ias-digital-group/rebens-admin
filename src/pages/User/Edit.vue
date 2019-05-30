@@ -326,6 +326,7 @@ export default {
     },
     fetchData() {
       const self = this;
+      
       if (this.viewAction == 'edit') {
         this.formLoading = true;
         userService.get(self.id).then(
@@ -338,6 +339,11 @@ export default {
           }
         );
       }
+      else if(self.$store.getters.currentUser.idOperation > 0){
+        self.model.idOperation = self.$store.getters.currentUser.idOperation;
+        self.loadOperationPartner(self);
+      }
+      
       this.selectLoading = true;
       operationService.findAll().then(
         response => {

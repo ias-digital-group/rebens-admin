@@ -2,7 +2,7 @@
 <div class="row">
   <div class="col-md-12">
     <card title="Pré-cadastro">
-      <h4 slot="header" class="card-title">Pré-cadastro</h4>
+      <h4 slot="header" class="card-title">Parceiro</h4>
       <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
         <div class="row">
           <label class="col-md-3 col-form-label">Nome</label>
@@ -18,85 +18,23 @@
               maxlength='300'></base-input>
           </div>
         </div>
-        <div class="row">
-          <label class="col-md-3 col-form-label">CPF</label>
-          <div class="col-md-5">
-            <base-input 
-              required
-              v-model="model.cpf"
-              v-validate="modelValidations.cpf"
-              type="text"
-              :error="getError('cpf')"
-              name="cpf"
-              placeholder="CPF" 
-              :inputMask="['###.###.###-##']"
-              maxlength='50'></base-input>
-          </div>
-        </div>
-        <div class="row">
-          <label class="col-md-3 col-form-label">Telefones</label>
-          <div class="col-md-9 col-lg-4">
-            <base-input 
-              label="Fixo"
-              type="tel"
-              placeholder="Telefone"
-              v-model="model.phone"
-              ref="phone"
-              :inputMask="['(##) ####-####']">
-            </base-input>
-          </div>
-          <div class="col-md-9 offset-md-3 offset-lg-0 col-lg-5">
-            <base-input 
-            required
-            label="Celular"
-            v-validate="modelValidations.celular"
-            :error="getError('celular')"
-            name="celular"
-            type="tel"
-            ref="cellPhone"
-            placeholder="Celular"
-            v-model="model.cellPhone"
-            :inputMask="['(##) ####-####', '(##) #####-####']">
-            </base-input>
-          </div>
-        </div>
         
         <div class="row">
-          <label class="col-md-3 col-form-label">E-mail 1</label>
-          <div class="col-md-5">
-            <base-input 
-              required
-              v-model="model.email1"
-              v-validate="modelValidations.email1"
-              type="email"
-              :error="getError('email1')"
-              name="email1"
-              placeholder="email1" 
-              maxlength='500'></base-input>
-          </div>
-        </div>
-        <div class="row">
-          <label class="col-md-3 col-form-label">E-mail 2</label>
-          <div class="col-md-5">
-            <base-input 
-              required
-              v-model="model.email2"
-              v-validate="modelValidations.email2"
-              type="email"
-              :error="getError('email2')"
-              name="email2"
-              placeholder="email2" 
-              maxlength='500'></base-input>
+          <label class="col-md-3 col-form-label">Ativo</label>
+          <div class="col-md-9">
+            <div class="form-group">
+              <base-checkbox v-model="model.active">&nbsp;</base-checkbox>
+            </div>
           </div>
         </div>
         <div class="row">
           <div class="col-md-12">
-            <base-link class="btn mt-3 btn-simple btn-primary" to="/customers">Voltar</base-link>
+            <base-link class="btn mt-3 btn-simple btn-primary" to="/operationPartner">Voltar</base-link>
             <base-button 
               class="mt-3 pull-right" 
               native-type="submit" 
               type="info"
-              @click.native.prevent="validateCustomer"
+              @click.native.prevent="validatePartner"
               :loading="submitLoading">
               Salvar
             </base-button>
@@ -111,7 +49,7 @@
 </template>
 <script>
 import { Select, Option, Tabs, TabPane, DatePicker } from 'element-ui';
-import operationService from '../../services/Operation/operationService';
+import operationPartnerService from '../../services/OperationPartner/operationPartnerService';
 import _ from 'lodash';
 export default {
   components: {
@@ -134,32 +72,13 @@ export default {
       model: {
         id: 0,
         name: '',
-        cpf: '',
-        phone: null,
-        cellPhone: null,
-        email1: null,
-        email2: null
+        idOperation: 0,
+        active: true
       },
       modelValidations: {
         nome: {
           required: true,
           max: 300
-        },
-        cpf: {
-          max: 50,
-          required: true
-        },
-        phone: {
-          max: 50
-        },
-        cellPhone: {
-          max: 50
-        },
-        email1: {
-          max: 500
-        },
-        email2: {
-          max: 500
         }
       }
     };
@@ -168,51 +87,61 @@ export default {
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
-    validateCustomer() {
+    validatePartner() {
       const self = this;
-      if(self.model.name !== '' && self.model.name.length <= 300 
-        && self.model.cpf !== '' && self.model.cpf.length <= 500){
+      if(self.model.name !== '' && self.model.name.length <= 300){
             self.submitLoading = true;
-            self.saveCustomer(self);
+            self.savePartner(self);
         }
     },
     clearForm(){
       const self = this;
       self.model.name = '';
-      self.model.cpf = '';
-      self.model.phone = '';
-      self.model.cellPhone = '';
-      self.model.email1 = '';
-      self.model.email2 = '';
     },
-    saveCustomer() {
-      const self = this;
-      this.$validator.validateAll().then(isValid => {
-        if (isValid) {
-            operationService.createCustomer(self.idOperation, self.model).then(
-                response => {
-                    self.$notify({
-                        type: 'primary',
-                        message: response
-                            ? response.message
-                            : 'Cliente pré cadastrado com sucesso.',
-                        icon: 'tim-icons icon-bell-55'
-                  });
-                  self.clearForm();
-                  self.submitLoading = false;
-                  self.$router.push('/customers');
-                },
-                err => {
-                self.$notify({
-                    type: 'primary',
-                    message: err.message,
-                    icon: 'tim-icons icon-bell-55'
-                });
-                self.submitLoading = false;
-                }
-            );
-            }
-      });
+    savePartner(vm) {
+      vm = vm ? vm : this;
+      vm.model.idOperation = vm.idOperation;
+      if (vm.model.id === 0) {
+        operationPartnerService.create(vm.model).then(
+          res => {
+            vm.$notify({
+              type: 'success',
+              message: 'Parceiro com sucesso!',
+              icon: 'tim-icons icon-bell-55'
+            });
+            vm.clearForm();
+            vm.$router.push('/operationPartner');
+          },
+          err => {
+            vm.$notify({
+              type: 'primary',
+              message: err.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+            vm.submitLoading = false;
+          }
+        );
+      } else {
+        operationPartnerService.update(vm.model).then(
+          response => {
+            vm.$notify({
+              type: 'primary',
+              message: response.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+            vm.clearForm();
+            vm.$router.push('/operationPartner');
+          },
+          err => {
+            vm.$notify({
+              type: 'primary',
+              message: err.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+            vm.submitLoading = false;
+          }
+        );
+      }
     }
   },
   created(){
