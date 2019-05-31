@@ -207,7 +207,7 @@ export default {
       const self = this;
       if(self.isRebens){
         self.operationPartners = [];
-        operationPartnerService.findAll({ page: 0, pageItems: 30, searchWord: '', sort: 'name ASC', idOperation: self.model.idOperation }).then(
+        operationPartnerService.findAll({ page: 0, pageItems: 1000, searchWord: '', sort: 'name ASC', idOperation: self.model.idOperation }).then(
           response => {
             self.operationPartners.push({ id: null, title: 'selecione' });
             _.each(response.data, function(el) {
