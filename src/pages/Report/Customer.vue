@@ -6,6 +6,36 @@
           <h4 class="card-title">{{$t('pages.report.customer.title')}}</h4>
         </template>
         <div>
+          <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
+            <el-select class="select-primary mb-3 pagination-select" v-model="operationFilter" v-if="!loading">
+              <el-option class="select-primary" value="0" label="Todas operações"></el-option>
+              <el-option v-for="op in operations" class="select-primary" :key="op" :value="op.id" :label="op.title"></el-option>
+            </el-select>
+            <!-- <el-select class="select-primary mb-3 pagination-select" :disabled="!partners || partners.length <= 0" v-model="partnerFilter" v-if="!loading">
+              <el-option class="select-primary" value="" label="Todos parceiros"></el-option>
+              <el-option v-for="item in partners" class="select-primary" :key="item" :value="item.id" :label="item.name"></el-option>
+            </el-select> -->
+            <el-select class="select-primary mb-3 pagination-select" v-model="activeFilter" v-if="!loading">
+              <el-option class="select-primary" value="0" label="Todos"></el-option>
+              <el-option class="select-primary" value="1" label="Ativos"></el-option>
+              <el-option class="select-primary" value="2" label="Inativos"></el-option>
+              <el-option class="select-primary" value="3" label="Validação"></el-option>
+              <el-option class="select-primary" value="4" label="Trocar Senha"></el-option>
+              <el-option class="select-primary" value="5" label="Incompleto"></el-option>
+            </el-select>
+            <base-input>
+              <el-input
+                type="search"
+                class="mb-3 search-input"
+                style="width:300px"
+                clearable
+                prefix-icon="el-icon-search"
+                placeholder="Procurar categorias"
+                aria-controls="datatables"
+                v-model="searchQuery">
+              </el-input>
+            </base-input>
+          </div>
           <el-table ref="table" :data="tableData" v-loading="loading" :empty-text="$t('pages.report.emptytext')" @sort-change="onSortChanged" :default-sort="{prop: sortField, order: sortOrder}">
             <el-table-column v-for="column in tableColumns" :key="column.label" :min-width="column.minWidth" :prop="column.prop"
               :label="column.label" sortable="custom">
@@ -28,6 +58,8 @@
 import { Table, TableColumn, Select, Option } from 'element-ui';
 import { BasePagination } from 'src/components';
 import reportService from '../../services/Report/reportService';
+import operationService from '../../services/Operation/operationService';
+import operationPartnerService from '../../services/OperationPartner/operationPartnerService';
 import listPage from '../../mixins/listPage';
 export default {
   mixins: [listPage],
@@ -41,6 +73,11 @@ export default {
   data() {
     return {
       sortField: 'name',
+      activeFilter: 0,
+      partnerFilter: 0,
+      operationFilter:0,
+      operations: [],
+      partners:[],
       tableColumns: [
         {
           prop: 'id',
@@ -78,7 +115,8 @@ export default {
         pageItems: 30,
         searchWord: this.searchQuery,
         sort: this.formatSortFieldParam,
-        idOperation:''
+        idOperation:this.operationFilter,
+        idPartner:this.partnerFilter
       };
       this.$data.loading = true;
         reportService.listCustomers(request).then(
@@ -92,6 +130,32 @@ export default {
           self.$data.loading = false;
         }
       );
+      if(self.operations.length <= 0)
+      {
+        operationService.findAll({ page: 0, pageItems: 1000, searchWord: '', sort: 'name ASC', active:'true' })
+        .then(
+          response => {
+            self.operations = response.data;
+          }
+        );
+      }
+      // operationPartnerService.findAll({ page: 0, pageItems: 1000, searchWord: '', sort: 'name ASC', idOperation:this.operationFilter, idPartner: this.partnerFilter })
+      // .then(
+      //   response => {
+      //     self.partners = response.data;
+      //   }
+      // );
+    }
+  },
+  watch:{
+    activeFilter(){
+      this.fetchData(); 
+    },
+    operationFilter(){
+      this.fetchData();
+    },
+    partnerFilter(){
+      this.fetchData();
     }
   }
 };
