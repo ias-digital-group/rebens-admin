@@ -198,7 +198,12 @@
       "customer":"Clientes",
       "benefitUse":"Utilização",
       "pages":"Páginas",
-      "customers":"Pré-cadastro"
+      "customers":"Pré-cadastro",
+      "courses":"Cursos",
+      "courseColleges":"Faculdades",
+      "courseModalities":"Modalidades",
+      "coursePeriods":"Períodos",
+      "courseGraduationTypes":"Tipos de graduação"
     }
   }
   
