@@ -32,6 +32,12 @@ export default {
       case 'benefits':
         ret = this.findAllByBenefit(request);
         break;
+      case 'colleges':
+        ret = this.findAllByCollege(request);
+        break;
+      case 'courses':
+        ret = this.findAllByCourse(request);
+        break;
       default:
         ret = null;
         break;
@@ -80,6 +86,48 @@ export default {
       );
     });
   },
+  findAllByCollege: function(request) {
+    return new Promise((resolve, reject) => {
+      if (!request || request.parentId == 0) {
+        reject(new Error('Objeto request invalido'));
+      }
+      HTTP.get(
+        config.apiEndpoints.courseCollegeUri.concat(
+          `${request.parentId}/address?page=${request.page}&pageItems=${
+            request.pageItems
+          }&searchWord=${request.searchWord}&sort=${request.sort}`
+        )
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  findAllByCourse: function(request) {
+    return new Promise((resolve, reject) => {
+      if (!request || request.parentId == 0) {
+        reject(new Error('Objeto request invalido'));
+      }
+      HTTP.get(
+        config.apiEndpoints.courseUri.concat(
+          `${request.parentId}/address?page=${request.page}&pageItems=${
+            request.pageItems
+          }&searchWord=${request.searchWord}&sort=${request.sort}`
+        )
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
   get: id => {
     return new Promise((resolve, reject) => {
       HTTP.get(config.apiEndpoints.addressUri.concat(id)).then(
@@ -113,6 +161,12 @@ export default {
       case 'benefits':
         ret = this.associateBenefit(request.id, request.parentId);
         break;
+      case 'colleges':
+        ret = this.associateCollege(request.id, request.parentId);
+        break;
+      case 'courses':
+          ret = this.associateCourse(request.id, request.parentId);
+          break;
       default:
         ret = null;
         break;
@@ -127,6 +181,12 @@ export default {
         break;
       case 'benefits':
         ret = this.deleteBenefit(request.id, request.parentId);
+        break;
+      case 'colleges':
+        ret = this.deleteCollege(request.id, request.parentId);
+        break;
+      case 'courses':
+        ret = this.deleteCourse(request.id, request.parentId);
         break;
       default:
         ret = null;
@@ -162,6 +222,34 @@ export default {
       );
     });
   },
+  deleteCollege: function(id, collegeId) {
+    return new Promise((resolve, reject) => {
+      HTTP.delete(
+        config.apiEndpoints.courseCollegeUri.concat(`${collegeId}/address/${id}`)
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  deleteCourse: function(id, courseId) {
+    return new Promise((resolve, reject) => {
+      HTTP.delete(
+        config.apiEndpoints.courseUri.concat(`${courseId}/address/${id}`)
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
   associatePartner: function(id, partnerId) {
     return new Promise((resolve, reject) => {
       HTTP.post(config.apiEndpoints.partnerUri.concat('addaddress'), {
@@ -183,6 +271,35 @@ export default {
         idBenefit: benefitId,
         idAddress: id
       }).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  associateCollege: function(id, collegeId) {
+    return new Promise((resolve, reject) => {
+      HTTP.post(config.apiEndpoints.courseCollegeUri.concat('addaddress'), {
+        idCourseCollege: collegeId,
+        idAddress: id
+      }).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  associateCourse: function(id, courseId) {
+    return new Promise((resolve, reject) => {
+      HTTP.post(
+        config.apiEndpoints.courseUri.concat(`${courseId}/address/${id}`)
+      ).then(
         response => {
           resolve(response.data);
         },

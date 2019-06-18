@@ -5,7 +5,7 @@ export default {
     return new Promise((resolve, reject) => {
       request = request
         ? request
-        : { page: 0, pageItems: 30, searchWord: '', sort: 'Question ASC' };
+        : { page: 0, pageItems: 30, searchWord: '', sort: 'Name ASC' };
       HTTP.get(
         config.apiEndpoints.coursePeriodUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${

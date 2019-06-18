@@ -50,6 +50,9 @@ const OperationPartnerEdit = () => import('src/pages/OperationPartner/Edit.vue')
 const OperationPartnerApprove = () => import('src/pages/OperationPartner/Approve.vue');
 const OperationPartnerCustomers = () => import('src/pages/OperationPartner/Customers.vue');
 
+const CourseList = () => import('src/pages/Course/List.vue');
+const CourseEdit = () => import('src/pages/Course/Edit.vue');
+
 const CourseCollegeList = () => import('src/pages/CourseCollege/List.vue');
 const CourseCollegeEdit = () => import('src/pages/CourseCollege/Edit.vue');
 
@@ -560,6 +563,49 @@ let accountPages = {
   ]
 }
 
+let coursePages = {
+  path: '/course',
+  component: DashboardLayout,
+  meta: {
+    requiresAuth: true,
+    roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+    title: 'Cursos'
+  },
+  children: [
+    {
+      path: '',
+      name: 'course',
+      component: CourseList,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+        title: 'Curso'
+      }
+    },
+    {
+      path: 'new',
+      name: `new_course`,
+      component: CourseEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+        title: 'Curso'
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_course',
+      props: true,
+      component: CourseEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+        title: 'Curso'
+      }
+    }
+  ]
+};
+
 let courseCollegePages = {
   path: '/courseCollege',
   component: DashboardLayout,
@@ -832,7 +878,8 @@ const routes = [
   courseCollegePages,
   courseGraduationTypePages,
   courseModalityPages,
-  coursePeriodPages
+  coursePeriodPages,
+  coursePages
 ];
 
 export default routes;
