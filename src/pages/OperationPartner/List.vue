@@ -14,6 +14,11 @@
                 :value="item">
               </el-option>
             </el-select>
+            <el-select class="select-primary mb-3 pagination-select" v-model="activeFilter" v-if="!loading">
+              <el-option class="select-primary" value="" label="Todos"></el-option>
+              <el-option class="select-primary" value="true" label="Ativos"></el-option>
+              <el-option class="select-primary" value="false" label="Inativos"></el-option>
+            </el-select>
             <base-input>
               <el-input
                 type="search"
@@ -33,6 +38,10 @@
             </el-table-column>
             <el-table-column :min-width="135" align="right" label="Ações">
               <div slot-scope="props">
+                 <base-button @click.native="handleEdit(props.$index, props.row);" class="edit btn-link" type="info"
+                  size="sm" icon>
+                  <i class="tim-icons icon-pencil"></i>
+                </base-button>
                 <base-button @click.native="handleDelete(props.$index, props.row);" class="remove btn-link" type="danger"
                   size="sm" icon>
                   <i class="tim-icons icon-simple-remove"></i>
@@ -40,6 +49,14 @@
               </div>
             </el-table-column>
           </el-table>
+        </div>
+        <div slot="footer" class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
+          <div class="">
+            
+          </div>
+          <base-pagination class="pagination-no-border" v-model="pagination.currentPage" :per-page="pagination.perPage"
+            :total="total" v-on:input="onPageChanged">
+          </base-pagination>
         </div>
       </card>
     </div>
@@ -89,6 +106,7 @@ export default {
       internalName: 'Parceiros',
       sortField: 'name',
       formLoading:false,
+      activeFilter: '',
       tableColumns: [
         {
           prop: 'name',
@@ -111,6 +129,7 @@ export default {
         pageItems: this.$data.pagination.perPage,
         searchWord: this.searchQuery,
         sort: this.formatSortFieldParam,
+        active: this.activeFilter,
         idOperation: this.$store.getters.currentUser.idOperation,
       };
       this.$data.loading = true;
@@ -164,6 +183,11 @@ export default {
     },
     handleEdit(index, row) {
       this.$router.push(`/operationPartner/${row.id}/edit/`);
+    }
+  },
+  watch:{
+    activeFilter(){
+      this.fetchData(); 
     }
   }
 };

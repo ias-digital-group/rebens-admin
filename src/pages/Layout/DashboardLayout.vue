@@ -21,13 +21,13 @@
         <!-- <sidebar-item v-show="!isPublisher && !isRebens && !isPartnerApprover" :link="{ name: $t('sidebar.partnerCustomers'), path: '/operationPartner/customers', icon: 'tim-icons icon-single-02' }"></sidebar-item>     -->
         <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.customer'), path: '/report/customer', icon: 'tim-icons icon-single-02' }"></sidebar-item>
         <sidebar-item v-show="!isPublisher && !isPartnerApprover" :link="{ name: $t('sidebar.users'), path: '/users', icon: 'tim-icons icon-single-02' }"></sidebar-item>    
-        <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.courses'), icon: 'fas fa-graduation-cap' }">
+        <!-- <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.courses'), icon: 'fas fa-graduation-cap' }">
           <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.courses'), path: '/course' }"></sidebar-item>
           <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.courseColleges'), path: '/courseCollege' }"></sidebar-item>
           <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.courseModalities'), path: '/courseModality' }"></sidebar-item>
           <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.coursePeriods'), path: '/coursePeriod' }"></sidebar-item>
           <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.courseGraduationTypes'), path: '/courseGraduationType' }"></sidebar-item>
-        </sidebar-item>
+        </sidebar-item> -->
         <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.report'), icon: 'fas fa-chart-pie' }">
           <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.benefitUse'), path: '/report/benefit-use' }"></sidebar-item>
         </sidebar-item>

@@ -7,7 +7,12 @@
         </template>
         <div>
           <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
-            <el-select class="select-primary mb-3 pagination-select" v-model="operationFilter" v-if="!loading">
+            <el-select class="select-primary mb-3 pagination-select" v-model="pagination.perPage" :placeholder="$t('pages.operationPartners.perpage-placeholder')" v-if="!loading">
+              <el-option class="select-primary" v-for="item in pagination.perPageOptions" :key="item" :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+            <el-select class="select-primary mb-3 pagination-select" v-model="operationFilter" v-if="!loading && idOperation == 0">
               <el-option class="select-primary" value="0" label="Todas operações"></el-option>
               <el-option v-for="op in operations" class="select-primary" :key="op" :value="op.id" :label="op.title"></el-option>
             </el-select>
@@ -78,6 +83,7 @@ export default {
       operationFilter:0,
       operations: [],
       partners:[],
+      idOperation:0,
       tableColumns: [
         {
           prop: 'id',
@@ -98,11 +104,6 @@ export default {
           prop: 'statusName',
           label: this.$i18n.t('pages.report.customer.grid.status'),
           minWidth: 200
-        },
-        {
-          prop: 'operationName',
-          label: this.$i18n.t('pages.report.customer.grid.operation'),
-          minWidth: 200
         }
       ]
     };
@@ -110,19 +111,29 @@ export default {
   methods: {
     fetchData() {
       const self = this;
+      if(self.idOperation == 0 && self.$store.getters.currentUser.idOperation)
+        self.idOperation = self.$store.getters.currentUser.idOperation;
+      else{
+        self.tableColumns.push({
+          prop: 'operationName',
+          label: this.$i18n.t('pages.report.customer.grid.operation'),
+          minWidth: 200
+        });
+      }
+
       const request = {
-        page: this.$data.pagination.currentPage - 1,
-        pageItems: 30,
-        searchWord: this.searchQuery,
-        sort: this.formatSortFieldParam,
-        idOperation:this.operationFilter,
-        idPartner:this.partnerFilter
+        page: self.$data.pagination.currentPage - 1,
+        pageItems: this.$data.pagination.perPage,
+        searchWord: self.searchQuery,
+        sort: self.formatSortFieldParam,
+        idOperation:self.operationFilter,
+        idPartner:self.partnerFilter,
+        status:self.activeFilter
       };
-      this.$data.loading = true;
+      self.$data.loading = true;
         reportService.listCustomers(request).then(
         response => {
           self.$data.tableData = response.data;
-          self.$data.pagination.perPage = 30;
           self.savePageSettings(self, response.totalItems);
           self.$data.loading = false;
         },
@@ -130,7 +141,7 @@ export default {
           self.$data.loading = false;
         }
       );
-      if(self.operations.length <= 0)
+      if(self.operations.length <= 0 && self.idOperation == 0)
       {
         operationService.findAll({ page: 0, pageItems: 1000, searchWord: '', sort: 'name ASC', active:'true' })
         .then(

@@ -15,6 +15,9 @@ export default {
         )
       ).then(
         response => {
+          _.each(response.data.data, function(el) {
+            el.statusName = el.active ? 'ativo' : 'inativo';
+          });
           resolve(response.data);
         },
         error => {

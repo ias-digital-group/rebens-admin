@@ -83,6 +83,11 @@ export default {
       }
     };
   },
+  computed: {
+    viewAction() {
+      return this.$route.name == 'edit_operationPartner' ? 'edit' : 'new';
+    }
+  },
   methods: {
     getError(fieldName) {
       return this.errors.first(fieldName);
@@ -142,10 +147,27 @@ export default {
           }
         );
       }
+    },
+    fetchData() {
+      const self = this;
+      
+      if (self.viewAction == 'edit') {
+        self.formLoading = true;
+        operationPartnerService.get(self.id).then(
+          response => {
+            self.model = response.data;
+            self.formLoading = false;
+          },
+          () => {
+            self.formLoading = false;
+          }
+        );
+      }
     }
   },
   created(){
     this.idOperation = this.$store.getters.currentUser.idOperation;
+    this.fetchData();
   }
 };
 </script>
