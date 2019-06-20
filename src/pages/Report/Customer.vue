@@ -78,12 +78,14 @@ export default {
   data() {
     return {
       sortField: 'name',
+      internalName: 'pages.report.customer.list',
       activeFilter: 0,
       partnerFilter: 0,
       operationFilter:0,
       operations: [],
       partners:[],
       idOperation:0,
+      firstAccess:true,
       tableColumns: [
         {
           prop: 'id',
@@ -111,15 +113,7 @@ export default {
   methods: {
     fetchData() {
       const self = this;
-      if(self.idOperation == 0 && self.$store.getters.currentUser.idOperation)
-        self.idOperation = self.$store.getters.currentUser.idOperation;
-      else{
-        self.tableColumns.push({
-          prop: 'operationName',
-          label: this.$i18n.t('pages.report.customer.grid.operation'),
-          minWidth: 200
-        });
-      }
+      self.runOnce(self);
 
       const request = {
         page: self.$data.pagination.currentPage - 1,
@@ -141,21 +135,35 @@ export default {
           self.$data.loading = false;
         }
       );
-      if(self.operations.length <= 0 && self.idOperation == 0)
-      {
-        operationService.findAll({ page: 0, pageItems: 1000, searchWord: '', sort: 'name ASC', active:'true' })
-        .then(
-          response => {
-            self.operations = response.data;
+    },
+    runOnce(self){
+      if(self.firstAccess){
+        if(self.idOperation == 0 && self.$store.getters.currentUser.idOperation)
+          self.idOperation = self.$store.getters.currentUser.idOperation;
+
+        if(self.idOperation == 0){
+          let obj = self.tableColumns.find(x => x.prop === 'operationName');
+          if(!obj){
+            self.tableColumns.push({
+              prop: 'operationName',
+              label: this.$i18n.t('pages.report.customer.grid.operation'),
+              minWidth: 200
+            });
           }
-        );
+        }
+
+        if(self.operations.length <= 0 && self.idOperation == 0)
+        {
+          operationService.findAll({ page: 0, pageItems: 1000, searchWord: '', sort: 'name ASC', active:'true' })
+          .then(
+            response => {
+              self.operations = response.data;
+            }
+          );
+        }
+
+        self.firstAccess = false;
       }
-      // operationPartnerService.findAll({ page: 0, pageItems: 1000, searchWord: '', sort: 'name ASC', idOperation:this.operationFilter, idPartner: this.partnerFilter })
-      // .then(
-      //   response => {
-      //     self.partners = response.data;
-      //   }
-      // );
     }
   },
   watch:{
