@@ -109,12 +109,12 @@ export default {
           minWidth: 0
         },
         {
-          prop: 'name',
-          label: 'Nome',
-          minWidth: 200
+          prop: 'title',
+          label: 'Título',
+          minWidth: 500
         },
         {
-          prop: 'active',
+          prop: 'statusName',
           label: 'Status',
           minWidth: 0
         }

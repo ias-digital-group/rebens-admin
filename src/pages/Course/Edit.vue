@@ -39,7 +39,7 @@
                         >
                         </el-option>
                     </el-select>
-                    <label v-show="customErros.includes('operation')" class="text-danger">O campo Operação é obrigatório</label>
+                    <label v-show="customErros.includes('idOperation')" class="text-danger">O campo Operação é obrigatório</label>
                     </div>
                 </div>
             </div>
@@ -61,7 +61,7 @@
                         >
                         </el-option>
                     </el-select>
-                    <label v-show="customErros.includes('college')" class="text-danger">O campo Faculdade é obrigatório</label>
+                    <label v-show="customErros.includes('idCollege')" class="text-danger">O campo Faculdade é obrigatório</label>
                     </div>
                 </div>
             </div>
@@ -83,7 +83,7 @@
                         >
                         </el-option>
                     </el-select>
-                    <label v-show="customErros.includes('graduationType')" class="text-danger">O campo Tipo de Graduação é obrigatório</label>
+                    <label v-show="customErros.includes('idGraduationType')" class="text-danger">O campo Tipo de Graduação é obrigatório</label>
                     </div>
                 </div>
             </div>
@@ -91,21 +91,46 @@
                 <label class="col-md-3 col-form-label">Modalidade</label>
                 <div class="col-md-4">
                     <div class="form-group">
-                    <el-select
-                        class="select-info"
-                        placeholder="Operação"
-                        v-model="model.idModality"
-                        v-loading.lock="selectLoading"
-                        lock>
-                        <el-option class="select-primary"
-                        v-for="type in modalities"
-                        :value="type.id"
-                        :label="type.title"
-                        :key="type.id"
-                        >
-                        </el-option>
-                    </el-select>
-                    <label v-show="customErros.includes('modality')" class="text-danger">O campo Modalidade é obrigatório</label>
+                      <el-select
+                          class="select-info"
+                          placeholder="Modalidade"
+                          v-model="model.idModality"
+                          v-loading.lock="selectLoading"
+                          lock>
+                          <el-option class="select-primary"
+                          v-for="type in modalities"
+                          :value="type.id"
+                          :label="type.title"
+                          :key="type.id"
+                          >
+                          </el-option>
+                      </el-select>
+                      <label v-show="customErros.includes('idModality')" class="text-danger">O campo Modalidade é obrigatório</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+              <label class="col-md-3 col-form-label">Período</label>
+                <div class="col-md-4">
+                    <div class="form-group">
+                      <el-select
+                          class="select-info"
+                          placeholder="Período"
+                          v-model="model.periodIds"
+                          v-loading.lock="selectLoading"
+                          value-key="id"
+                          ref="id"
+                          multiple
+                          lock>
+                          <el-option class="select-primary"
+                          v-for="type in periods"
+                          :value="type.id"
+                          :label="type.title"
+                          :key="type.id"
+                          >
+                          </el-option>
+                      </el-select>
+                      <label v-show="customErros.includes('period')" class="text-danger">O campo Período é obrigatório</label>
                     </div>
                 </div>
             </div>
@@ -175,14 +200,14 @@
               </div>
             </div>
             <div class="row">
-              <label class="col-md-3 col-form-label">Descrição *</label>
+              <label class="col-md-3 col-form-label">Descrição</label>
               <div class="col-md-9">
                 <wysiwyg v-model="model.description" placeholder="Descrição" />
                 <label v-show="customErros.includes('description')" class="text-danger">O campo Descrição é obrigatório!</label>
               </div>
             </div>
             <div class="row">
-              <label class="col-md-3 col-form-label">Texto do voucher *</label>
+              <label class="col-md-3 col-form-label">Texto do voucher</label>
               <div class="col-md-9">
                 <wysiwyg v-model="model.voucherText" placeholder="Texto do voucher" />
                 <label v-show="customErros.includes('voucherText')" class="text-danger">O campo Texto do voucher é obrigatório!</label>
@@ -203,7 +228,7 @@
             </template>
             <template v-else>
               <div class="row">
-                <label class="col-md-3 col-form-label">Logo (250x250)</label>
+                <label class="col-md-3 col-form-label">Imagem (250x250)</label>
                 <div class="col-md-9">
                   <image-upload @change="onImageChange" change-text="Alterar" remove-text="Remover" select-text="Selecione uma imagem" />
                 </div>
@@ -244,6 +269,7 @@
 import { Select, Option, Tabs, TabPane, DatePicker } from 'element-ui';
 import courseService from '../../services/Course/courseService';
 import courseCollegeService from '../../services/CourseCollege/courseCollegeService';
+import coursePeriodService from '../../services/CoursePeriod/coursePeriodService';
 import courseModalityService from '../../services/CourseModality/courseModalityService';
 import courseGraduationTypeService from '../../services/CourseGraduationType/courseGraduationTypeService';
 import Addresses from 'src/components/Addresses';
@@ -292,7 +318,8 @@ export default {
         voucherText:'',
         description:'',
         image:'',
-        active: true
+        active: true,
+        periodIds:[]
       },
       money: {
         decimal: ',',
@@ -312,6 +339,7 @@ export default {
       },
       operations: [],
       colleges: [],
+      periods: [],
       graduationTypes: [],
       modalities: [],
       customErros: [],
@@ -344,41 +372,44 @@ export default {
 
       if (!self.model.title) self.customErros.push('title');
       if (!self.model.idOperation) self.customErros.push('idOperation');
-      if (!self.model.idCollege) self.customErros.push('idCollege');
-      if (!self.model.idGraduationType) self.customErros.push('idGraduationType');
-      if (!self.model.idModality) self.customErros.push('idModality');
+      if (!self.model.idCollege || self.model.idCollege == 0) self.customErros.push('idCollege');
+      if (!self.model.idGraduationType || self.model.idGraduationType == 0) self.customErros.push('idGraduationType');
+      if (!self.model.idModality || self.model.idModality == 0) self.customErros.push('idModality');
       if (!self.model.originalPrice) self.customErros.push('originalPrice');
       if (!self.model.discount) self.customErros.push('discount');
       if (!self.model.finalPrice) self.customErros.push('finalPrice');
       if (!self.model.duration) self.customErros.push('duration');
+      if (!self.model.periodIds || self.model.periodIds.length == 0) self.customErros.push('period');
 
-      self.submitLoading = true;
-      if (self.image) {
-        helperService.uploadFile(self.image).then(
-          response => {
-            if (response.status != 200) {
+      if(self.customErros.length == 0){
+        self.submitLoading = true;
+        if (self.image) {
+          helperService.uploadFile(self.image).then(
+            response => {
+              if (response.status != 200) {
+                self.$notify({
+                  type: 'primary',
+                  message: response.message,
+                  icon: 'tim-icons icon-bell-55'
+                });
+                self.submitLoading = false;
+                return;
+              }
+              self.model.logo = response.data.url;
+              self.saveCourse(self);
+            },
+            err => {
               self.$notify({
                 type: 'primary',
-                message: response.message,
+                message: err.message,
                 icon: 'tim-icons icon-bell-55'
               });
               self.submitLoading = false;
-              return;
             }
-            self.model.logo = response.data.url;
-            self.saveCourse(self);
-          },
-          err => {
-            self.$notify({
-              type: 'primary',
-              message: err.message,
-              icon: 'tim-icons icon-bell-55'
-            });
-            self.submitLoading = false;
-          }
-        );
-      } else {
-        self.saveCourse(self);
+          );
+        } else {
+          self.saveCourse(self);
+        }
       }
     },
     saveCourse(vm) {
@@ -436,6 +467,7 @@ export default {
         courseService.get(self.id).then(
           response => {
             self.model = response.data;
+            self.onOperationChange();
             self.formLoading = false;
           },
           () => {
@@ -447,7 +479,6 @@ export default {
       self.selectLoading = true;
       operationService.findAll().then(
         response => {
-          self.operations.push({ id: null, title: 'selecione' });
           _.each(response.data, function(el) {
             self.operations.push({ id: el.id, title: el.title });
           });
@@ -464,9 +495,8 @@ export default {
     onOperationChange(){
       const self = this;
 
-      courseCollegeService.findAll({ page: 0, pageItems: 30, searchWord: '', sort: 'Name ASC', idOperation: self.model.idOperation }).then(
+      courseCollegeService.findAll({ page: 0, pageItems: 300, searchWord: '', sort: 'Name ASC', idOperation: self.model.idOperation }).then(
         response => {
-          self.colleges.push({ id: null, title: 'selecione' });
           _.each(response.data, function(el) {
             self.colleges.push({ id: el.id, title: el.name });
           });
@@ -477,9 +507,8 @@ export default {
         }
       );
 
-      courseModalityService.findAll({ page: 0, pageItems: 30, searchWord: '', sort: 'Name ASC', idOperation: self.model.idOperation }).then(
+      courseModalityService.findAll({ page: 0, pageItems: 300, searchWord: '', sort: 'Name ASC', idOperation: self.model.idOperation }).then(
         response => {
-          self.modalities.push({ id: null, title: 'selecione' });
           _.each(response.data, function(el) {
             self.modalities.push({ id: el.id, title: el.name });
           });
@@ -490,11 +519,22 @@ export default {
         }
       );
 
-      courseGraduationTypeService.findAll({ page: 0, pageItems: 30, searchWord: '', sort: 'Name ASC', idOperation: self.model.idOperation }).then(
+      courseGraduationTypeService.findAll({ page: 0, pageItems: 300, searchWord: '', sort: 'Name ASC', idOperation: self.model.idOperation }).then(
         response => {
-          self.graduationTypes.push({ id: null, title: 'selecione' });
           _.each(response.data, function(el) {
             self.graduationTypes.push({ id: el.id, title: el.name });
+          });
+          self.selectLoading = false;
+        },
+        () => {
+          self.selectLoading = false;
+        }
+      );
+
+      coursePeriodService.findAll({ page: 0, pageItems: 300, searchWord: '', sort: 'Name ASC', idOperation: self.model.idOperation }).then(
+        response => {
+          _.each(response.data, function(el) {
+            self.periods.push({ id: el.id, title: el.name });
           });
           self.selectLoading = false;
         },
