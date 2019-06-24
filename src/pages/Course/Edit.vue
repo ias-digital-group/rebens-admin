@@ -116,9 +116,9 @@
                       <el-select
                           class="select-info"
                           placeholder="Período"
-                          v-model="model.periodIds"
                           v-loading.lock="selectLoading"
                           value-key="id"
+                          v-model="model.periodIds"
                           ref="id"
                           multiple
                           lock>
@@ -213,13 +213,13 @@
                 <label v-show="customErros.includes('voucherText')" class="text-danger">O campo Texto do voucher é obrigatório!</label>
               </div>
             </div>
-            <template v-if="model.logo">
+            <template v-if="model.image">
               <div class="row">
-                <label class="col-md-3 col-form-label">Imagem (250x250)</label>
+                <label class="col-md-3 col-form-label">Imagem (1200x500)</label>
                 <div class="col-md-9">
                   <div>
-                    <img :src="model.logo" class="img-preview" />
-                    <base-button @click="model.logo = ''" class="btn-simple btn-file" type="danger">
+                    <img :src="model.image" class="img-preview" />
+                    <base-button @click="model.image = ''" class="btn-simple btn-file" type="danger">
                       <i class="fas fa-times"></i>
                     </base-button>
                   </div>
@@ -228,7 +228,7 @@
             </template>
             <template v-else>
               <div class="row">
-                <label class="col-md-3 col-form-label">Imagem (250x250)</label>
+                <label class="col-md-3 col-form-label">Imagem (1200x500)</label>
                 <div class="col-md-9">
                   <image-upload @change="onImageChange" change-text="Alterar" remove-text="Remover" select-text="Selecione uma imagem" />
                 </div>
@@ -445,7 +445,7 @@ export default {
               message: response.message,
               icon: 'tim-icons icon-bell-55'
             });
-            vm.$router.push('/courseCollege');
+            vm.$router.push('/course');
             vm.submitLoading = false;
           },
           err => {
