@@ -395,7 +395,7 @@ export default {
                 self.submitLoading = false;
                 return;
               }
-              self.model.logo = response.data.url;
+              self.model.image = response.data.url;
               self.saveCourse(self);
             },
             err => {
