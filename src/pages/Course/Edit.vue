@@ -234,6 +234,27 @@
                 </div>
               </div>
             </template>
+            <template v-if="model.listImage">
+              <div class="row">
+                <label class="col-md-3 col-form-label">Imagem da Listagem (216x174)</label>
+                <div class="col-md-9">
+                  <div>
+                    <img :src="model.listImage" class="img-preview" />
+                    <base-button @click="model.listImage = ''" class="btn-simple btn-file" type="danger">
+                      <i class="fas fa-times"></i>
+                    </base-button>
+                  </div>
+                </div>
+              </div>
+            </template>
+            <template v-else>
+              <div class="row">
+                <label class="col-md-3 col-form-label">Imagem da Listagem (216x174)</label>
+                <div class="col-md-9">
+                  <image-upload @change="onListImageChange" change-text="Alterar" remove-text="Remover" select-text="Selecione uma imagem" />
+                </div>
+              </div>
+            </template>
             <div class="row">
                 <label class="col-md-3 col-form-label">Ativo</label>
                 <div class="col-md-9">
@@ -318,6 +339,7 @@ export default {
         voucherText:'',
         description:'',
         image:'',
+        listImage:'',
         active: true,
         periodIds:[]
       },
@@ -344,6 +366,7 @@ export default {
       modalities: [],
       customErros: [],
       image: null,
+      listImage:null, 
       modelValidations: {
         title: { required: true, max: 500 },
         idOperation:{ required:true },
@@ -383,7 +406,10 @@ export default {
 
       if(self.customErros.length == 0){
         self.submitLoading = true;
+        let imgCounter = 0;
+
         if (self.image) {
+          imgCounter++;
           helperService.uploadFile(self.image).then(
             response => {
               if (response.status != 200) {
@@ -396,7 +422,9 @@ export default {
                 return;
               }
               self.model.image = response.data.url;
-              self.saveCourse(self);
+              imgCounter--;
+              if(imgCounter == 0)
+                self.saveCourse(self);
             },
             err => {
               self.$notify({
@@ -407,9 +435,39 @@ export default {
               self.submitLoading = false;
             }
           );
-        } else {
+        } 
+
+        if (self.listImage) {
+          imgCounter++;
+          helperService.uploadFile(self.listImage).then(
+            response => {
+              if (response.status != 200) {
+                self.$notify({
+                  type: 'primary',
+                  message: response.message,
+                  icon: 'tim-icons icon-bell-55'
+                });
+                self.submitLoading = false;
+                return;
+              }
+              self.model.listImage = response.data.url;
+              imgCounter--;
+              if(imgCounter == 0)
+                self.saveCourse(self);
+            },
+            err => {
+              self.$notify({
+                type: 'primary',
+                message: err.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+              self.submitLoading = false;
+            }
+          );
+        } 
+        if(imgCounter == 0)
           self.saveCourse(self);
-        }
+        
       }
     },
     saveCourse(vm) {
@@ -491,6 +549,9 @@ export default {
     },
     onImageChange(file) {
       this.image = file;
+    },
+    onListImageChange(file) {
+      this.listImage = file;
     },
     onOperationChange(){
       const self = this;
