@@ -36,7 +36,7 @@ export default {
   },
   getListTree: () => {
     return new Promise((resolve, reject) => {
-      HTTP.get(config.apiEndpoints.categoryUri.concat('ListTree')).then(
+      HTTP.get(config.apiEndpoints.categoryUri.concat('ListTreeAdm')).then(
         response => {
           resolve(response.data);
         },
