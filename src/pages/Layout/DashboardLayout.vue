@@ -21,7 +21,7 @@
         <!-- <sidebar-item v-show="!isPublisher && !isRebens && !isPartnerApprover" :link="{ name: $t('sidebar.partnerCustomers'), path: '/operationPartner/customers', icon: 'tim-icons icon-single-02' }"></sidebar-item>     -->
         <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.customer'), path: '/report/customer', icon: 'tim-icons icon-single-02' }"></sidebar-item>
         <sidebar-item v-show="!isPublisher && !isPartnerApprover" :link="{ name: $t('sidebar.users'), path: '/users', icon: 'tim-icons icon-single-02' }"></sidebar-item>    
-        <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.courses'), icon: 'fas fa-graduation-cap' }">
+        <sidebar-item v-show="showCourses" :link="{ name: $t('sidebar.courses'), icon: 'fas fa-graduation-cap' }">
           <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.courses'), path: '/course' }"></sidebar-item>
           <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.courseColleges'), path: '/courseCollege' }"></sidebar-item>
           <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.courseModalities'), path: '/courseModality' }"></sidebar-item>
@@ -92,6 +92,7 @@ export default {
       isPublisher: false,
       isPartnerApprover:false,
       isPartnerAdmin:false,
+      showCourses:true,
       sidebarBackground: 'blue' //vue|blue|orange|green|red|primary
     };
   },
@@ -120,6 +121,8 @@ export default {
     this.isPublisher = this.$store.getters.currentUser.role == "publisher" || this.$store.getters.currentUser.role == "publisherRebens";
     this.isPartnerApprover = this.$store.getters.currentUser.role == "partnerApprover";
     this.isPartnerAdmin = this.$store.getters.currentUser.role == "partnerAdministrator";
+    this.showCourses = this.isRebens || (!this.isPublisher && !this.isPartnerApprover && !this.isPartnerAdmin && 
+                        !this.isRebens && this.$store.getters.currentUser.idOperation == 1);
   }
 };
 </script>
