@@ -15,7 +15,7 @@
                   type="text"
                   :error="getError('title')"
                   name="title"
-                  placeholder="title" 
+                  placeholder="Título" 
                   maxlength='500'></base-input>
                   <label v-show="customErros.includes('title')" class="text-danger">O campo Título é obrigatório</label>
               </div>
@@ -199,7 +199,7 @@
                 </base-input>
               </div>
             </div>
-            <div class="row">
+            <div class="row" style="padding-bottom:10px;">
               <label class="col-md-3 col-form-label">Descrição</label>
               <div class="col-md-9">
                 <wysiwyg v-model="model.description" placeholder="Descrição" />
@@ -223,6 +223,7 @@
                       <i class="fas fa-times"></i>
                     </base-button>
                   </div>
+                  <label v-show="customErros.includes('image')" class="text-danger">O campo Imagem é obrigatório!</label>
                 </div>
               </div>
             </template>
@@ -231,6 +232,7 @@
                 <label class="col-md-3 col-form-label">Imagem (1200x500)</label>
                 <div class="col-md-9">
                   <image-upload @change="onImageChange" change-text="Alterar" remove-text="Remover" select-text="Selecione uma imagem" />
+                  <label v-show="customErros.includes('image')" class="text-danger">O campo Imagem é obrigatório!</label>
                 </div>
               </div>
             </template>
@@ -244,6 +246,7 @@
                       <i class="fas fa-times"></i>
                     </base-button>
                   </div>
+                  <label v-show="customErros.includes('listImage')" class="text-danger">O campo Imagem da Listagem é obrigatório!</label>
                 </div>
               </div>
             </template>
@@ -252,6 +255,7 @@
                 <label class="col-md-3 col-form-label">Imagem da Listagem (216x174)</label>
                 <div class="col-md-9">
                   <image-upload @change="onListImageChange" change-text="Alterar" remove-text="Remover" select-text="Selecione uma imagem" />
+                  <label v-show="customErros.includes('listImage')" class="text-danger">O campo Imagem da Listagem é obrigatório!</label>
                 </div>
               </div>
             </template>
@@ -403,6 +407,8 @@ export default {
       if (!self.model.finalPrice) self.customErros.push('finalPrice');
       if (!self.model.duration) self.customErros.push('duration');
       if (!self.model.periodIds || self.model.periodIds.length == 0) self.customErros.push('period');
+      if (!self.model.listImage) self.customErros.push('listImage');
+      if (!self.model.image) self.customErros.push('image');
 
       if(self.customErros.length == 0){
         self.submitLoading = true;
