@@ -97,6 +97,18 @@
           "active":"Ativo"
         }
       },
+      "operationPartners": {
+        "title": "Parceiros",
+        "perpage-placeholder": "Por página",
+        "emptytext": "...",
+        "recordcount-message": "Total de parceiros:",
+        "grid": {
+          "id": "ID",
+          "name": "Nome",
+          "active":"Status",
+          "actions": "Ações"
+        }
+      },
       "access-denied": {
         "title": "Acesso negado"
       },
@@ -174,6 +186,8 @@
       "dashboard": "Dashboard",
       "categories": "Categorias",
       "partners": "Parceiros",
+      "partnersApprove": "Aprovação de clientes",
+      "partnerCustomers": "Clientes",
       "banners": "Banners",
       "faqs": "Perguntas Frequentes",
       "users": "Usuários",
@@ -184,7 +198,12 @@
       "customer":"Clientes",
       "benefitUse":"Utilização",
       "pages":"Páginas",
-      "customers":"Pré-cadastro"
+      "customers":"Pré-cadastro",
+      "courses":"Cursos",
+      "courseColleges":"Faculdades",
+      "courseModalities":"Modalidades",
+      "coursePeriods":"Períodos",
+      "courseGraduationTypes":"Tipos de graduação"
     }
   }
   

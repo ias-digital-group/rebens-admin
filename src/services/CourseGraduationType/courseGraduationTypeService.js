@@ -5,12 +5,12 @@ export default {
     return new Promise((resolve, reject) => {
       request = request
         ? request
-        : { page: 0, pageItems: 30, searchWord: '', sort: 'name ASC', active:'', idParent:'' };
+        : { page: 0, pageItems: 30, searchWord: '', sort: 'Name ASC' };
       HTTP.get(
-        config.apiEndpoints.categoryUri.concat(
+        config.apiEndpoints.courseGraduationTypeUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
             request.searchWord
-          }&sort=${request.sort}&active=${request.active}&idParent=${request.idParent}`
+          }&sort=${request.sort}${(request.idOperation ? '&idOperation=' + request.idOperation : '')}`
         )
       ).then(
         response => {
@@ -24,19 +24,7 @@ export default {
   },
   get: id => {
     return new Promise((resolve, reject) => {
-      HTTP.get(config.apiEndpoints.categoryUri.concat(id)).then(
-        response => {
-          resolve(response.data);
-        },
-        error => {
-          reject(error);
-        }
-      );
-    });
-  },
-  getListTree: () => {
-    return new Promise((resolve, reject) => {
-      HTTP.get(config.apiEndpoints.categoryUri.concat('ListTreeAdm')).then(
+      HTTP.get(config.apiEndpoints.courseGraduationTypeUri.concat(id)).then(
         response => {
           resolve(response.data);
         },
@@ -48,7 +36,7 @@ export default {
   },
   create: model => {
     return new Promise((resolve, reject) => {
-      HTTP.post(config.apiEndpoints.categoryUri, model).then(
+      HTTP.post(config.apiEndpoints.courseGraduationTypeUri, model).then(
         response => {
           resolve(response.data);
         },
@@ -60,7 +48,7 @@ export default {
   },
   update: model => {
     return new Promise((resolve, reject) => {
-      HTTP.put(config.apiEndpoints.categoryUri, model).then(
+      HTTP.put(config.apiEndpoints.courseGraduationTypeUri, model).then(
         response => {
           resolve(response.data);
         },
@@ -72,7 +60,7 @@ export default {
   },
   delete: id => {
     return new Promise((resolve, reject) => {
-      HTTP.delete(config.apiEndpoints.categoryUri.concat(id)).then(
+      HTTP.delete(config.apiEndpoints.courseGraduationTypeUri.concat(id)).then(
         response => {
           resolve(response.data);
         },

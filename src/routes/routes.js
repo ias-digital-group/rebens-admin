@@ -45,6 +45,26 @@ const UsersEdit = () => import('src/pages/User/Edit.vue');
 const CustomerReport = () => import('src/pages/Report/Customer.vue');
 const BenefitUseReport = () => import('src/pages/Report/BenefitUse.vue');
 
+const OperationPartnerList = () => import('src/pages/OperationPartner/List.vue');
+const OperationPartnerEdit = () => import('src/pages/OperationPartner/Edit.vue');
+const OperationPartnerApprove = () => import('src/pages/OperationPartner/Approve.vue');
+const OperationPartnerCustomers = () => import('src/pages/OperationPartner/Customers.vue');
+
+const CourseList = () => import('src/pages/Course/List.vue');
+const CourseEdit = () => import('src/pages/Course/Edit.vue');
+
+const CourseCollegeList = () => import('src/pages/CourseCollege/List.vue');
+const CourseCollegeEdit = () => import('src/pages/CourseCollege/Edit.vue');
+
+const CourseModalityList = () => import('src/pages/CourseModality/List.vue');
+const CourseModalityEdit = () => import('src/pages/CourseModality/Edit.vue');
+
+const CourseGraduationTypeList = () => import('src/pages/CourseGraduationType/List.vue');
+const CourseGraduationTypeEdit = () => import('src/pages/CourseGraduationType/Edit.vue');
+
+const CoursePeriodList = () => import('src/pages/CoursePeriod/List.vue');
+const CoursePeriodEdit = () => import('src/pages/CoursePeriod/Edit.vue');
+
 const ChangePassword = () => import('src/pages/Account/ChangePassword.vue');
 
 let categoriesPages = {
@@ -379,12 +399,13 @@ let benefitsPages = {
     }
   ]
 };
+
 let usersPages = {
   path: '/users',
   component: DashboardLayout,
   meta:{
     requiresAuth: true,
-    roles: ['master','administrator', 'administratorRebens'],
+    roles: ['master','administrator', 'administratorRebens', 'partnerAdministrator'],
     title: i18n.t('pages.users.title')
   },
   children:[
@@ -394,7 +415,7 @@ let usersPages = {
       component: UsersList,
       meta:{
         requiresAuth: true,
-        roles: ['master','administrator', 'administratorRebens'],
+        roles: ['master','administrator', 'administratorRebens', 'partnerAdministrator'],
         title: i18n.t('pages.users.title')
       }
     },
@@ -404,7 +425,7 @@ let usersPages = {
       component: UsersEdit,
       meta: {
         requiresAuth: true,
-        roles: ['master','administrator', 'administratorRebens'],
+        roles: ['master','administrator', 'administratorRebens', 'partnerAdministrator'],
         title: i18n.t('pages.users.title')
       }
     },
@@ -415,7 +436,7 @@ let usersPages = {
       component: UsersEdit,
       meta: {
         requiresAuth:true,
-        roles: ['master','administrator', 'administratorRebens'],
+        roles: ['master','administrator', 'administratorRebens', 'partnerAdministrator'],
         title: i18n.t('pages.users.title')
       }
     }
@@ -454,6 +475,72 @@ let reportPages = {
     }
   ]
 }
+
+let operationPartnerPages = {
+  path: '/operationPartner',
+  component: DashboardLayout,
+  meta:{
+    requiresAuth: true,
+    roles: ['publisher', 'administrator','partnerAdministrator', 'partnerApprover'],
+    title: 'Parceiros'
+  },
+  children:[
+    {
+      path: '',
+      name:'operationPartner',
+      component: OperationPartnerList,
+      meta:{
+        requiresAuth: true,
+        roles: ['publisher', 'administrator','partnerAdministrator', 'partnerApprover'],
+        title: 'Parceiros'
+      }
+    },
+    {
+      path: 'new',
+      name: `new_operationPartner`,
+      component: OperationPartnerEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['publisher', 'administrator','partnerAdministrator', 'partnerApprover'],
+        title: 'Parceiros'
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_operationPartner',
+      props: true,
+      component: OperationPartnerEdit,
+      meta: {
+        requiresAuth:true,
+        roles: ['publisher', 'administrator','partnerAdministrator', 'partnerApprover'],
+        title: 'Parceiros'
+      }
+    },
+    {
+      path: 'approve',
+      name: 'approve_operationPartnerCustomer',
+      props: true,
+      component: OperationPartnerApprove,
+      meta: {
+        requiresAuth:true,
+        roles: ['publisher', 'administrator','partnerAdministrator', 'partnerApprover'],
+        title: 'Aprovação de Clientes'
+      }
+    },
+    {
+      path: 'customers',
+      name: 'customers_operationPartnerCustomer',
+      props: true,
+      component: OperationPartnerCustomers,
+      meta: {
+        requiresAuth:true,
+        roles: ['publisher', 'administrator','partnerAdministrator'],
+        title: 'Clientes'
+      }
+    }
+  ]
+}
+
 let accountPages = {
   path:'/account',
   component: DashboardLayout,
@@ -476,6 +563,221 @@ let accountPages = {
   ]
 }
 
+let coursePages = {
+  path: '/course',
+  component: DashboardLayout,
+  meta: {
+    requiresAuth: true,
+    roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+    title: 'Cursos'
+  },
+  children: [
+    {
+      path: '',
+      name: 'course',
+      component: CourseList,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+        title: 'Curso'
+      }
+    },
+    {
+      path: 'new',
+      name: `new_course`,
+      component: CourseEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+        title: 'Curso'
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_course',
+      props: true,
+      component: CourseEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+        title: 'Curso'
+      }
+    }
+  ]
+};
+
+let courseCollegePages = {
+  path: '/courseCollege',
+  component: DashboardLayout,
+  meta: {
+    requiresAuth: true,
+    roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+    title: 'Faculdades'
+  },
+  children: [
+    {
+      path: '',
+      name: 'college',
+      component: CourseCollegeList,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+        title: 'Faculdade'
+      }
+    },
+    {
+      path: 'new',
+      name: `new_college`,
+      component: CourseCollegeEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+        title: 'Faculdade'
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_college',
+      props: true,
+      component: CourseCollegeEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+        title: 'Faculdade'
+      }
+    }
+  ]
+};
+
+let courseModalityPages = {
+  path: '/courseModality',
+  component: DashboardLayout,
+  meta: {
+    requiresAuth: true,
+    roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+    title: 'Modalidades'
+  },
+  children: [
+    {
+      path: '',
+      name: 'modality',
+      component: CourseModalityList,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+        title: 'Modalidade'
+      }
+    },
+    {
+      path: 'new',
+      name: `new_modality`,
+      component: CourseModalityEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+        title: 'Modalidade'
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_modality',
+      props: true,
+      component: CourseModalityEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+        title: 'Modalidade'
+      }
+    }
+  ]
+};
+
+let courseGraduationTypePages = {
+  path: '/courseGraduationType',
+  component: DashboardLayout,
+  meta: {
+    requiresAuth: true,
+    roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+    title: 'Tipos de Graduação'
+  },
+  children: [
+    {
+      path: '',
+      name: 'graduationType',
+      component: CourseGraduationTypeList,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+        title: 'Tipo de Graduação'
+      }
+    },
+    {
+      path: 'new',
+      name: `new_graduationType`,
+      component: CourseGraduationTypeEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+        title: 'Tipo de Graduação'
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_graduationType',
+      props: true,
+      component: CourseGraduationTypeEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+        title: 'Tipo de Graduação'
+      }
+    }
+  ]
+};
+
+let coursePeriodPages = {
+  path: '/coursePeriod',
+  component: DashboardLayout,
+  meta: {
+    requiresAuth: true,
+    roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+    title: 'Períodos'
+  },
+  children: [
+    {
+      path: '',
+      name: 'period',
+      component: CoursePeriodList,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+        title: 'Periodo'
+      }
+    },
+    {
+      path: 'new',
+      name: `new_period`,
+      component: CoursePeriodEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+        title: 'Periodo'
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_period',
+      props: true,
+      component: CoursePeriodEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisher', 'administrator', 'publisherRebens', 'administratorRebens'],
+        title: 'Periodo'
+      }
+    }
+  ]
+};
+
 const routes = [
   {
     path: '/',
@@ -489,7 +791,7 @@ const routes = [
         components: { default: Dashboard },
         meta: {
           requiresAuth: true,
-          roles: ['master', 'administrator', 'publisher', 'publisherRebens', 'administratorRebens'],
+          roles: ['master', 'administrator', 'publisher', 'publisherRebens', 'administratorRebens', 'partnerAdministrator', 'partnerApprover'],
           title: i18n.t('pages.dashboard.title')
         }
       }
@@ -571,7 +873,13 @@ const routes = [
   reportPages,
   pagesPages,
   faqsPages,
-  customersPages
+  customersPages,
+  operationPartnerPages,
+  courseCollegePages,
+  courseGraduationTypePages,
+  courseModalityPages,
+  coursePeriodPages,
+  coursePages
 ];
 
 export default routes;

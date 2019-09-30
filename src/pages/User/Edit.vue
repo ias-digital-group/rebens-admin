@@ -45,10 +45,12 @@
                     v-validate="modelValidations.roles"
                     lock>
                     <el-option v-show="isMaster" class="select-primary" value="master" label="Master"></el-option>
-                    <el-option class="select-primary" value="publisher" label="Publicador" ></el-option>
-                    <el-option class="select-primary" value="administrator" label="Administrador"></el-option>
-                    <el-option v-show="isRebens" class="select-primary" value="publisherRebens" label="Publicador Rebens"></el-option>
-                    <el-option v-show="isRebens" class="select-primary" value="administratorRebens" label="Administrador Rebens"></el-option>
+                    <el-option v-show="!isPartnerUser" class="select-primary" value="publisher" label="Publicador" ></el-option>
+                    <el-option v-show="!isPartnerUser" class="select-primary" value="administrator" label="Administrador"></el-option>
+                    <el-option v-show="isRebens && !isPartnerUser" class="select-primary" value="publisherRebens" label="Publicador Rebens"></el-option>
+                    <el-option v-show="isRebens && !isPartnerUser" class="select-primary" value="administratorRebens" label="Administrador Rebens"></el-option>
+                    <el-option class="select-primary" value="partnerAdministrator" label="Administrador Parceiro"></el-option>
+                    <el-option class="select-primary" value="partnerApprover" label="Aprovador Parceiro"></el-option>
                 </el-select>
                 <label v-show="customErros.includes('roles')" class="text-danger">O campo Papel é obrigatório</label>
                 </div>
@@ -63,6 +65,7 @@
                     placeholder="Operação"
                     v-model="model.idOperation"
                     v-loading.lock="selectLoading"
+                    @change="onOperationChange()"
                     lock>
                     <el-option class="select-primary"
                     v-for="type in operations"
@@ -73,6 +76,28 @@
                     </el-option>
                 </el-select>
                 <label v-show="customErros.includes('operation')" class="text-danger">O campo Operação é obrigatório</label>
+                </div>
+            </div>
+          </div>
+          <div class="row" v-if="showOperationPartners">
+            <label class="col-md-3 col-form-label">Parceiro da operação</label>
+            <div class="col-md-3">
+                <div class="form-group">
+                  <el-select
+                      class="select-info"
+                      placeholder="Parceiro da operação"
+                      v-model="model.idOperationPartner"
+                      v-loading.lock="selectLoading"
+                      lock>
+                      <el-option class="select-primary"
+                      v-for="type in operationPartners"
+                      :value="type.id"
+                      :label="type.title"
+                      :key="type.id"
+                      >
+                      </el-option>
+                  </el-select>
+                  <label v-show="customErros.includes('operationPartner')" class="text-danger">O campo Parceiro da Operação é obrigatório</label>
                 </div>
             </div>
           </div>
@@ -114,6 +139,7 @@
 import { Select, Option, Tabs, TabPane, DatePicker } from 'element-ui';
 import userService from '../../services/User/userService';
 import operationService from '../../services/Operation/operationService';
+import operationPartnerService from '../../services/OperationPartner/operationPartnerService';
 import _ from 'lodash';
 export default {
   components: {
@@ -135,6 +161,7 @@ export default {
       sendingLoading:false,
       isMaster:false,
       isRebens:false,
+      isPartnerUser:false,
       customErros: [],
       reg: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
       model: {
@@ -142,6 +169,7 @@ export default {
         email:'',
         status: false,
         idOperation:null,
+        idOperationPartner:null,
         roles:''
       },
       modelValidations: {
@@ -157,7 +185,8 @@ export default {
           required:true
         }
       },
-      operations: []
+      operations: [],
+      operationPartners: []
     };
   },
   computed: {
@@ -165,10 +194,35 @@ export default {
       return this.$route.name == 'edit_user' ? 'edit' : 'new';
     },
     showOperations(){
-      return (this.model.roles == 'administrator' || this.model.roles == 'publisher') && this.isRebens;
+      return (this.model.roles == 'administrator' || this.model.roles == 'publisher' || 
+              this.model.roles == 'partnerAdministrator' || this.model.roles == 'partnerApprover') 
+              && this.isRebens && !this.isPartnerUser;
+    },
+    showOperationPartners(){
+      return (this.model.roles == 'partnerAdministrator' || this.model.roles == 'partnerApprover') && !this.isPartnerUser && this.operationPartners.length > 1;
     }
   },
   methods: {
+    onOperationChange(){
+      const self = this;
+      if(self.isRebens){
+        self.operationPartners = [];
+        operationPartnerService.findAll({ page: 0, pageItems: 1000, searchWord: '', sort: 'name ASC', idOperation: self.model.idOperation }).then(
+          response => {
+            self.operationPartners.push({ id: null, title: 'selecione' });
+            _.each(response.data, function(el) {
+              if (el.id != self.id) {
+                self.operationPartners.push({ id: el.id, title: el.name });
+              }
+            });
+            self.selectLoading = false;
+          },
+          () => {
+            self.selectLoading = false;
+          }
+        );
+      }
+    },
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
@@ -189,7 +243,10 @@ export default {
         self.customErros.push('email-length');
       if(self.model.roles == '')
         self.customErros.push('roles');
-      if(self.isRebens && (self.model.roles === 'publisher' || self.model.roles === 'administrator') && self.model.idOperation == null)
+      if(self.isRebens 
+        && (self.model.roles === 'publisher' || self.model.roles === 'administrator' || 
+            self.model.roles == 'partnerAdministrator' || self.model.roles == 'partnerApprover') 
+        && self.model.idOperation == null)
           self.customErros.push('operation');
 
       this.$validator.validateAll().then(isValid => {
@@ -221,6 +278,9 @@ export default {
       if(!vm.isRebens)
       {
         vm.model.idOperation = vm.$store.getters.currentUser.idOperation;
+      }
+      if(vm.isPartnerUser){
+        vm.model.idOperationPartner = vm.$store.getters.currentUser.idOperationPartner;
       }
       if (vm.viewAction == 'new') {
         userService.create(vm.model).then(
@@ -266,18 +326,24 @@ export default {
     },
     fetchData() {
       const self = this;
+      
       if (this.viewAction == 'edit') {
         this.formLoading = true;
         userService.get(self.id).then(
           response => {
             self.model = response.data;
-            self.formLoading = false;
+            self.loadOperationPartner(self);
           },
           () => {
             self.formLoading = false;
           }
         );
       }
+      else if(self.$store.getters.currentUser.idOperation > 0){
+        self.model.idOperation = self.$store.getters.currentUser.idOperation;
+        self.loadOperationPartner(self);
+      }
+      
       this.selectLoading = true;
       operationService.findAll().then(
         response => {
@@ -293,12 +359,50 @@ export default {
           self.selectLoading = false;
         }
       );
+    },
+    loadOperationPartner(self){
+      self.formLoading = true;
+      if(!self.isPartnerUser){
+        let operationId = 0;
+        if(self.isRebens){
+          if((self.model.roles == 'partnerAdministrator' || self.model.roles == 'partnerApprover'))
+          {
+            operationId = self.model.idOperation;
+          }
+        }
+        else{
+          operationId = self.$store.getters.currentUser.idOperation;
+        }
+        if(operationId > 0){
+          operationPartnerService.findAll({ page: 0, pageItems: 1000, searchWord: '', sort: 'name ASC', idOperation: operationId }).then(
+            response => {
+              self.operationPartners.push({ id: null, title: 'selecione' });
+              _.each(response.data, function(el) {
+                if (el.id != self.id) {
+                  self.operationPartners.push({ id: el.id, title: el.name });
+                }
+              });
+              self.formLoading = false;
+            },
+            () => {
+              self.formLoading = false;
+            }
+          );
+        }
+        else{
+          self.formLoading = false;
+        }
+      }
+      else{
+        self.formLoading = false;
+      }
     }
   },
   created() {
-    this.fetchData();
     this.isMaster = this.$store.getters.currentUser.role == "master";
+    this.isPartnerUser = this.$store.getters.currentUser.role == "partnerAdministrator";
     this.isRebens = this.$store.getters.currentUser.role == "administratorRebens" || this.$store.getters.currentUser.role == "master";
+    this.fetchData();
   }
 };
 </script>

@@ -134,6 +134,7 @@ export default {
       staticTextService.get(self.id).then(
         response => {
           self.model = response.data;
+          self.model.images = [];
           self.formLoading = false;
         },
         () => {

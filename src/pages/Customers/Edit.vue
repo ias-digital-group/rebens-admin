@@ -3,7 +3,6 @@
   <div class="col-md-12">
     <card title="Pré-cadastro">
       <h4 slot="header" class="card-title">Pré-cadastro</h4>
-      
       <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
         <div class="row">
           <label class="col-md-3 col-form-label">Nome</label>
@@ -171,11 +170,19 @@ export default {
     },
     validateCustomer() {
       const self = this;
-      if(self.model.name !== '' && self.model.name.length <= 300 
-        && self.model.cpf !== '' && self.model.cpf.length <= 500){
-            self.submitLoading = true;
-            self.saveCustomer(self);
+
+
+      this.$validator.validateAll().then(isValid => {
+        if (isValid) {
+          self.submitLoading = true;
+          self.saveCustomer(self);
         }
+      });
+      // if(self.model.name !== '' && self.model.name.length <= 300 
+      //   && self.model.cpf !== '' && self.model.cpf.length <= 500){
+      //     self.submitLoading = true;
+      //     self.saveCustomer(self);
+      //   }
     },
     clearForm(){
       const self = this;

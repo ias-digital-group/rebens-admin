@@ -159,8 +159,16 @@ export default {
                 self.submitLoading = false;
               }
             );
-          } else {
+          } else if(self.model.logo){
             self.savePartner(self);
+          }
+          else{
+            self.$notify({
+              type: 'danger',
+              message: 'O Logo é obrigatório',
+              icon: 'tim-icons icon-bell-55'
+            });
+            self.submitLoading = false;
           }
         }
       });

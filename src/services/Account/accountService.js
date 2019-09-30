@@ -55,7 +55,7 @@ export default {
   },
   rememberPassword: (email) => {
     return new Promise((resolve, reject) => {
-      http.get(config.apiEndpoints.accountUri.concat(`RememberPassword/?email=${email}`)).then(
+      http.get(config.apiEndpoints.accountUri.concat(`RememberPassword/?email=${encodeURIComponent(email)}`)).then(
         response => {
           resolve(response.data);
         },

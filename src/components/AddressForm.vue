@@ -31,7 +31,7 @@
         </div>
       </div>
       <div class="row">
-        <label class="col-md-3 col-form-label">Logradouro</label>
+        <label class="col-md-3 col-form-label">Endereço</label>
         <div class="col-md-6 col-lg-4">
           <base-input 
             required
@@ -40,7 +40,7 @@
             type="text"
             :error="getError('logradouro')"
             name="logradouro"
-            placeholder="Logradouro" 
+            placeholder="Endereço" 
             maxlength='400'></base-input>
         </div>
         <div class="col-md-3 col-lg-2">
