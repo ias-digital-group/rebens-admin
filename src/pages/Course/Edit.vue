@@ -407,8 +407,8 @@ export default {
       if (!self.model.finalPrice) self.customErros.push('finalPrice');
       if (!self.model.duration) self.customErros.push('duration');
       if (!self.model.periodIds || self.model.periodIds.length == 0) self.customErros.push('period');
-      if (!self.model.listImage) self.customErros.push('listImage');
-      if (!self.model.image) self.customErros.push('image');
+      if (!self.model.listImage && !self.listImage) self.customErros.push('listImage');
+      if (!self.model.image && !self.image) self.customErros.push('image');
 
       if(self.customErros.length == 0){
         self.submitLoading = true;
