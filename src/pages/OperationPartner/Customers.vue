@@ -3,13 +3,39 @@
     <div class="col-12">
       <card card-body-classes="table-full-width">
         <div>
-          <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
-            <el-select class="select-primary mb-4 pagination-select" v-model="statusFilter" v-if="!loading">
-              <el-option class="select-primary" value="0" label="Todos"></el-option>
-              <el-option class="select-primary" value="1" label="Novos"></el-option>
-              <el-option class="select-primary" value="2" label="Aprovados"></el-option>
-              <el-option class="select-primary" value="3" label="Reprovados"></el-option>
-              <el-option class="select-primary" value="4" label="Cadastrados no site"></el-option>
+          <div
+            class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
+          >
+            <el-select
+              class="select-primary mb-4 pagination-select"
+              v-model="statusFilter"
+              v-if="!loading"
+            >
+              <el-option
+                class="select-primary"
+                value="0"
+                label="Todos"
+              ></el-option>
+              <el-option
+                class="select-primary"
+                value="1"
+                label="Novos"
+              ></el-option>
+              <el-option
+                class="select-primary"
+                value="2"
+                label="Aprovados"
+              ></el-option>
+              <el-option
+                class="select-primary"
+                value="3"
+                label="Reprovados"
+              ></el-option>
+              <el-option
+                class="select-primary"
+                value="4"
+                label="Cadastrados no site"
+              ></el-option>
             </el-select>
             <base-input>
               <el-input
@@ -20,27 +46,59 @@
                 prefix-icon="el-icon-search"
                 placeholder="Procurar Cliente"
                 aria-controls="datatables"
-                v-model="searchQuery">
+                v-model="searchQuery"
+              >
               </el-input>
             </base-input>
           </div>
-          <el-table ref="table" :data="tableData" v-loading="loading" :empty-text="$t('pages.operationPartners.emptytext')" @sort-change="onSortChanged" :default-sort="{prop: sortField, order: sortOrder}">
-          <el-table-column v-for="column in tableColumns" :key="column.label" :min-width="column.minWidth" :prop="column.prop"
-          :label="column.label" sortable="custom">
-          </el-table-column>
-          <el-table-column :min-width="135" align="right" :label="$t('pages.operationPartners.grid.actions')">
+          <el-table
+            ref="table"
+            :data="tableData"
+            v-loading="loading"
+            :empty-text="$t('pages.operationPartners.emptytext')"
+            @sort-change="onSortChanged"
+            :default-sort="{ prop: sortField, order: sortOrder }"
+          >
+            <el-table-column
+              v-for="column in tableColumns"
+              :key="column.label"
+              :min-width="column.minWidth"
+              :prop="column.prop"
+              :label="column.label"
+              sortable="custom"
+            >
+            </el-table-column>
+            <el-table-column
+              :min-width="135"
+              align="right"
+              :label="$t('pages.operationPartners.grid.actions')"
+            >
               <div slot-scope="props">
-                  <base-button v-show="props.row.status == 1 || props.row.status == 3" @click.native="approve(props.$index, props.row);" title="Aprovar" class="edit btn-link" type="success"
-                  size="sm" icon>
+                <base-button
+                  v-show="props.row.status == 1 || props.row.status == 3"
+                  @click.native="approve(props.$index, props.row)"
+                  title="Aprovar"
+                  class="edit btn-link"
+                  type="success"
+                  size="sm"
+                  icon
+                >
                   <i class="tim-icons icon-check-2"></i>
-                  </base-button>
-                  <base-button v-show="props.row.status == 1" @click.native="disapprove(props.$index, props.row);" title="Reprovar" class="remove btn-link" type="danger"
-                  size="sm" icon>
+                </base-button>
+                <base-button
+                  v-show="props.row.status == 1"
+                  @click.native="disapprove(props.$index, props.row)"
+                  title="Reprovar"
+                  class="remove btn-link"
+                  type="danger"
+                  size="sm"
+                  icon
+                >
                   <i class="tim-icons icon-simple-remove"></i>
-                  </base-button>
+                </base-button>
               </div>
-          </el-table-column>
-      </el-table>
+            </el-table-column>
+          </el-table>
         </div>
       </card>
     </div>
@@ -49,7 +107,7 @@
 </template>
 <script>
 import { Table, TableColumn, Select, Option } from 'element-ui';
-import { BasePagination, Modal } from 'src/components';
+import { BasePagination } from 'src/components';
 import operationPartnerService from '../../services/OperationPartner/operationPartnerService';
 import listPage from '../../mixins/listPage';
 export default {
@@ -65,8 +123,8 @@ export default {
     return {
       internalName: 'Parceiros',
       sortField: 'name',
-      formLoading:false,
-      statusFilter:0,
+      formLoading: false,
+      statusFilter: 0,
       tableColumns: [
         {
           prop: 'id',
@@ -113,8 +171,8 @@ export default {
         searchWord: this.searchQuery,
         sort: this.formatSortFieldParam,
         idOperation: this.$store.getters.currentUser.idOperation,
-        status:this.statusFilter,
-        idOperationPartner:this.$store.getters.currentUser.idOperationPartner
+        status: this.statusFilter,
+        idOperationPartner: this.$store.getters.currentUser.idOperationPartner
       };
       this.$data.loading = true;
       operationPartnerService.findAllCustomers(request).then(
@@ -126,18 +184,22 @@ export default {
         },
         () => {
           self.$data.loading = false;
-        });
+        }
+      );
     },
     approve(index, row) {
       const self = this;
-      operationPartnerService.changeCustomerStatus({id: row.id, status: 2}).then(response => {
+      operationPartnerService
+        .changeCustomerStatus({ id: row.id, status: 2 })
+        .then(
+          () => {
             self.$notify({
               type: 'primary',
               message: 'Cliente aprovado com sucesso!',
               icon: 'tim-icons icon-bell-55'
             });
             row.status = 2;
-            row.statusName = 'aprovado'
+            row.statusName = 'aprovado';
           },
           err => {
             self.$notify({
@@ -145,18 +207,22 @@ export default {
               message: err.message,
               icon: 'tim-icons icon-bell-55'
             });
-          });
+          }
+        );
     },
     disapprove(index, row) {
       const self = this;
-      operationPartnerService.changeCustomerStatus({id: row.id, status: 3}).then(response => {
+      operationPartnerService
+        .changeCustomerStatus({ id: row.id, status: 3 })
+        .then(
+          () => {
             self.$notify({
               type: 'primary',
               message: 'Cliente reprovado com sucesso!',
               icon: 'tim-icons icon-bell-55'
             });
             row.status = 3;
-            row.statusName = 'reprovado'
+            row.statusName = 'reprovado';
           },
           err => {
             self.$notify({
@@ -164,12 +230,13 @@ export default {
               message: err.message,
               icon: 'tim-icons icon-bell-55'
             });
-          });
+          }
+        );
     }
   },
-  watch:{
-    statusFilter(){
-      this.fetchData(); 
+  watch: {
+    statusFilter() {
+      this.fetchData();
     }
   }
 };

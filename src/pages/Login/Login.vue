@@ -15,33 +15,37 @@
               :error="getError($t('pages.login.input-email'))"
               :name="$t('pages.login.input-email')"
               type="email"
-              :placeholder="$t('pages.login.input-email')" 
+              :placeholder="$t('pages.login.input-email')"
             >
             </base-input>
-            <base-input 
-              :placeholder="$t('pages.login.input-password')" 
+            <base-input
+              :placeholder="$t('pages.login.input-password')"
               required
               :name="$t('pages.login.input-password')"
               v-model="credentials.password"
               v-validate="modelValidations.password"
               :error="getError($t('pages.login.input-password'))"
-              type="password">
+              type="password"
+            >
             </base-input>
           </div>
 
           <div slot="footer">
-            <base-button 
-              type="info" 
-              class="mb-3" 
-              size="lg" 
+            <base-button
+              type="info"
+              class="mb-3"
+              size="lg"
               native-type="submit"
               @click.native.prevent="validate"
               :loading="fullscreenLoading"
-              block>
-              {{$t('pages.login.signin-button')}}
+              block
+            >
+              {{ $t('pages.login.signin-button') }}
             </base-button>
           </div>
-          <base-link class="mt-3" to="/passwordRecovery">esqueci minha senha</base-link>
+          <base-link class="mt-3" to="/passwordRecovery"
+            >esqueci minha senha</base-link
+          >
         </card>
       </form>
     </div>

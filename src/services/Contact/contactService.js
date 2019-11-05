@@ -9,9 +9,7 @@ export default {
         : { page: 0, pageItems: 30, searchWord: '', sort: 'name ASC' };
       HTTP.get(
         config.apiEndpoints.contactUri.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
-            request.searchWord
-          }&sort=${request.sort}`
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}`
         )
       ).then(
         response => {
@@ -42,9 +40,7 @@ export default {
       }
       HTTP.get(
         config.apiEndpoints.partnerUri.concat(
-          `${request.parentId}/contacts?page=${request.page}&pageItems=${
-            request.pageItems
-          }&searchWord=${request.searchWord}&sort=${request.sort}`
+          `${request.parentId}/contacts?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}`
         )
       ).then(
         response => {

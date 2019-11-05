@@ -23,7 +23,12 @@
           ref="file"
         />
       </span>
-      <base-button v-if="fileExists" @click="removeFile" class="btn btn-simple" type="danger">
+      <base-button
+        v-if="fileExists"
+        @click="removeFile"
+        class="btn btn-simple"
+        type="danger"
+      >
         <i class="fas fa-times"></i> {{ removeText }}
       </base-button>
     </div>
@@ -92,5 +97,4 @@ export default {
   }
 };
 </script>
-<style>
-</style>
+<style></style>

@@ -11,7 +11,9 @@ export default {
         config.apiEndpoints.courseUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
             request.searchWord
-          }&sort=${request.sort}${(request.idOperation ? '&idOperation=' + request.idOperation : '')}`
+          }&sort=${request.sort}${
+            request.idOperation ? '&idOperation=' + request.idOperation : ''
+          }`
         )
       ).then(
         response => {

@@ -3,7 +3,7 @@
     class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-animate"
     :class="switchClass"
   >
-    <div class="bootstrap-switch-container" @click="triggerToggle();">
+    <div class="bootstrap-switch-container" @click="triggerToggle()">
       <span class="bootstrap-switch-handle-on ">
         <slot name="on"> {{ onText }} </slot>
       </span>
@@ -45,5 +45,4 @@ export default {
   }
 };
 </script>
-<style>
-</style>
+<style></style>

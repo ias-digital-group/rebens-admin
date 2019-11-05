@@ -3,21 +3,40 @@
     <div class="col-12">
       <card card-body-classes="table-full-width">
         <template slot="header">
-          <h4 class="card-title">{{$t('pages.report.benefit-use.title')}}</h4>
+          <h4 class="card-title">{{ $t('pages.report.benefit-use.title') }}</h4>
         </template>
         <div>
-          <el-table ref="table" :data="tableData" v-loading="loading" :empty-text="$t('pages.report.emptytext')" @sort-change="onSortChanged" :default-sort="{prop: sortField, order: sortOrder}">
-            <el-table-column v-for="column in tableColumns" :key="column.label" :min-width="column.minWidth" :prop="column.prop"
-              :label="column.label" sortable="custom">
+          <el-table
+            ref="table"
+            :data="tableData"
+            v-loading="loading"
+            :empty-text="$t('pages.report.emptytext')"
+            @sort-change="onSortChanged"
+            :default-sort="{ prop: sortField, order: sortOrder }"
+          >
+            <el-table-column
+              v-for="column in tableColumns"
+              :key="column.label"
+              :min-width="column.minWidth"
+              :prop="column.prop"
+              :label="column.label"
+              sortable="custom"
+            >
             </el-table-column>
           </el-table>
         </div>
-        <div slot="footer" class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
-          <div class="">
-            
-          </div>
-          <base-pagination class="pagination-no-border" v-model="pagination.currentPage" :per-page="pagination.perPage"
-            :total="total" v-on:input="onPageChanged">
+        <div
+          slot="footer"
+          class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
+        >
+          <div class=""></div>
+          <base-pagination
+            class="pagination-no-border"
+            v-model="pagination.currentPage"
+            :per-page="pagination.perPage"
+            :total="total"
+            v-on:input="onPageChanged"
+          >
           </base-pagination>
         </div>
       </card>
@@ -73,12 +92,12 @@ export default {
         pageItems: 30,
         searchWord: this.searchQuery,
         sort: this.formatSortFieldParam,
-        idOperation:"",
-        startDate:'',
-        endDate:''
+        idOperation: '',
+        startDate: '',
+        endDate: ''
       };
       this.$data.loading = true;
-        reportService.listBenefitUse(request).then(
+      reportService.listBenefitUse(request).then(
         response => {
           self.$data.tableData = response.data;
           self.$data.pagination.perPage = 30;

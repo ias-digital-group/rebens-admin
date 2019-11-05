@@ -1,27 +1,28 @@
 <template>
   <div class="row">
     <div class="col-12">
-        <div class="row">
-            <div class="col-4">
-                <el-tree
-                    :data="categoryList"
-                    show-checkbox
-                    node-key="id"
-                    :default-expand-all="false"
-                    :default-checked-keys="selectedCategories"
-                    :props="defaultProps"
-                    v-loading="loading"
-                    @check-change="handleCheckChange"
-                ></el-tree>
-            </div>
+      <div class="row">
+        <div class="col-4">
+          <el-tree
+            :data="categoryList"
+            show-checkbox
+            node-key="id"
+            :default-expand-all="false"
+            :default-checked-keys="selectedCategories"
+            :props="defaultProps"
+            v-loading="loading"
+            @check-change="handleCheckChange"
+          ></el-tree>
         </div>
+      </div>
     </div>
     <div class="col-md-12">
-      <base-button 
-        class="mt-3 pull-right" 
-        native-type="submit" 
+      <base-button
+        class="mt-3 pull-right"
+        native-type="submit"
         type="info"
-        @click.native.prevent="saveCategories">
+        @click.native.prevent="saveCategories"
+      >
         Salvar
       </base-button>
     </div>
@@ -29,8 +30,8 @@
 </template>
 <script>
 import { Tree } from 'element-ui';
-import categoryService from '../services/Category/categoryService'
-import benefitService from '../services/Benefit/benefitService'
+import categoryService from '../services/Category/categoryService';
+import benefitService from '../services/Benefit/benefitService';
 export default {
   props: {
     parent: String,
@@ -57,11 +58,14 @@ export default {
     handleCheckChange(data, checked) {
       const self = this;
       if (checked) {
-        if(self.selectedCategories.indexOf(data.id) < 0){
+        if (self.selectedCategories.indexOf(data.id) < 0) {
           self.selectedCategories.push(data.id);
         }
-      } else if(self.selectedCategories.indexOf(data.id) >= 0){
-        self.selectedCategories.splice(self.selectedCategories.indexOf(data.id), 1);
+      } else if (self.selectedCategories.indexOf(data.id) >= 0) {
+        self.selectedCategories.splice(
+          self.selectedCategories.indexOf(data.id),
+          1
+        );
       }
     },
     fetchData() {
@@ -71,23 +75,22 @@ export default {
         self.categoryList = response.data;
       });
       benefitService.getCategories(this.parentId).then(response => {
-        if(response && response.data)
-          self.selectedCategories = response.data;
+        if (response && response.data) self.selectedCategories = response.data;
         this.loading = false;
       });
     },
-    saveCategories(){
+    saveCategories() {
       var ids = '';
-      for(var i=0;i<this.selectedCategories.length ; i++){
+      for (var i = 0; i < this.selectedCategories.length; i++) {
         ids += this.selectedCategories[i] + ',';
       }
-      ids = ids.substring(0, ids.length-1)
+      ids = ids.substring(0, ids.length - 1);
       benefitService.saveCategories(this.parentId, ids).then(response => {
         this.$notify({
           type: 'primary',
           message: response
-          ? response.message
-          : 'Categorias atualizadas com sucesso.',
+            ? response.message
+            : 'Categorias atualizadas com sucesso.',
           icon: 'tim-icons icon-bell-55'
         });
         this.fetchData();

@@ -9,9 +9,7 @@ export default {
         : { page: 0, pageItems: 30, searchWord: '', sort: 'name ASC' };
       HTTP.get(
         config.apiEndpoints.addressUri.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
-            request.searchWord
-          }&sort=${request.sort}`
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}`
         )
       ).then(
         response => {
@@ -51,9 +49,7 @@ export default {
       }
       HTTP.get(
         config.apiEndpoints.partnerUri.concat(
-          `${request.parentId}/address?page=${request.page}&pageItems=${
-            request.pageItems
-          }&searchWord=${request.searchWord}&sort=${request.sort}`
+          `${request.parentId}/address?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}`
         )
       ).then(
         response => {
@@ -72,9 +68,7 @@ export default {
       }
       HTTP.get(
         config.apiEndpoints.benefitUri.concat(
-          `${request.parentId}/address?page=${request.page}&pageItems=${
-            request.pageItems
-          }&searchWord=${request.searchWord}&sort=${request.sort}`
+          `${request.parentId}/address?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}`
         )
       ).then(
         response => {
@@ -93,9 +87,7 @@ export default {
       }
       HTTP.get(
         config.apiEndpoints.courseCollegeUri.concat(
-          `${request.parentId}/address?page=${request.page}&pageItems=${
-            request.pageItems
-          }&searchWord=${request.searchWord}&sort=${request.sort}`
+          `${request.parentId}/address?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}`
         )
       ).then(
         response => {
@@ -114,9 +106,7 @@ export default {
       }
       HTTP.get(
         config.apiEndpoints.courseUri.concat(
-          `${request.parentId}/address?page=${request.page}&pageItems=${
-            request.pageItems
-          }&searchWord=${request.searchWord}&sort=${request.sort}`
+          `${request.parentId}/address?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}`
         )
       ).then(
         response => {
@@ -165,8 +155,8 @@ export default {
         ret = this.associateCollege(request.id, request.parentId);
         break;
       case 'courses':
-          ret = this.associateCourse(request.id, request.parentId);
-          break;
+        ret = this.associateCourse(request.id, request.parentId);
+        break;
       default:
         ret = null;
         break;
@@ -225,7 +215,9 @@ export default {
   deleteCollege: function(id, collegeId) {
     return new Promise((resolve, reject) => {
       HTTP.delete(
-        config.apiEndpoints.courseCollegeUri.concat(`${collegeId}/address/${id}`)
+        config.apiEndpoints.courseCollegeUri.concat(
+          `${collegeId}/address/${id}`
+        )
       ).then(
         response => {
           resolve(response.data);

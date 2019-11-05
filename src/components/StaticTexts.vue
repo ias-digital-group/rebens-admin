@@ -1,39 +1,67 @@
 <template>
   <div class="row">
     <div class="col-12" v-if="showTable">
-      <el-table ref="staticTextTable" :data="tableData" v-loading="loading" empty-text="...">
-        <el-table-column v-for="column in tableColumns" :key="column.label" :min-width="column.minWidth" :prop="column.prop"
-          :label="column.label">
+      <el-table
+        ref="staticTextTable"
+        :data="tableData"
+        v-loading="loading"
+        empty-text="..."
+      >
+        <el-table-column
+          v-for="column in tableColumns"
+          :key="column.label"
+          :min-width="column.minWidth"
+          :prop="column.prop"
+          :label="column.label"
+        >
         </el-table-column>
         <el-table-column :min-width="135" align="right" label="Ações">
           <div slot-scope="props">
-            <base-button @click.native="handleEdit(props.$index, props.row);" class="edit btn-link" type="info"
-              size="sm" icon>
+            <base-button
+              @click.native="handleEdit(props.$index, props.row)"
+              class="edit btn-link"
+              type="info"
+              size="sm"
+              icon
+            >
               <i class="tim-icons icon-pencil"></i>
             </base-button>
           </div>
         </el-table-column>
       </el-table>
     </div>
-    <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"  v-if="showTable">
-      <base-pagination class="pagination-no-border" v-model="pagination.currentPage" :per-page="pagination.perPage"
-        :total="total" v-on:input="onPageChanged">
+    <div
+      class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
+      v-if="showTable"
+    >
+      <base-pagination
+        class="pagination-no-border"
+        v-model="pagination.currentPage"
+        :per-page="pagination.perPage"
+        :total="total"
+        v-on:input="onPageChanged"
+      >
       </base-pagination>
-      
     </div>
     <div class="col-12" v-if="showForm">
-      <hr>
+      <hr />
       <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
-        <h3 class="text-center">{{model.name}}</h3>
-        <static-text-form ref="staticTextForm" :staticText.sync="model"></static-text-form>
+        <h3 class="text-center">{{ model.name }}</h3>
+        <static-text-form
+          ref="staticTextForm"
+          :staticText.sync="model"
+        ></static-text-form>
         <div class="row">
           <div class="col-md-12">
-            <a class="btn mt-3 btn-secondary btn-simple" @click="clearModel()">Cancelar</a>
-            <base-button 
-              class="mt-3 pull-right" 
-              native-type="submit" 
+            <a class="btn mt-3 btn-secondary btn-simple" @click="clearModel()"
+              >Cancelar</a
+            >
+            <base-button
+              class="mt-3 pull-right"
+              native-type="submit"
               type="info"
-              @click.native.prevent="validateForm">
+              @click.native.prevent="validateForm"
+            >
               Salvar
             </base-button>
           </div>
@@ -107,11 +135,10 @@ export default {
       staticTextService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;
-          if(response.data){
+          if (response.data) {
             self.showForm = false;
             self.showTable = response.data.length > 0;
-          }
-          else{
+          } else {
             self.showForm = false;
             self.showTable = false;
           }
@@ -141,24 +168,25 @@ export default {
       self.submitLoading = true;
       if (self.model.images && self.model.images.length > 0) {
         let promises = new Array(self.model.images.length);
-        for(var i = 0; i <= self.model.images.length - 1; i++) {
+        for (var i = 0; i <= self.model.images.length - 1; i++) {
           promises[i] = helperService.uploadFile(self.model.images[i].img);
         }
-        Promise.all(promises).then(values => {
-          for(var j = 0; j<= values.length - 1; j++) {
-            const fieldIndex = self.model.images[j].index;
-            self.model.data.fields[fieldIndex].data = values[j].data.url;
-          }
-          self.saveStaticText(self);
-        })
-        .catch(reason => {
-          self.$notify({
-            type: 'primary',
-            message: reason.message,
-            icon: 'tim-icons icon-bell-55'
+        Promise.all(promises)
+          .then(values => {
+            for (var j = 0; j <= values.length - 1; j++) {
+              const fieldIndex = self.model.images[j].index;
+              self.model.data.fields[fieldIndex].data = values[j].data.url;
+            }
+            self.saveStaticText(self);
+          })
+          .catch(reason => {
+            self.$notify({
+              type: 'primary',
+              message: reason.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+            self.submitLoading = false;
           });
-          self.submitLoading = false;
-        });
       } else {
         self.saveStaticText(self);
       }
@@ -189,8 +217,7 @@ export default {
     },
     clearModel() {
       this.model.page = '';
-      this.model.data = {},
-      this.model.active = false;
+      (this.model.data = {}), (this.model.active = false);
       this.model.name = '';
       this.model.id = 0;
       this.$validator.reset();

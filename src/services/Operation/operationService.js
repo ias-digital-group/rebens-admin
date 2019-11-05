@@ -8,12 +8,16 @@ export default {
     return new Promise((resolve, reject) => {
       request = request
         ? request
-        : { page: 0, pageItems: 30, searchWord: '', sort: 'name ASC', active:'' };
+        : {
+            page: 0,
+            pageItems: 30,
+            searchWord: '',
+            sort: 'name ASC',
+            active: ''
+          };
       HTTP.get(
         config.apiEndpoints.operationUri.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
-            request.searchWord
-          }&sort=${request.sort}&active=${request.active}`
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}&active=${request.active}`
         )
       ).then(
         response => {
@@ -224,7 +228,10 @@ export default {
   },
   saveConfiguration: function(id, data) {
     return new Promise((resolve, reject) => {
-      HTTP.post(config.apiEndpoints.operationUri.concat(`${id}/Configuration`), data).then(
+      HTTP.post(
+        config.apiEndpoints.operationUri.concat(`${id}/Configuration`),
+        data
+      ).then(
         response => {
           resolve(response.data);
         },
@@ -238,12 +245,16 @@ export default {
     return new Promise((resolve, reject) => {
       request = request
         ? request
-        : { page: 0, pageItems: 30, searchWord: '', sort: 'name ASC', active:'' };
+        : {
+            page: 0,
+            pageItems: 30,
+            searchWord: '',
+            sort: 'name ASC',
+            active: ''
+          };
       HTTP.get(
         config.apiEndpoints.operationUri.concat(
-          `${request.parentId}/Customers?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
-            request.searchWord
-          }&sort=${request.sort}`
+          `${request.parentId}/Customers?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}`
         )
       ).then(
         response => {
@@ -260,7 +271,10 @@ export default {
   },
   createCustomer: function(id, model) {
     return new Promise((resolve, reject) => {
-      HTTP.post(config.apiEndpoints.operationUri.concat(`${id}/customers`), model).then(
+      HTTP.post(
+        config.apiEndpoints.operationUri.concat(`${id}/customers`),
+        model
+      ).then(
         response => {
           resolve(response.data);
         },
@@ -272,7 +286,9 @@ export default {
   },
   deleteCustomer: function(id, idCustomer) {
     return new Promise((resolve, reject) => {
-      HTTP.delete(config.apiEndpoints.operationUri.concat(`${id}/customers/${idCustomer}`)).then(
+      HTTP.delete(
+        config.apiEndpoints.operationUri.concat(`${id}/customers/${idCustomer}`)
+      ).then(
         response => {
           resolve(response.data);
         },
@@ -287,11 +303,15 @@ export default {
       var formData = new FormData();
       formData.append('file', file);
       axios
-        .post(config.apiEndpoints.operationUri.concat(`${id}/UploadCustomersList`), formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
+        .post(
+          config.apiEndpoints.operationUri.concat(`${id}/UploadCustomersList`),
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
           }
-        })
+        )
         .then(
           response => {
             resolve(response.data);
@@ -304,7 +324,11 @@ export default {
   },
   publish: function(id, isTemporary) {
     return new Promise((resolve, reject) => {
-      HTTP.post(config.apiEndpoints.operationUri.concat(`${id}/Publish/?isTemporary=${isTemporary}`)).then(
+      HTTP.post(
+        config.apiEndpoints.operationUri.concat(
+          `${id}/Publish/?isTemporary=${isTemporary}`
+        )
+      ).then(
         response => {
           resolve(response.data);
         },

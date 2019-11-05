@@ -2,9 +2,7 @@
   <div>
     <div class="row">
       <div class="col-lg-6 col-sm-6 text-center">
-        <card
-          type="tasks"
-          class="text-left">
+        <card type="tasks" class="text-left">
           <template slot="header">
             <h6 class="title d-inline">Tasks (5)</h6>
             <p class="card-category d-inline">Today</p>
@@ -12,7 +10,8 @@
             <base-dropdown
               menu-on-right=""
               tag="div"
-              title-classes="btn btn-link btn-icon">
+              title-classes="btn btn-link btn-icon"
+            >
               <i slot="title" class="tim-icons icon-settings-gear-63"></i>
               <a class="dropdown-item" href="#pablo">Action</a>
               <a class="dropdown-item" href="#pablo">Another action</a>
@@ -232,5 +231,4 @@ export default {
   }
 };
 </script>
-<style>
-</style>
+<style></style>
