@@ -147,6 +147,10 @@
               path: '/courseGraduationType'
             }"
           ></sidebar-item>
+          <sidebar-item
+            v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
+            :link="{ name: $t('sidebar.freeCourse'), path: '/freeCourse' }"
+          ></sidebar-item>
         </sidebar-item>
         <sidebar-item
           v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"

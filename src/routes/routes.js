@@ -57,6 +57,9 @@ const OperationPartnerCustomers = () =>
 const CourseList = () => import('src/pages/Course/List.vue');
 const CourseEdit = () => import('src/pages/Course/Edit.vue');
 
+const FreeCourseList = () => import('src/pages/FreeCourse/List.vue');
+const FreeCourseEdit = () => import('src/pages/FreeCourse/Edit.vue');
+
 const CourseCollegeList = () => import('src/pages/CourseCollege/List.vue');
 const CourseCollegeEdit = () => import('src/pages/CourseCollege/Edit.vue');
 
@@ -1031,6 +1034,73 @@ let coursePeriodPages = {
   ]
 };
 
+let freeCoursePages = {
+  path: '/freeCourse',
+  component: DashboardLayout,
+  meta: {
+    requiresAuth: true,
+    roles: [
+      'master',
+      'publisher',
+      'administrator',
+      'publisherRebens',
+      'administratorRebens'
+    ],
+    title: 'Cursos Livres'
+  },
+  children: [
+    {
+      path: '',
+      name: 'freeCourse',
+      component: FreeCourseList,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'publisher',
+          'administrator',
+          'publisherRebens',
+          'administratorRebens'
+        ],
+        title: 'Curso Livre'
+      }
+    },
+    {
+      path: 'new',
+      name: `new_freeCourse`,
+      component: FreeCourseEdit,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'publisher',
+          'administrator',
+          'publisherRebens',
+          'administratorRebens'
+        ],
+        title: 'Curso'
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_freeCourse',
+      props: true,
+      component: FreeCourseEdit,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'publisher',
+          'administrator',
+          'publisherRebens',
+          'administratorRebens'
+        ],
+        title: 'Curso Livre'
+      }
+    }
+  ]
+};
+
 const routes = [
   {
     path: '/',
@@ -1140,7 +1210,8 @@ const routes = [
   courseGraduationTypePages,
   courseModalityPages,
   coursePeriodPages,
-  coursePages
+  coursePages,
+  freeCoursePages
 ];
 
 export default routes;
