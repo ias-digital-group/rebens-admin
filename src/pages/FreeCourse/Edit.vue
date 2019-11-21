@@ -128,12 +128,22 @@
             <label class="col-md-3 col-form-label">Descrição</label>
             <div class="col-md-9">
               <wysiwyg v-model="model.description" placeholder="Descrição" />
+              <label
+                v-show="customErros.includes('description')"
+                class="text-danger"
+                >O campo Descrição é obrigatório!</label
+              >
             </div>
           </div>
           <div class="row">
             <label class="col-md-3 col-form-label">Como Funciona</label>
             <div class="col-md-9">
               <wysiwyg v-model="model.howToUse" placeholder="Como Funciona" />
+              <label
+                v-show="customErros.includes('howToUse')"
+                class="text-danger"
+                >O campo Como Funciona é obrigatório!</label
+              >
             </div>
           </div>
           <template v-if="model.image">
@@ -335,6 +345,10 @@ export default {
       if (!self.model.listImage && !self.listImage)
         self.customErros.push('listImage');
       if (!self.model.image && !self.image) self.customErros.push('image');
+      if (!self.model.description && self.model.description === '')
+        self.customErros.push('description');
+      if (!self.model.howToUse && self.model.howToUse === '')
+        self.customErros.push('howToUse');
 
       if (self.customErros.length == 0) {
         self.submitLoading = true;
