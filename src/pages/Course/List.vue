@@ -167,6 +167,11 @@ export default {
           minWidth: 0
         },
         {
+          prop: 'name',
+          label: 'Nome',
+          minWidth: 400
+        },
+        {
           prop: 'title',
           label: 'Título',
           minWidth: 500

@@ -7,6 +7,23 @@
           <el-tab-pane label="Cadastro"> -->
         <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
           <div class="row">
+            <label class="col-md-3 col-form-label">Nome</label>
+            <div class="col-md-9">
+              <base-input
+                required
+                v-model="model.name"
+                type="text"
+                :error="getError('name')"
+                name="name"
+                placeholder="Nome"
+                maxlength="200"
+              ></base-input>
+              <label v-show="customErros.includes('name')" class="text-danger"
+                >O campo Nome é obrigatório</label
+              >
+            </div>
+          </div>
+          <div class="row">
             <label class="col-md-3 col-form-label">Título</label>
             <div class="col-md-9">
               <base-input
@@ -454,6 +471,7 @@ export default {
       model: {
         id: 0,
         title: '',
+        name: '',
         idOperation: null,
         idCollege: null,
         idGraduationType: null,
@@ -523,6 +541,7 @@ export default {
       self.customErros = [];
 
       if (!self.model.title) self.customErros.push('title');
+      if (!self.model.name) self.customErros.push('name');
       if (!self.model.idOperation) self.customErros.push('idOperation');
       if (!self.model.idCollege || self.model.idCollege == 0)
         self.customErros.push('idCollege');
