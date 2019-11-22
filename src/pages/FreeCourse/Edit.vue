@@ -72,22 +72,16 @@
             <label class="col-md-3 col-form-label">Parceiro</label>
             <div class="col-md-4">
               <div class="form-group">
-                <el-select
-                  class="select-info"
-                  placeholder="Parceiro"
-                  v-model="model.idPartner"
-                  v-loading.lock="partnerLoading"
-                  lock
+                <el-autocomplete
+                  :fetch-suggestions="querySearch"
+                  @select="handleSelect"
+                  placeholder=""
+                  style="width:100%"
+                  v-model="partnerName"
+                  :trigger-on-focus="false"
                 >
-                  <el-option
-                    class="select-primary"
-                    v-for="type in partners"
-                    :value="type.id"
-                    :label="type.title"
-                    :key="type.id"
-                  >
-                  </el-option>
-                </el-select>
+                </el-autocomplete>
+                <input type="hidden" v-model="model.idPartner" />
                 <label
                   v-show="customErros.includes('idPartner')"
                   class="text-danger"
@@ -284,6 +278,7 @@ export default {
   },
   data() {
     return {
+      partnerName:'',
       operationLoading: false,
       partnerLoading: false,
       formLoading: false,
@@ -330,6 +325,20 @@ export default {
     }
   },
   methods: {
+    querySearch(query, cb) {
+      var list = this.partners;
+      var results = query ? list.filter(this.createFilter(query)) : list;
+      var top3 = results.slice(0, 3);
+      cb(top3);
+    },
+    createFilter(query) {
+      return partner => {
+        return partner.value.toLowerCase().includes(query.toLowerCase());
+      };
+    },
+    handleSelect(item) {
+      this.model.idPartner = item.id;
+    },
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
@@ -491,7 +500,7 @@ export default {
       partnerService.findAllActive().then(
         response => {
           _.each(response.data, function(el) {
-            self.partners.push({ id: el.id, title: el.name });
+            self.partners.push({ id: el.id, value: el.name });
           });
           self.partnerLoading = false;
         },
