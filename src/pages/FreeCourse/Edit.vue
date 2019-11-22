@@ -278,7 +278,7 @@ export default {
   },
   data() {
     return {
-      partnerName:'',
+      partnerName: '',
       operationLoading: false,
       partnerLoading: false,
       formLoading: false,

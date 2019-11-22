@@ -153,7 +153,10 @@
           ></sidebar-item>
           <sidebar-item
             v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
-            :link="{ name: $t('sidebar.courseRegulation'), path: '/courseRegulation' }"
+            :link="{
+              name: $t('sidebar.courseRegulation'),
+              path: '/courseRegulation'
+            }"
           ></sidebar-item>
           <sidebar-item
             v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"

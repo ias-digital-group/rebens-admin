@@ -79,8 +79,10 @@ const ChangePassword = () => import('src/pages/Account/ChangePassword.vue');
 const CourseFaqList = () => import('src/pages/CourseFaq/List.vue');
 const CourseFaqEdit = () => import('src/pages/CourseFaq/Edit.vue');
 
-const CourseRegulationList = () => import('src/pages/CourseRegulation/List.vue');
-const CourseRegulationEdit = () => import('src/pages/CourseRegulation/Edit.vue');
+const CourseRegulationList = () =>
+  import('src/pages/CourseRegulation/List.vue');
+const CourseRegulationEdit = () =>
+  import('src/pages/CourseRegulation/Edit.vue');
 
 let categoriesPages = {
   path: '/categories',

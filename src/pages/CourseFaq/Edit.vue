@@ -2,7 +2,9 @@
   <div class="row">
     <div class="col-md-12">
       <card :title="$t('pages.courseFaq.title')">
-        <h4 slot="header" class="card-title">{{ $t('pages.courseFaq.title') }}</h4>
+        <h4 slot="header" class="card-title">
+          {{ $t('pages.courseFaq.title') }}
+        </h4>
         <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
           <div class="row">
             <label class="col-md-3 col-form-label">Nome</label>
@@ -16,33 +18,51 @@
                 placeholder="Nome"
                 maxlength="200"
               ></base-input>
-             
             </div>
           </div>
-          <h4>Perguntas <a href="javascript:void(0)" @click="addItem" class="btn btn-icon btn-simple btn-sm btn-twitter"><i class="tim-icons icon-simple-add"></i></a></h4>
-          <div class="faq-item" v-for="(item, index) in model.data.items" :key="index">
+          <h4>
+            Perguntas
+            <a
+              href="javascript:void(0)"
+              @click="addItem"
+              class="btn btn-icon btn-simple btn-sm btn-twitter"
+              ><i class="tim-icons icon-simple-add"></i
+            ></a>
+          </h4>
+          <div
+            class="faq-item"
+            v-for="(item, index) in model.data.items"
+            :key="index"
+          >
             <div class="row">
-            <label class="col-md-3 col-form-label">Pergunta</label>
-            <div class="col-md-8">
-              <base-input
-                required
-                v-model="item.question"
-                type="text"
-                name="question"
-                placeholder="Pergunta"
-                maxlength="500"
-              ></base-input>
+              <label class="col-md-3 col-form-label">Pergunta</label>
+              <div class="col-md-8">
+                <base-input
+                  required
+                  v-model="item.question"
+                  type="text"
+                  name="question"
+                  placeholder="Pergunta"
+                  maxlength="500"
+                ></base-input>
+              </div>
+              <div class="col-md-1">
+                <a
+                  href="javascript:void(0)"
+                  @click="removeItem(index)"
+                  class="btn btn-icon btn-simple btn-sm btn-youtube"
+                  ><i class="tim-icons icon-simple-add"></i
+                ></a>
+              </div>
             </div>
-            <div class="col-md-1"><a href="javascript:void(0)" @click="removeItem(index)" class="btn btn-icon btn-simple btn-sm btn-youtube"><i class="tim-icons icon-simple-add"></i></a></div>
-          </div>
-          <div class="row">
-            <label class="col-md-3 col-form-label">Resposta</label>
-            <div class="col-md-8">
-              <wysiwyg placeholder="Resposta" v-model="item.answer" />
+            <div class="row">
+              <label class="col-md-3 col-form-label">Resposta</label>
+              <div class="col-md-8">
+                <wysiwyg placeholder="Resposta" v-model="item.answer" />
+              </div>
             </div>
           </div>
-          </div>
-          
+
           <div class="row">
             <div class="col-md-12">
               <base-link class="btn mt-3 btn-simple btn-primary" to="/courseFaq"
@@ -66,7 +86,6 @@
 </template>
 <script>
 import staticTextService from '../../services/StaticText/staticTextService';
-import helperService from '../../services/Helper/helperService';
 
 export default {
   props: {
@@ -86,8 +105,8 @@ export default {
         page: 'course-faq',
         name: '',
         data: {
-          default:false, 
-          items:[]
+          default: false,
+          items: []
         },
         idOperation: 0,
         active: true,
@@ -108,7 +127,7 @@ export default {
     },
     saveStaticText(self) {
       self.formLoading = true;
-      if(self.model.id === 0) {
+      if (self.model.id === 0) {
         staticTextService.create(self.model).then(
           response => {
             self.$notify({
@@ -165,7 +184,7 @@ export default {
       );
     },
     addItem() {
-      this.model.data.items.push({question:'', answer:''});
+      this.model.data.items.push({ question: '', answer: '' });
     },
     removeItem(index) {
       this.model.data.items.splice(index, 1);
@@ -177,7 +196,7 @@ export default {
 };
 </script>
 <style scoped>
-.faq-item{
+.faq-item {
   padding-bottom: 10px;
   border-bottom: 1px solid #eee;
   margin-bottom: 15px;

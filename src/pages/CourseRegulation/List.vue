@@ -3,12 +3,14 @@
     <div class="col-12">
       <card card-body-classes="table-full-width">
         <template slot="header">
-          <h4 class="card-title">{{ $t('pages.pages.title') }}
-          <base-link
+          <h4 class="card-title">
+            {{ $t('pages.pages.title') }}
+            <base-link
               to="/courseRegulation/new"
               class="btn btn-icon btn-simple btn-twitter btn-sm"
               ><i class="tim-icons icon-simple-add"></i
-            ></base-link></h4>
+            ></base-link>
+          </h4>
         </template>
         <div>
           <div

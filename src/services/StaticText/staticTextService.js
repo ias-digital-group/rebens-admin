@@ -6,7 +6,13 @@ export default {
     return new Promise((resolve, reject) => {
       request = request
         ? request
-        : { page: 0, pageItems: 30, searchWord: '', sort: 'name ASC', idStaticTextType: 4 };
+        : {
+            page: 0,
+            pageItems: 30,
+            searchWord: '',
+            sort: 'name ASC',
+            idStaticTextType: 4
+          };
       HTTP.get(
         config.apiEndpoints.staticTextUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
