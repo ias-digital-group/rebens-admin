@@ -149,6 +149,14 @@
           ></sidebar-item>
           <sidebar-item
             v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
+            :link="{ name: $t('sidebar.courseFaq'), path: '/courseFaq' }"
+          ></sidebar-item>
+          <sidebar-item
+            v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
+            :link="{ name: $t('sidebar.courseRegulation'), path: '/courseRegulation' }"
+          ></sidebar-item>
+          <sidebar-item
+            v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
             :link="{ name: $t('sidebar.freeCourse'), path: '/freeCourse' }"
           ></sidebar-item>
         </sidebar-item>

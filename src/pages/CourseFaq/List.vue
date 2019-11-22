@@ -3,7 +3,12 @@
     <div class="col-12">
       <card card-body-classes="table-full-width">
         <template slot="header">
-          <h4 class="card-title">{{ $t('pages.pages.title') }}</h4>
+          <h4 class="card-title">{{ $t('pages.courseFaq.title') }}
+          <base-link
+              to="/courseFaq/new"
+              class="btn btn-icon btn-simple btn-twitter btn-sm"
+              ><i class="tim-icons icon-simple-add"></i
+            ></base-link></h4>
         </template>
         <div>
           <div
@@ -31,7 +36,7 @@
                 style="width:300px"
                 clearable
                 prefix-icon="el-icon-search"
-                placeholder="Procurar Página"
+                placeholder="Procurar"
                 aria-controls="datatables"
                 v-model="searchQuery"
               >
@@ -111,7 +116,7 @@ export default {
   },
   data() {
     return {
-      internalName: 'pages.pages.list',
+      internalName: 'pages.courseFaq.title',
       sortField: 'name',
       tableColumns: [
         {
@@ -124,7 +129,7 @@ export default {
   },
   methods: {
     handleEdit(index, row) {
-      this.$router.push(`/pages/${row.id}/edit/`);
+      this.$router.push(`/courseFaq/${row.id}/edit/`);
     },
     fetchData() {
       const self = this;
@@ -133,7 +138,7 @@ export default {
         pageItems: this.$data.pagination.perPage,
         searchWord: this.searchQuery,
         sort: this.formatSortFieldParam,
-        idStaticTextType: 4
+        idStaticTextType: 17
       };
       this.$data.loading = true;
       staticTextService.findAll(request).then(

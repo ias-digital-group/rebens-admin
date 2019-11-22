@@ -76,6 +76,12 @@ const CoursePeriodEdit = () => import('src/pages/CoursePeriod/Edit.vue');
 
 const ChangePassword = () => import('src/pages/Account/ChangePassword.vue');
 
+const CourseFaqList = () => import('src/pages/CourseFaq/List.vue');
+const CourseFaqEdit = () => import('src/pages/CourseFaq/Edit.vue');
+
+const CourseRegulationList = () => import('src/pages/CourseRegulation/List.vue');
+const CourseRegulationEdit = () => import('src/pages/CourseRegulation/Edit.vue');
+
 let categoriesPages = {
   path: '/categories',
   component: DashboardLayout,
@@ -1101,6 +1107,140 @@ let freeCoursePages = {
   ]
 };
 
+let courseFaqPages = {
+  path: '/CourseFaq',
+  component: DashboardLayout,
+  meta: {
+    requiresAuth: true,
+    roles: [
+      'master',
+      'publisher',
+      'administrator',
+      'publisherRebens',
+      'administratorRebens'
+    ],
+    title: 'Perguntas Frequentes'
+  },
+  children: [
+    {
+      path: '',
+      name: 'courseFaq',
+      component: CourseFaqList,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'publisher',
+          'administrator',
+          'publisherRebens',
+          'administratorRebens'
+        ],
+        title: 'Perguntas Frequentes'
+      }
+    },
+    {
+      path: 'new',
+      name: `new_courseFaq`,
+      component: CourseFaqEdit,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'publisher',
+          'administrator',
+          'publisherRebens',
+          'administratorRebens'
+        ],
+        title: 'Perguntas Frequentes'
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_courseFaq',
+      props: true,
+      component: CourseFaqEdit,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'publisher',
+          'administrator',
+          'publisherRebens',
+          'administratorRebens'
+        ],
+        title: 'Perguntas Frequentes'
+      }
+    }
+  ]
+};
+
+let courseRegulationPages = {
+  path: '/courseRegulation',
+  component: DashboardLayout,
+  meta: {
+    requiresAuth: true,
+    roles: [
+      'master',
+      'publisher',
+      'administrator',
+      'publisherRebens',
+      'administratorRebens'
+    ],
+    title: 'Regulamentos'
+  },
+  children: [
+    {
+      path: '',
+      name: 'courseRegulation',
+      component: CourseRegulationList,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'publisher',
+          'administrator',
+          'publisherRebens',
+          'administratorRebens'
+        ],
+        title: 'Regulamentos'
+      }
+    },
+    {
+      path: 'new',
+      name: `new_courseRegulation`,
+      component: CourseRegulationEdit,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'publisher',
+          'administrator',
+          'publisherRebens',
+          'administratorRebens'
+        ],
+        title: 'Regulamento'
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_courseRegulation',
+      props: true,
+      component: CourseRegulationEdit,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'publisher',
+          'administrator',
+          'publisherRebens',
+          'administratorRebens'
+        ],
+        title: 'Regulamento'
+      }
+    }
+  ]
+};
+
 const routes = [
   {
     path: '/',
@@ -1211,6 +1351,8 @@ const routes = [
   courseModalityPages,
   coursePeriodPages,
   coursePages,
+  courseFaqPages,
+  courseRegulationPages,
   freeCoursePages
 ];
 
