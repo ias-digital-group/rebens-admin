@@ -642,7 +642,7 @@
           >
             <categories
               v-loading="formLoading"
-              parent="benefits"
+              parentName="benefits"
               :parentId="id"
               :key="operationKey"
             ></categories>

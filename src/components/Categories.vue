@@ -32,9 +32,10 @@
 import { Tree } from 'element-ui';
 import categoryService from '../services/Category/categoryService';
 import benefitService from '../services/Benefit/benefitService';
+import freeCourseService from '../services/FreeCourse/freeCourseService';
 export default {
   props: {
-    parent: String,
+    parentName: String,
     parentId: [String, Number]
   },
   components: {
@@ -74,10 +75,19 @@ export default {
       categoryService.getListTree().then(response => {
         self.categoryList = response.data;
       });
-      benefitService.getCategories(this.parentId).then(response => {
-        if (response && response.data) self.selectedCategories = response.data;
-        this.loading = false;
-      });
+      if (this.parentName === 'benefits') {
+        benefitService.getCategories(this.parentId).then(response => {
+          if (response && response.data)
+            self.selectedCategories = response.data;
+          this.loading = false;
+        });
+      } else if (this.parentName === 'freeCourse') {
+        freeCourseService.getCategories(this.parentId).then(response => {
+          if (response && response.data)
+            self.selectedCategories = response.data;
+          this.loading = false;
+        });
+      }
     },
     saveCategories() {
       var ids = '';
@@ -85,17 +95,31 @@ export default {
         ids += this.selectedCategories[i] + ',';
       }
       ids = ids.substring(0, ids.length - 1);
-      benefitService.saveCategories(this.parentId, ids).then(response => {
-        this.$notify({
-          type: 'primary',
-          message: response
-            ? response.message
-            : 'Categorias atualizadas com sucesso.',
-          icon: 'tim-icons icon-bell-55'
+      if (this.parentName === 'benefits') {
+        benefitService.saveCategories(this.parentId, ids).then(response => {
+          this.$notify({
+            type: 'primary',
+            message: response
+              ? response.message
+              : 'Categorias atualizadas com sucesso.',
+            icon: 'tim-icons icon-bell-55'
+          });
+          this.fetchData();
+          this.loading = false;
         });
-        this.fetchData();
-        this.loading = false;
-      });
+      } else if (this.parentName === 'freeCourse') {
+        freeCourseService.saveCategories(this.parentId, ids).then(response => {
+          this.$notify({
+            type: 'primary',
+            message: response
+              ? response.message
+              : 'Categorias atualizadas com sucesso.',
+            icon: 'tim-icons icon-bell-55'
+          });
+          this.fetchData();
+          this.loading = false;
+        });
+      }
     }
   }
 };

@@ -72,5 +72,61 @@ export default {
         }
       );
     });
+  },
+  getCategories: id => {
+    return new Promise((resolve, reject) => {
+      HTTP.get(config.apiEndpoints.freeCourseUri.concat(`${id}/category`)).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  saveCategories: function(id, categoryIds) {
+    return new Promise((resolve, reject) => {
+      HTTP.post(config.apiEndpoints.freeCourseUri.concat('SaveCategories'), {
+        CategoryIds: categoryIds,
+        idFreeCourse: id
+      }).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  addcategory: function(id, categoryId) {
+    return new Promise((resolve, reject) => {
+      HTTP.post(config.apiEndpoints.freeCourseUri.concat('addcategory'), {
+        idCategory: categoryId,
+        idFreeCourse: id
+      }).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  deleteCategory: function(id, categoryId) {
+    return new Promise((resolve, reject) => {
+      HTTP.delete(
+        config.apiEndpoints.freeCourseUri.concat(`${id}/category/${categoryId}`)
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
   }
 };
