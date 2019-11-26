@@ -1,16 +1,32 @@
 <template>
   <div class="row">
     <div class="col-md-12">
-      <card :title="$t('pages.pages.title')">
-        <h4 slot="header" class="card-title">{{ $t('pages.pages.title') }}</h4>
+      <card :title="$t('pages.courseRegulation.title')">
+        <h4 slot="header" class="card-title">{{ $t('pages.courseRegulation.title') }}</h4>
         <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
-          <static-text-form
-            ref="staticTextForm"
-            :staticText.sync="model"
-          ></static-text-form>
+          <div class="row">
+            <label class="col-md-3 col-form-label">Nome</label>
+            <div class="col-md-6">
+              <base-input
+                required
+                v-model="model.name"
+                type="text"
+                :error="getError('name')"
+                name="name"
+                placeholder="Nome"
+                maxlength="200"
+              ></base-input>
+            </div>
+          </div>
+           <div class="row">
+              <label class="col-md-3 col-form-label">Regulamento</label>
+              <div class="col-md-8">
+                <wysiwyg placeholder="Regulamento" v-model="model.data.regulation" />
+              </div>
+            </div>
           <div class="row">
             <div class="col-md-12">
-              <base-link class="btn mt-3 btn-simple btn-primary" to="/pages"
+              <base-link class="btn mt-3 btn-simple btn-primary" to="/courseRegulation"
                 >Voltar</base-link
               >
               <base-button
@@ -33,7 +49,6 @@
 import { Select, Option, DatePicker } from 'element-ui';
 import StaticTextForm from '../../components/StaticTextForm.vue';
 import staticTextService from '../../services/StaticText/staticTextService';
-import helperService from '../../services/Helper/helperService';
 
 export default {
   components: {
@@ -56,77 +71,68 @@ export default {
       submitLoading: false,
       model: {
         id: 0,
-        page: '',
+        page: 'course-regulation',
         name: '',
-        data: {},
-        idOperation: 0,
+        data: {
+          regulation: ''
+        },
+        idOperation: 1,
         active: true,
-        images: []
+        idStaticTextType: 18
       }
     };
   },
   computed: {
     viewAction() {
-      return this.$route.name == 'edit_banner' ? 'edit' : 'new';
-    },
-    activeName: {
-      get: function() {
-        if (this.$route.query && this.$route.query.tab)
-          return this.$route.query.tab == 'op' ? 'operations' : 'banner';
-        return 'banner';
-      },
-      set: function() {}
+      return this.$route.name == 'edit_courseRegulation' ? 'edit' : 'new';
     }
   },
   methods: {
     validateForm() {
       const self = this;
       self.submitLoading = true;
-      if (self.model.images && self.model.images.length > 0) {
-        let promises = new Array(self.model.images.length);
-        for (var i = 0; i <= self.model.images.length - 1; i++) {
-          promises[i] = helperService.uploadFile(self.model.images[i].img);
-        }
-        Promise.all(promises)
-          .then(values => {
-            for (var j = 0; j <= values.length - 1; j++) {
-              const fieldIndex = self.model.images[j].index;
-              self.model.data.fields[fieldIndex].data = values[j].data.url;
-            }
-            self.saveStaticText(self);
-          })
-          .catch(reason => {
-            self.$notify({
-              type: 'primary',
-              message: reason.message,
-              icon: 'tim-icons icon-bell-55'
-            });
-            self.submitLoading = false;
-          });
-      } else {
-        self.saveStaticText(self);
-      }
+      self.saveStaticText(self);
     },
     saveStaticText(self) {
       self.formLoading = true;
-      staticTextService.update(self.model).then(
-        response => {
-          self.$notify({
-            type: 'primary',
-            message: response
-              ? response.message
-              : 'Página atualizada com sucesso.',
-            icon: 'tim-icons icon-bell-55'
-          });
-          self.formLoading = false;
-          self.$router.push('/pages');
-        },
-        () => {
-          console.log('erro');
-          self.formLoading = false;
-        }
-      );
-      self.formLoading = false;
+      if (self.model.id === 0) {
+        staticTextService.create(self.model).then(
+          response => {
+            self.$notify({
+              type: 'primary',
+              message: response
+                ? response.message
+                : 'Regulamento criado com sucesso.',
+              icon: 'tim-icons icon-bell-55'
+            });
+            self.submitLoading = false;
+            self.formLoading = false;
+            self.$router.push('/courseRegulation');
+          },
+          () => {
+            self.submitLoading = false;
+            self.formLoading = false;
+          }
+        );
+      } else {
+        staticTextService.update(self.model).then(
+          response => {
+            self.$notify({
+              type: 'primary',
+              message: response
+                ? response.message
+                : 'Regulamento atualizado com sucesso.',
+              icon: 'tim-icons icon-bell-55'
+            });
+            self.formLoading = false;
+            self.$router.push('/courseRegulation');
+          },
+          () => {
+            console.log('erro');
+            self.formLoading = false;
+          }
+        );
+      }
     },
     getError(fieldName) {
       return this.errors.first(fieldName);
@@ -137,7 +143,6 @@ export default {
       staticTextService.get(self.id).then(
         response => {
           self.model = response.data;
-          self.model.images = [];
           self.formLoading = false;
         },
         () => {

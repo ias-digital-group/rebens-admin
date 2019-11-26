@@ -108,7 +108,7 @@ export default {
           default: false,
           items: []
         },
-        idOperation: 0,
+        idOperation: 1,
         active: true,
         idStaticTextType: 17
       }
@@ -134,7 +134,7 @@ export default {
               type: 'primary',
               message: response
                 ? response.message
-                : 'Perguntas criada com sucesso.',
+                : 'Perguntas salvas com sucesso.',
               icon: 'tim-icons icon-bell-55'
             });
             self.submitLoading = false;

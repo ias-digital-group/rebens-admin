@@ -4,7 +4,7 @@
       <card card-body-classes="table-full-width">
         <template slot="header">
           <h4 class="card-title">
-            {{ $t('pages.pages.title') }}
+            {{ $t('pages.courseRegulation.title') }}
             <base-link
               to="/courseRegulation/new"
               class="btn btn-icon btn-simple btn-twitter btn-sm"
