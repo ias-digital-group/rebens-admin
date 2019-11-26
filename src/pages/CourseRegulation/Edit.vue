@@ -2,7 +2,9 @@
   <div class="row">
     <div class="col-md-12">
       <card :title="$t('pages.courseRegulation.title')">
-        <h4 slot="header" class="card-title">{{ $t('pages.courseRegulation.title') }}</h4>
+        <h4 slot="header" class="card-title">
+          {{ $t('pages.courseRegulation.title') }}
+        </h4>
         <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
           <div class="row">
             <label class="col-md-3 col-form-label">Nome</label>
@@ -18,15 +20,20 @@
               ></base-input>
             </div>
           </div>
-           <div class="row">
-              <label class="col-md-3 col-form-label">Regulamento</label>
-              <div class="col-md-8">
-                <wysiwyg placeholder="Regulamento" v-model="model.data.regulation" />
-              </div>
+          <div class="row">
+            <label class="col-md-3 col-form-label">Regulamento</label>
+            <div class="col-md-8">
+              <wysiwyg
+                placeholder="Regulamento"
+                v-model="model.data.regulation"
+              />
             </div>
+          </div>
           <div class="row">
             <div class="col-md-12">
-              <base-link class="btn mt-3 btn-simple btn-primary" to="/courseRegulation"
+              <base-link
+                class="btn mt-3 btn-simple btn-primary"
+                to="/courseRegulation"
                 >Voltar</base-link
               >
               <base-button
