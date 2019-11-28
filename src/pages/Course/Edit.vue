@@ -185,6 +185,56 @@
             </div>
           </div>
           <div class="row">
+            <label class="col-md-3 col-form-label">Perguntas Frequentes</label>
+            <div class="col-md-4">
+              <div class="form-group">
+                <el-select
+                  class="select-info"
+                  placeholder="Perguntas Frequentes"
+                  v-loading.lock="selectLoading"
+                  value-key="value"
+                  v-model="model.idFaq"
+                  ref="value"
+                  lock
+                >
+                  <el-option
+                    class="select-primary"
+                    v-for="faq in faqs"
+                    :value="faq.value"
+                    :label="faq.display"
+                    :key="faq.value"
+                  >
+                  </el-option>
+                </el-select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <label class="col-md-3 col-form-label">Regulamento</label>
+            <div class="col-md-4">
+              <div class="form-group">
+                <el-select
+                  class="select-info"
+                  placeholder="Regulamento"
+                  v-loading.lock="selectLoading"
+                  value-key="value"
+                  v-model="model.idRegulation"
+                  ref="value"
+                  lock
+                >
+                  <el-option
+                    class="select-primary"
+                    v-for="reg in regulations"
+                    :value="reg.value"
+                    :label="reg.display"
+                    :key="reg.value"
+                  >
+                  </el-option>
+                </el-select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
             <label class="col-md-3 col-form-label">Preço</label>
             <div class="col-md-9 offset-md-3 offset-lg-0 col-lg-3">
               <base-input label="Preço Original">
@@ -488,7 +538,9 @@ export default {
         image: '',
         listImage: '',
         active: true,
-        periodIds: []
+        periodIds: [],
+        idFaq: 0,
+        idRegulation: 0
       },
       money: {
         decimal: ',',
@@ -509,6 +561,8 @@ export default {
       operations: [],
       colleges: [],
       periods: [],
+      faqs: [],
+      regulations: [],
       graduationTypes: [],
       modalities: [],
       customErros: [],
@@ -696,6 +750,36 @@ export default {
           self.selectLoading = false;
         }
       );
+
+      courseService.listFaqs().then(
+        response => {
+          _.each(response.data, function(el){
+            self.faqs.push(el);
+            if (self.model.idFaq === 0 && el.display === 'Perguntas Frequentes - Padrão') {
+              self.model.idFaq = el.value;
+            }
+          });
+          self.selectLoading = false;
+        },
+        () => {
+          self.selectLoading = false;
+        }
+      );
+
+      courseService.listRegulations().then(
+        response => {
+          _.each(response.data, function(el){
+            self.regulations.push(el);
+            if (self.model.idRegulation === 0 && el.display === 'Regulamento - Padrão') {
+              self.model.idRegulation = el.value;
+            }
+          });
+          self.selectLoading = false;
+        },
+        () => {
+          self.selectLoading = false;
+        }
+      )
     },
     onImageChange(file) {
       this.image = file;

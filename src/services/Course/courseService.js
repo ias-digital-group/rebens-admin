@@ -72,5 +72,29 @@ export default {
         }
       );
     });
+  },
+  listFaqs: function() {
+    return new Promise((resolve, reject) => {
+      HTTP.get(config.apiEndpoints.courseUri.concat('items/17')).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  listRegulations: function() {
+    return new Promise((resolve, reject) => {
+      HTTP.get(config.apiEndpoints.courseUri.concat('items/18')).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
   }
 };
