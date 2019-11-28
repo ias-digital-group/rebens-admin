@@ -753,9 +753,12 @@ export default {
 
       courseService.listFaqs().then(
         response => {
-          _.each(response.data, function(el){
+          _.each(response.data, function(el) {
             self.faqs.push(el);
-            if (self.model.idFaq === 0 && el.display === 'Perguntas Frequentes - Padrão') {
+            if (
+              self.model.idFaq === 0 &&
+              el.display === 'Perguntas Frequentes - Padrão'
+            ) {
               self.model.idFaq = el.value;
             }
           });
@@ -768,9 +771,12 @@ export default {
 
       courseService.listRegulations().then(
         response => {
-          _.each(response.data, function(el){
+          _.each(response.data, function(el) {
             self.regulations.push(el);
-            if (self.model.idRegulation === 0 && el.display === 'Regulamento - Padrão') {
+            if (
+              self.model.idRegulation === 0 &&
+              el.display === 'Regulamento - Padrão'
+            ) {
               self.model.idRegulation = el.value;
             }
           });
@@ -779,7 +785,7 @@ export default {
         () => {
           self.selectLoading = false;
         }
-      )
+      );
     },
     onImageChange(file) {
       this.image = file;
