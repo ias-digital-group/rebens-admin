@@ -342,7 +342,7 @@
               >
             </div>
           </div>
-          <div class="row">
+          <div class="row" style="padding-bottom:10px;">
             <label class="col-md-3 col-form-label">Texto do voucher</label>
             <div class="col-md-9">
               <wysiwyg
@@ -357,7 +357,7 @@
             </div>
           </div>
           <template v-if="model.image">
-            <div class="row">
+            <div class="row" style="padding-bottom:10px;">
               <label class="col-md-3 col-form-label">Imagem (1200x500)</label>
               <div class="col-md-9">
                 <div>
@@ -379,7 +379,7 @@
             </div>
           </template>
           <template v-else>
-            <div class="row">
+            <div class="row" style="padding-bottom:10px;">
               <label class="col-md-3 col-form-label">Imagem (1200x500)</label>
               <div class="col-md-9">
                 <image-upload
@@ -397,7 +397,7 @@
             </div>
           </template>
           <template v-if="model.listImage">
-            <div class="row">
+            <div class="row" style="padding-bottom:10px;">
               <label class="col-md-3 col-form-label"
                 >Imagem da Listagem (216x174)</label
               >
@@ -421,7 +421,7 @@
             </div>
           </template>
           <template v-else>
-            <div class="row">
+            <div class="row" style="padding-bottom:10px;">
               <label class="col-md-3 col-form-label"
                 >Imagem da Listagem (216x174)</label
               >
@@ -440,6 +440,117 @@
               </div>
             </div>
           </template>
+          <div class="row">
+            <label class="col-md-3 col-form-label">Aviso</label>
+            <div class="col-md-9">
+              <base-input
+                required
+                v-model="model.disclaimer"
+                type="text"
+                :error="getError('disclaimer')"
+                name="disclaimer"
+                placeholder="Aviso"
+                maxlength="300"
+              ></base-input>
+              <label
+                v-show="customErros.includes('disclaimer')"
+                class="text-danger"
+                >O campo Aviso é obrigatório!</label
+              >
+            </div>
+          </div>
+          <div class="row" style="padding-bottom:10px;">
+            <label class="col-md-3 col-form-label"
+              >Descrição dos tipos de curso</label
+            >
+            <div class="col-md-9">
+              <wysiwyg
+                v-model="model.courseTypeDescription"
+                placeholder="Descrição dos tipos de curso"
+              />
+              <label
+                v-show="customErros.includes('courseTypeDescription')"
+                class="text-danger"
+                >O campo Descrição dos tipos de curso é obrigatório!</label
+              >
+            </div>
+          </div>
+          <div class="row">
+            <label class="col-md-3 col-form-label">Título box Benefícios</label>
+            <div class="col-md-9">
+              <base-input
+                required
+                v-model="model.benefitBoxTitle"
+                type="text"
+                :error="getError('benefitBoxTitle')"
+                name="benefitBoxTitle"
+                placeholder="Título box Benefícios"
+                maxlength="200"
+              ></base-input>
+              <label
+                v-show="customErros.includes('benefitBoxTitle')"
+                class="text-danger"
+                >O campo Título box Benefícios é obrigatório!</label
+              >
+            </div>
+          </div>
+          <div class="row">
+            <label class="col-md-3 col-form-label">Texto box Benefícios</label>
+            <div class="col-md-9">
+              <base-input
+                required
+                v-model="model.benefitBoxDescription"
+                type="text"
+                :error="getError('benefitBoxDescription')"
+                name="benefitBoxDescription"
+                placeholder="Texto box Benefícios"
+                maxlength="1000"
+              ></base-input>
+              <label
+                v-show="customErros.includes('benefitBoxDescription')"
+                class="text-danger"
+                >O campo Texto box Benefícios é obrigatório!</label
+              >
+            </div>
+          </div>
+          <div class="row">
+            <label class="col-md-3 col-form-label">Título Ajude um aluno</label>
+            <div class="col-md-9">
+              <base-input
+                required
+                v-model="model.helpStudentTitle"
+                type="text"
+                :error="getError('helpStudentTitle')"
+                name="helpStudentTitle"
+                placeholder="Título Ajude um aluno"
+                maxlength="200"
+              ></base-input>
+              <label
+                v-show="customErros.includes('helpStudentTitle')"
+                class="text-danger"
+                >O campo Título Ajude um aluno é obrigatório!</label
+              >
+            </div>
+          </div>
+          <div class="row">
+            <label class="col-md-3 col-form-label">Texto ajude um aluno</label>
+            <div class="col-md-9">
+              <base-input
+                required
+                v-model="model.helpStudentDescription"
+                type="text"
+                :error="getError('helpStudentDescription')"
+                name="helpStudentDescription"
+                placeholder="Texto ajude um aluno"
+                maxlength="1000"
+              ></base-input>
+              <label
+                v-show="customErros.includes('helpStudentDescription')"
+                class="text-danger"
+                >O campo Texto ajude um aluno é obrigatório!</label
+              >
+            </div>
+          </div>
           <div class="row">
             <label class="col-md-3 col-form-label">Ativo</label>
             <div class="col-md-9">
@@ -540,7 +651,17 @@ export default {
         active: true,
         periodIds: [],
         idFaq: 0,
-        idRegulation: 0
+        idRegulation: 0,
+        disclaimer:
+          'Consulte este curso no portal do MEC. Todos os cursos ofertados pelo UNICAMPI EDUCAÇÃO são autorizados pelo MEC',
+        benefitBoxTitle: 'Beneficios',
+        benefitBoxDescription:
+          'Isenção da Taxa de vestibular<br />Primeira mensalidade isenta',
+        courseTypeDescription:
+          '<b>PRESENCIAL</b><p>O curso presencial é ideal para os que preferem ter mais contato com outros alunos de forma mais tradicional e também para quem aprecia estar com uma rotina mais fixa durante a semana.</p><b>EAD</b><p>As pessoas têm cada vez mais atividades, e neste sentido, um formato flexível é ideal, em que a pessoa estuda no horário e onde quiser! No parque, no café, na praia, no conforto de casa, não há distância entre você e o conhecimento! Econômico e prático e barato! Você pode estudar de onde e quando quiser, no seu tempo, com a mesma qualidade e profundidade de um curso presencial.</p><b>SEMIPRESENCIAL</b><p>A Graduação EAD é flexível. Você pode optar por Ensino a Distância totalmente on-line, ou uma imersão mais profunda, na modalidade semipresencial, na qual você comparece ao campus duas vezes por semana para interagir mais com os professores, os colegas e as matérias. Seja qual for a escolha, você tem a certeza de fazer o melhor para unir você ao sucesso.</p>',
+        helpStudentTitle: 'AJUDE UM ALUNO',
+        helpStudentDescription:
+          'Torne o seu sonho realidade com a revenda de produtos UNICAMPI e conquiste sua independência financeira.'
       },
       money: {
         decimal: ',',
