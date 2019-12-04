@@ -733,7 +733,10 @@ export default {
       return this.$route.name == 'edit_course' ? 'edit' : 'new';
     },
     priceFinal() {
-      return (this.model.originalPrice * this.model.discount) / 100;
+      return (
+        this.model.originalPrice -
+        (this.model.originalPrice * this.model.discount) / 100
+      );
     }
   },
   methods: {
