@@ -268,15 +268,11 @@
               <base-input label="Preço Final">
                 <money
                   class="form-control"
-                  v-model="model.finalPrice"
+                  :value="priceFinal"
                   v-bind="money"
+                  readonly
                 ></money>
               </base-input>
-              <label
-                v-show="customErros.includes('finalPrice')"
-                class="text-danger"
-                >O campo Preço Final é obrigatório!</label
-              >
             </div>
           </div>
           <div class="row">
@@ -299,6 +295,20 @@
             </div>
           </div>
           <div class="row">
+            <label class="col-md-3 col-form-label">Início das aulas</label>
+            <div class="col-md-9">
+              <base-input
+                required
+                v-model="model.courseBegin"
+                type="text"
+                :error="getError('courseBegin')"
+                name="courseBegin"
+                placeholder="Início das aulas"
+                maxlength="100"
+              ></base-input>
+            </div>
+          </div>
+          <!-- <div class="row">
             <label class="col-md-3 col-form-label">Data</label>
             <div class="col-md-9 col-lg-3">
               <base-input label="Validade">
@@ -330,7 +340,7 @@
                 </el-date-picker>
               </base-input>
             </div>
-          </div>
+          </div> -->
           <div class="row" style="padding-bottom:10px;">
             <label class="col-md-3 col-form-label">Descrição</label>
             <div class="col-md-9">
@@ -342,7 +352,7 @@
               >
             </div>
           </div>
-          <div class="row" style="padding-bottom:10px;">
+          <!-- <div class="row" style="padding-bottom:10px;">
             <label class="col-md-3 col-form-label">Texto do voucher</label>
             <div class="col-md-9">
               <wysiwyg
@@ -355,7 +365,7 @@
                 >O campo Texto do voucher é obrigatório!</label
               >
             </div>
-          </div>
+          </div> -->
           <template v-if="model.image">
             <div class="row" style="padding-bottom:10px;">
               <label class="col-md-3 col-form-label">Imagem (1200x500)</label>
@@ -552,6 +562,20 @@
             </div>
           </div>
           <div class="row">
+            <label class="col-md-3 col-form-label">Link ajude um aluno</label>
+            <div class="col-md-9">
+              <base-input
+                required
+                v-model="model.helpStudentLink"
+                type="text"
+                :error="getError('helpStudentLink')"
+                name="helpStudentLink"
+                placeholder="Link ajude um aluno"
+                maxlength="500"
+              ></base-input>
+            </div>
+          </div>
+          <div class="row">
             <label class="col-md-3 col-form-label">Ativo</label>
             <div class="col-md-9">
               <div class="form-group">
@@ -661,7 +685,9 @@ export default {
           '<b>PRESENCIAL</b><p>O curso presencial é ideal para os que preferem ter mais contato com outros alunos de forma mais tradicional e também para quem aprecia estar com uma rotina mais fixa durante a semana.</p><b>EAD</b><p>As pessoas têm cada vez mais atividades, e neste sentido, um formato flexível é ideal, em que a pessoa estuda no horário e onde quiser! No parque, no café, na praia, no conforto de casa, não há distância entre você e o conhecimento! Econômico e prático e barato! Você pode estudar de onde e quando quiser, no seu tempo, com a mesma qualidade e profundidade de um curso presencial.</p><b>SEMIPRESENCIAL</b><p>A Graduação EAD é flexível. Você pode optar por Ensino a Distância totalmente on-line, ou uma imersão mais profunda, na modalidade semipresencial, na qual você comparece ao campus duas vezes por semana para interagir mais com os professores, os colegas e as matérias. Seja qual for a escolha, você tem a certeza de fazer o melhor para unir você ao sucesso.</p>',
         helpStudentTitle: 'AJUDE UM ALUNO',
         helpStudentDescription:
-          'Torne o seu sonho realidade com a revenda de produtos UNICAMPI e conquiste sua independência financeira.'
+          'Torne o seu sonho realidade com a revenda de produtos UNICAMPI e conquiste sua independência financeira.',
+        helpStudentLink: '',
+        courseBegin: ''
       },
       money: {
         decimal: ',',
@@ -705,6 +731,9 @@ export default {
   computed: {
     viewAction() {
       return this.$route.name == 'edit_course' ? 'edit' : 'new';
+    },
+    priceFinal() {
+      return (this.model.originalPrice * this.model.discount) / 100;
     }
   },
   methods: {
@@ -726,8 +755,8 @@ export default {
         self.customErros.push('idModality');
       if (!self.model.originalPrice) self.customErros.push('originalPrice');
       if (!self.model.discount) self.customErros.push('discount');
-      if (!self.model.finalPrice) self.customErros.push('finalPrice');
       if (!self.model.duration) self.customErros.push('duration');
+      if (!self.model.description) self.customErros.push('description');
       if (!self.model.periodIds || self.model.periodIds.length == 0)
         self.customErros.push('period');
       if (!self.model.listImage && !self.listImage)
@@ -737,6 +766,7 @@ export default {
       if (self.customErros.length == 0) {
         self.submitLoading = true;
         let imgCounter = 0;
+        self.model.finalPrice = self.priceFinal;
 
         if (self.image) {
           imgCounter++;
@@ -1006,5 +1036,8 @@ export default {
 <style scoped>
 .img-preview {
   max-width: 100px;
+}
+.editr--content {
+  color: #000;
 }
 </style>
