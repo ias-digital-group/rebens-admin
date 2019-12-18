@@ -1,16 +1,24 @@
 import { HTTP } from '../../http';
 import config from '../../config';
+import _ from 'lodash';
+
 export default {
   findAll: request => {
     return new Promise((resolve, reject) => {
       request = request
         ? request
-        : { page: 0, pageItems: 30, searchWord: '', sort: 'Name ASC', active:'', role:'', idOperation:'' };
+        : {
+            page: 0,
+            pageItems: 30,
+            searchWord: '',
+            sort: 'Name ASC',
+            active: '',
+            role: '',
+            idOperation: ''
+          };
       HTTP.get(
         config.apiEndpoints.userUri.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
-            request.searchWord
-          }&sort=${request.sort}&active=${request.active}&role=${request.role}&idOperation=${request.idOperation}`
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}&active=${request.active}&role=${request.role}&idOperation=${request.idOperation}`
         )
       ).then(
         response => {
@@ -75,7 +83,9 @@ export default {
   },
   resendValidation: id => {
     return new Promise((resolve, reject) => {
-      HTTP.get(config.apiEndpoints.userUri.concat(`ResendValidation/${id}`)).then(
+      HTTP.get(
+        config.apiEndpoints.userUri.concat(`ResendValidation/${id}`)
+      ).then(
         response => {
           resolve(response.data);
         },

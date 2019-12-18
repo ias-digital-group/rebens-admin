@@ -3,21 +3,54 @@
     <div class="col-12">
       <card card-body-classes="table-full-width">
         <template slot="header">
-          <h4 class="card-title">Parceiros
-          <base-link to="/operationPartner/new" class="btn btn-icon btn-simple btn-twitter btn-sm"><i class="tim-icons icon-simple-add"></i></base-link>  
+          <h4 class="card-title">
+            Parceiros
+            <base-link
+              to="/operationPartner/new"
+              class="btn btn-icon btn-simple btn-twitter btn-sm"
+              ><i class="tim-icons icon-simple-add"></i
+            ></base-link>
           </h4>
         </template>
         <div>
-          <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
-            <el-select class="select-primary mb-3 pagination-select" v-model="pagination.perPage" :placeholder="$t('pages.operationPartners.perpage-placeholder')" v-if="!loading">
-              <el-option class="select-primary" v-for="item in pagination.perPageOptions" :key="item" :label="item"
-                :value="item">
+          <div
+            class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
+          >
+            <el-select
+              class="select-primary mb-3 pagination-select"
+              v-model="pagination.perPage"
+              :placeholder="$t('pages.operationPartners.perpage-placeholder')"
+              v-if="!loading"
+            >
+              <el-option
+                class="select-primary"
+                v-for="item in pagination.perPageOptions"
+                :key="item"
+                :label="item"
+                :value="item"
+              >
               </el-option>
             </el-select>
-            <el-select class="select-primary mb-3 pagination-select" v-model="activeFilter" v-if="!loading">
-              <el-option class="select-primary" value="" label="Todos"></el-option>
-              <el-option class="select-primary" value="true" label="Ativos"></el-option>
-              <el-option class="select-primary" value="false" label="Inativos"></el-option>
+            <el-select
+              class="select-primary mb-3 pagination-select"
+              v-model="activeFilter"
+              v-if="!loading"
+            >
+              <el-option
+                class="select-primary"
+                value=""
+                label="Todos"
+              ></el-option>
+              <el-option
+                class="select-primary"
+                value="true"
+                label="Ativos"
+              ></el-option>
+              <el-option
+                class="select-primary"
+                value="false"
+                label="Inativos"
+              ></el-option>
             </el-select>
             <base-input>
               <el-input
@@ -28,45 +61,78 @@
                 prefix-icon="el-icon-search"
                 placeholder="Procurar parceiro"
                 aria-controls="datatables"
-                v-model="searchQuery">
+                v-model="searchQuery"
+              >
               </el-input>
             </base-input>
           </div>
-          <el-table ref="table" :data="tableData" v-loading="loading" :empty-text="$t('pages.operationPartners.emptytext')" @sort-change="onSortChanged" :default-sort="{prop: sortField, order: sortOrder}">
-            <el-table-column v-for="column in tableColumns" :key="column.label" :min-width="column.minWidth" :prop="column.prop"
-              :label="column.label" sortable="custom">
+          <el-table
+            ref="table"
+            :data="tableData"
+            v-loading="loading"
+            :empty-text="$t('pages.operationPartners.emptytext')"
+            @sort-change="onSortChanged"
+            :default-sort="{ prop: sortField, order: sortOrder }"
+          >
+            <el-table-column
+              v-for="column in tableColumns"
+              :key="column.label"
+              :min-width="column.minWidth"
+              :prop="column.prop"
+              :label="column.label"
+              sortable="custom"
+            >
             </el-table-column>
             <el-table-column :min-width="135" align="right" label="Ações">
               <div slot-scope="props">
-                 <base-button @click.native="handleEdit(props.$index, props.row);" class="edit btn-link" type="info"
-                  size="sm" icon>
+                <base-button
+                  @click.native="handleEdit(props.$index, props.row)"
+                  class="edit btn-link"
+                  type="info"
+                  size="sm"
+                  icon
+                >
                   <i class="tim-icons icon-pencil"></i>
                 </base-button>
-                <base-button @click.native="handleDelete(props.$index, props.row);" class="remove btn-link" type="danger"
-                  size="sm" icon>
+                <base-button
+                  @click.native="handleDelete(props.$index, props.row)"
+                  class="remove btn-link"
+                  type="danger"
+                  size="sm"
+                  icon
+                >
                   <i class="tim-icons icon-simple-remove"></i>
                 </base-button>
               </div>
             </el-table-column>
           </el-table>
         </div>
-        <div slot="footer" class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
-          <div class="">
-            
-          </div>
-          <base-pagination class="pagination-no-border" v-model="pagination.currentPage" :per-page="pagination.perPage"
-            :total="total" v-on:input="onPageChanged">
+        <div
+          slot="footer"
+          class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
+        >
+          <div class=""></div>
+          <base-pagination
+            class="pagination-no-border"
+            v-model="pagination.currentPage"
+            :per-page="pagination.perPage"
+            :total="total"
+            v-on:input="onPageChanged"
+          >
           </base-pagination>
         </div>
       </card>
     </div>
     <!-- Classic Modal -->
-    <modal
-      :show.sync="modal.visible"
-      headerClasses="justify-content-center">
+    <modal :show.sync="modal.visible" headerClasses="justify-content-center">
       <h4 slot="header" class="title title-up">Remover Parceiro</h4>
-      <form class="modal-form" ref="modalForm" @submit.prevent v-loading="modal.formLoading">
-        <input type="hidden" name="nome" value="DELETE" ref="nome">
+      <form
+        class="modal-form"
+        ref="modalForm"
+        @submit.prevent
+        v-loading="modal.formLoading"
+      >
+        <input type="hidden" name="nome" value="DELETE" ref="nome" />
         <base-input
           required
           v-model="modal.nameConfirmation"
@@ -74,14 +140,18 @@
           placeholder="Digite DELETE para confirmar"
           :error="getError('confirmação')"
           type="text"
-          v-validate="modal.modelValidations.name_confirm" name="confirmação">
+          v-validate="modal.modelValidations.name_confirm"
+          name="confirmação"
+        >
         </base-input>
       </form>
       <template slot="footer">
-        <base-button @click.native.prevent="validateModal" type="danger">Remover</base-button>
-        <base-button
-          type="info"
-          @click.native="modal.visible = false;">Fechar</base-button>
+        <base-button @click.native.prevent="validateModal" type="danger"
+          >Remover</base-button
+        >
+        <base-button type="info" @click.native="modal.visible = false"
+          >Fechar</base-button
+        >
       </template>
     </modal>
   </div>
@@ -105,7 +175,7 @@ export default {
     return {
       internalName: 'Parceiros',
       sortField: 'name',
-      formLoading:false,
+      formLoading: false,
       activeFilter: '',
       tableColumns: [
         {
@@ -130,18 +200,16 @@ export default {
         searchWord: this.searchQuery,
         sort: this.formatSortFieldParam,
         active: this.activeFilter,
-        idOperation: this.$store.getters.currentUser.idOperation,
+        idOperation: this.$store.getters.currentUser.idOperation
       };
       this.$data.loading = true;
       operationPartnerService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;
-          if(response.data)
-          {
+          if (response.data) {
             self.showForm = false;
             self.showTable = response.data.length > 0;
-          }
-          else{
+          } else {
             self.showForm = false;
             self.showTable = false;
           }
@@ -159,25 +227,25 @@ export default {
         if (isValid) {
           self.modal.formLoading = true;
           operationPartnerService.delete(self.modal.model.id).then(
-                response => {
-                self.$notify({
-                    type: 'primary',
-                    message: response.message,
-                    icon: 'tim-icons icon-bell-55'
-                });
-                self.resetModal();
-                self.pagination.currentPage = 1;
-                self.fetchData();
-                },
-                err => {
-                self.$notify({
-                    type: 'primary',
-                    message: err.message,
-                    icon: 'tim-icons icon-bell-55'
-                });
-                self.modal.formLoading = false;
-                }
-            );
+            response => {
+              self.$notify({
+                type: 'primary',
+                message: response.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+              self.resetModal();
+              self.pagination.currentPage = 1;
+              self.fetchData();
+            },
+            err => {
+              self.$notify({
+                type: 'primary',
+                message: err.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+              self.modal.formLoading = false;
+            }
+          );
         }
       });
     },
@@ -185,9 +253,9 @@ export default {
       this.$router.push(`/operationPartner/${row.id}/edit/`);
     }
   },
-  watch:{
-    activeFilter(){
-      this.fetchData(); 
+  watch: {
+    activeFilter() {
+      this.fetchData();
     }
   }
 };

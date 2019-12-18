@@ -35,7 +35,11 @@
         </div>
       </card>
     </div>
-    <dashboard-pie-chart v-for="(operation, index) in operationsPieCharts" :key="index" v-bind:operation="operation"></dashboard-pie-chart>
+    <dashboard-pie-chart
+      v-for="(operation, index) in operationsPieCharts"
+      :key="index"
+      v-bind:operation="operation"
+    ></dashboard-pie-chart>
   </div>
 </template>
 <script>
@@ -55,7 +59,7 @@ export default {
   data() {
     return {
       operationsPieCharts: [],
-      benefitViewChart:{
+      benefitViewChart: {
         extraOptions: chartConfigs.barChartOptions,
         chartData: null,
         gradientColors: config.colors.primaryGradient,
@@ -70,51 +74,52 @@ export default {
     };
   },
   methods: {
-    fetchData(){
+    fetchData() {
       const self = this;
 
       reportService.loadDashboard().then(
         response => {
-          if(response.data){
-            if(response.data.benefitUse)
-            {
+          if (response.data) {
+            if (response.data.benefitUse) {
               self.benefitUseChart.chartData = {
                 labels: response.data.benefitUse.labels,
-                datasets: [{
-                  label: response.data.benefitUse.title,
-                  fill: true,
-                  borderColor: config.colors.info,
-                  borderWidth: 2,
-                  borderDash: [],
-                  borderDashOffset: 0.0,
-                  data: response.data.benefitUse.data
-                }]
+                datasets: [
+                  {
+                    label: response.data.benefitUse.title,
+                    fill: true,
+                    borderColor: config.colors.info,
+                    borderWidth: 2,
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    data: response.data.benefitUse.data
+                  }
+                ]
               };
             }
-            if(response.data.benefitView)
-            {
+            if (response.data.benefitView) {
               self.benefitViewChart.chartData = {
                 labels: response.data.benefitView.labels,
-                datasets: [{
-                  label: response.data.benefitView.title,
-                  fill: true,
-                  borderColor: config.colors.info,
-                  borderWidth: 2,
-                  borderDash: [],
-                  borderDashOffset: 0.0,
-                  data: response.data.benefitView.data
-                }]
+                datasets: [
+                  {
+                    label: response.data.benefitView.title,
+                    fill: true,
+                    borderColor: config.colors.info,
+                    borderWidth: 2,
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    data: response.data.benefitView.data
+                  }
+                ]
               };
             }
 
-            if(response.data.operations)
-            {
+            if (response.data.operations) {
               response.data.operations.forEach(element => {
                 let op = {
                   name: element.operation,
                   charts: []
                 };
-                if(element.users){
+                if (element.users) {
                   let chart = {
                     title: element.users.title,
                     chartData: {
@@ -133,10 +138,10 @@ export default {
                     },
                     extraOptions: chartConfigs.pieChartOptions,
                     gradientStops: [1, 0.4, 0]
-                  }
+                  };
                   op.charts.push(chart);
                 }
-                if(element.regionState){
+                if (element.regionState) {
                   let chart = {
                     title: element.regionState.title,
                     chartData: {
@@ -155,10 +160,10 @@ export default {
                     },
                     extraOptions: chartConfigs.pieChartOptions,
                     gradientStops: [1, 0.4, 0]
-                  }
+                  };
                   op.charts.push(chart);
                 }
-                if(element.regionCity){
+                if (element.regionCity) {
                   let chart = {
                     title: element.regionCity.title,
                     chartData: {
@@ -177,10 +182,10 @@ export default {
                     },
                     extraOptions: chartConfigs.pieChartOptions,
                     gradientStops: [1, 0.4, 0]
-                  }
+                  };
                   op.charts.push(chart);
                 }
-                if(element.regionNeighborhood){
+                if (element.regionNeighborhood) {
                   let chart = {
                     title: element.regionNeighborhood.title,
                     chartData: {
@@ -199,7 +204,7 @@ export default {
                     },
                     extraOptions: chartConfigs.pieChartOptions,
                     gradientStops: [1, 0.4, 0]
-                  }
+                  };
                   op.charts.push(chart);
                 }
 
@@ -207,10 +212,10 @@ export default {
               });
             }
           }
-//          self.$data.loading = false;
+          //          self.$data.loading = false;
         },
         () => {
-  //        self.$data.loading = false;
+          //        self.$data.loading = false;
         }
       );
     }
@@ -222,5 +227,4 @@ export default {
   }
 };
 </script>
-<style>
-</style>
+<style></style>

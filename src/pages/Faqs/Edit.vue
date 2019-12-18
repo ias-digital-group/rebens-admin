@@ -1,74 +1,76 @@
 <template>
-<div class="row">
-  <div class="col-md-12">
-    <card :title="$t('pages.faqs.title')">
-      <h4 slot="header" class="card-title">{{$t('pages.faqs.title')}}</h4>
-      
-      <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
-        <div class="row">
-          <label class="col-md-3 col-form-label">Pergunta</label>
-          <div class="col-md-9">
-              <base-input 
-              required
-              v-model="model.question"
-              type="text"
-              :error="getError('question')"
-              name="question"
-              placeholder="Pergunta" 
-              maxlength='200'></base-input>
+  <div class="row">
+    <div class="col-md-12">
+      <card :title="$t('pages.faqs.title')">
+        <h4 slot="header" class="card-title">{{ $t('pages.faqs.title') }}</h4>
+
+        <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
+          <div class="row">
+            <label class="col-md-3 col-form-label">Pergunta</label>
+            <div class="col-md-9">
+              <base-input
+                required
+                v-model="model.question"
+                type="text"
+                :error="getError('question')"
+                name="question"
+                placeholder="Pergunta"
+                maxlength="200"
+              ></base-input>
+            </div>
           </div>
-        </div>
-        <div class="row">
+          <div class="row">
             <label class="col-md-3 col-form-label">Resposta</label>
             <div class="col-md-9">
-                <wysiwyg v-model="model.answer" placeholder="Resposta" />
+              <wysiwyg v-model="model.answer" placeholder="Resposta" />
             </div>
-        </div>
-        <div class="row">
+          </div>
+          <div class="row">
             <label class="col-md-3 col-form-label">Ordem</label>
             <div class="col-md-2">
-                <base-input 
+              <base-input
                 required
                 v-model="model.order"
                 type="number"
                 :error="getError('order')"
                 name="order"
-                placeholder="Ordem" 
-                maxlength='3'></base-input>
+                placeholder="Ordem"
+                maxlength="3"
+              ></base-input>
             </div>
-        </div>
-        <div class="row">
+          </div>
+          <div class="row">
             <label class="col-md-3 col-form-label">Ativo</label>
             <div class="col-md-9">
-                <div class="form-group">
-                    <base-checkbox v-model="model.active">&nbsp;</base-checkbox>
-                </div>
+              <div class="form-group">
+                <base-checkbox v-model="model.active">&nbsp;</base-checkbox>
+              </div>
             </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <base-link class="btn mt-3 btn-simple btn-primary" to="/faqs">Voltar</base-link>
-            <base-button 
-              class="mt-3 pull-right" 
-              native-type="submit" 
-              type="info"
-              @click.native.prevent="validateFaq"
-              :loading="submitLoading">
-              Salvar
-            </base-button>
-            
           </div>
-        </div>
-      </form>
-          
-    </card>
+          <div class="row">
+            <div class="col-md-12">
+              <base-link class="btn mt-3 btn-simple btn-primary" to="/faqs"
+                >Voltar</base-link
+              >
+              <base-button
+                class="mt-3 pull-right"
+                native-type="submit"
+                type="info"
+                @click.native.prevent="validateFaq"
+                :loading="submitLoading"
+              >
+                Salvar
+              </base-button>
+            </div>
+          </div>
+        </form>
+      </card>
+    </div>
   </div>
-</div>
 </template>
 <script>
-import { Select, Option, Tabs, TabPane, DatePicker } from 'element-ui';
+import { Select, Option } from 'element-ui';
 import faqService from '../../services/Faq/faqService';
-import _ from 'lodash';
 export default {
   components: {
     [Option.name]: Option,
@@ -76,7 +78,7 @@ export default {
   },
   props: {
     id: String,
-     removeText: {
+    removeText: {
       type: String,
       default: 'Remove'
     }
@@ -103,8 +105,8 @@ export default {
           required: true,
           max: 4
         },
-        answer:{
-          required:true,
+        answer: {
+          required: true,
           max: 2000
         }
       }
@@ -121,20 +123,24 @@ export default {
     },
     validateFaq() {
       const self = this;
-      if(self.model.question !== '' && self.model.question.length <= 1000 
-        && self.model.answer !== '' && self.model.answer.length <= 1000
-        && self.model.order !== ''){
-            self.submitLoading = true;
-            self.saveFaq(self);
-        }
+      if (
+        self.model.question !== '' &&
+        self.model.question.length <= 1000 &&
+        self.model.answer !== '' &&
+        self.model.answer.length <= 1000 &&
+        self.model.order !== ''
+      ) {
+        self.submitLoading = true;
+        self.saveFaq(self);
+      }
     },
     saveFaq(vm) {
       vm = vm ? vm : this;
-      if(!vm.model.idOperation)
+      if (!vm.model.idOperation)
         vm.model.idOperation = this.$store.getters.currentUser.idOperation;
       if (vm.model.id === 0) {
         faqService.create(vm.model).then(
-          res => {
+          () => {
             vm.$notify({
               type: 'success',
               message: 'Pergunta cadastrada com sucesso!',
@@ -142,7 +148,6 @@ export default {
             });
             vm.submitLoading = false;
             vm.$router.push('/faqs');
-            
           },
           err => {
             vm.$notify({

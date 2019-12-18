@@ -27,12 +27,17 @@ export default {
     faqUri: process.env.VUE_APP_API_URI.concat('faq/'),
     userUri: process.env.VUE_APP_API_URI.concat('adminuser/'),
     reportUri: process.env.VUE_APP_API_URI.concat('report/'),
-    operationPartnerUri: process.env.VUE_APP_API_URI.concat('operationPartner/'),
+    operationPartnerUri: process.env.VUE_APP_API_URI.concat(
+      'operationPartner/'
+    ),
     courseCollegeUri: process.env.VUE_APP_API_URI.concat('courseCollege/'),
     courseModalityUri: process.env.VUE_APP_API_URI.concat('courseModality/'),
-    courseGraduationTypeUri: process.env.VUE_APP_API_URI.concat('courseGraduationType/'),
+    courseGraduationTypeUri: process.env.VUE_APP_API_URI.concat(
+      'courseGraduationType/'
+    ),
     coursePeriodUri: process.env.VUE_APP_API_URI.concat('coursePeriod/'),
     courseUri: process.env.VUE_APP_API_URI.concat('course/'),
+    freeCourseUri: process.env.VUE_APP_API_URI.concat('freeCourse/'),
     viaCepUri: process.env.VUE_APP_VIACEP_URI
   }
 };

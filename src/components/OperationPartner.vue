@@ -1,82 +1,125 @@
 <template>
-    <div class="row">
-        <div class="col-12" v-if="showTable">
-            <el-table ref="table" :data="tableData" v-loading="loading" :empty-text="$t('pages.operationPartners.emptytext')" @sort-change="onSortChanged" :default-sort="{prop: sortField, order: sortOrder}">
-                <el-table-column v-for="column in tableColumns" :key="column.label" :min-width="column.minWidth" :prop="column.prop"
-                :label="column.label" :formatter="renderValue" sortable="custom">
-                </el-table-column>
-                <el-table-column :min-width="135" align="right" :label="$t('pages.operationPartners.grid.actions')">
-                    <div slot-scope="props">
-                        <base-button @click.native="handleEdit(props.$index, props.row);" class="edit btn-link" type="info"
-                        size="sm" icon>
-                        <i class="tim-icons icon-pencil"></i>
-                        </base-button>
-                        <base-button @click.native="handleDelete(props.$index, props.row);" class="remove btn-link" type="danger"
-                        size="sm" icon>
-                        <i class="tim-icons icon-simple-remove"></i>
-                        </base-button>
-                    </div>
-                </el-table-column>
-          </el-table>
-        </div>
-        <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
-            <base-button 
-              class="mt-3 pull-right" 
-              native-type="button" 
+  <div class="row">
+    <div class="col-12" v-if="showTable">
+      <el-table
+        ref="table"
+        :data="tableData"
+        v-loading="loading"
+        :empty-text="$t('pages.operationPartners.emptytext')"
+        @sort-change="onSortChanged"
+        :default-sort="{ prop: sortField, order: sortOrder }"
+      >
+        <el-table-column
+          v-for="column in tableColumns"
+          :key="column.label"
+          :min-width="column.minWidth"
+          :prop="column.prop"
+          :label="column.label"
+          :formatter="renderValue"
+          sortable="custom"
+        >
+        </el-table-column>
+        <el-table-column
+          :min-width="135"
+          align="right"
+          :label="$t('pages.operationPartners.grid.actions')"
+        >
+          <div slot-scope="props">
+            <base-button
+              @click.native="handleEdit(props.$index, props.row)"
+              class="edit btn-link"
               type="info"
-              @click.native.prevent="newPartner"
-                v-show="!showForm"
-              >
-              Novo
+              size="sm"
+              icon
+            >
+              <i class="tim-icons icon-pencil"></i>
             </base-button>
-            <base-pagination v-show="showTable" class="pagination-no-border" v-model="pagination.currentPage" :per-page="pagination.perPage"
-                :total="total" v-on:input="onPageChanged">
-            </base-pagination>
-        </div>
-        <div class="col-12" v-if="showForm">
-      <hr>
+            <base-button
+              @click.native="handleDelete(props.$index, props.row)"
+              class="remove btn-link"
+              type="danger"
+              size="sm"
+              icon
+            >
+              <i class="tim-icons icon-simple-remove"></i>
+            </base-button>
+          </div>
+        </el-table-column>
+      </el-table>
+    </div>
+    <div
+      class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
+    >
+      <base-button
+        class="mt-3 pull-right"
+        native-type="button"
+        type="info"
+        @click.native.prevent="newPartner"
+        v-show="!showForm"
+      >
+        Novo
+      </base-button>
+      <base-pagination
+        v-show="showTable"
+        class="pagination-no-border"
+        v-model="pagination.currentPage"
+        :per-page="pagination.perPage"
+        :total="total"
+        v-on:input="onPageChanged"
+      >
+      </base-pagination>
+    </div>
+    <div class="col-12" v-if="showForm">
+      <hr />
       <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
         <div class="row">
-            <label class="col-md-3 col-form-label">Nome</label>
-            <div class="col-md-9">
-                <base-input 
-                required
-                v-model="model.name"
-                type="text"
-                :error="getError('name')"
-                name="name"
-                placeholder="Nome" 
-                maxlength='300'></base-input>
-            </div>
+          <label class="col-md-3 col-form-label">Nome</label>
+          <div class="col-md-9">
+            <base-input
+              required
+              v-model="model.name"
+              type="text"
+              :error="getError('name')"
+              name="name"
+              placeholder="Nome"
+              maxlength="300"
+            ></base-input>
+          </div>
         </div>
         <div class="row">
-            <label class="col-md-3 col-form-label">Ativo</label>
-            <div class="col-md-9">
-                <div class="form-group">
-                    <base-checkbox v-model="model.active">&nbsp;</base-checkbox>
-                </div>
+          <label class="col-md-3 col-form-label">Ativo</label>
+          <div class="col-md-9">
+            <div class="form-group">
+              <base-checkbox v-model="model.active">&nbsp;</base-checkbox>
             </div>
+          </div>
         </div>
         <div class="row">
           <div class="col-md-12">
-            <a class="btn mt-3 btn-secondary btn-simple" @click="clearModel()">Cancelar</a>
-            <base-button 
-              class="mt-3 pull-right" 
-              native-type="submit" 
+            <a class="btn mt-3 btn-secondary btn-simple" @click="clearModel()"
+              >Cancelar</a
+            >
+            <base-button
+              class="mt-3 pull-right"
+              native-type="submit"
               type="info"
-              @click.native.prevent="validatePartner">
+              @click.native.prevent="validatePartner"
+            >
               Salvar
             </base-button>
           </div>
         </div>
       </form>
     </div>
-        <modal
-      :show.sync="modal.visible"
-      headerClasses="justify-content-center">
+    <modal :show.sync="modal.visible" headerClasses="justify-content-center">
       <h4 slot="header" class="title title-up">Remover parceiro</h4>
-      <form class="modal-form" ref="modalForm" @submit.prevent v-loading="modal.formLoading">
-        <input type="hidden" name="nome" value="DELETE" ref="nome">
+      <form
+        class="modal-form"
+        ref="modalForm"
+        @submit.prevent
+        v-loading="modal.formLoading"
+      >
+        <input type="hidden" name="nome" value="DELETE" ref="nome" />
         <base-input
           required
           v-model="modal.nameConfirmation"
@@ -84,17 +127,21 @@
           placeholder="Digite DELETE para confirmar"
           :error="getError('confirmação')"
           type="text"
-          v-validate="modal.modelValidations.name_confirm" name="confirmação">
+          v-validate="modal.modelValidations.name_confirm"
+          name="confirmação"
+        >
         </base-input>
       </form>
       <template slot="footer">
-        <base-button @click.native.prevent="validateModal" type="danger">Remover</base-button>
-        <base-button
-          type="info"
-          @click.native="modal.visible = false;">Fechar</base-button>
+        <base-button @click.native.prevent="validateModal" type="danger"
+          >Remover</base-button
+        >
+        <base-button type="info" @click.native="modal.visible = false"
+          >Fechar</base-button
+        >
       </template>
     </modal>
-    </div>
+  </div>
 </template>
 <script>
 import { Table, TableColumn, Select, Option } from 'element-ui';
@@ -152,26 +199,30 @@ export default {
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
-    newPartner(){
-        this.clearModel();
-        this.showForm = true;
+    newPartner() {
+      this.clearModel();
+      this.showForm = true;
     },
     validatePartner() {
       const self = this;
-      if(self.model.name !== '' && self.model.name.length <= 300){
-            self.submitLoading = true;
-            self.savePartner(self);
-        }
+      if (self.model.name !== '' && self.model.name.length <= 300) {
+        self.submitLoading = true;
+        self.savePartner(self);
+      }
     },
     renderValue(row, column, cellValue) {
-      return column.property === 'active' ? (cellValue ? 'ativo' : 'inativo') : cellValue;
+      return column.property === 'active'
+        ? cellValue
+          ? 'ativo'
+          : 'inativo'
+        : cellValue;
     },
     savePartner(vm) {
       vm = vm ? vm : this;
       vm.model.idOperation = vm.parentId;
       if (vm.model.id === 0) {
         operationPartnerService.create(vm.model).then(
-          res => {
+          () => {
             vm.$notify({
               type: 'success',
               message: 'Parceiro com sucesso!',
@@ -276,8 +327,7 @@ export default {
     },
     clearModel() {
       this.model.id = 0;
-      this.model.idOperation = 0,
-      this.model.active = false;
+      (this.model.idOperation = 0), (this.model.active = false);
       this.model.name = '';
       this.$validator.reset();
       this.showForm = false;

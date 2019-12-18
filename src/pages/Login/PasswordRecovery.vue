@@ -15,23 +15,25 @@
               :error="getError($t('pages.login.input-email'))"
               :name="$t('pages.login.input-email')"
               type="email"
-              :placeholder="$t('pages.login.input-email')" 
+              :placeholder="$t('pages.login.input-email')"
             >
             </base-input>
           </div>
 
           <div slot="footer">
-            <base-link class="mb-3 btn btn-simple" to="/Login">voltar</base-link>
-            <base-button 
-              type="info" 
-              class="mb-3 pull-right" 
+            <base-link class="mb-3 btn btn-simple" to="/Login"
+              >voltar</base-link
+            >
+            <base-button
+              type="info"
+              class="mb-3 pull-right"
               native-type="submit"
               @click.native.prevent="validate"
-              :loading="fullscreenLoading">
-              {{$t('pages.password-recovery.signin-button')}}
+              :loading="fullscreenLoading"
+            >
+              {{ $t('pages.password-recovery.signin-button') }}
             </base-button>
           </div>
-          
         </card>
       </form>
     </div>
@@ -64,32 +66,28 @@ export default {
       this.$validator.validateAll().then(isValid => {
         //R3bens#123
         if (isValid) {
-          accountService
-            .rememberPassword(
-              self.$data.credentials.email
-            )
-            .then(
-              response => {
-                self.$data.fullscreenLoading = false;
-                self.$notify({
-                  type: 'primary',
-                  message: response.message,
-                  icon: 'tim-icons icon-bell-55'
-                });
-              },
-              err => {
-                const msg =
-                  err.response.status == 404
-                    ? err.response.data.message
-                    : err.message;
-                self.$notify({
-                  type: 'primary',
-                  message: msg,
-                  icon: 'tim-icons icon-bell-55'
-                });
-                self.$data.fullscreenLoading = false;
-              }
-            );
+          accountService.rememberPassword(self.$data.credentials.email).then(
+            response => {
+              self.$data.fullscreenLoading = false;
+              self.$notify({
+                type: 'primary',
+                message: response.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+            },
+            err => {
+              const msg =
+                err.response.status == 404
+                  ? err.response.data.message
+                  : err.message;
+              self.$notify({
+                type: 'primary',
+                message: msg,
+                icon: 'tim-icons icon-bell-55'
+              });
+              self.$data.fullscreenLoading = false;
+            }
+          );
         } else {
           this.$data.fullscreenLoading = false;
         }

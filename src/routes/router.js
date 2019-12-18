@@ -16,17 +16,16 @@ router.beforeEach((to, from, next) => {
   if (requiresAuth) {
     if (store.getters.isAuthenticated) {
       const matchedRole = to.meta.roles.find(function(role) {
-        return store.getters.currentUser.role === role
-      })
-      if(matchedRole) {
-        next()
-      }
-      else {
+        return store.getters.currentUser.role === role;
+      });
+      if (matchedRole) {
+        next();
+      } else {
         next({
           path: '/access-denied'
-        })
+        });
       }
-      
+
       //next();
     } else {
       next({

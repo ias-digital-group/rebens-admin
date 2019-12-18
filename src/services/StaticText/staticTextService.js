@@ -6,12 +6,20 @@ export default {
     return new Promise((resolve, reject) => {
       request = request
         ? request
-        : { page: 0, pageItems: 30, searchWord: '', sort: 'name ASC' };
+        : {
+            page: 0,
+            pageItems: 30,
+            searchWord: '',
+            sort: 'name ASC',
+            idStaticTextType: 4
+          };
       HTTP.get(
         config.apiEndpoints.staticTextUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
             request.searchWord
-          }&sort=${request.sort}${(request.parentId ? '&idOperation=' + request.parentId : '')}`
+          }&sort=${request.sort}&idStaticTextType=${request.idStaticTextType}${
+            request.parentId ? '&idOperation=' + request.parentId : ''
+          }`
         )
       ).then(
         response => {
@@ -38,6 +46,19 @@ export default {
   update: model => {
     return new Promise((resolve, reject) => {
       HTTP.put(config.apiEndpoints.staticTextUri, model).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  create: model => {
+    debugger;
+    return new Promise((resolve, reject) => {
+      HTTP.post(config.apiEndpoints.staticTextUri, model).then(
         response => {
           resolve(response.data);
         },

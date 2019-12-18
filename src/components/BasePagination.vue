@@ -15,7 +15,7 @@
       :key="item"
       :class="{ active: value === item }"
     >
-      <a class="page-link" @click="changePage(item);">{{ item }}</a>
+      <a class="page-link" @click="changePage(item)">{{ item }}</a>
     </li>
     <li
       v-if="showArrows"

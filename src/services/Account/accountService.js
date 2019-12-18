@@ -27,7 +27,7 @@ export default {
   validate: (code, password, passwordConfirm) => {
     return new Promise((resolve, reject) => {
       const model = {
-        code: code, 
+        code: code,
         password: password,
         passwordConfirm: passwordConfirm
       };
@@ -41,28 +41,36 @@ export default {
       );
     });
   },
-  changePassword: (request) => {
+  changePassword: request => {
     return new Promise((resolve, reject) => {
-      http.post(config.apiEndpoints.accountUri.concat('ChangePassword'), request).then(
-        response => {
-          resolve(response.data);
-        },
-        error => {
-          reject(error);
-        }
-      );
+      http
+        .post(config.apiEndpoints.accountUri.concat('ChangePassword'), request)
+        .then(
+          response => {
+            resolve(response.data);
+          },
+          error => {
+            reject(error);
+          }
+        );
     });
   },
-  rememberPassword: (email) => {
+  rememberPassword: email => {
     return new Promise((resolve, reject) => {
-      http.get(config.apiEndpoints.accountUri.concat(`RememberPassword/?email=${encodeURIComponent(email)}`)).then(
-        response => {
-          resolve(response.data);
-        },
-        error => {
-          reject(error);
-        }
-      );
+      http
+        .get(
+          config.apiEndpoints.accountUri.concat(
+            `RememberPassword/?email=${encodeURIComponent(email)}`
+          )
+        )
+        .then(
+          response => {
+            resolve(response.data);
+          },
+          error => {
+            reject(error);
+          }
+        );
     });
   }
 };

@@ -11,7 +11,9 @@ export default {
         config.apiEndpoints.courseUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
             request.searchWord
-          }&sort=${request.sort}${(request.idOperation ? '&idOperation=' + request.idOperation : '')}`
+          }&sort=${request.sort}${
+            request.idOperation ? '&idOperation=' + request.idOperation : ''
+          }`
         )
       ).then(
         response => {
@@ -62,6 +64,30 @@ export default {
   delete: id => {
     return new Promise((resolve, reject) => {
       HTTP.delete(config.apiEndpoints.courseUri.concat(id)).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  listFaqs: function() {
+    return new Promise((resolve, reject) => {
+      HTTP.get(config.apiEndpoints.courseUri.concat('items/17')).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  listRegulations: function() {
+    return new Promise((resolve, reject) => {
+      HTTP.get(config.apiEndpoints.courseUri.concat('items/18')).then(
         response => {
           resolve(response.data);
         },

@@ -30,7 +30,7 @@
             data-toggle="tab"
             role="tablist"
             :href="`#${tab.id}`"
-            @click.prevent="activateTab(tab);"
+            @click.prevent="activateTab(tab)"
             :aria-expanded="tab.active"
             class="nav-link"
             :class="{ active: tab.active }"
@@ -163,5 +163,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

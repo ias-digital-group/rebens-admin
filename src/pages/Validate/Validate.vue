@@ -6,39 +6,42 @@
           <template slot="header">
             <img src="img/logo-login.png" alt="" />
           </template>
-          <p style="text-align:center">{{$t('pages.validate.info')}}</p>
-          <hr>
+          <p style="text-align:center">{{ $t('pages.validate.info') }}</p>
+          <hr />
           <div>
-            <base-input 
-              :placeholder="$t('pages.validate.input-password')" 
+            <base-input
+              :placeholder="$t('pages.validate.input-password')"
               required
               :name="$t('pages.validate.input-password')"
               v-model="credentials.password"
               v-validate="modelValidations.password"
               :error="getError($t('pages.validate.input-password'))"
-              type="password">
+              type="password"
+            >
             </base-input>
-            <base-input 
-              :placeholder="$t('pages.validate.input-confirm')" 
+            <base-input
+              :placeholder="$t('pages.validate.input-confirm')"
               required
               :name="$t('pages.validate.input-confirm')"
               v-model="credentials.passwordConfirm"
               v-validate="modelValidations.passwordConfirm"
               :error="getError($t('pages.validate.input-confirm'))"
-              type="password">
+              type="password"
+            >
             </base-input>
           </div>
 
           <div slot="footer">
-            <base-button 
-              type="info" 
-              class="mb-3" 
-              size="lg" 
+            <base-button
+              type="info"
+              class="mb-3"
+              size="lg"
               native-type="submit"
               @click.native.prevent="validate"
               :loading="fullscreenLoading"
-              block>
-              {{$t('pages.validate.button')}}
+              block
+            >
+              {{ $t('pages.validate.button') }}
             </base-button>
           </div>
         </card>
@@ -118,12 +121,10 @@ export default {
     }
   },
   created() {
-    if(this.$route.query.c)
-    {
+    if (this.$route.query.c) {
       this.credentials.code = this.$route.query.c;
-    }
-    else{
-        window.location = '/';
+    } else {
+      window.location = '/';
     }
   }
 };

@@ -38,7 +38,7 @@
               >
                 <a
                   class="nav-link"
-                  @click="navigateToTab(index);"
+                  @click="navigateToTab(index)"
                   :class="[
                     { 'disabled-wizard-link': !tab.checked },
                     { active: tab.active },

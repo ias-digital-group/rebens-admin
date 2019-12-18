@@ -13,7 +13,10 @@
     <div class="wrapper wrapper-full-page">
       <div class="full-page" :class="pageClass">
         <div class="content">
-          <zoom-center-transition :duration="pageTransitionDuration" mode="out-in">
+          <zoom-center-transition
+            :duration="pageTransitionDuration"
+            mode="out-in"
+          >
             <router-view></router-view>
           </zoom-center-transition>
         </div>

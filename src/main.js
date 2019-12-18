@@ -6,7 +6,7 @@ import store from './store/';
 import router from './routes/router';
 import i18n from './i18n';
 import axios from 'axios';
-import wysiwyg from "vue-wysiwyg";
+import wysiwyg from 'vue-wysiwyg';
 
 const token = localStorage.getItem('token');
 if (token) {
@@ -15,15 +15,15 @@ if (token) {
 // plugin setup
 Vue.use(DashboardPlugin);
 Vue.use(wysiwyg, {
-  hideModules:{
-    "code":true, 
-    "image":true, 
-    "table":true, 
-    "removeFormat":true, 
-    "justifyLeft": true,
-    "justifyCenter": true,
-    "justifyRight": true,
-    "headings": true
+  hideModules: {
+    code: true,
+    image: true,
+    table: true,
+    removeFormat: true,
+    justifyLeft: true,
+    justifyCenter: true,
+    justifyRight: true,
+    headings: true
   },
   forcePlainTextOnPaste: true
 });

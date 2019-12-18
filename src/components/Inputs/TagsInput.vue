@@ -7,7 +7,7 @@
       :type="tagType"
       :closable="true"
       :close-transition="false"
-      @close="handleClose(tag);"
+      @close="handleClose(tag)"
     >
       {{ tag }}
     </el-tag>

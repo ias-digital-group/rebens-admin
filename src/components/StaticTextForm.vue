@@ -1,59 +1,75 @@
 <template>
-    <div class="form-horizontal" :loading="staticTextFormLoading">
-      <div v-for="(field, idx) in staticText.data.fields" :key="idx" class="row">
-          <label class="col-md-3 col-form-label">{{field.label}}</label>
-          <template v-if="field.type == 'text'">
-            <div class="col-md-9">
-              <base-input 
-              v-model="field.data"
-              type="text"
-              :placeholder="field.name"></base-input>
-            </div>
-          </template>
-          <template v-else-if="field.type == 'tel'">
-            <div class="col-md-9">
-              <base-input 
-                type="tel"
-                :placeholder="field.name"
-                v-model="field.data"
-                masked="true"
-                :inputMask="['(##) ####-####', '(##) #####-####']">
-              </base-input>
-            </div>
-          </template>
-          <template v-else-if="field.type == 'boolean'">
-            <div class="col-md-9">
-              <base-checkbox v-model="field.data">&nbsp;</base-checkbox>
-            </div>
-          </template>
-          <template v-else-if="field.type == 'html'">
-            <div class="col-md-9">
-              <wysiwyg v-model="field.data" placeholder="Digite o texto ..." style="margin-bottom:10px;" />
-            </div>
-          </template>
-          <template v-else>
-            <template v-if="field.data">
-              <div class="col-md-9">
-                <div class="fileinput">
-                  <div class="thumbnail">
-                    <img :src="field.data" class="img-preview" />
-                  </div>
-                </div>
-                <div>
-                  <base-button @click="removeImage(field, idx)" class="btn-simple btn-file" type="danger">
-                    <i class="fas fa-times"></i>
-                  </base-button>
-                </div>
+  <div class="form-horizontal" :loading="staticTextFormLoading">
+    <div v-for="(field, idx) in staticText.data.fields" :key="idx" class="row">
+      <label class="col-md-3 col-form-label">{{ field.label }}</label>
+      <template v-if="field.type == 'text'">
+        <div class="col-md-9">
+          <base-input
+            v-model="field.data"
+            type="text"
+            :placeholder="field.name"
+          ></base-input>
+        </div>
+      </template>
+      <template v-else-if="field.type == 'tel'">
+        <div class="col-md-9">
+          <base-input
+            type="tel"
+            :placeholder="field.name"
+            v-model="field.data"
+            masked="true"
+            :inputMask="['(##) ####-####', '(##) #####-####']"
+          >
+          </base-input>
+        </div>
+      </template>
+      <template v-else-if="field.type == 'boolean'">
+        <div class="col-md-9">
+          <base-checkbox v-model="field.data">&nbsp;</base-checkbox>
+        </div>
+      </template>
+      <template v-else-if="field.type == 'html'">
+        <div class="col-md-9">
+          <wysiwyg
+            v-model="field.data"
+            placeholder="Digite o texto ..."
+            style="margin-bottom:10px;"
+          />
+        </div>
+      </template>
+      <template v-else>
+        <template v-if="field.data">
+          <div class="col-md-9">
+            <div class="fileinput">
+              <div class="thumbnail">
+                <img :src="field.data" class="img-preview" />
               </div>
-            </template>
-            <template v-else>
-              <div class="col-md-9">
-                <image-upload @change="onImageChange" :optionalData="getOptionalData(field, idx)" change-text="Alterar" remove-text="Remover" select-text="Selecione uma imagem" />
-              </div>
-            </template>
-          </template>
-      </div>
+            </div>
+            <div>
+              <base-button
+                @click="removeImage(field, idx)"
+                class="btn-simple btn-file"
+                type="danger"
+              >
+                <i class="fas fa-times"></i>
+              </base-button>
+            </div>
+          </div>
+        </template>
+        <template v-else>
+          <div class="col-md-9">
+            <image-upload
+              @change="onImageChange"
+              :optionalData="getOptionalData(field, idx)"
+              change-text="Alterar"
+              remove-text="Remover"
+              select-text="Selecione uma imagem"
+            />
+          </div>
+        </template>
+      </template>
     </div>
+  </div>
 </template>
 <script>
 import { ImageUpload } from 'src/components/index';
@@ -66,7 +82,7 @@ export default {
   props: {
     staticText: Object
   },
-  components:{
+  components: {
     ImageUpload
   },
   data() {
@@ -79,23 +95,23 @@ export default {
       return this.errors.first(fieldName);
     },
     getOptionalData(field, idx) {
-      return {field: field, index: idx, data: field.data, img: null};
+      return { field: field, index: idx, data: field.data, img: null };
     },
     removeImage(field, idx) {
       //this.staticText.images.push({field: field, index: idx, data: field.data, img: null});
       field.data = '';
       _.remove(this.staticText.images, el => {
         return el.index == idx;
-      });  
+      });
     },
     onImageChange(file, element) {
       if (file == null) {
         //const f = this.staticText.images[element.index];
         //this.staticText.data.fields[element.index].data = '';
-        //_.pullAt(this.staticText.images, i); 
+        //_.pullAt(this.staticText.images, i);
         return;
       }
-      if(this.staticText.images.length == 0) {
+      if (this.staticText.images.length == 0) {
         element.img = file;
         this.staticText.images.push(element);
       } else {
@@ -105,7 +121,6 @@ export default {
           }
         });
       }
-      
     }
   }
 };

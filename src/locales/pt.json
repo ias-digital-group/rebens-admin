@@ -6,6 +6,12 @@
       "pages":{
         "title":"Páginas"
       },
+      "courseFaq":{
+        "title":"Cursos - Perguntas Frequentes"
+      },
+      "courseRegulation":{
+        "title":"Cursos - Regulamentos"
+      },
       "categories": {
         "title": "Categorias",
         "perpage-placeholder": "Por página",
@@ -203,7 +209,10 @@
       "courseColleges":"Faculdades",
       "courseModalities":"Modalidades",
       "coursePeriods":"Períodos",
-      "courseGraduationTypes":"Tipos de graduação"
+      "courseGraduationTypes":"Tipos de graduação",
+      "courseFaq":"Perguntas Frequentes",
+      "courseRegulation":"Regulamentos",
+      "freeCourse":"Cursos Livres"
     }
   }
   

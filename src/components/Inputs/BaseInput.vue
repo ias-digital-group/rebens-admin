@@ -1,11 +1,14 @@
 <template>
-  <div class="form-group" :class="{
+  <div
+    class="form-group"
+    :class="{
       'input-group': hasIcon,
       'input-group-focus': focused,
       'has-danger': error,
       'has-success': !error && touched,
       'has-label': label
-    }">
+    }"
+  >
     <slot name="label">
       <label v-if="label"> {{ label }} {{ required ? '*' : '' }} </label>
     </slot>
@@ -16,10 +19,24 @@
     </slot>
     <slot>
       <template v-if="inputMask && inputMask.length > 0">
-        <the-mask :value="value" ref="maskedInput" :mask='inputMask' v-bind="$attrs" v-on="listeners" class="form-control" aria-describedby="addon-right addon-left" />  
+        <the-mask
+          :value="value"
+          ref="maskedInput"
+          :mask="inputMask"
+          v-bind="$attrs"
+          v-on="listeners"
+          class="form-control"
+          aria-describedby="addon-right addon-left"
+        />
       </template>
       <template v-else>
-        <input :value="value" v-bind="$attrs" v-on="listeners" class="form-control" aria-describedby="addon-right addon-left" />
+        <input
+          :value="value"
+          v-bind="$attrs"
+          v-on="listeners"
+          class="form-control"
+          aria-describedby="addon-right addon-left"
+        />
       </template>
     </slot>
 
@@ -117,5 +134,4 @@ export default {
   }
 };
 </script>
-<style>
-</style>
+<style></style>

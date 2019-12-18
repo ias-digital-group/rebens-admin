@@ -49,7 +49,7 @@ export default {
     }
   },
   watch: {
-    searchQuery(value) {
+    searchQuery() {
       this.pagination.currentPage = 1;
       this.fetchData();
     }

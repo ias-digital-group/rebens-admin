@@ -2,14 +2,18 @@
   <div class="row">
     <div class="col-12">
       <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
-        <static-text-form ref="staticTextForm" :staticText.sync="model"></static-text-form>
+        <static-text-form
+          ref="staticTextForm"
+          :staticText.sync="model"
+        ></static-text-form>
         <div class="row">
           <div class="col-md-12">
-            <base-button 
-              class="mt-3 pull-right" 
-              native-type="submit" 
+            <base-button
+              class="mt-3 pull-right"
+              native-type="submit"
               type="info"
-              @click.native.prevent="validateForm">
+              @click.native.prevent="validateForm"
+            >
               Salvar
             </base-button>
           </div>
@@ -24,7 +28,7 @@ import StaticTextForm from 'src/components/StaticTextForm.vue';
 import Modal from 'src/components/Modal.vue';
 import operationService from '../services/Operation/operationService';
 import helperService from '../services/Helper/helperService';
-import _ from 'lodash';
+
 export default {
   components: {
     [Option.name]: Option,
@@ -54,15 +58,11 @@ export default {
   methods: {
     fetchData() {
       const self = this;
-      const request = {
-        parentId: this.parentId,
-        parent: this.parent
-      };
       this.$data.loading = true;
       operationService.getConfiguration(this.parentId).then(
         response => {
-            this.model.images = [];
-            this.model.data = response.data;
+          this.model.images = [];
+          this.model.data = response.data;
           self.$data.loading = false;
         },
         () => {
@@ -75,26 +75,27 @@ export default {
       self.submitLoading = true;
       if (self.model.images && self.model.images.length > 0) {
         let promises = new Array(self.model.images.length);
-        for(var i = 0; i <= self.model.images.length - 1; i++) {
+        for (var i = 0; i <= self.model.images.length - 1; i++) {
           promises[i] = helperService.uploadFile(self.model.images[i].img);
         }
-        Promise.all(promises).then(values => {
-          for(var j = 0; j<= values.length - 1; j++) {
-            const fieldIndex = self.model.images[j].index;
-            self.model.data.fields[fieldIndex].data = values[j].data.url;
-          }
-          self.saveConfig(self);
-        })
-        .catch(reason => {
-          self.$notify({
-            type: 'primary',
-            message: reason.message,
-            icon: 'tim-icons icon-bell-55'
+        Promise.all(promises)
+          .then(values => {
+            for (var j = 0; j <= values.length - 1; j++) {
+              const fieldIndex = self.model.images[j].index;
+              self.model.data.fields[fieldIndex].data = values[j].data.url;
+            }
+            self.saveConfig(self);
+          })
+          .catch(reason => {
+            self.$notify({
+              type: 'primary',
+              message: reason.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+            self.submitLoading = false;
           });
-          self.submitLoading = false;
-        });
       } else {
-        self.saveConfig (self);
+        self.saveConfig(self);
       }
     },
     saveConfig(self) {

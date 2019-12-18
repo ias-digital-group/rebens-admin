@@ -1,22 +1,53 @@
 <template>
   <div class="row">
     <div class="col-12" v-if="showTable">
-      <el-table ref="table" :data="tableData" v-loading="loading" :empty-text="$t('pages.operationPartners.emptytext')" @sort-change="onSortChanged" :default-sort="{prop: sortField, order: sortOrder}">
-          <el-table-column v-for="column in tableColumns" :key="column.label" :min-width="column.minWidth" :prop="column.prop"
-          :label="column.label" sortable="custom">
-          </el-table-column>
-          <el-table-column :min-width="135" align="right" :label="$t('pages.operationPartners.grid.actions')">
-              <div slot-scope="props">
-                  <base-button v-show="props.row.status == 1" @click.native="approve(props.$index, props.row);" title="Aprovar" class="edit btn-link" type="success"
-                  size="sm" icon>
-                  <i class="tim-icons icon-check-2"></i>
-                  </base-button>
-                  <base-button v-show="props.row.status == 1" @click.native="disapprove(props.$index, props.row);" title="Reprovar" class="remove btn-link" type="danger"
-                  size="sm" icon>
-                  <i class="tim-icons icon-simple-remove"></i>
-                  </base-button>
-              </div>
-          </el-table-column>
+      <el-table
+        ref="table"
+        :data="tableData"
+        v-loading="loading"
+        :empty-text="$t('pages.operationPartners.emptytext')"
+        @sort-change="onSortChanged"
+        :default-sort="{ prop: sortField, order: sortOrder }"
+      >
+        <el-table-column
+          v-for="column in tableColumns"
+          :key="column.label"
+          :min-width="column.minWidth"
+          :prop="column.prop"
+          :label="column.label"
+          sortable="custom"
+        >
+        </el-table-column>
+        <el-table-column
+          :min-width="135"
+          align="right"
+          :label="$t('pages.operationPartners.grid.actions')"
+        >
+          <div slot-scope="props">
+            <base-button
+              v-show="props.row.status == 1"
+              @click.native="approve(props.$index, props.row)"
+              title="Aprovar"
+              class="edit btn-link"
+              type="success"
+              size="sm"
+              icon
+            >
+              <i class="tim-icons icon-check-2"></i>
+            </base-button>
+            <base-button
+              v-show="props.row.status == 1"
+              @click.native="disapprove(props.$index, props.row)"
+              title="Reprovar"
+              class="remove btn-link"
+              type="danger"
+              size="sm"
+              icon
+            >
+              <i class="tim-icons icon-simple-remove"></i>
+            </base-button>
+          </div>
+        </el-table-column>
       </el-table>
     </div>
   </div>
@@ -88,8 +119,8 @@ export default {
         searchWord: this.searchQuery,
         sort: this.formatSortFieldParam,
         idOperation: this.parentId,
-        status:1,
-        idOperationPartner:this.$store.getters.currentUser.idOperationPartner
+        status: 1,
+        idOperationPartner: this.$store.getters.currentUser.idOperationPartner
       };
       this.$data.loading = true;
       operationPartnerService.findAllCustomers(request).then(
@@ -106,14 +137,17 @@ export default {
     },
     approve(index, row) {
       const self = this;
-      operationPartnerService.changeCustomerStatus({id: row.id, status: 2}).then(response => {
+      operationPartnerService
+        .changeCustomerStatus({ id: row.id, status: 2 })
+        .then(
+          () => {
             self.$notify({
               type: 'primary',
               message: 'Cliente aprovado com sucesso!',
               icon: 'tim-icons icon-bell-55'
             });
             row.status = 2;
-            row.statusName = 'aprovado'
+            row.statusName = 'aprovado';
           },
           err => {
             self.$notify({
@@ -121,18 +155,22 @@ export default {
               message: err.message,
               icon: 'tim-icons icon-bell-55'
             });
-          });
+          }
+        );
     },
     disapprove(index, row) {
       const self = this;
-      operationPartnerService.changeCustomerStatus({id: row.id, status: 3}).then(response => {
+      operationPartnerService
+        .changeCustomerStatus({ id: row.id, status: 3 })
+        .then(
+          () => {
             self.$notify({
               type: 'primary',
               message: 'Cliente reprovado com sucesso!',
               icon: 'tim-icons icon-bell-55'
             });
             row.status = 3;
-            row.statusName = 'reprovado'
+            row.statusName = 'reprovado';
           },
           err => {
             self.$notify({
@@ -140,7 +178,8 @@ export default {
               message: err.message,
               icon: 'tim-icons icon-bell-55'
             });
-          });
+          }
+        );
     }
   }
 };

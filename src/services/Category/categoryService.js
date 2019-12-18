@@ -5,12 +5,17 @@ export default {
     return new Promise((resolve, reject) => {
       request = request
         ? request
-        : { page: 0, pageItems: 30, searchWord: '', sort: 'name ASC', active:'', idParent:'' };
+        : {
+            page: 0,
+            pageItems: 30,
+            searchWord: '',
+            sort: 'name ASC',
+            active: '',
+            idParent: ''
+          };
       HTTP.get(
         config.apiEndpoints.categoryUri.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
-            request.searchWord
-          }&sort=${request.sort}&active=${request.active}&idParent=${request.idParent}`
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}&active=${request.active}&idParent=${request.idParent}`
         )
       ).then(
         response => {

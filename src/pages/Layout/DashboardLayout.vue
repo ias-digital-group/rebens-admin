@@ -5,33 +5,176 @@
     <side-bar
       :background-color="sidebarBackground"
       :short-title="$t('sidebar.shortTitle')"
-      :title="$t('sidebar.title')">
+      :title="$t('sidebar.title')"
+    >
       <template slot="links">
-        <sidebar-item :link="{ name: $t('sidebar.dashboard'), icon: 'tim-icons icon-chart-pie-36', path: '/dashboard' }"></sidebar-item>
-        <sidebar-item v-show="!isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.benefits'), icon: 'tim-icons icon-money-coins', path: '/benefits' }"></sidebar-item>
-        <sidebar-item v-show="!isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.banners'), icon: 'fas fa-file-image', path: '/banners' }"></sidebar-item>
-        <sidebar-item v-show="isRebens && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.categories'), icon: 'tim-icons icon-single-copy-04', path: '/categories' }"></sidebar-item>
-        <sidebar-item v-show="isRebens && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.partners'), icon: 'tim-icons icon-link-72', path: '/partners' }"></sidebar-item>
-        <sidebar-item v-show="isRebens && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.operations'), icon: 'tim-icons icon-bank', path: '/operations' }"></sidebar-item>
-        <sidebar-item v-show="!isRebens && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.faqs'), icon: 'tim-icons icon-bulb-63', path: '/faqs' }"></sidebar-item>    
-        <sidebar-item v-show="!isRebens && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.customers'), icon: 'tim-icons icon-single-02', path: '/customers' }"></sidebar-item>    
-        <sidebar-item v-show="!isRebens && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.pages'), icon: 'tim-icons icon-paper', path: '/pages' }"></sidebar-item>    
-        <sidebar-item v-show="!isRebens && !isPublisher && !isPartnerApprover && !isPartnerAdmin" :link="{ name: $t('sidebar.partners'), icon: 'tim-icons icon-link-72', path: '/operationPartner' }"></sidebar-item>    
-        <sidebar-item v-show="!isPublisher && !isRebens" :link="{ name: $t('sidebar.partnersApprove'), path: '/operationPartner/approve', icon: 'tim-icons icon-single-02' }"></sidebar-item>    
+        <sidebar-item
+          :link="{
+            name: $t('sidebar.dashboard'),
+            icon: 'tim-icons icon-chart-pie-36',
+            path: '/dashboard'
+          }"
+        ></sidebar-item>
+        <sidebar-item
+          v-show="!isPartnerAdmin && !isPartnerApprover"
+          :link="{
+            name: $t('sidebar.benefits'),
+            icon: 'tim-icons icon-money-coins',
+            path: '/benefits'
+          }"
+        ></sidebar-item>
+        <sidebar-item
+          v-show="!isPartnerAdmin && !isPartnerApprover"
+          :link="{
+            name: $t('sidebar.banners'),
+            icon: 'fas fa-file-image',
+            path: '/banners'
+          }"
+        ></sidebar-item>
+        <sidebar-item
+          v-show="isRebens && !isPartnerAdmin && !isPartnerApprover"
+          :link="{
+            name: $t('sidebar.categories'),
+            icon: 'tim-icons icon-single-copy-04',
+            path: '/categories'
+          }"
+        ></sidebar-item>
+        <sidebar-item
+          v-show="isRebens && !isPartnerAdmin && !isPartnerApprover"
+          :link="{
+            name: $t('sidebar.partners'),
+            icon: 'tim-icons icon-link-72',
+            path: '/partners'
+          }"
+        ></sidebar-item>
+        <sidebar-item
+          v-show="isRebens && !isPartnerAdmin && !isPartnerApprover"
+          :link="{
+            name: $t('sidebar.operations'),
+            icon: 'tim-icons icon-bank',
+            path: '/operations'
+          }"
+        ></sidebar-item>
+        <sidebar-item
+          v-show="!isRebens && !isPartnerAdmin && !isPartnerApprover"
+          :link="{
+            name: $t('sidebar.faqs'),
+            icon: 'tim-icons icon-bulb-63',
+            path: '/faqs'
+          }"
+        ></sidebar-item>
+        <sidebar-item
+          v-show="!isRebens && !isPartnerAdmin && !isPartnerApprover"
+          :link="{
+            name: $t('sidebar.customers'),
+            icon: 'tim-icons icon-single-02',
+            path: '/customers'
+          }"
+        ></sidebar-item>
+        <sidebar-item
+          v-show="!isRebens && !isPartnerAdmin && !isPartnerApprover"
+          :link="{
+            name: $t('sidebar.pages'),
+            icon: 'tim-icons icon-paper',
+            path: '/pages'
+          }"
+        ></sidebar-item>
+        <sidebar-item
+          v-show="
+            !isRebens && !isPublisher && !isPartnerApprover && !isPartnerAdmin
+          "
+          :link="{
+            name: $t('sidebar.partners'),
+            icon: 'tim-icons icon-link-72',
+            path: '/operationPartner'
+          }"
+        ></sidebar-item>
+        <sidebar-item
+          v-show="!isPublisher && !isRebens"
+          :link="{
+            name: $t('sidebar.partnersApprove'),
+            path: '/operationPartner/approve',
+            icon: 'tim-icons icon-single-02'
+          }"
+        ></sidebar-item>
         <!-- <sidebar-item v-show="!isPublisher && !isRebens && !isPartnerApprover" :link="{ name: $t('sidebar.partnerCustomers'), path: '/operationPartner/customers', icon: 'tim-icons icon-single-02' }"></sidebar-item>     -->
-        <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.customer'), path: '/report/customer', icon: 'tim-icons icon-single-02' }"></sidebar-item>
-        <sidebar-item v-show="!isPublisher && !isPartnerApprover" :link="{ name: $t('sidebar.users'), path: '/users', icon: 'tim-icons icon-single-02' }"></sidebar-item>    
-        <sidebar-item v-show="showCourses" :link="{ name: $t('sidebar.courses'), icon: 'fas fa-graduation-cap' }">
-          <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.courses'), path: '/course' }"></sidebar-item>
-          <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.courseColleges'), path: '/courseCollege' }"></sidebar-item>
-          <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.courseModalities'), path: '/courseModality' }"></sidebar-item>
-          <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.coursePeriods'), path: '/coursePeriod' }"></sidebar-item>
-          <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.courseGraduationTypes'), path: '/courseGraduationType' }"></sidebar-item>
+        <sidebar-item
+          v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
+          :link="{
+            name: $t('sidebar.customer'),
+            path: '/report/customer',
+            icon: 'tim-icons icon-single-02'
+          }"
+        ></sidebar-item>
+        <sidebar-item
+          v-show="!isPublisher && !isPartnerApprover"
+          :link="{
+            name: $t('sidebar.users'),
+            path: '/users',
+            icon: 'tim-icons icon-single-02'
+          }"
+        ></sidebar-item>
+        <sidebar-item
+          v-show="showCourses"
+          :link="{ name: $t('sidebar.courses'), icon: 'fas fa-graduation-cap' }"
+        >
+          <sidebar-item
+            v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
+            :link="{ name: $t('sidebar.courses'), path: '/course' }"
+          ></sidebar-item>
+          <sidebar-item
+            v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
+            :link="{
+              name: $t('sidebar.courseColleges'),
+              path: '/courseCollege'
+            }"
+          ></sidebar-item>
+          <sidebar-item
+            v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
+            :link="{
+              name: $t('sidebar.courseModalities'),
+              path: '/courseModality'
+            }"
+          ></sidebar-item>
+          <sidebar-item
+            v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
+            :link="{ name: $t('sidebar.coursePeriods'), path: '/coursePeriod' }"
+          ></sidebar-item>
+          <sidebar-item
+            v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
+            :link="{
+              name: $t('sidebar.courseGraduationTypes'),
+              path: '/courseGraduationType'
+            }"
+          ></sidebar-item>
+          <sidebar-item
+            v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
+            :link="{ name: $t('sidebar.courseFaq'), path: '/courseFaq' }"
+          ></sidebar-item>
+          <sidebar-item
+            v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
+            :link="{
+              name: $t('sidebar.courseRegulation'),
+              path: '/courseRegulation'
+            }"
+          ></sidebar-item>
+          <sidebar-item
+            v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
+            :link="{ name: $t('sidebar.freeCourse'), path: '/freeCourse' }"
+          ></sidebar-item>
         </sidebar-item>
-        <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.report'), icon: 'fas fa-chart-pie' }">
-          <sidebar-item v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover" :link="{ name: $t('sidebar.benefitUse'), path: '/report/benefit-use' }"></sidebar-item>
+        <sidebar-item
+          v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
+          :link="{ name: $t('sidebar.report'), icon: 'fas fa-chart-pie' }"
+        >
+          <sidebar-item
+            v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
+            :link="{
+              name: $t('sidebar.benefitUse'),
+              path: '/report/benefit-use'
+            }"
+          ></sidebar-item>
         </sidebar-item>
-        
       </template>
     </side-bar>
     <div class="main-panel" :data="sidebarBackground">
@@ -90,9 +233,9 @@ export default {
     return {
       isRebens: false,
       isPublisher: false,
-      isPartnerApprover:false,
-      isPartnerAdmin:false,
-      showCourses:true,
+      isPartnerApprover: false,
+      isPartnerAdmin: false,
+      showCourses: true,
       sidebarBackground: 'blue' //vue|blue|orange|green|red|primary
     };
   },
@@ -117,12 +260,24 @@ export default {
     }
   },
   created() {
-    this.isRebens = this.$store.getters.currentUser.role == "master" || this.$store.getters.currentUser.role == "administratorRebens" || this.$store.getters.currentUser.role == "publisherRebens";
-    this.isPublisher = this.$store.getters.currentUser.role == "publisher" || this.$store.getters.currentUser.role == "publisherRebens";
-    this.isPartnerApprover = this.$store.getters.currentUser.role == "partnerApprover";
-    this.isPartnerAdmin = this.$store.getters.currentUser.role == "partnerAdministrator";
-    this.showCourses = this.isRebens || (!this.isPublisher && !this.isPartnerApprover && !this.isPartnerAdmin && 
-                        !this.isRebens && this.$store.getters.currentUser.idOperation == 1);
+    this.isRebens =
+      this.$store.getters.currentUser.role == 'master' ||
+      this.$store.getters.currentUser.role == 'administratorRebens' ||
+      this.$store.getters.currentUser.role == 'publisherRebens';
+    this.isPublisher =
+      this.$store.getters.currentUser.role == 'publisher' ||
+      this.$store.getters.currentUser.role == 'publisherRebens';
+    this.isPartnerApprover =
+      this.$store.getters.currentUser.role == 'partnerApprover';
+    this.isPartnerAdmin =
+      this.$store.getters.currentUser.role == 'partnerAdministrator';
+    this.showCourses =
+      this.isRebens ||
+      (!this.isPublisher &&
+        !this.isPartnerApprover &&
+        !this.isPartnerAdmin &&
+        !this.isRebens &&
+        this.$store.getters.currentUser.idOperation == 1);
   }
 };
 </script>

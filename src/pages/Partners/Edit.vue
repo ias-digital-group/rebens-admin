@@ -2,28 +2,38 @@
   <div class="row">
     <div class="col-md-12">
       <card title="Parceiros">
-        <h4 slot="header" class="card-title">{{$t('pages.partners.title')}}</h4>
+        <h4 slot="header" class="card-title">
+          {{ $t('pages.partners.title') }}
+        </h4>
         <el-tabs>
           <el-tab-pane label="Parceiro">
-            <form class="form-horizontal mt-3" v-loading="formLoading" @submit.prevent>
+            <form
+              class="form-horizontal mt-3"
+              v-loading="formLoading"
+              @submit.prevent
+            >
               <div class="row">
                 <label class="col-md-3 col-form-label">Nome</label>
                 <div class="col-md-9">
-                  <base-input 
+                  <base-input
                     required
                     v-model="model.name"
                     v-validate="modelValidations.name"
                     type="text"
                     :error="getError('name')"
                     name="name"
-                    placeholder="Nome" 
-                    maxlength='200'></base-input>
+                    placeholder="Nome"
+                    maxlength="200"
+                  ></base-input>
                 </div>
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Descrição</label>
                 <div class="col-md-9">
-                  <wysiwyg v-model="model.description" placeholder="Descrição"  />
+                  <wysiwyg
+                    v-model="model.description"
+                    placeholder="Descrição"
+                  />
                 </div>
               </div>
               <template v-if="model.logo">
@@ -32,7 +42,11 @@
                   <div class="col-md-9">
                     <div>
                       <img :src="model.logo" class="img-preview" />
-                      <base-button @click="model.logo = ''" class="btn-simple btn-file" type="danger">
+                      <base-button
+                        @click="model.logo = ''"
+                        class="btn-simple btn-file"
+                        type="danger"
+                      >
                         <i class="fas fa-times"></i>
                       </base-button>
                     </div>
@@ -43,7 +57,12 @@
                 <div class="row">
                   <label class="col-md-3 col-form-label">Logo (250x250)</label>
                   <div class="col-md-9">
-                    <image-upload @change="onImageChange" change-text="Alterar" remove-text="Remover" select-text="Selecione uma imagem" />
+                    <image-upload
+                      @change="onImageChange"
+                      change-text="Alterar"
+                      remove-text="Remover"
+                      select-text="Selecione uma imagem"
+                    />
                   </div>
                 </div>
               </template>
@@ -57,25 +76,45 @@
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  <base-link class="btn mt-3 btn-primary btn-simple" to="/partners">Voltar</base-link>
-                  <base-button 
-                    class="mt-3 pull-right" 
-                    native-type="submit" 
+                  <base-link
+                    class="btn mt-3 btn-primary btn-simple"
+                    to="/partners"
+                    >Voltar</base-link
+                  >
+                  <base-button
+                    class="mt-3 pull-right"
+                    native-type="submit"
                     type="info"
                     @click.native.prevent="validate"
-                    :loading="submitLoading">
+                    :loading="submitLoading"
+                  >
                     Salvar
                   </base-button>
-                  
                 </div>
               </div>
             </form>
           </el-tab-pane>
-          <el-tab-pane label="Contatos" :disabled="viewAction == 'new' ? true : false">
-            <contacts v-loading="formLoading" parent="partners" :parentId="id" ref="contacts"></contacts>
-            </el-tab-pane>
-          <el-tab-pane label="Endereços" :disabled="viewAction == 'new' ? true : false">
-            <addresses v-loading="formLoading" parent="partners" :parentId="id" ref="addresses"></addresses>
+          <el-tab-pane
+            label="Contatos"
+            :disabled="viewAction == 'new' ? true : false"
+          >
+            <contacts
+              v-loading="formLoading"
+              parent="partners"
+              :parentId="id"
+              ref="contacts"
+            ></contacts>
+          </el-tab-pane>
+          <el-tab-pane
+            label="Endereços"
+            :disabled="viewAction == 'new' ? true : false"
+          >
+            <addresses
+              v-loading="formLoading"
+              parent="partners"
+              :parentId="id"
+              ref="addresses"
+            ></addresses>
           </el-tab-pane>
         </el-tabs>
       </card>
@@ -111,7 +150,7 @@ export default {
         name: '',
         active: false,
         logo: '',
-        description:''
+        description: ''
       },
       modelValidations: {
         name: {
@@ -159,10 +198,9 @@ export default {
                 self.submitLoading = false;
               }
             );
-          } else if(self.model.logo){
+          } else if (self.model.logo) {
             self.savePartner(self);
-          }
-          else{
+          } else {
             self.$notify({
               type: 'danger',
               message: 'O Logo é obrigatório',
