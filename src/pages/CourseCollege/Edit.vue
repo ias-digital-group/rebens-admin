@@ -11,6 +11,20 @@
               @submit.prevent
             >
               <div class="row">
+                <label class="col-md-3 col-form-label">Razão Social</label>
+                <div class="col-md-9">
+                  <base-input
+                    required
+                    v-model="model.legalName"
+                    type="text"
+                    :error="getError('legalName')"
+                    name="legalName"
+                    placeholder="Razão Social"
+                    maxlength="500"
+                  ></base-input>
+                </div>
+              </div>
+              <div class="row">
                 <label class="col-md-3 col-form-label">Nome</label>
                 <div class="col-md-9">
                   <base-input
@@ -21,6 +35,22 @@
                     name="name"
                     placeholder="Nome"
                     maxlength="200"
+                  ></base-input>
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-md-3 col-form-label">CNPJ</label>
+                <div class="col-md-9">
+                  <base-input
+                    required
+                    v-model="model.doc"
+                    type="text"
+                    :error="getError('doc')"
+                    name="doc"
+                    placeholder="CNPJ"
+                    maxlength="50"
+                    masked="true"
+                    :inputMask="['##.###.###/####-##']"
                   ></base-input>
                 </div>
               </div>
@@ -160,7 +190,9 @@ export default {
         name: '',
         idOperation: 0,
         logo: '',
-        active: true
+        active: true,
+        legalName: '',
+        doc: ''
       },
       operations: [],
       customErros: [],
@@ -169,6 +201,14 @@ export default {
         name: {
           required: true,
           max: 200
+        },
+        legalName: {
+          required: true,
+          max: 500
+        },
+        doc: {
+          required: true,
+          max: 50
         },
         idOperation: {
           required: true
@@ -191,6 +231,10 @@ export default {
 
       if (self.model.idOperation == null || self.model.idOperation === 0)
         self.customErros.push('operation');
+      if (self.model.legalName == null || self.model.legalName.length < 3)
+        self.customErros.push('legalName');
+      if (self.model.doc == null || self.model.doc.length !== 18)
+        self.customErros.push('doc');
       if (
         self.model.name !== '' &&
         self.model.name.length <= 200 &&
