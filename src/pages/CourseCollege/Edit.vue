@@ -22,6 +22,11 @@
                     placeholder="Razão Social"
                     maxlength="500"
                   ></base-input>
+                  <label
+                      v-show="customErros.includes('legalName')"
+                      class="text-danger"
+                      >O campo Razão Social é obrigatório</label
+                    >
                 </div>
               </div>
               <div class="row">
@@ -52,6 +57,11 @@
                     masked="true"
                     :inputMask="['##.###.###/####-##']"
                   ></base-input>
+                  <label
+                      v-show="customErros.includes('doc')"
+                      class="text-danger"
+                      >O campo CNPJ é obrigatório</label
+                    >
                 </div>
               </div>
               <div class="row">
