@@ -80,9 +80,7 @@ export default {
         id: 0,
         page: 'course-regulation',
         name: '',
-        data: {
-          regulation: ''
-        },
+        data: '',
         idOperation: 1,
         active: true,
         idStaticTextType: 18
