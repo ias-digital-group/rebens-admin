@@ -129,7 +129,8 @@ export default {
         searchWord: this.searchQuery,
         sort: this.formatSortFieldParam,
         parentId: this.parentId,
-        parent: this.parent
+        parent: this.parent,
+        idStaticTextType: 4
       };
       this.$data.loading = true;
       staticTextService.findAll(request).then(

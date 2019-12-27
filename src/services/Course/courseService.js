@@ -57,6 +57,7 @@ export default {
         },
         error => {
           reject(error);
+          console.error('update', error);
         }
       );
     });

@@ -573,6 +573,11 @@
                 placeholder="Link ajude um aluno"
                 maxlength="500"
               ></base-input>
+              <label
+                v-show="customErros.includes('helpStudentLink')"
+                class="text-danger"
+                >O campo Link ajude um aluno é obrigatório!</label
+              >
             </div>
           </div>
           <div class="row">
@@ -765,6 +770,8 @@ export default {
       if (!self.model.listImage && !self.listImage)
         self.customErros.push('listImage');
       if (!self.model.image && !self.image) self.customErros.push('image');
+      if (!self.model.helpStudentLink || self.model.helpStudentLink === '')
+        self.customErros.push('helpStudentLink');
 
       if (self.customErros.length == 0) {
         self.submitLoading = true;
