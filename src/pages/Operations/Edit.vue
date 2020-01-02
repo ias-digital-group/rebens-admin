@@ -36,81 +36,137 @@
             >
               <div class="row">
                 <label class="col-md-3 col-form-label">Titulo</label>
-                <div class="col-md-9">
+                <div
+                  class="col-md-9"
+                  :class="
+                    customErrors.includes('title') ||
+                    customErrors.includes('titleMax')
+                      ? 'has-danger'
+                      : ''
+                  "
+                >
                   <base-input
                     required
                     v-model="model.title"
-                    v-validate="modelValidations.title"
                     type="text"
-                    :error="getError('title')"
                     name="title"
                     placeholder="Titulo"
                     :disabled="!isMaster"
                     maxlength="300"
                   ></base-input>
+                  <label v-show="customErrors.includes('title')" class="error"
+                    >&nbsp;&nbsp;O campo Título é obrigatório.</label
+                  >
+                  <label
+                    v-show="customErrors.includes('titleMax')"
+                    class="error"
+                    >&nbsp;&nbsp;O campo Título aceita no máximo 300
+                    caracteres.</label
+                  >
                 </div>
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Empresa</label>
-                <div class="col-md-9">
+                <div
+                  class="col-md-9"
+                  :class="
+                    customErrors.includes('companyName') ||
+                    customErrors.includes('companyNameMax')
+                      ? 'has-danger'
+                      : ''
+                  "
+                >
                   <base-input
                     required
                     v-model="model.companyName"
-                    v-validate="modelValidations.companyName"
                     type="text"
-                    :error="getError('companyName')"
                     name="companyName"
                     placeholder="Empresa"
                     :disabled="!isMaster"
                     maxlength="300"
                   ></base-input>
+                  <label
+                    v-show="customErrors.includes('companyName')"
+                    class="error"
+                    >&nbsp;&nbsp;O campo Empresa é obrigatório.</label
+                  >
+                  <label
+                    v-show="customErrors.includes('companyNameMax')"
+                    class="error"
+                    >&nbsp;&nbsp;O campo Empresa aceita no máximo 300
+                    caracteres.</label
+                  >
                 </div>
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Documento</label>
-                <div class="col-md-9">
+                <div
+                  class="col-md-9"
+                  :class="
+                    customErrors.includes('companyDoc') ? 'has-danger' : ''
+                  "
+                >
                   <base-input
                     required
                     v-model="model.companyDoc"
-                    v-validate="modelValidations.companyDoc"
                     type="text"
-                    :error="getError('companyDoc')"
                     name="companyDoc"
                     placeholder="CNPJ"
                     maxlength="18"
                     :disabled="!isMaster"
                     :inputMask="['##.###.###/####-##']"
                   ></base-input>
+                  <label
+                    v-show="customErrors.includes('companyDoc')"
+                    class="error"
+                    >&nbsp;&nbsp;O campo Documento é obrigatório.</label
+                  >
                 </div>
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Domínio</label>
-                <div class="col-md-9">
+                <div
+                  class="col-md-9"
+                  :class="
+                    customErrors.includes('domainMax') ? 'has-danger' : ''
+                  "
+                >
                   <base-input
                     v-model="model.domain"
-                    v-validate="modelValidations.domain"
                     type="text"
-                    :error="getError('domain')"
                     name="domain"
                     :disabled="!isMaster"
                     placeholder="www.seudominio.com.br"
                     maxlength="200"
                   ></base-input>
+                  <label
+                    v-show="customErrors.includes('domainMax')"
+                    class="error"
+                    >&nbsp;&nbsp;O campo Domínio aceita no máximo 200
+                    caracteres.</label
+                  >
                 </div>
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label"
                   >Subdomínio temporário</label
                 >
-                <div class="col-md-5">
+                <div
+                  class="col-md-5"
+                  :class="
+                    customErrors.includes('temporarySubdomain')
+                      ? 'has-danger'
+                      : ''
+                  "
+                >
                   <base-input
                     v-model="model.temporarySubdomain"
                     type="text"
-                    :error="getError('temporarySubdomain')"
                     name="temporarySubdomain"
                     :disabled="!isMaster"
                     placeholder=""
                     maxlength="50"
+                    required
                   ></base-input>
                   <label style="position:absolute;top:11px;right:30px;"
                     >.sistemarebens.com.br</label
@@ -123,15 +179,25 @@
                   target="_blank"
                   >preview</a
                 >
+                <label
+                  v-show="customErrors.includes('temporarySubdomain')"
+                  class="error"
+                  >&nbsp;&nbsp;O campo Subdomínio temporário é
+                  obrigatório.</label
+                >
+                <label
+                  v-show="customErrors.includes('temporarySubdomainMax')"
+                  class="error"
+                  >&nbsp;&nbsp;O campo Subdomínio aceita no máximo 50
+                  caracteres.</label
+                >
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Porcentagem</label>
                 <div class="col-md-3">
                   <base-input
                     v-model="model.cachbackPercentage"
-                    v-validate="modelValidations.cachbackPercentage"
                     type="tel"
-                    :error="getError('cachbackPercentage')"
                     name="cachbackPercentage"
                     placeholder="Porcentagem"
                     maxlength="4"
@@ -145,7 +211,9 @@
                 <label class="col-md-3 col-form-label">Tipo</label>
                 <div
                   class="col-md-9"
-                  :class="idOperationTypeError ? 'has-danger' : ''"
+                  :class="
+                    customErrors.includes('idOperationType') ? 'has-danger' : ''
+                  "
                 >
                   <el-select
                     class="select-info"
@@ -153,8 +221,6 @@
                     placeholder="Tipo de operação"
                     v-model="model.idOperationType"
                     v-loading.lock="selectLoading"
-                    v-validate="modelValidations.idOperationType"
-                    :error="getError('idOperationType')"
                     :disabled="!isMaster"
                     lock
                   >
@@ -167,7 +233,9 @@
                     >
                     </el-option>
                   </el-select>
-                  <label v-show="idOperationTypeError" class="error"
+                  <label
+                    v-show="customErrors.includes('idOperationType')"
+                    class="error"
                     >&nbsp;&nbsp;O campo Tipo é obrigatório.</label
                   >
                 </div>
@@ -356,7 +424,7 @@ export default {
       image: null,
       isMaster: false,
       configKey: 0,
-      idOperationTypeError: false,
+      customErrors: [],
       model: {
         title: '',
         companyName: '',
@@ -373,29 +441,6 @@ export default {
         publishStatus: '',
         canPublishTemporary: false
       },
-      modelValidations: {
-        title: {
-          required: true,
-          max: 300
-        },
-        companyName: {
-          required: true,
-          max: 300
-        },
-        temporarySubdomain: {
-          max: 20
-        },
-        companyDoc: {
-          required: true,
-          max: 18
-        },
-        domain: {
-          max: 200
-        },
-        idOperationType: {
-          required: true
-        }
-      },
       operationTypeList: []
     };
   },
@@ -411,19 +456,52 @@ export default {
   },
   methods: {
     getError(fieldName) {
+      console.log(this.errors);
       return this.errors.first(fieldName);
     },
     validate() {
       const self = this;
       if (
-        !self.idOperationType ||
-        self.idOperationType === '' ||
-        self.idOperationType === 0
+        !self.model.idOperationType ||
+        self.model.idOperationType === '' ||
+        self.model.idOperationType === 0
       ) {
-        self.idOperationTypeError = true;
+        self.customErrors.push('idOperationType');
       }
+
+      if (!self.model.title || self.model.title === '') {
+        self.customErrors.push('title');
+      } else if (self.model.title.length > 300) {
+        self.customErrors.push('titleMax');
+      }
+
+      if (!self.model.companyName || self.model.companyName === '') {
+        self.customErrors.push('companyName');
+      } else if (self.model.companyName.length > 300) {
+        self.customErrors.push('companyNameMax');
+      }
+
+      if (
+        !self.model.temporarySubdomain ||
+        self.model.temporarySubdomain === ''
+      ) {
+        self.customErrors.push('temporarySubdomain');
+      } else if (self.model.temporarySubdomain.length > 20) {
+        self.customErrors.push('temporarySubdomainMax');
+      }
+
+      if (!self.model.companyDoc || self.model.companyDoc === '') {
+        self.customErrors.push('companyDoc');
+      } else if (self.model.companyDoc.length > 18) {
+        self.customErrors.push('companyDoc');
+      }
+
+      if (self.model.domain && self.model.domain.length > 200) {
+        self.customErrors.push('domainMax');
+      }
+
       this.$validator.validateAll().then(isValid => {
-        if (isValid) {
+        if (isValid && self.customErros.length == 0) {
           self.submitLoading = true;
           if (self.image) {
             helperService.uploadFile(self.image).then(
