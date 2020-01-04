@@ -94,7 +94,7 @@
               <el-input
                 type="search"
                 class="mb-3 search-input"
-                style="width:300px"
+                style="width:200px"
                 clearable
                 prefix-icon="el-icon-search"
                 placeholder="Usuários"
@@ -127,6 +127,15 @@
               :label="$t('pages.users.grid.actions')"
             >
               <div slot-scope="props">
+                <base-button
+                  @click.native="handleResendPassword(props.$index, props.row)"
+                  class="edit btn-link"
+                  type="info"
+                  size="sm"
+                  icon
+                >
+                  <i class="tim-icons icon-lock-circle"></i>
+                </base-button>
                 <base-button
                   @click.native="handleEdit(props.$index, props.row)"
                   class="edit btn-link"
@@ -251,6 +260,25 @@ export default {
   methods: {
     handleEdit(index, row) {
       this.$router.push(`/users/${row.id}/edit/`);
+    },
+    handleResendPassword(index, row) {
+      if(confirm('Deseja reenviar o e-mail de validação?')){
+        const self = this;
+        self.$data.loading = true;
+        userService.resendValidation(row.id).then(
+          () => {
+            self.$notify({
+              type: 'success',
+              message: 'E-mail reenviado com sucesso!',
+              icon: 'tim-icons icon-bell-55'
+            });
+            self.$data.loading = false;
+          },
+          () => {
+            self.$data.loading = false;
+          }
+        );
+      }      
     },
     fetchData() {
       const self = this;
