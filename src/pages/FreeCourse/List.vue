@@ -78,6 +78,16 @@
                 >
                 </base-button>
                 <base-button
+                  @click.native="duplicate(props.$index, props.row)"
+                  class="btn-link"
+                  type="primary"
+                  size="sm"
+                  icon
+                >
+                  <i class="tim-icons icon-single-copy-04"></i>
+                </base-button>
+                 
+                <base-button
                   @click.native="handleEdit(props.$index, props.row)"
                   class="edit btn-link"
                   type="info"
@@ -155,6 +165,7 @@ import { Table, TableColumn, Select, Option } from 'element-ui';
 import { BasePagination, Modal } from 'src/components';
 import freeCourseService from '../../services/FreeCourse/freeCourseService';
 import listPage from '../../mixins/listPage';
+import { setTimeout } from 'timers';
 export default {
   mixins: [listPage],
   components: {
@@ -197,9 +208,30 @@ export default {
     handleEdit(index, row) {
       this.$router.push(`/freeCourse/${row.id}/edit/`);
     },
+    duplicate(index, row) {
+      const self = this;
+      self.$data.loading = true;
+      freeCourseService.duplicate(row.id)
+        .then(
+          response => {
+            self.$data.loading = false;
+            if (response.status === 'ok') {
+              this.$router.push(`/freeCourse/${response.message}/edit/`);
+            } else {
+              self.$notify({
+                type: 'primary',
+                message: response.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+            }
+          },
+          () => {
+            self.$data.loading = false;
+          }
+        )
+    },
     toggleStatus(index, row) {
       const self = this;
-      debugger;
       self.$data.loading = true;
       freeCourseService.changeActive(row.id, !row.active)
         .then(
@@ -209,6 +241,7 @@ export default {
               row.statusName = row.active ? 'Ativo' : 'Inativo' 
               self.$data.loading = false;
             } else {
+              self.$data.loading = false;
               self.$notify({
                 type: 'primary',
                 message: response.message,

@@ -125,6 +125,15 @@
                 >
                 </base-button>
                 <base-button
+                  @click.native="duplicate(props.$index, props.row)"
+                  class="btn-link"
+                  type="primary"
+                  size="sm"
+                  icon
+                >
+                  <i class="tim-icons icon-single-copy-04"></i>
+                </base-button>
+                <base-button
                   @click.native="handleEdit(props.$index, props.row)"
                   class="edit btn-link"
                   type="info"
@@ -249,6 +258,28 @@ export default {
   methods: {
     handleEdit(index, row) {
       this.$router.push(`/benefits/${row.id}/edit/`);
+    },
+    duplicate(index, row) {
+      const self = this;
+      self.$data.loading = true;
+      benefitService.duplicate(row.id)
+        .then(
+          response => {
+            self.$data.loading = false;
+            if (response.status === 'ok') {
+              this.$router.push(`/benefits/${response.message}/edit/`);
+            } else {
+              self.$notify({
+                type: 'primary',
+                message: response.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+            }
+          },
+          () => {
+            self.$data.loading = false;
+          }
+        )
     },
     toggleStatus(index, row) {
       const self = this;

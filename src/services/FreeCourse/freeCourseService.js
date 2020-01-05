@@ -140,5 +140,17 @@ export default {
         }
       );
     });
+  },
+  duplicate: function(id) {
+    return new Promise((resolve, reject) => {
+      HTTP.post(config.apiEndpoints.freeCourseUri.concat(`duplicate/${id}`)).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
   }
 };
