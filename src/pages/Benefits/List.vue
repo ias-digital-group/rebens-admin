@@ -110,11 +110,20 @@
             >
             </el-table-column>
             <el-table-column
-              :min-width="135"
+              :min-width="150"
               align="right"
               :label="$t('pages.benefits.grid.actions')"
             >
               <div slot-scope="props">
+                <base-button
+                  @click.native="toggleStatus(props.$index, props.row)"
+                  class="btn-link"
+                  type="warning"
+                  size="sm"
+                  v-text="props.row.active ? 'inativar' : 'ativar'"
+                  style="padding:0 5px;font-size:12px;font-weight:400;line-height:28px"
+                >
+                </base-button>
                 <base-button
                   @click.native="handleEdit(props.$index, props.row)"
                   class="edit btn-link"
@@ -240,6 +249,30 @@ export default {
   methods: {
     handleEdit(index, row) {
       this.$router.push(`/benefits/${row.id}/edit/`);
+    },
+    toggleStatus(index, row) {
+      const self = this;
+      debugger;
+      self.$data.loading = true;
+      benefitService.changeActive(row.id, !row.active)
+        .then(
+          response => {
+            if (response.status === 'ok') {
+              row.active = !row.active;
+              row.statusName = row.active ? 'Ativo' : 'Inativo' 
+              self.$data.loading = false;
+            } else {
+              self.$notify({
+                type: 'primary',
+                message: response.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+            }
+          },
+          () => {
+            self.$data.loading = false;
+          }
+        );
     },
     fetchData() {
       const self = this;

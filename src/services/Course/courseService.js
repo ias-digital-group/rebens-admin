@@ -97,5 +97,17 @@ export default {
         }
       );
     });
+  },
+  changeActive: function(id, active) {
+    return new Promise((resolve, reject) => {
+      HTTP.post(config.apiEndpoints.courseUri.concat(`changeActive/${id}/${active}`)).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
   }
 };
