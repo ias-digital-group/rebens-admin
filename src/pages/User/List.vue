@@ -133,8 +133,9 @@
                   type="info"
                   size="sm"
                   icon
+                  title="Reenviar senha"
                 >
-                  <i class="tim-icons icon-lock-circle"></i>
+                  <i class="tim-icons icon-send"></i>
                 </base-button>
                 <base-button
                   @click.native="handleEdit(props.$index, props.row)"
@@ -142,6 +143,7 @@
                   type="info"
                   size="sm"
                   icon
+                  title="Editar"
                 >
                   <i class="tim-icons icon-pencil"></i>
                 </base-button>
@@ -151,6 +153,7 @@
                   type="danger"
                   size="sm"
                   icon
+                  title="Excluir"
                 >
                   <i class="tim-icons icon-simple-remove"></i>
                 </base-button>
