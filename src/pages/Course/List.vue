@@ -209,48 +209,46 @@ export default {
     duplicate(index, row) {
       const self = this;
       self.$data.loading = true;
-      courseService.duplicate(row.id)
-        .then(
-          response => {
-            self.$data.loading = false;
-            if (response.status === 'ok') {
-              this.$router.push(`/course/${response.message}/edit/`);
-            } else {
-              self.$notify({
-                type: 'primary',
-                message: response.message,
-                icon: 'tim-icons icon-bell-55'
-              });
-            }
-          },
-          () => {
-            self.$data.loading = false;
+      courseService.duplicate(row.id).then(
+        response => {
+          self.$data.loading = false;
+          if (response.status === 'ok') {
+            this.$router.push(`/course/${response.message}/edit/`);
+          } else {
+            self.$notify({
+              type: 'primary',
+              message: response.message,
+              icon: 'tim-icons icon-bell-55'
+            });
           }
-        )
+        },
+        () => {
+          self.$data.loading = false;
+        }
+      );
     },
     toggleStatus(index, row) {
       const self = this;
       debugger;
       self.$data.loading = true;
-      courseService.changeActive(row.id, !row.active)
-        .then(
-          response => {
-            if (response.status === 'ok') {
-              row.active = !row.active;
-              row.statusName = row.active ? 'Ativo' : 'Inativo' 
-              self.$data.loading = false;
-            } else {
-              self.$notify({
-                type: 'primary',
-                message: response.message,
-                icon: 'tim-icons icon-bell-55'
-              });
-            }
-          },
-          () => {
+      courseService.changeActive(row.id, !row.active).then(
+        response => {
+          if (response.status === 'ok') {
+            row.active = !row.active;
+            row.statusName = row.active ? 'Ativo' : 'Inativo';
             self.$data.loading = false;
+          } else {
+            self.$notify({
+              type: 'primary',
+              message: response.message,
+              icon: 'tim-icons icon-bell-55'
+            });
           }
-        );
+        },
+        () => {
+          self.$data.loading = false;
+        }
+      );
     },
     fetchData() {
       const self = this;

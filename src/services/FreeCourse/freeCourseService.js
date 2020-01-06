@@ -131,7 +131,9 @@ export default {
   },
   changeActive: function(id, active) {
     return new Promise((resolve, reject) => {
-      HTTP.post(config.apiEndpoints.freeCourseUri.concat(`changeActive/${id}/${active}`)).then(
+      HTTP.post(
+        config.apiEndpoints.freeCourseUri.concat(`changeActive/${id}/${active}`)
+      ).then(
         response => {
           resolve(response.data);
         },
@@ -143,7 +145,9 @@ export default {
   },
   duplicate: function(id) {
     return new Promise((resolve, reject) => {
-      HTTP.post(config.apiEndpoints.freeCourseUri.concat(`duplicate/${id}`)).then(
+      HTTP.post(
+        config.apiEndpoints.freeCourseUri.concat(`duplicate/${id}`)
+      ).then(
         response => {
           resolve(response.data);
         },

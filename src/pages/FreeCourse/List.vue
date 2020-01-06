@@ -86,7 +86,7 @@
                 >
                   <i class="tim-icons icon-single-copy-04"></i>
                 </base-button>
-                 
+
                 <base-button
                   @click.native="handleEdit(props.$index, props.row)"
                   class="edit btn-link"
@@ -165,7 +165,6 @@ import { Table, TableColumn, Select, Option } from 'element-ui';
 import { BasePagination, Modal } from 'src/components';
 import freeCourseService from '../../services/FreeCourse/freeCourseService';
 import listPage from '../../mixins/listPage';
-import { setTimeout } from 'timers';
 export default {
   mixins: [listPage],
   components: {
@@ -211,48 +210,46 @@ export default {
     duplicate(index, row) {
       const self = this;
       self.$data.loading = true;
-      freeCourseService.duplicate(row.id)
-        .then(
-          response => {
-            self.$data.loading = false;
-            if (response.status === 'ok') {
-              this.$router.push(`/freeCourse/${response.message}/edit/`);
-            } else {
-              self.$notify({
-                type: 'primary',
-                message: response.message,
-                icon: 'tim-icons icon-bell-55'
-              });
-            }
-          },
-          () => {
-            self.$data.loading = false;
+      freeCourseService.duplicate(row.id).then(
+        response => {
+          self.$data.loading = false;
+          if (response.status === 'ok') {
+            this.$router.push(`/freeCourse/${response.message}/edit/`);
+          } else {
+            self.$notify({
+              type: 'primary',
+              message: response.message,
+              icon: 'tim-icons icon-bell-55'
+            });
           }
-        )
+        },
+        () => {
+          self.$data.loading = false;
+        }
+      );
     },
     toggleStatus(index, row) {
       const self = this;
       self.$data.loading = true;
-      freeCourseService.changeActive(row.id, !row.active)
-        .then(
-          response => {
-            if (response.status === 'ok') {
-              row.active = !row.active;
-              row.statusName = row.active ? 'Ativo' : 'Inativo' 
-              self.$data.loading = false;
-            } else {
-              self.$data.loading = false;
-              self.$notify({
-                type: 'primary',
-                message: response.message,
-                icon: 'tim-icons icon-bell-55'
-              });
-            }
-          },
-          () => {
+      freeCourseService.changeActive(row.id, !row.active).then(
+        response => {
+          if (response.status === 'ok') {
+            row.active = !row.active;
+            row.statusName = row.active ? 'Ativo' : 'Inativo';
             self.$data.loading = false;
+          } else {
+            self.$data.loading = false;
+            self.$notify({
+              type: 'primary',
+              message: response.message,
+              icon: 'tim-icons icon-bell-55'
+            });
           }
-        );
+        },
+        () => {
+          self.$data.loading = false;
+        }
+      );
     },
     fetchData() {
       const self = this;

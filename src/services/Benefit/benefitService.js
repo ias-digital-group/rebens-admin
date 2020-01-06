@@ -153,7 +153,9 @@ export default {
   },
   changeActive: function(id, active) {
     return new Promise((resolve, reject) => {
-      HTTP.post(config.apiEndpoints.benefitUri.concat(`changeActive/${id}/${active}`)).then(
+      HTTP.post(
+        config.apiEndpoints.benefitUri.concat(`changeActive/${id}/${active}`)
+      ).then(
         response => {
           resolve(response.data);
         },

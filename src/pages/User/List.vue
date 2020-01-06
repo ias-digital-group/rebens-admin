@@ -262,7 +262,7 @@ export default {
       this.$router.push(`/users/${row.id}/edit/`);
     },
     handleResendPassword(index, row) {
-      if(confirm('Deseja reenviar o e-mail de validação?')){
+      if (confirm('Deseja reenviar o e-mail de validação?')) {
         const self = this;
         self.$data.loading = true;
         userService.resendValidation(row.id).then(
@@ -278,7 +278,7 @@ export default {
             self.$data.loading = false;
           }
         );
-      }      
+      }
     },
     fetchData() {
       const self = this;
