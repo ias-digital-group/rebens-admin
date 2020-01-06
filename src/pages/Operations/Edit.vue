@@ -461,6 +461,7 @@ export default {
     },
     validate() {
       const self = this;
+      self.customErrors = [];
       if (
         !self.model.idOperationType ||
         self.model.idOperationType === '' ||
