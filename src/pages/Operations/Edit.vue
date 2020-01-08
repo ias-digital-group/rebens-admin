@@ -248,7 +248,7 @@
                   <div class="col-md-9">
                     <div>
                       <img
-                        style="max-width:160px;max-height:68px;"
+                        style="max-width:160px;"
                         :src="model.logo"
                         class="img-preview"
                       />
@@ -272,12 +272,15 @@
                   <div class="col-md-9">
                     <image-upload
                       @change="onImageChange"
-                      style="max-width:160px;max-height:68px;"
+                      style="max-width:160px;"
                       change-text="Alterar"
                       :disabled="!isMaster"
                       remove-text="Remover"
                       select-text="Selecione uma imagem"
-                    />
+                    /><br />
+                    <label v-show="customErrors.includes('logo')" class="error"
+                      >&nbsp;&nbsp;O campo Logo é obrigatório.</label
+                    >
                   </div>
                 </div>
               </template>
@@ -500,9 +503,12 @@ export default {
       if (self.model.domain && self.model.domain.length > 200) {
         self.customErrors.push('domainMax');
       }
+      if (!self.model.logo || self.model.logo === '') {
+        self.customErrors.push('logo');
+      }
 
       this.$validator.validateAll().then(isValid => {
-        if (isValid && self.customErros.length == 0) {
+        if (isValid && self.customErrors.length == 0) {
           self.submitLoading = true;
           if (self.image) {
             helperService.uploadFile(self.image).then(

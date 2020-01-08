@@ -73,6 +73,7 @@ export default {
     validateForm() {
       const self = this;
       self.submitLoading = true;
+
       if (self.model.images && self.model.images.length > 0) {
         let promises = new Array(self.model.images.length);
         for (var i = 0; i <= self.model.images.length - 1; i++) {
@@ -100,25 +101,46 @@ export default {
     },
     saveConfig(self) {
       self.formLoading = true;
-      operationService.saveConfiguration(self.parentId, self.model.data).then(
-        response => {
-          self.$notify({
-            type: 'primary',
-            message: response
-              ? response.message
-              : 'Configurações atualizadas com sucesso.',
-            icon: 'tim-icons icon-bell-55'
-          });
-          self.$router.go();
-          //window.location.reload(true);
-          // self.formLoading = false;
-          // self.fetchData();
-        },
-        () => {
-          console.log('erro');
-          self.formLoading = false;
+      let errors = '';
+      for (let i = 0; i < self.model.data.fields.length; i++) {
+        if (
+          self.model.data.fields[i].isRequired &&
+          self.model.data.fields[i].data === ''
+        ) {
+          errors += ` ${self.model.data.fields[i].label} |`;
         }
-      );
+      }
+      if (errors !== '') {
+        errors = `Campo(s) ${errors.substring(
+          0,
+          errors.length - 1
+        )} obrigatório(s)!`;
+        self.$notify({
+          type: 'primary',
+          message: errors,
+          icon: 'tim-icons icon-bell-55'
+        });
+      } else {
+        operationService.saveConfiguration(self.parentId, self.model.data).then(
+          response => {
+            self.$notify({
+              type: 'primary',
+              message: response
+                ? response.message
+                : 'Configurações atualizadas com sucesso.',
+              icon: 'tim-icons icon-bell-55'
+            });
+            self.$router.go();
+            //window.location.reload(true);
+            // self.formLoading = false;
+            // self.fetchData();
+          },
+          () => {
+            console.log('erro');
+            self.formLoading = false;
+          }
+        );
+      }
       self.formLoading = false;
     },
     getError(fieldName) {
