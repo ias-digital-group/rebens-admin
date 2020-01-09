@@ -503,7 +503,7 @@ export default {
       if (self.model.domain && self.model.domain.length > 200) {
         self.customErrors.push('domainMax');
       }
-      if (!self.model.logo || self.model.logo === '') {
+      if ((!self.model.logo || self.model.logo === '') && !self.image) {
         self.customErrors.push('logo');
       }
 
@@ -552,6 +552,7 @@ export default {
             vw.$router.push(`/operations/${response.id}/edit/`);
             setTimeout(() => {
               vw.fetchData();
+              vw.submitLoading = false;
               vw.configKey++;
             }, 500);
           },
