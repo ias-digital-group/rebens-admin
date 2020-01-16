@@ -23,10 +23,7 @@
           <div class="row">
             <label class="col-md-3 col-form-label">Regulamento</label>
             <div class="col-md-8">
-              <wysiwyg
-                placeholder="Regulamento"
-                v-model="model.data.regulation"
-              />
+              <wysiwyg placeholder="Regulamento" v-model="model.data" />
             </div>
           </div>
           <div class="row">
