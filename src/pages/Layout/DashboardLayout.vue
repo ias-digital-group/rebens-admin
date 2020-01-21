@@ -277,7 +277,8 @@ export default {
         !this.isPartnerApprover &&
         !this.isPartnerAdmin &&
         !this.isRebens &&
-        this.$store.getters.currentUser.idOperation == 1);
+        (this.$store.getters.currentUser.idOperation == 1 ||
+          this.$store.getters.currentUser.idOperation == 70));
   }
 };
 </script>
