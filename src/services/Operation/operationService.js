@@ -337,5 +337,19 @@ export default {
         }
       );
     });
+  },
+  checkFileProcessing: function(id) {
+    return new Promise((resolve, reject) => {
+      HTTP.get(
+        config.apiEndpoints.operationUri.concat(`${id}/HasFileProcessing`)
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
   }
 };
