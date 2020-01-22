@@ -64,7 +64,17 @@
       class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
       v-if="!showForm"
     >
-      <span class="btn btn-info mt-3 btn-simple btn-file">
+      <span
+        class="btn btn-info mt-3 btn-simple"
+        disabled
+        v-show="showFileInfo"
+        >{{ fileInfoText }}</span
+      >
+      <span
+        class="btn btn-info mt-3 btn-simple btn-file"
+        v-show="showUploadButton"
+        v-loading="uploadLoading"
+      >
         <span class="fileinput-new">Subir Lista</span>
         <input type="hidden" value="" name="" />
         <input
@@ -201,7 +211,6 @@
         </div>
       </form>
     </div>
-    <!-- Classic Modal -->
     <modal :show.sync="modal.visible" headerClasses="justify-content-center">
       <h4 slot="header" class="title title-up">Remover Pré Cadastro</h4>
       <form
@@ -261,6 +270,10 @@ export default {
       sortField: 'name',
       showForm: false,
       showTable: false,
+      showUploadButton: false,
+      showFileInfo: false,
+      uploadLoading: false,
+      fileInfoText: '',
       tableColumns: [
         {
           prop: 'name',
@@ -349,6 +362,18 @@ export default {
           self.$data.loading = false;
         }
       );
+
+      operationService.checkFileProcessing(this.parentId).then(response => {
+        if (response.status == 'ok') {
+          self.fileInfoText = response.message;
+          self.showUploadButton = false;
+          self.showFileInfo = true;
+        } else {
+          self.showUploadButton = true;
+          self.showFileInfo = false;
+          self.fileInfoText = '';
+        }
+      });
     },
     validateCustomer() {
       const self = this;
@@ -430,7 +455,7 @@ export default {
         return;
       }
       const self = this;
-      self.formLoading = true;
+      self.uploadLoading = true;
       let file = event.target.files[0];
       operationService.uploadCustomerList(self.parentId, file).then(
         response => {
@@ -442,7 +467,7 @@ export default {
           self.resetModal();
           self.pagination.currentPage = 1;
           self.fetchData();
-          self.formLoading = false;
+          self.uploadLoading = false;
         },
         err => {
           self.$notify({
@@ -450,7 +475,7 @@ export default {
             message: err.message,
             icon: 'tim-icons icon-bell-55'
           });
-          self.formLoading = false;
+          self.uploadLoading = false;
         }
       );
     },

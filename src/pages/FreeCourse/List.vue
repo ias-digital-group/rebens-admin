@@ -63,11 +63,30 @@
             >
             </el-table-column>
             <el-table-column
-              :min-width="135"
+              :min-width="150"
               align="right"
               :label="$t('pages.faqs.grid.actions')"
             >
               <div slot-scope="props">
+                <base-button
+                  @click.native="toggleStatus(props.$index, props.row)"
+                  class="btn-link"
+                  type="warning"
+                  size="sm"
+                  v-text="props.row.active ? 'inativar' : 'ativar'"
+                  style="padding:0 5px;font-size:12px;font-weight:400;line-height:28px"
+                >
+                </base-button>
+                <base-button
+                  @click.native="duplicate(props.$index, props.row)"
+                  class="btn-link"
+                  type="primary"
+                  size="sm"
+                  icon
+                >
+                  <i class="tim-icons icon-single-copy-04"></i>
+                </base-button>
+
                 <base-button
                   @click.native="handleEdit(props.$index, props.row)"
                   class="edit btn-link"
@@ -169,12 +188,12 @@ export default {
         {
           prop: 'name',
           label: 'Nome',
-          minWidth: 500
+          minWidth: 200
         },
         {
           prop: 'title',
           label: 'Título',
-          minWidth: 500
+          minWidth: 200
         },
         {
           prop: 'statusName',
@@ -187,6 +206,50 @@ export default {
   methods: {
     handleEdit(index, row) {
       this.$router.push(`/freeCourse/${row.id}/edit/`);
+    },
+    duplicate(index, row) {
+      const self = this;
+      self.$data.loading = true;
+      freeCourseService.duplicate(row.id).then(
+        response => {
+          self.$data.loading = false;
+          if (response.status === 'ok') {
+            this.$router.push(`/freeCourse/${response.message}/edit/`);
+          } else {
+            self.$notify({
+              type: 'primary',
+              message: response.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+          }
+        },
+        () => {
+          self.$data.loading = false;
+        }
+      );
+    },
+    toggleStatus(index, row) {
+      const self = this;
+      self.$data.loading = true;
+      freeCourseService.changeActive(row.id, !row.active).then(
+        response => {
+          if (response.status === 'ok') {
+            row.active = !row.active;
+            row.statusName = row.active ? 'Ativo' : 'Inativo';
+            self.$data.loading = false;
+          } else {
+            self.$data.loading = false;
+            self.$notify({
+              type: 'primary',
+              message: response.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+          }
+        },
+        () => {
+          self.$data.loading = false;
+        }
+      );
     },
     fetchData() {
       const self = this;

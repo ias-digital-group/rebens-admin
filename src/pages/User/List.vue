@@ -94,7 +94,7 @@
               <el-input
                 type="search"
                 class="mb-3 search-input"
-                style="width:300px"
+                style="width:200px"
                 clearable
                 prefix-icon="el-icon-search"
                 placeholder="Usuários"
@@ -128,11 +128,22 @@
             >
               <div slot-scope="props">
                 <base-button
+                  @click.native="handleResendPassword(props.$index, props.row)"
+                  class="edit btn-link"
+                  type="info"
+                  size="sm"
+                  icon
+                  title="Reenviar senha"
+                >
+                  <i class="tim-icons icon-send"></i>
+                </base-button>
+                <base-button
                   @click.native="handleEdit(props.$index, props.row)"
                   class="edit btn-link"
                   type="info"
                   size="sm"
                   icon
+                  title="Editar"
                 >
                   <i class="tim-icons icon-pencil"></i>
                 </base-button>
@@ -142,6 +153,7 @@
                   type="danger"
                   size="sm"
                   icon
+                  title="Excluir"
                 >
                   <i class="tim-icons icon-simple-remove"></i>
                 </base-button>
@@ -251,6 +263,25 @@ export default {
   methods: {
     handleEdit(index, row) {
       this.$router.push(`/users/${row.id}/edit/`);
+    },
+    handleResendPassword(index, row) {
+      if (confirm('Deseja reenviar o e-mail de validação?')) {
+        const self = this;
+        self.$data.loading = true;
+        userService.resendValidation(row.id).then(
+          () => {
+            self.$notify({
+              type: 'success',
+              message: 'E-mail reenviado com sucesso!',
+              icon: 'tim-icons icon-bell-55'
+            });
+            self.$data.loading = false;
+          },
+          () => {
+            self.$data.loading = false;
+          }
+        );
+      }
     },
     fetchData() {
       const self = this;
