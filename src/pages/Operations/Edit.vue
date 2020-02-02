@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <card title="Horizontal Form">
         <h4 slot="header" class="card-title col-md-12">
-          {{ $t('pages.operations.title') }}
+          {{ $t('pages.operations.title') }} {{  }}
           <base-button
             class="pull-right"
             native-type="button"

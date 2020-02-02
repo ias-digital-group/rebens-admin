@@ -25,7 +25,7 @@
       </template>
       <template v-else-if="field.type == 'boolean'">
         <div class="col-md-9">
-          <base-checkbox v-model="field.data">&nbsp;</base-checkbox>
+          <base-checkbox  v-model="field.checked">&nbsp;</base-checkbox>
         </div>
       </template>
       <template v-else-if="field.type == 'html'">

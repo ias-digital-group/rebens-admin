@@ -351,5 +351,18 @@ export default {
         }
       );
     });
+  },
+  listModules: function() {
+    return new Promise((resolve, reject) => {
+      HTTP.get(config.apiEndpoints.operationUri.concat('Modules'))
+      .then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
   }
 };

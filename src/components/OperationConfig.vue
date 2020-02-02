@@ -6,6 +6,15 @@
           ref="staticTextForm"
           :staticText.sync="model"
         ></static-text-form>
+        <hr />
+        <div class="row"><div class="col-md-12"><h4>Módulos</h4></div></div>
+        <div v-for="(field, idx) in modules" :key="idx" class="row">       
+          <label class="col-md-3 col-form-label">{{ field.name }}</label>
+          <div class="col-md-9">
+            <base-checkbox v-model="field.id">&nbsp;</base-checkbox>
+          </div>
+        </div>
+        
         <div class="row">
           <div class="col-md-12">
             <base-button
@@ -52,7 +61,8 @@ export default {
         idOperation: 0,
         active: true,
         images: []
-      }
+      },
+      modules: []
     };
   },
   methods: {
@@ -67,6 +77,11 @@ export default {
         },
         () => {
           self.$data.loading = false;
+        }
+      );
+      operationService.listModules().then(
+        response => {
+          this.modules = response;
         }
       );
     },
