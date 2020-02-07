@@ -233,11 +233,6 @@
                     >
                     </el-option>
                   </el-select>
-                  <label
-                    v-show="customErrors.includes('idOperationType')"
-                    class="error"
-                    >&nbsp;&nbsp;O campo Tipo é obrigatório.</label
-                  >
                 </div>
               </div>
               <template v-if="model.logo">
