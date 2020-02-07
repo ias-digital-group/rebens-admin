@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <card title="Horizontal Form">
         <h4 slot="header" class="card-title col-md-12">
-          {{ $t('pages.operations.title') }} {{  }}
+          {{ $t('pages.operations.title') }}
           <base-button
             class="pull-right"
             native-type="button"
@@ -590,7 +590,7 @@ export default {
     publish() {
       const self = this;
       self.publishLoading = true;
-      operationService.publish(self.id, false).then(
+      operationService.publish(self.id).then(
         () => {
           self.$notify({
             type: 'primary',
@@ -613,7 +613,7 @@ export default {
     publishTemp() {
       const self = this;
       self.publishTempLoading = true;
-      operationService.publish(self.id, true).then(
+      operationService.publish(self.id).then(
         () => {
           self.$notify({
             type: 'primary',

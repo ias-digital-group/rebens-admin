@@ -323,13 +323,9 @@ export default {
         );
     });
   },
-  publish: function(id, isTemporary) {
+  publish: function(id) {
     return new Promise((resolve, reject) => {
-      HTTP.post(
-        config.apiEndpoints.operationUri.concat(
-          `${id}/Publish/?isTemporary=${isTemporary}`
-        )
-      ).then(
+      HTTP.post(config.apiEndpoints.operationUri.concat(`${id}/Publish`)).then(
         response => {
           resolve(response.data);
         },
@@ -355,8 +351,7 @@ export default {
   },
   listModules: function(id) {
     return new Promise((resolve, reject) => {
-      HTTP.get(config.apiEndpoints.operationUri.concat(`Modules/${id}`))
-      .then(
+      HTTP.get(config.apiEndpoints.operationUri.concat(`Modules/${id}`)).then(
         response => {
           resolve(response.data);
         },
