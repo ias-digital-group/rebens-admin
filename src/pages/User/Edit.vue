@@ -103,6 +103,11 @@
                     value="partnerApprover"
                     label="Aprovador Parceiro"
                   ></el-option>
+                  <el-option
+                    class="select-primary"
+                    value="promoter"
+                    label="Promotor"
+                  ></el-option>
                 </el-select>
                 <label
                   v-show="customErros.includes('roles')"
