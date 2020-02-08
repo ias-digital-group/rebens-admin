@@ -233,11 +233,6 @@
                     >
                     </el-option>
                   </el-select>
-                  <label
-                    v-show="customErrors.includes('idOperationType')"
-                    class="error"
-                    >&nbsp;&nbsp;O campo Tipo é obrigatório.</label
-                  >
                 </div>
               </div>
               <template v-if="model.logo">
@@ -595,7 +590,7 @@ export default {
     publish() {
       const self = this;
       self.publishLoading = true;
-      operationService.publish(self.id, false).then(
+      operationService.publish(self.id).then(
         () => {
           self.$notify({
             type: 'primary',
@@ -618,7 +613,7 @@ export default {
     publishTemp() {
       const self = this;
       self.publishTempLoading = true;
-      operationService.publish(self.id, true).then(
+      operationService.publish(self.id).then(
         () => {
           self.$notify({
             type: 'primary',
