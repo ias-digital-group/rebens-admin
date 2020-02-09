@@ -92,7 +92,14 @@ export default {
               response => {
                 if (response && response.authenticated) {
                   self.$store.dispatch('setUser', response);
-                  window.location = '/';
+                  const jwtData = JSON.parse(
+                    atob(response.accessToken.split('.')[1])
+                  );
+                  if (jwtData.role === 'promoter') {
+                    window.location = '/#/promoter';
+                  } else {
+                    window.location = '/';
+                  }
                   return;
                 }
                 self.$data.fullscreenLoading = false;

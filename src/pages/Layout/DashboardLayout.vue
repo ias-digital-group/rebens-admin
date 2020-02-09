@@ -1,8 +1,12 @@
 <template>
-  <div class="wrapper" :class="{ 'nav-open': $sidebar.showSidebar }">
+  <div
+    class="wrapper"
+    :class="{ 'nav-open': $sidebar.showSidebar, 'no-sidebar': isPromoter }"
+  >
     <notifications></notifications>
-    <sidebar-fixed-toggle-button />
+    <sidebar-fixed-toggle-button v-if="!isPromoter" />
     <side-bar
+      v-if="!isPromoter"
       :background-color="sidebarBackground"
       :short-title="$t('sidebar.shortTitle')"
       :title="$t('sidebar.title')"
@@ -257,9 +261,13 @@ export default {
       } else {
         docClasses.add('perfect-scrollbar-off');
       }
+      if (this.isPromoter) {
+        this.$sidebar.displaySidebar(false);
+      }
     }
   },
   created() {
+    this.isPromoter = this.$store.getters.currentUser.role == 'promoter';
     this.isRebens =
       this.$store.getters.currentUser.role == 'master' ||
       this.$store.getters.currentUser.role == 'administratorRebens' ||

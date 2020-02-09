@@ -276,6 +276,7 @@ export default {
       return (
         (this.model.roles == 'administrator' ||
           this.model.roles == 'publisher' ||
+          this.model.roles == 'promoter' ||
           this.model.roles == 'partnerAdministrator' ||
           this.model.roles == 'partnerApprover') &&
         this.isRebens &&
@@ -340,6 +341,7 @@ export default {
         self.isRebens &&
         (self.model.roles === 'publisher' ||
           self.model.roles === 'administrator' ||
+          self.model.roles == 'promoter' ||
           self.model.roles == 'partnerAdministrator' ||
           self.model.roles == 'partnerApprover') &&
         self.model.idOperation == null
