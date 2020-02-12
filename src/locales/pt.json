@@ -169,6 +169,9 @@
             "total":"Utilizações"
           }
         }
+      },
+      "promoter":{
+        "title":"Clientes"
       }
     },
     "navbar":{
@@ -203,6 +206,7 @@
       "report": "Relatórios",
       "customer":"Clientes",
       "benefitUse":"Utilização",
+      "promoterReport":"Promotores",
       "pages":"Páginas",
       "customers":"Pré-cadastro",
       "courses":"Cursos",

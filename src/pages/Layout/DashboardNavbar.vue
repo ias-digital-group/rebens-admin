@@ -6,10 +6,11 @@
     :transparent="true"
   >
     <div slot="brand" class="navbar-wrapper">
-      <div class="navbar-minimize d-inline">
+      <div v-if="!isPromoter" class="navbar-minimize d-inline">
         <sidebar-toggle-button />
       </div>
       <div
+        v-if="!isPromoter"
         class="navbar-toggle d-inline"
         :class="{ toggled: $sidebar.showSidebar }"
       >
@@ -186,6 +187,9 @@ export default {
       this.$store.dispatch('removeUser');
       this.$router.push('/login');
     }
+  },
+  created() {
+    this.isPromoter = this.$store.getters.currentUser.role === 'promoter';
   }
 };
 </script>

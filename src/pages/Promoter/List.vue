@@ -4,10 +4,9 @@
       <card card-body-classes="table-full-width">
         <template slot="header">
           <h4 class="card-title">
-            {{ $t('pages.operations.title') }}
+            Clientes
             <base-link
-              v-show="isMaster"
-              to="/operations/new"
+              to="/promoter/new"
               class="btn btn-icon btn-simple btn-twitter btn-sm"
               ><i class="tim-icons icon-simple-add"></i
             ></base-link>
@@ -20,7 +19,7 @@
             <el-select
               class="select-primary mb-3 pagination-select"
               v-model="pagination.perPage"
-              :placeholder="$t('pages.operations.perpage-placeholder')"
+              :placeholder="$t('pages.banners.perpage-placeholder')"
               v-if="!loading"
             >
               <el-option
@@ -34,23 +33,43 @@
             </el-select>
             <el-select
               class="select-primary mb-3 pagination-select"
-              v-model="activeFilter"
+              v-model="customerStatus"
               v-if="!loading"
             >
               <el-option
                 class="select-primary"
                 value=""
-                label="Todas"
+                label="Todos status"
               ></el-option>
               <el-option
                 class="select-primary"
-                value="true"
-                label="Ativas"
+                key="1"
+                value="1"
+                label="Ativo"
               ></el-option>
               <el-option
                 class="select-primary"
-                value="false"
-                label="Inativas"
+                key="2"
+                value="2"
+                label="Inativo"
+              ></el-option>
+              <el-option
+                class="select-primary"
+                key="3"
+                value="3"
+                label="Validação"
+              ></el-option>
+              <el-option
+                class="select-primary"
+                key="4"
+                value="4"
+                label="Trocar Senha"
+              ></el-option>
+              <el-option
+                class="select-primary"
+                key="5"
+                value="5"
+                label="Incompleto"
               ></el-option>
             </el-select>
             <base-input>
@@ -60,7 +79,7 @@
                 style="width:300px"
                 clearable
                 prefix-icon="el-icon-search"
-                placeholder="Procurar operações"
+                placeholder="Procurar cliente"
                 aria-controls="datatables"
                 v-model="searchQuery"
               >
@@ -71,7 +90,7 @@
             ref="table"
             :data="tableData"
             v-loading="loading"
-            :empty-text="$t('pages.operations.emptytext')"
+            :empty-text="$t('pages.banners.emptytext')"
             @sort-change="onSortChanged"
             :default-sort="{ prop: sortField, order: sortOrder }"
           >
@@ -84,32 +103,14 @@
               sortable="custom"
             >
             </el-table-column>
-            <el-table-column
-              :min-width="135"
-              align="right"
-              :label="$t('pages.operations.grid.actions')"
-            >
-              <div slot-scope="props">
-                <base-button
-                  @click.native="handleEdit(props.$index, props.row)"
-                  class="edit btn-link"
-                  type="info"
-                  size="sm"
-                  icon
-                >
-                  <i class="tim-icons icon-pencil"></i>
-                </base-button>
-              </div>
-            </el-table-column>
           </el-table>
         </div>
         <div
           slot="footer"
           class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
         >
-          <div class=""></div>
           <base-pagination
-            class="pagination-no-border"
+            class="pagination-no-border mt-3"
             v-model="pagination.currentPage"
             :per-page="pagination.perPage"
             :total="total"
@@ -123,13 +124,12 @@
 </template>
 <script>
 import { Table, TableColumn, Select, Option } from 'element-ui';
-import { BasePagination, Modal } from 'src/components';
-import operationService from '../../services/Operation/operationService';
+import { BasePagination } from 'src/components';
+import promoterService from '../../services/Promoter/promoterService';
 import listPage from '../../mixins/listPage';
 export default {
   mixins: [listPage],
   components: {
-    Modal,
     BasePagination,
     [Select.name]: Select,
     [Option.name]: Option,
@@ -138,33 +138,35 @@ export default {
   },
   data() {
     return {
-      internalName: 'pages.operations.list',
+      internalName: 'Clientes',
       sortField: 'name',
-      isMaster: false,
-      activeFilter: '',
+      formLoading: false,
+      customerStatus: '',
       tableColumns: [
         {
-          prop: 'id',
-          label: this.$i18n.t('pages.operations.grid.id'),
-          minWidth: 0
+          prop: 'name',
+          label: 'Nome'
         },
         {
-          prop: 'title',
-          label: this.$i18n.t('pages.operations.grid.title'),
-          minWidth: 200
+          prop: 'cpf',
+          label: 'CPF'
         },
         {
-          prop: 'activeName',
-          label: this.$i18n.t('pages.operations.grid.active'),
-          minWidth: 0
+          prop: 'email',
+          label: 'E-mail'
+        },
+        {
+          prop: 'created',
+          label: 'Data'
+        },
+        {
+          prop: 'statusName',
+          label: 'Status'
         }
       ]
     };
   },
   methods: {
-    handleEdit(index, row) {
-      this.$router.push(`/operations/${row.id}/edit/`);
-    },
     fetchData() {
       const self = this;
       const request = {
@@ -172,12 +174,19 @@ export default {
         pageItems: this.$data.pagination.perPage,
         searchWord: this.searchQuery,
         sort: this.formatSortFieldParam,
-        active: this.activeFilter
+        status: this.customerStatus
       };
       this.$data.loading = true;
-      operationService.findAll(request).then(
+      promoterService.list(request).then(
         response => {
           self.$data.tableData = response.data;
+          if (response.data) {
+            self.showForm = false;
+            self.showTable = response.data.length > 0;
+          } else {
+            self.showForm = false;
+            self.showTable = false;
+          }
           self.savePageSettings(self, response.totalItems);
           self.$data.loading = false;
         },
@@ -185,42 +194,10 @@ export default {
           self.$data.loading = false;
         }
       );
-    },
-    validateModal() {
-      const self = this;
-      this.$validator.validateAll().then(isValid => {
-        if (isValid) {
-          self.modal.formLoading = true;
-          operationService.delete(self.modal.model.id).then(
-            response => {
-              self.$notify({
-                type: 'primary',
-                message: response.message,
-                icon: 'tim-icons icon-bell-55'
-              });
-              self.resetModal();
-              self.pagination.currentPage = 1;
-              self.fetchData();
-            },
-            err => {
-              self.$notify({
-                type: 'primary',
-                message: err.message,
-                icon: 'tim-icons icon-bell-55'
-              });
-              self.modal.formLoading = false;
-            }
-          );
-        }
-      });
     }
   },
-  created() {
-    this.isMaster = this.$store.getters.currentUser.role == 'master';
-    this.fetchData();
-  },
   watch: {
-    activeFilter() {
+    customerStatus() {
       this.fetchData();
     }
   }

@@ -54,9 +54,7 @@
 
           <div class="row">
             <div class="col-md-12">
-              <base-link
-                class="btn mt-3 btn-simple btn-primary"
-                to="/categories"
+              <base-link class="btn mt-3 btn-simple btn-primary" to="/"
                 >Voltar</base-link
               >
               <base-button

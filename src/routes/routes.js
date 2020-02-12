@@ -84,6 +84,10 @@ const CourseRegulationList = () =>
 const CourseRegulationEdit = () =>
   import('src/pages/CourseRegulation/Edit.vue');
 
+const PromoterList = () => import('src/pages/Promoter/List.vue');
+const PromoterEdit = () => import('src/pages/Promoter/Edit.vue');
+const PromoterReport = () => import('src/pages/Promoter/Report.vue');
+
 let categoriesPages = {
   path: '/categories',
   component: DashboardLayout,
@@ -683,7 +687,8 @@ let accountPages = {
       'administrator',
       'publisher',
       'publisherRebens',
-      'administratorRebens'
+      'administratorRebens',
+      'promoter'
     ],
     title: i18n.t('pages.account.title')
   },
@@ -699,7 +704,8 @@ let accountPages = {
           'administrator',
           'publisher',
           'publisherRebens',
-          'administratorRebens'
+          'administratorRebens',
+          'promoter'
         ],
         title: i18n.t('pages.change-password.title')
       }
@@ -1243,6 +1249,66 @@ let courseRegulationPages = {
   ]
 };
 
+let promoterPages = {
+  path: '/promoter',
+  component: DashboardLayout,
+  meta: {
+    requiresAuth: true,
+    roles: ['promoter'],
+    title: i18n.t('pages.promoter.title')
+  },
+  children: [
+    {
+      path: '',
+      name: 'promoter',
+      component: PromoterList,
+      meta: {
+        requiresAuth: true,
+        roles: ['promoter'],
+        title: i18n.t('pages.promoter.title')
+      }
+    },
+    {
+      path: 'new',
+      name: `new_promoter_customer`,
+      component: PromoterEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['promoter'],
+        title: i18n.t('pages.promoter.title')
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_promoter_custoemr',
+      props: true,
+      component: PromoterEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['promoter'],
+        title: i18n.t('pages.promoter.title')
+      }
+    },
+    {
+      path: 'report',
+      name: 'edit_promoter_report',
+      props: true,
+      component: PromoterReport,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'publisher',
+          'administrator',
+          'publisherRebens',
+          'administratorRebens'
+        ],
+        title: i18n.t('pages.promoter.title')
+      }
+    }
+  ]
+};
+
 const routes = [
   {
     path: '/',
@@ -1263,7 +1329,8 @@ const routes = [
             'publisherRebens',
             'administratorRebens',
             'partnerAdministrator',
-            'partnerApprover'
+            'partnerApprover',
+            'promoter'
           ],
           title: i18n.t('pages.dashboard.title')
         }
@@ -1355,7 +1422,8 @@ const routes = [
   coursePages,
   courseFaqPages,
   courseRegulationPages,
-  freeCoursePages
+  freeCoursePages,
+  promoterPages
 ];
 
 export default routes;

@@ -809,6 +809,12 @@
 
 }
 
+.no-sidebar{
+  .content{
+    padding-left: 30px;
+  }
+}
+
 @include media-breakpoint-down(sm){
   .main-panel .content {
     padding-left: 15px;

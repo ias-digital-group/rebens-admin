@@ -38,6 +38,7 @@ export default {
     coursePeriodUri: process.env.VUE_APP_API_URI.concat('coursePeriod/'),
     courseUri: process.env.VUE_APP_API_URI.concat('course/'),
     freeCourseUri: process.env.VUE_APP_API_URI.concat('freeCourse/'),
+    promoterUri: process.env.VUE_APP_API_URI.concat('promoter/'),
     viaCepUri: process.env.VUE_APP_VIACEP_URI
   }
 };
