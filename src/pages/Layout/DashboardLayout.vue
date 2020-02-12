@@ -178,6 +178,13 @@
               path: '/report/benefit-use'
             }"
           ></sidebar-item>
+          <sidebar-item
+            v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
+            :link="{
+              name: $t('sidebar.promoterReport'),
+              path: '/promoter/report'
+            }"
+          ></sidebar-item>
         </sidebar-item>
       </template>
     </side-bar>

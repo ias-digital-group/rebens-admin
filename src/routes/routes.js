@@ -86,6 +86,7 @@ const CourseRegulationEdit = () =>
 
 const PromoterList = () => import('src/pages/Promoter/List.vue');
 const PromoterEdit = () => import('src/pages/Promoter/Edit.vue');
+const PromoterReport = () => import('src/pages/Promoter/Report.vue');
 
 let categoriesPages = {
   path: '/categories',
@@ -1285,6 +1286,23 @@ let promoterPages = {
       meta: {
         requiresAuth: true,
         roles: ['promoter'],
+        title: i18n.t('pages.promoter.title')
+      }
+    },
+    {
+      path: 'report',
+      name: 'edit_promoter_report',
+      props: true,
+      component: PromoterReport,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'publisher',
+          'administrator',
+          'publisherRebens',
+          'administratorRebens'
+        ],
         title: i18n.t('pages.promoter.title')
       }
     }

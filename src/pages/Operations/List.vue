@@ -99,15 +99,6 @@
                 >
                   <i class="tim-icons icon-pencil"></i>
                 </base-button>
-                <base-button
-                  @click.native="handleDelete(props.$index, props.row)"
-                  class="remove btn-link"
-                  type="danger"
-                  size="sm"
-                  icon
-                >
-                  <i class="tim-icons icon-simple-remove"></i>
-                </base-button>
               </div>
             </el-table-column>
           </el-table>
@@ -128,37 +119,6 @@
         </div>
       </card>
     </div>
-    <!-- Classic Modal -->
-    <modal :show.sync="modal.visible" headerClasses="justify-content-center">
-      <h4 slot="header" class="title title-up">Remover operação</h4>
-      <form
-        class="modal-form"
-        ref="modalForm"
-        @submit.prevent
-        v-loading="modal.formLoading"
-      >
-        <input type="hidden" name="nome" value="DELETE" ref="nome" />
-        <base-input
-          required
-          v-model="modal.nameConfirmation"
-          label="Digite DELETE para confirmar"
-          placeholder="Digite DELETE para confirmar"
-          :error="getError('confirmação')"
-          type="text"
-          v-validate="modal.modelValidations.name_confirm"
-          name="confirmação"
-        >
-        </base-input>
-      </form>
-      <template slot="footer">
-        <base-button @click.native.prevent="validateModal" type="danger"
-          >Remover</base-button
-        >
-        <base-button type="info" @click.native="modal.visible = false"
-          >Fechar</base-button
-        >
-      </template>
-    </modal>
   </div>
 </template>
 <script>

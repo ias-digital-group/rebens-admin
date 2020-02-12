@@ -105,6 +105,13 @@ export default {
           this.model.images = [];
           this.model.data = response.data;
           self.$data.loading = false;
+          if (this.model.data && this.model.data.fields) {
+            for (var field of this.model.data.fields) {
+              if (field.name === 'register-type') {
+                this.$emit('change', field.data);
+              }
+            }
+          }
         },
         () => {
           self.$data.loading = false;

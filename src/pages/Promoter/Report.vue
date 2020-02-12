@@ -3,14 +3,7 @@
     <div class="col-12">
       <card card-body-classes="table-full-width">
         <template slot="header">
-          <h4 class="card-title">
-            Clientes
-            <base-link
-              to="/promoter/new"
-              class="btn btn-icon btn-simple btn-twitter btn-sm"
-              ><i class="tim-icons icon-simple-add"></i
-            ></base-link>
-          </h4>
+          <h4 class="card-title">Promotores</h4>
         </template>
         <div>
           <div
@@ -31,47 +24,6 @@
               >
               </el-option>
             </el-select>
-            <el-select
-              class="select-primary mb-3 pagination-select"
-              v-model="customerStatus"
-              v-if="!loading"
-            >
-              <el-option
-                class="select-primary"
-                value=""
-                label="Todos status"
-              ></el-option>
-              <el-option
-                class="select-primary"
-                key="1"
-                value="1"
-                label="Ativo"
-              ></el-option>
-              <el-option
-                class="select-primary"
-                key="2"
-                value="2"
-                label="Inativo"
-              ></el-option>
-              <el-option
-                class="select-primary"
-                key="3"
-                value="3"
-                label="Validação"
-              ></el-option>
-              <el-option
-                class="select-primary"
-                key="4"
-                value="4"
-                label="Trocar Senha"
-              ></el-option>
-              <el-option
-                class="select-primary"
-                key="5"
-                value="5"
-                label="Incompleto"
-              ></el-option>
-            </el-select>
             <base-input>
               <el-input
                 type="search"
@@ -79,7 +31,7 @@
                 style="width:300px"
                 clearable
                 prefix-icon="el-icon-search"
-                placeholder="Procurar cliente"
+                placeholder="Procurar Promotor"
                 aria-controls="datatables"
                 v-model="searchQuery"
               >
@@ -138,30 +90,33 @@ export default {
   },
   data() {
     return {
-      internalName: 'Clientes',
+      internalName: 'Promotores',
       sortField: 'name',
       formLoading: false,
-      customerStatus: '',
       tableColumns: [
         {
           prop: 'name',
           label: 'Nome'
         },
         {
-          prop: 'cpf',
-          label: 'CPF'
+          prop: 'totalActive',
+          label: 'Ativos'
         },
         {
-          prop: 'email',
-          label: 'E-mail'
+          prop: 'totalInactive',
+          label: 'Inativos'
         },
         {
-          prop: 'created',
-          label: 'Data'
+          prop: 'totalValidation',
+          label: 'Validação'
         },
         {
-          prop: 'statusName',
-          label: 'Status'
+          prop: 'totalIncomplete',
+          label: 'Incompletos'
+        },
+        {
+          prop: 'total',
+          label: 'Total'
         }
       ]
     };
@@ -173,18 +128,15 @@ export default {
         page: this.$data.pagination.currentPage - 1,
         pageItems: this.$data.pagination.perPage,
         searchWord: this.searchQuery,
-        sort: this.formatSortFieldParam,
-        status: this.customerStatus
+        sort: this.formatSortFieldParam
       };
       this.$data.loading = true;
-      promoterService.list(request).then(
+      promoterService.report(request).then(
         response => {
           self.$data.tableData = response.data;
           if (response.data) {
-            self.showForm = false;
             self.showTable = response.data.length > 0;
           } else {
-            self.showForm = false;
             self.showTable = false;
           }
           self.savePageSettings(self, response.totalItems);
@@ -194,11 +146,6 @@ export default {
           self.$data.loading = false;
         }
       );
-    }
-  },
-  watch: {
-    customerStatus() {
-      this.fetchData();
     }
   }
 };
