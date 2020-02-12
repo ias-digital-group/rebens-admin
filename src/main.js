@@ -19,7 +19,6 @@ Vue.use(wysiwyg, {
     code: true,
     image: true,
     table: true,
-    removeFormat: true,
     justifyLeft: true,
     justifyCenter: true,
     justifyRight: true,

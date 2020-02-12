@@ -6,6 +6,46 @@
           ref="staticTextForm"
           :staticText.sync="model"
         ></static-text-form>
+        <hr />
+        <div class="row">
+          <div class="col-md-12"><h4>Módulos</h4></div>
+        </div>
+        <div
+          v-for="(mod, idx) in modules"
+          :key="idx"
+          style="border-bottom:1px solid #eee"
+        >
+          <div class="row">
+            <label class="col-md-3 col-form-label">{{ mod.title }}</label>
+            <div class="col-md-9">
+              <div class="form-group">
+                <base-checkbox v-model="mod.checked">&nbsp;</base-checkbox>
+              </div>
+            </div>
+          </div>
+          <div
+            class="row"
+            v-show="mod.checked"
+            v-for="(field, idx2) in mod.info.fields"
+            :key="idx2"
+          >
+            <div class="col-md-1">&nbsp;</div>
+            <label class="col-md-3 col-form-label">{{ field.label }}</label>
+            <div class="col-md-8">
+              <div class="form-group">
+                <base-input
+                  type="text"
+                  :name="field.name"
+                  :placeholder="field.label"
+                  :requored="field.isRequired"
+                  v-model="field.data"
+                >
+                </base-input>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="row">
           <div class="col-md-12">
             <base-button
@@ -52,7 +92,8 @@ export default {
         idOperation: 0,
         active: true,
         images: []
-      }
+      },
+      modules: []
     };
   },
   methods: {
@@ -64,15 +105,26 @@ export default {
           this.model.images = [];
           this.model.data = response.data;
           self.$data.loading = false;
+          if (this.model.data && this.model.data.fields) {
+            for (var field of this.model.data.fields) {
+              if (field.name === 'register-type') {
+                this.$emit('change', field.data);
+              }
+            }
+          }
         },
         () => {
           self.$data.loading = false;
         }
       );
+      operationService.listModules(this.parentId).then(response => {
+        this.modules = response;
+      });
     },
     validateForm() {
       const self = this;
       self.submitLoading = true;
+
       if (self.model.images && self.model.images.length > 0) {
         let promises = new Array(self.model.images.length);
         for (var i = 0; i <= self.model.images.length - 1; i++) {
@@ -100,25 +152,48 @@ export default {
     },
     saveConfig(self) {
       self.formLoading = true;
-      operationService.saveConfiguration(self.parentId, self.model.data).then(
-        response => {
-          self.$notify({
-            type: 'primary',
-            message: response
-              ? response.message
-              : 'Configurações atualizadas com sucesso.',
-            icon: 'tim-icons icon-bell-55'
-          });
-          self.$router.go();
-          //window.location.reload(true);
-          // self.formLoading = false;
-          // self.fetchData();
-        },
-        () => {
-          console.log('erro');
-          self.formLoading = false;
+      let errors = '';
+      for (let i = 0; i < self.model.data.fields.length; i++) {
+        if (
+          self.model.data.fields[i].isRequired &&
+          self.model.data.fields[i].data === ''
+        ) {
+          errors += ` ${self.model.data.fields[i].label} |`;
         }
-      );
+      }
+      if (errors !== '') {
+        errors = `Campo(s) ${errors.substring(
+          0,
+          errors.length - 1
+        )} obrigatório(s)!`;
+        self.$notify({
+          type: 'primary',
+          message: errors,
+          icon: 'tim-icons icon-bell-55'
+        });
+      } else {
+        operationService
+          .saveConfiguration(self.parentId, self.model.data, self.modules)
+          .then(
+            response => {
+              self.$notify({
+                type: 'primary',
+                message: response
+                  ? response.message
+                  : 'Configurações atualizadas com sucesso.',
+                icon: 'tim-icons icon-bell-55'
+              });
+              self.$router.go();
+              //window.location.reload(true);
+              // self.formLoading = false;
+              // self.fetchData();
+            },
+            () => {
+              console.log('erro');
+              self.formLoading = false;
+            }
+          );
+      }
       self.formLoading = false;
     },
     getError(fieldName) {

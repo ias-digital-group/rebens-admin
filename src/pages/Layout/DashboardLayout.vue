@@ -1,8 +1,12 @@
 <template>
-  <div class="wrapper" :class="{ 'nav-open': $sidebar.showSidebar }">
+  <div
+    class="wrapper"
+    :class="{ 'nav-open': $sidebar.showSidebar, 'no-sidebar': isPromoter }"
+  >
     <notifications></notifications>
-    <sidebar-fixed-toggle-button />
+    <sidebar-fixed-toggle-button v-if="!isPromoter" />
     <side-bar
+      v-if="!isPromoter"
       :background-color="sidebarBackground"
       :short-title="$t('sidebar.shortTitle')"
       :title="$t('sidebar.title')"
@@ -174,6 +178,13 @@
               path: '/report/benefit-use'
             }"
           ></sidebar-item>
+          <sidebar-item
+            v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
+            :link="{
+              name: $t('sidebar.promoterReport'),
+              path: '/promoter/report'
+            }"
+          ></sidebar-item>
         </sidebar-item>
       </template>
     </side-bar>
@@ -257,9 +268,13 @@ export default {
       } else {
         docClasses.add('perfect-scrollbar-off');
       }
+      if (this.isPromoter) {
+        this.$sidebar.displaySidebar(false);
+      }
     }
   },
   created() {
+    this.isPromoter = this.$store.getters.currentUser.role == 'promoter';
     this.isRebens =
       this.$store.getters.currentUser.role == 'master' ||
       this.$store.getters.currentUser.role == 'administratorRebens' ||
@@ -277,7 +292,8 @@ export default {
         !this.isPartnerApprover &&
         !this.isPartnerAdmin &&
         !this.isRebens &&
-        this.$store.getters.currentUser.idOperation == 1);
+        (this.$store.getters.currentUser.idOperation == 1 ||
+          this.$store.getters.currentUser.idOperation == 70));
   }
 };
 </script>

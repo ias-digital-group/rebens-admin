@@ -25,7 +25,7 @@
       </template>
       <template v-else-if="field.type == 'boolean'">
         <div class="col-md-9">
-          <base-checkbox v-model="field.data">&nbsp;</base-checkbox>
+          <base-checkbox v-model="field.checked">&nbsp;</base-checkbox>
         </div>
       </template>
       <template v-else-if="field.type == 'html'">
@@ -35,6 +35,25 @@
             placeholder="Digite o texto ..."
             style="margin-bottom:10px;"
           />
+        </div>
+      </template>
+      <template v-else-if="field.type == 'select'">
+        <div class="col-md-9">
+          <el-select
+            class="select-info"
+            required
+            :placeholder="field.label"
+            v-model="field.data"
+          >
+            <el-option
+              v-for="t in field.options"
+              class="select-primary"
+              :value="t.value"
+              :label="t.name"
+              :key="t.value"
+            >
+            </el-option>
+          </el-select>
         </div>
       </template>
       <template v-else>
@@ -72,6 +91,7 @@
   </div>
 </template>
 <script>
+import { Select, Option } from 'element-ui';
 import { ImageUpload } from 'src/components/index';
 import _ from 'lodash';
 export default {
@@ -83,7 +103,9 @@ export default {
     staticText: Object
   },
   components: {
-    ImageUpload
+    ImageUpload,
+    [Option.name]: Option,
+    [Select.name]: Select
   },
   data() {
     return {

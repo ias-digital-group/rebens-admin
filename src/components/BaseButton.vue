@@ -3,6 +3,7 @@
     :is="tag"
     :type="tag === 'button' ? nativeType : ''"
     :disabled="disabled || loading"
+    :title="title"
     @click="handleClick"
     class="btn"
     :class="[
@@ -38,6 +39,11 @@ export default {
     loading: Boolean,
     wide: Boolean,
     disabled: Boolean,
+    title: {
+      type: String,
+      default: '',
+      description: ''
+    },
     type: {
       type: String,
       default: 'default',
