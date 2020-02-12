@@ -233,11 +233,6 @@
                     >
                     </el-option>
                   </el-select>
-                  <label
-                    v-show="customErrors.includes('idOperationType')"
-                    class="error"
-                    >&nbsp;&nbsp;O campo Tipo é obrigatório.</label
-                  >
                 </div>
               </div>
               <template v-if="model.logo">
@@ -328,6 +323,7 @@
               parent="operations"
               :parentId="id"
               :key="configKey"
+              @change="onRegisterType"
               ref="operationconfig"
             ></operation-config>
           </el-tab-pane>
@@ -353,7 +349,13 @@
               ref="faq"
             ></faq>
           </el-tab-pane>
-          <el-tab-pane label="Pré cadastro" :disabled="viewAction == 'new'">
+          <el-tab-pane
+            label="Pré cadastro"
+            v-if="
+              registerType === 'closed-partner' || registerType === 'closed'
+            "
+            :disabled="viewAction == 'new'"
+          >
             <customers
               v-loading="formLoading"
               parent="operations"
@@ -361,7 +363,11 @@
               ref="customers"
             ></customers>
           </el-tab-pane>
-          <el-tab-pane label="Parceiros" :disabled="viewAction == 'new'">
+          <el-tab-pane
+            label="Parceiros"
+            v-if="registerType === 'closed-partner'"
+            :disabled="viewAction == 'new'"
+          >
             <partners
               v-loading="formLoading"
               parent="operations"
@@ -372,6 +378,7 @@
           <el-tab-pane
             label="Aprovação de Clientes"
             :disabled="viewAction == 'new'"
+            v-if="registerType === 'closed-partner'"
           >
             <operationPartnerCustomer
               v-loading="formLoading"
@@ -424,6 +431,7 @@ export default {
       publishLoading: false,
       publishTempLoading: false,
       showTempPublishBtn: false,
+      registerType: '',
       image: null,
       isMaster: false,
       configKey: 0,
@@ -574,12 +582,6 @@ export default {
               icon: 'tim-icons icon-bell-55'
             });
             vw.$router.go();
-
-            //window.location.reload(true);
-            // vw.$router.push(`/operations/${vw.model.id}/edit/`);
-            // vw.submitLoading = false;
-            //vw.canPublish = response.data;
-            //vw.fetchData();
           },
           err => {
             vw.$notify({
@@ -595,7 +597,7 @@ export default {
     publish() {
       const self = this;
       self.publishLoading = true;
-      operationService.publish(self.id, false).then(
+      operationService.publish(self.id).then(
         () => {
           self.$notify({
             type: 'primary',
@@ -618,7 +620,7 @@ export default {
     publishTemp() {
       const self = this;
       self.publishTempLoading = true;
-      operationService.publish(self.id, true).then(
+      operationService.publish(self.id).then(
         () => {
           self.$notify({
             type: 'primary',
@@ -674,6 +676,10 @@ export default {
     },
     onImageChange(file) {
       this.image = file;
+    },
+    onRegisterType(type) {
+      this.registerType = type;
+      console.log('registertype', type);
     }
   },
   created() {

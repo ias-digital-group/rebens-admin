@@ -226,11 +226,12 @@ export default {
       );
     });
   },
-  saveConfiguration: function(id, data) {
+  saveConfiguration: function(id, data, modules) {
+    const postData = { fields: data.fields, modules: modules };
     return new Promise((resolve, reject) => {
       HTTP.post(
         config.apiEndpoints.operationUri.concat(`${id}/Configuration`),
-        data
+        postData
       ).then(
         response => {
           resolve(response.data);
@@ -322,13 +323,9 @@ export default {
         );
     });
   },
-  publish: function(id, isTemporary) {
+  publish: function(id) {
     return new Promise((resolve, reject) => {
-      HTTP.post(
-        config.apiEndpoints.operationUri.concat(
-          `${id}/Publish/?isTemporary=${isTemporary}`
-        )
-      ).then(
+      HTTP.post(config.apiEndpoints.operationUri.concat(`${id}/Publish`)).then(
         response => {
           resolve(response.data);
         },
@@ -343,6 +340,18 @@ export default {
       HTTP.get(
         config.apiEndpoints.operationUri.concat(`${id}/HasFileProcessing`)
       ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  listModules: function(id) {
+    return new Promise((resolve, reject) => {
+      HTTP.get(config.apiEndpoints.operationUri.concat(`Modules/${id}`)).then(
         response => {
           resolve(response.data);
         },

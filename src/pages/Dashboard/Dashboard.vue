@@ -222,8 +222,10 @@ export default {
   },
   mounted() {
     this.i18n = this.$i18n;
-    //this.initBigChart(0);
     this.fetchData();
+    if (this.$store.getters.currentUser.role === 'promoter') {
+      this.$router.push('/promoter');
+    }
   }
 };
 </script>
