@@ -20,13 +20,32 @@
           }"
         ></sidebar-item>
         <sidebar-item
-          v-show="!isPartnerAdmin && !isPartnerApprover"
-          :link="{
-            name: $t('sidebar.benefits'),
-            icon: 'tim-icons icon-money-coins',
-            path: '/benefits'
-          }"
-        ></sidebar-item>
+          :link="{ name: $t('sidebar.benefits'), icon: 'tim-icons icon-money-coins' }"
+        >
+          <sidebar-item
+            v-show="!isPartnerAdmin && !isPartnerApprover"
+            :link="{
+              name: $t('sidebar.benefits'),
+              path: '/benefits'
+            }"
+          ></sidebar-item>
+          <sidebar-item
+            v-show="isRebens && !isPartnerAdmin && !isPartnerApprover"
+            :link="{
+              name: $t('sidebar.categories'),
+              icon: 'tim-icons icon-single-copy-04',
+              path: '/categories'
+            }"
+          ></sidebar-item>
+          <sidebar-item
+            v-show="isRebens && !isPartnerAdmin && !isPartnerApprover"
+            :link="{
+              name: $t('sidebar.partners'),
+              icon: 'tim-icons icon-link-72',
+              path: '/partners'
+            }"
+          ></sidebar-item>
+        </sidebar-item>
         <sidebar-item
           v-show="!isPartnerAdmin && !isPartnerApprover"
           :link="{
@@ -38,70 +57,11 @@
         <sidebar-item
           v-show="isRebens && !isPartnerAdmin && !isPartnerApprover"
           :link="{
-            name: $t('sidebar.categories'),
-            icon: 'tim-icons icon-single-copy-04',
-            path: '/categories'
-          }"
-        ></sidebar-item>
-        <sidebar-item
-          v-show="isRebens && !isPartnerAdmin && !isPartnerApprover"
-          :link="{
-            name: $t('sidebar.partners'),
-            icon: 'tim-icons icon-link-72',
-            path: '/partners'
-          }"
-        ></sidebar-item>
-        <sidebar-item
-          v-show="isRebens && !isPartnerAdmin && !isPartnerApprover"
-          :link="{
             name: $t('sidebar.operations'),
             icon: 'tim-icons icon-bank',
             path: '/operations'
           }"
         ></sidebar-item>
-        <sidebar-item
-          v-show="!isRebens && !isPartnerAdmin && !isPartnerApprover"
-          :link="{
-            name: $t('sidebar.faqs'),
-            icon: 'tim-icons icon-bulb-63',
-            path: '/faqs'
-          }"
-        ></sidebar-item>
-        <sidebar-item
-          v-show="!isRebens && !isPartnerAdmin && !isPartnerApprover"
-          :link="{
-            name: $t('sidebar.customers'),
-            icon: 'tim-icons icon-single-02',
-            path: '/customers'
-          }"
-        ></sidebar-item>
-        <sidebar-item
-          v-show="!isRebens && !isPartnerAdmin && !isPartnerApprover"
-          :link="{
-            name: $t('sidebar.pages'),
-            icon: 'tim-icons icon-paper',
-            path: '/pages'
-          }"
-        ></sidebar-item>
-        <sidebar-item
-          v-show="
-            !isRebens && !isPublisher && !isPartnerApprover && !isPartnerAdmin
-          "
-          :link="{
-            name: $t('sidebar.partners'),
-            icon: 'tim-icons icon-link-72',
-            path: '/operationPartner'
-          }"
-        ></sidebar-item>
-        <sidebar-item
-          v-show="!isPublisher && !isRebens"
-          :link="{
-            name: $t('sidebar.partnersApprove'),
-            path: '/operationPartner/approve',
-            icon: 'tim-icons icon-single-02'
-          }"
-        ></sidebar-item>
-        <!-- <sidebar-item v-show="!isPublisher && !isRebens && !isPartnerApprover" :link="{ name: $t('sidebar.partnerCustomers'), path: '/operationPartner/customers', icon: 'tim-icons icon-single-02' }"></sidebar-item>     -->
         <sidebar-item
           v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
           :link="{
@@ -162,9 +122,30 @@
               path: '/courseRegulation'
             }"
           ></sidebar-item>
+        </sidebar-item>
+        <sidebar-item
+          v-show="showCourses"
+          :link="{ name: $t('sidebar.freeCourse'), icon: 'fas fa-graduation-cap' }"
+        >
           <sidebar-item
             v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
             :link="{ name: $t('sidebar.freeCourse'), path: '/freeCourse' }"
+          ></sidebar-item>
+          <sidebar-item
+            v-show="isRebens && !isPartnerAdmin && !isPartnerApprover"
+            :link="{
+              name: $t('sidebar.categories'),
+              icon: 'tim-icons icon-single-copy-04',
+              path: '/categories'
+            }"
+          ></sidebar-item>
+          <sidebar-item
+            v-show="isRebens && !isPartnerAdmin && !isPartnerApprover"
+            :link="{
+              name: $t('sidebar.partners'),
+              icon: 'tim-icons icon-link-72',
+              path: '/partners'
+            }"
           ></sidebar-item>
         </sidebar-item>
         <sidebar-item
@@ -186,6 +167,58 @@
             }"
           ></sidebar-item>
         </sidebar-item>
+
+
+
+        <sidebar-item
+          v-show="!isRebens && !isPartnerAdmin && !isPartnerApprover"
+          :link="{
+            name: $t('sidebar.customers'),
+            icon: 'tim-icons icon-single-02',
+            path: '/customers'
+          }"
+        ></sidebar-item>
+        
+        <sidebar-item
+          v-show="!isRebens && !isPartnerAdmin && !isPartnerApprover"
+          :link="{
+            name: $t('sidebar.faqs'),
+            icon: 'tim-icons icon-bulb-63',
+            path: '/faqs'
+          }"
+        ></sidebar-item>
+        
+        <sidebar-item
+          v-show="!isRebens && !isPartnerAdmin && !isPartnerApprover"
+          :link="{
+            name: $t('sidebar.pages'),
+            icon: 'tim-icons icon-paper',
+            path: '/pages'
+          }"
+        ></sidebar-item>
+        <sidebar-item
+          v-show="
+            !isRebens && !isPublisher && !isPartnerApprover && !isPartnerAdmin
+          "
+          :link="{
+            name: $t('sidebar.partners'),
+            icon: 'tim-icons icon-link-72',
+            path: '/operationPartner'
+          }"
+        ></sidebar-item>
+        <sidebar-item
+          v-show="!isPublisher && !isRebens"
+          :link="{
+            name: $t('sidebar.partnersApprove'),
+            path: '/operationPartner/approve',
+            icon: 'tim-icons icon-single-02'
+          }"
+        ></sidebar-item>
+        <!-- <sidebar-item v-show="!isPublisher && !isRebens && !isPartnerApprover" :link="{ name: $t('sidebar.partnerCustomers'), path: '/operationPartner/customers', icon: 'tim-icons icon-single-02' }"></sidebar-item>     -->
+        
+        
+        
+        
       </template>
     </side-bar>
     <div class="main-panel" :data="sidebarBackground">

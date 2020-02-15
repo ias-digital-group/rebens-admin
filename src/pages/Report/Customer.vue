@@ -59,22 +59,12 @@
               <el-option
                 class="select-primary"
                 value="1"
-                label="Ativos"
-              ></el-option>
-              <el-option
-                class="select-primary"
-                value="2"
-                label="Inativos"
+                label="Completo"
               ></el-option>
               <el-option
                 class="select-primary"
                 value="3"
                 label="Validação"
-              ></el-option>
-              <el-option
-                class="select-primary"
-                value="4"
-                label="Trocar Senha"
               ></el-option>
               <el-option
                 class="select-primary"

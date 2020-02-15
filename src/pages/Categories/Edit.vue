@@ -199,7 +199,7 @@ export default {
         );
       }
       this.selectLoading = true;
-      categoryService.getListTree().then(
+      categoryService.getListTree(this.type).then(
         response => {
           self.categoriesList.push({ id: null, value: 'Raiz' });
           _.each(response.data, function(el) {

@@ -35,8 +35,8 @@ import benefitService from '../services/Benefit/benefitService';
 import freeCourseService from '../services/FreeCourse/freeCourseService';
 export default {
   props: {
-    parentName: String,
-    parentId: [String, Number]
+    parentId: [String, Number],
+    type: int
   },
   components: {
     [Tree.name]: Tree
@@ -75,13 +75,13 @@ export default {
       categoryService.getListTree().then(response => {
         self.categoryList = response.data;
       });
-      if (this.parentName === 'benefits') {
+      if (this.type === 1) {
         benefitService.getCategories(this.parentId).then(response => {
           if (response && response.data)
             self.selectedCategories = response.data;
           this.loading = false;
         });
-      } else if (this.parentName === 'freeCourse') {
+      } else if (this.type === 2) {
         freeCourseService.getCategories(this.parentId).then(response => {
           if (response && response.data)
             self.selectedCategories = response.data;
@@ -95,7 +95,7 @@ export default {
         ids += this.selectedCategories[i] + ',';
       }
       ids = ids.substring(0, ids.length - 1);
-      if (this.parentName === 'benefits') {
+      if (this.type === 1) {
         benefitService.saveCategories(this.parentId, ids).then(response => {
           this.$notify({
             type: 'primary',
@@ -107,7 +107,7 @@ export default {
           this.fetchData();
           this.loading = false;
         });
-      } else if (this.parentName === 'freeCourse') {
+      } else if (this.type === 2) {
         freeCourseService.saveCategories(this.parentId, ids).then(response => {
           this.$notify({
             type: 'primary',

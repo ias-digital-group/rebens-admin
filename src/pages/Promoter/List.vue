@@ -45,25 +45,13 @@
                 class="select-primary"
                 key="1"
                 value="1"
-                label="Ativo"
-              ></el-option>
-              <el-option
-                class="select-primary"
-                key="2"
-                value="2"
-                label="Inativo"
+                label="Completo"
               ></el-option>
               <el-option
                 class="select-primary"
                 key="3"
                 value="3"
                 label="Validação"
-              ></el-option>
-              <el-option
-                class="select-primary"
-                key="4"
-                value="4"
-                label="Trocar Senha"
               ></el-option>
               <el-option
                 class="select-primary"

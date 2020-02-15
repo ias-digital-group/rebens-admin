@@ -281,8 +281,8 @@
           >
             <categories
               v-loading="formLoading"
-              parentName="freeCourse"
               :parentId="id"
+              :type="2"
               :key="operationKey"
             ></categories>
           </el-tab-pane>

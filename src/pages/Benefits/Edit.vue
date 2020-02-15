@@ -642,8 +642,8 @@
           >
             <categories
               v-loading="formLoading"
-              parentName="benefits"
               :parentId="id"
+              :type="1"
               :key="operationKey"
             ></categories>
           </el-tab-pane>
