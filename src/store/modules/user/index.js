@@ -65,11 +65,9 @@ const actions = {
       id: jwtData.Id,
       role: jwtData.role,
       idOperation: jwtData.operationId,
-      idOperationPartner: jwtData.operationPartnerId
+      idOperationPartner: jwtData.operationPartnerId,
+      modules: jwtData.modules != '' ? jwtData.modules.split('|') : ''
     };
-    // axios.defaults.headers.common['Authorization'] = `Bearer ${
-    //   signinResponse.accessToken
-    // }`;
     commit(types.SAVE_AUTH_DATA, {
       user: user,
       accessToken: signinResponse.accessToken

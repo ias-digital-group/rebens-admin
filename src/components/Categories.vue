@@ -36,7 +36,7 @@ import freeCourseService from '../services/FreeCourse/freeCourseService';
 export default {
   props: {
     parentId: [String, Number],
-    type: int
+    type: Number
   },
   components: {
     [Tree.name]: Tree

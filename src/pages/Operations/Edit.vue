@@ -9,7 +9,7 @@
             native-type="button"
             type="info"
             @click="publish"
-            v-if="viewAction != 'new'"
+            v-if="viewAction != 'new' && isMaster"
             :disabled="!model.canPublish"
             :loading="publishLoading"
           >
@@ -19,7 +19,7 @@
             class="pull-right"
             native-type="button"
             type="info"
-            v-if="showTempPublishBtn"
+            v-if="showTempPublishBtn && isMaster"
             :disabled="model.temporaryPublishStatus == 'Publicado Temporário'"
             @click="publishTemp"
             :loading="publishTempLoading"
@@ -316,7 +316,7 @@
           </el-tab-pane>
           <el-tab-pane
             label="Configurações"
-            :disabled="viewAction == 'new' || !isMaster ? true : false"
+            v-if="viewAction != 'new' && isMaster"
           >
             <operation-config
               v-loading="formLoading"

@@ -41,7 +41,9 @@ export default {
   },
   getListTree: type => {
     return new Promise((resolve, reject) => {
-      HTTP.get(config.apiEndpoints.categoryUri.concat(`ListTreeAdm/?type=${type}`)).then(
+      HTTP.get(
+        config.apiEndpoints.categoryUri.concat(`ListTreeAdm/?type=${type}`)
+      ).then(
         response => {
           resolve(response.data);
         },
