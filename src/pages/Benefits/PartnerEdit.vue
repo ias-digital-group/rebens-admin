@@ -78,7 +78,7 @@
                 <div class="col-md-12">
                   <base-link
                     class="btn mt-3 btn-primary btn-simple"
-                    to="/partners"
+                    to="/benefits/partner"
                     >Voltar</base-link
                   >
                   <base-button
@@ -139,8 +139,7 @@ export default {
     ImageUpload
   },
   props: {
-    id: String,
-    type: Number
+    id: String
   },
   data() {
     return {
@@ -152,7 +151,7 @@ export default {
         active: false,
         logo: '',
         description: '',
-        type: this.type
+        type: 1
       },
       modelValidations: {
         name: {
@@ -222,7 +221,7 @@ export default {
               message: 'Parceiro cadastrado com sucesso!',
               icon: 'tim-icons icon-bell-55'
             });
-            vw.$router.push(`/partners/${this.type}/${response.id}/edit/`);
+            vw.$router.push(`/benefits/partner/${response.id}/edit/`);
             vw.submitLoading = false;
           },
           err => {
@@ -242,7 +241,7 @@ export default {
               message: response.message,
               icon: 'tim-icons icon-bell-55'
             });
-            vw.$router.push(`/partners/${this.type}`);
+            vw.$router.push('/benefits/partner/');
             vw.submitLoading = false;
           },
           err => {

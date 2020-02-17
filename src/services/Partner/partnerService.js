@@ -16,8 +16,8 @@ export default {
           };
       HTTP.get(
         config.apiEndpoints.partnerUri.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}`+
-          `&sort=${request.sort}&active=${request.active}&type=${type}`
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}` +
+            `&sort=${request.sort}&active=${request.active}&type=${request.type}`
         )
       ).then(
         response => {

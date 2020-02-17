@@ -4,9 +4,9 @@
       <card card-body-classes="table-full-width">
         <template slot="header">
           <h4 class="card-title">
-            {{ $t('pages.categories.title') }}
+            {{ $t('pages.partners.title') }}
             <base-link
-              :to="`/categories/${this.type}/new`"
+              to="/benefits/partner/new"
               class="btn btn-icon btn-simple btn-twitter btn-sm"
               ><i class="tim-icons icon-simple-add"></i
             ></base-link>
@@ -19,7 +19,7 @@
             <el-select
               class="select-primary mb-3 pagination-select"
               v-model="pagination.perPage"
-              :placeholder="$t('pages.categories.perpage-placeholder')"
+              :placeholder="$t('pages.partners.perpage-placeholder')"
               v-if="!loading"
             >
               <el-option
@@ -39,17 +39,17 @@
               <el-option
                 class="select-primary"
                 value=""
-                label="Todas"
+                label="Todos"
               ></el-option>
               <el-option
                 class="select-primary"
                 value="true"
-                label="Ativas"
+                label="Ativos"
               ></el-option>
               <el-option
                 class="select-primary"
                 value="false"
-                label="Inativas"
+                label="Inativos"
               ></el-option>
             </el-select>
             <base-input>
@@ -59,7 +59,7 @@
                 style="width:300px"
                 clearable
                 prefix-icon="el-icon-search"
-                placeholder="Procurar categorias"
+                placeholder="Procurar parceiros"
                 aria-controls="datatables"
                 v-model="searchQuery"
               >
@@ -70,7 +70,7 @@
             ref="table"
             :data="tableData"
             v-loading="loading"
-            :empty-text="$t('pages.categories.emptytext')"
+            :empty-text="$t('pages.partners.emptytext')"
             @sort-change="onSortChanged"
             :default-sort="{ prop: sortField, order: sortOrder }"
           >
@@ -86,7 +86,7 @@
             <el-table-column
               :min-width="135"
               align="right"
-              :label="$t('pages.categories.grid.actions')"
+              :label="$t('pages.partners.grid.actions')"
             >
               <div slot-scope="props">
                 <base-button
@@ -115,9 +115,7 @@
           slot="footer"
           class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
         >
-          <div>
-            <p class="card-category"></p>
-          </div>
+          <div class=""></div>
           <base-pagination
             class="pagination-no-border"
             v-model="pagination.currentPage"
@@ -131,7 +129,7 @@
     </div>
     <!-- Classic Modal -->
     <modal :show.sync="modal.visible" headerClasses="justify-content-center">
-      <h4 slot="header" class="title title-up">Remover categoria</h4>
+      <h4 slot="header" class="title title-up">Remover parceiro</h4>
       <form
         class="modal-form"
         ref="modalForm"
@@ -165,7 +163,7 @@
 <script>
 import { Table, TableColumn, Select, Option } from 'element-ui';
 import { BasePagination, Modal } from 'src/components';
-import categoryService from '../../services/Category/categoryService';
+import partnerService from '../../services/Partner/partnerService';
 import listPage from '../../mixins/listPage';
 export default {
   mixins: [listPage],
@@ -177,42 +175,33 @@ export default {
     [Table.name]: Table,
     [TableColumn.name]: TableColumn
   },
-  props: {
-    type: Number
-  },
   data() {
     return {
-      internalName: 'pages.categories.list',
+      internalName: 'pages.partners.list',
       sortField: 'name',
       activeFilter: '',
-      parentFilter: '',
       tableColumns: [
         {
           prop: 'id',
-          label: this.$i18n.t('pages.categories.grid.id'),
+          label: this.$i18n.t('pages.partners.grid.id'),
           minWidth: 0
         },
         {
           prop: 'name',
-          label: this.$i18n.t('pages.categories.grid.name'),
+          label: this.$i18n.t('pages.partners.grid.name'),
           minWidth: 200
         },
         {
           prop: 'statusName',
-          label: this.$i18n.t('pages.categories.grid.status'),
+          label: this.$i18n.t('pages.partners.grid.status'),
           minWidth: 200
-        },
-        {
-          prop: 'order',
-          label: this.$i18n.t('pages.categories.grid.order'),
-          minWidth: 0
         }
       ]
     };
   },
   methods: {
     handleEdit(index, row) {
-      this.$router.push(`/categories/${this.type}/${row.id}/edit/`);
+      this.$router.push(`/benefits/partner/${row.id}/edit/`);
     },
     fetchData() {
       const self = this;
@@ -222,11 +211,10 @@ export default {
         searchWord: this.searchQuery,
         sort: this.formatSortFieldParam,
         active: this.activeFilter,
-        idParent: this.parentFilter,
-        type: this.type
+        type: 1
       };
       this.$data.loading = true;
-      categoryService.findAll(request).then(
+      partnerService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems);
@@ -242,7 +230,7 @@ export default {
       this.$validator.validateAll().then(isValid => {
         if (isValid) {
           self.modal.formLoading = true;
-          categoryService.delete(self.modal.model.id).then(
+          partnerService.delete(self.modal.model.id).then(
             response => {
               self.$notify({
                 type: 'primary',
@@ -256,10 +244,7 @@ export default {
             err => {
               self.$notify({
                 type: 'primary',
-                message:
-                  err.response && err.response.data
-                    ? err.response.data.message
-                    : err.message,
+                message: err.message,
                 icon: 'tim-icons icon-bell-55'
               });
               self.modal.formLoading = false;

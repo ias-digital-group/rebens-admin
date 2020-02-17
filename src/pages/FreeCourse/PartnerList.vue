@@ -6,7 +6,7 @@
           <h4 class="card-title">
             {{ $t('pages.partners.title') }}
             <base-link
-              :to="`/partners/${this.type}/new`"
+              to="/freeCourse/partner/new"
               class="btn btn-icon btn-simple btn-twitter btn-sm"
               ><i class="tim-icons icon-simple-add"></i
             ></base-link>
@@ -175,9 +175,6 @@ export default {
     [Table.name]: Table,
     [TableColumn.name]: TableColumn
   },
-  props: {
-    type: Number
-  },
   data() {
     return {
       internalName: 'pages.partners.list',
@@ -204,7 +201,7 @@ export default {
   },
   methods: {
     handleEdit(index, row) {
-      this.$router.push(`/partners/${this.type}/${row.id}/edit/`);
+      this.$router.push(`/freeCourse/partner/${row.id}/edit/`);
     },
     fetchData() {
       const self = this;
@@ -214,7 +211,7 @@ export default {
         searchWord: this.searchQuery,
         sort: this.formatSortFieldParam,
         active: this.activeFilter,
-        type: this.type
+        type: 2
       };
       this.$data.loading = true;
       partnerService.findAll(request).then(

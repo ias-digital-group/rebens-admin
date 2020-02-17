@@ -16,8 +16,8 @@ export default {
           };
       HTTP.get(
         config.apiEndpoints.categoryUri.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}` + 
-          `&sort=${request.sort}&active=${request.active}&idParent=${request.idParent}&type=${request.type}`
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}` +
+            `&sort=${request.sort}&active=${request.active}&idParent=${request.idParent}&type=${request.type}`
         )
       ).then(
         response => {

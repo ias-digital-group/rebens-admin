@@ -48,7 +48,7 @@
             <div class="col-md-12">
               <base-link
                 class="btn mt-3 btn-simple btn-primary"
-                to="/categories"
+                to="freeCourse/categories"
                 >Voltar</base-link
               >
               <base-button
@@ -79,8 +79,7 @@ export default {
     ImageUpload
   },
   props: {
-    id: String,
-    type: Number
+    id: String
   },
   data() {
     return {
@@ -94,7 +93,7 @@ export default {
         idParent: null,
         active: false,
         icon: '',
-        type: this.type
+        type: 2
       },
       modelValidations: {
         name: {
@@ -152,7 +151,7 @@ export default {
               message: 'Categoria cadastrada com sucesso!',
               icon: 'tim-icons icon-bell-55'
             });
-            vm.$router.push(`/categories/${this.type}`);
+            vm.$router.push('/freeCourse/categories');
             vm.submitLoading = false;
           },
           err => {
@@ -172,7 +171,7 @@ export default {
               message: response.message,
               icon: 'tim-icons icon-bell-55'
             });
-            vm.$router.push(`/categories/${this.type}`);
+            vm.$router.push('/freeCourse/categories');
             vm.submitLoading = false;
           },
           err => {
@@ -201,7 +200,7 @@ export default {
         );
       }
       this.selectLoading = true;
-      categoryService.getListTree(this.type).then(
+      categoryService.getListTree(this.$route.params.type).then(
         response => {
           self.categoriesList.push({ id: null, value: 'Raiz' });
           _.each(response.data, function(el) {
