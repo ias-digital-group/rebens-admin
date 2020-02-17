@@ -6,7 +6,7 @@
           <h4 class="card-title">
             {{ $t('pages.categories.title') }}
             <base-link
-              to="/categories/new"
+              :to="`/categories/${this.type}/new`"
               class="btn btn-icon btn-simple btn-twitter btn-sm"
               ><i class="tim-icons icon-simple-add"></i
             ></base-link>
@@ -177,6 +177,9 @@ export default {
     [Table.name]: Table,
     [TableColumn.name]: TableColumn
   },
+  props: {
+    type: Number
+  },
   data() {
     return {
       internalName: 'pages.categories.list',
@@ -209,7 +212,7 @@ export default {
   },
   methods: {
     handleEdit(index, row) {
-      this.$router.push(`/categories/${row.id}/edit/`);
+      this.$router.push(`/categories/${this.type}/${row.id}/edit/`);
     },
     fetchData() {
       const self = this;
@@ -219,7 +222,8 @@ export default {
         searchWord: this.searchQuery,
         sort: this.formatSortFieldParam,
         active: this.activeFilter,
-        idParent: this.parentFilter
+        idParent: this.parentFilter,
+        type: this.type
       };
       this.$data.loading = true;
       categoryService.findAll(request).then(

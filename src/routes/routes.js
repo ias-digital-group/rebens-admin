@@ -89,7 +89,7 @@ const PromoterEdit = () => import('src/pages/Promoter/Edit.vue');
 const PromoterReport = () => import('src/pages/Promoter/Report.vue');
 
 let categoriesPages = {
-  path: '/categories',
+  path: '/categories/:type',
   component: DashboardLayout,
   meta: {
     requiresAuth: true,
@@ -120,7 +120,7 @@ let categoriesPages = {
       }
     },
     {
-      path: 'new',
+      path: 'new/',
       name: `new_category`,
       component: CategoriesEdit,
       meta: {
@@ -135,7 +135,7 @@ let categoriesPages = {
       }
     },
     {
-      path: ':id/edit',
+      path: ':id/edit/',
       name: 'edit_category',
       props: true,
       component: CategoriesEdit,
@@ -154,7 +154,7 @@ let categoriesPages = {
 };
 
 let partnersPages = {
-  path: '/partners',
+  path: '/partners/:type',
   component: DashboardLayout,
   meta: {
     requiresAuth: true,

@@ -139,7 +139,8 @@ export default {
     ImageUpload
   },
   props: {
-    id: String
+    id: String,
+    type: Number
   },
   data() {
     return {
@@ -150,7 +151,8 @@ export default {
         name: '',
         active: false,
         logo: '',
-        description: ''
+        description: '',
+        type: this.type
       },
       modelValidations: {
         name: {
@@ -220,7 +222,7 @@ export default {
               message: 'Parceiro cadastrado com sucesso!',
               icon: 'tim-icons icon-bell-55'
             });
-            vw.$router.push(`/partners/${response.id}/edit/`);
+            vw.$router.push(`/partners/${this.type}/${response.id}/edit/`);
             vw.submitLoading = false;
           },
           err => {
@@ -240,7 +242,7 @@ export default {
               message: response.message,
               icon: 'tim-icons icon-bell-55'
             });
-            vw.$router.push('/partners');
+            vw.$router.push(`/partners/${this.type}`);
             vw.submitLoading = false;
           },
           err => {

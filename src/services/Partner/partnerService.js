@@ -11,11 +11,13 @@ export default {
             pageItems: 30,
             searchWord: '',
             sort: 'name ASC',
-            active: ''
+            active: '',
+            type: 1
           };
       HTTP.get(
         config.apiEndpoints.partnerUri.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}&active=${request.active}`
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}`+
+          `&sort=${request.sort}&active=${request.active}&type=${type}`
         )
       ).then(
         response => {

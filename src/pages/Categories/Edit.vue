@@ -79,7 +79,8 @@ export default {
     ImageUpload
   },
   props: {
-    id: String
+    id: String,
+    type: Number
   },
   data() {
     return {
@@ -92,7 +93,8 @@ export default {
         order: 1,
         idParent: null,
         active: false,
-        icon: ''
+        icon: '',
+        type: this.type
       },
       modelValidations: {
         name: {
@@ -150,7 +152,7 @@ export default {
               message: 'Categoria cadastrada com sucesso!',
               icon: 'tim-icons icon-bell-55'
             });
-            vm.$router.push('/categories');
+            vm.$router.push(`/categories/${this.type}`);
             vm.submitLoading = false;
           },
           err => {
@@ -170,7 +172,7 @@ export default {
               message: response.message,
               icon: 'tim-icons icon-bell-55'
             });
-            vm.$router.push('/categories');
+            vm.$router.push(`/categories/${this.type}`);
             vm.submitLoading = false;
           },
           err => {

@@ -40,7 +40,7 @@
             :link="{
               name: $t('sidebar.categories'),
               icon: 'tim-icons icon-single-copy-04',
-              path: '/categories'
+              path: '/categories/1'
             }"
           ></sidebar-item>
           <sidebar-item
@@ -48,7 +48,7 @@
             :link="{
               name: $t('sidebar.partners'),
               icon: 'tim-icons icon-link-72',
-              path: '/partners'
+              path: '/partners/1'
             }"
           ></sidebar-item>
         </sidebar-item>
@@ -136,14 +136,14 @@
             :link="{
               name: $t('sidebar.categories'),
               icon: 'tim-icons icon-single-copy-04',
-              path: '/categories'
+              path: '/categories/2'
             }"
           ></sidebar-item>
           <sidebar-item
             :link="{
               name: $t('sidebar.partners'),
               icon: 'tim-icons icon-link-72',
-              path: '/partners'
+              path: '/partners/2'
             }"
           ></sidebar-item>
         </sidebar-item>
