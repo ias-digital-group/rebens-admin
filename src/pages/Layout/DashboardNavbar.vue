@@ -6,11 +6,11 @@
     :transparent="true"
   >
     <div slot="brand" class="navbar-wrapper">
-      <div v-if="!isPromoter" class="navbar-minimize d-inline">
+      <div v-if="showNavbar" class="navbar-minimize d-inline">
         <sidebar-toggle-button />
       </div>
       <div
-        v-if="!isPromoter"
+        v-if="showNavbar"
         class="navbar-toggle d-inline"
         :class="{ toggled: $sidebar.showSidebar }"
       >
@@ -161,7 +161,8 @@ export default {
       activeNotifications: false,
       showMenu: false,
       searchModalVisible: false,
-      searchQuery: ''
+      searchQuery: '',
+      showNavbar: true
     };
   },
   methods: {
@@ -189,7 +190,8 @@ export default {
     }
   },
   created() {
-    this.isPromoter = this.$store.getters.currentUser.role === 'promoter';
+    this.showNavbar = this.$store.getters.currentUser.role !== 'promoter'
+                      && this.$store.getters.currentUser.role !== 'partnerApprover';
   }
 };
 </script>

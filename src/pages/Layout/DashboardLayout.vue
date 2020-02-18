@@ -7,9 +7,9 @@
     }"
   >
     <notifications></notifications>
-    <sidebar-fixed-toggle-button v-if="!isPromoter && !isPartnerAdmin" />
+    <sidebar-fixed-toggle-button v-if="!isPromoter && !isPartnerApprover" />
     <side-bar
-      v-if="!isPromoter && !isPartnerAdmin"
+      v-if="!isPromoter && !isPartnerApprover"
       :background-color="sidebarBackground"
       :short-title="$t('sidebar.shortTitle')"
       :title="$t('sidebar.title')"
@@ -23,7 +23,7 @@
           }"
         ></sidebar-item>
         <sidebar-item
-          v-show="!isPartnerAdmin && !isPartnerApprover"
+          v-show="!isPartnerAdmin"
           :link="{
             name: $t('sidebar.benefits'),
             icon: 'tim-icons icon-money-coins'
@@ -69,7 +69,7 @@
           }"
         ></sidebar-item>
         <sidebar-item
-          v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
+          v-show="!isPublisher && !isPartnerAdmin"
           :link="{
             name: $t('sidebar.customer'),
             path: '/report/customer',
@@ -77,7 +77,7 @@
           }"
         ></sidebar-item>
         <sidebar-item
-          v-show="!isPublisher && !isPartnerApprover"
+          v-show="!isPublisher"
           :link="{
             name: $t('sidebar.users'),
             path: '/users',
@@ -148,7 +148,7 @@
           ></sidebar-item>
         </sidebar-item>
         <sidebar-item
-          v-show="!isRebens && !isPartnerAdmin && !isPartnerApprover"
+          v-show="!isRebens && !isPartnerAdmin"
           :link="{
             name: $t('sidebar.customers'),
             icon: 'tim-icons icon-single-02',
@@ -156,7 +156,7 @@
           }"
         ></sidebar-item>
         <sidebar-item
-          v-show="!isRebens && !isPartnerAdmin && !isPartnerApprover"
+          v-show="!isRebens && !isPartnerAdmin"
           :link="{
             name: $t('sidebar.faqs'),
             icon: 'tim-icons icon-bulb-63',
@@ -164,7 +164,7 @@
           }"
         ></sidebar-item>
         <sidebar-item
-          v-show="!isRebens && !isPartnerAdmin && !isPartnerApprover"
+          v-show="!isRebens && !isPartnerAdmin"
           :link="{
             name: $t('sidebar.pages'),
             icon: 'tim-icons icon-paper',
@@ -188,18 +188,18 @@
           }"
         ></sidebar-item>
         <sidebar-item
-          v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
+          v-show="!isPublisher && !isPartnerAdmin"
           :link="{ name: $t('sidebar.report'), icon: 'fas fa-chart-pie' }"
         >
           <sidebar-item
-            v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
+            v-show="!isPublisher && !isPartnerAdmin"
             :link="{
               name: $t('sidebar.benefitUse'),
               path: '/report/benefit-use'
             }"
           ></sidebar-item>
           <sidebar-item
-            v-show="!isPublisher && !isPartnerAdmin && !isPartnerApprover"
+            v-show="!isPublisher && !isPartnerAdmin"
             :link="{
               name: $t('sidebar.promoterReport'),
               path: '/promoter/report'
@@ -288,7 +288,7 @@ export default {
       } else {
         docClasses.add('perfect-scrollbar-off');
       }
-      if (this.isPromoter) {
+      if (this.isPromoter || this.isPartnerApprover) {
         this.$sidebar.displaySidebar(false);
       }
     }
@@ -302,7 +302,7 @@ export default {
     this.isPublisher =
       this.$store.getters.currentUser.role == 'publisher' ||
       this.$store.getters.currentUser.role == 'publisherRebens';
-    this.isPartnerApprover =
+    this.isPartnerApprover = 
       this.$store.getters.currentUser.role == 'partnerApprover';
     this.isPartnerAdmin =
       this.$store.getters.currentUser.role == 'partnerAdministrator';

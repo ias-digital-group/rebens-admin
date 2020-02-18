@@ -683,7 +683,9 @@ let accountPages = {
           'publisher',
           'publisherRebens',
           'administratorRebens',
-          'promoter'
+          'promoter',
+          'partnerApprover',
+          'partnerAdministrator'
         ],
         title: i18n.t('pages.change-password.title')
       }

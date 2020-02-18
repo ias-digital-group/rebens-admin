@@ -225,6 +225,8 @@ export default {
     this.fetchData();
     if (this.$store.getters.currentUser.role === 'promoter') {
       this.$router.push('/promoter');
+    } else if (this.$store.getters.currentUser.role === 'partnerApprover') {
+      window.location = '/#/operationPartner/approve';
     }
   }
 };
