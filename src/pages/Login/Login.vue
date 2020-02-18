@@ -97,7 +97,7 @@ export default {
                   );
                   if (jwtData.role === 'promoter') {
                     window.location = '/#/promoter';
-                  } else if (jwtData.role == "partnerApprover") {
+                  } else if (jwtData.role == 'partnerApprover') {
                     window.location = '/#/operationPartner/approve';
                   } else {
                     window.location = '/';

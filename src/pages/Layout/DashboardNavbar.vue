@@ -190,8 +190,9 @@ export default {
     }
   },
   created() {
-    this.showNavbar = this.$store.getters.currentUser.role !== 'promoter'
-                      && this.$store.getters.currentUser.role !== 'partnerApprover';
+    this.showNavbar =
+      this.$store.getters.currentUser.role !== 'promoter' &&
+      this.$store.getters.currentUser.role !== 'partnerApprover';
   }
 };
 </script>

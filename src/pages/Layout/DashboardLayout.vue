@@ -302,7 +302,7 @@ export default {
     this.isPublisher =
       this.$store.getters.currentUser.role == 'publisher' ||
       this.$store.getters.currentUser.role == 'publisherRebens';
-    this.isPartnerApprover = 
+    this.isPartnerApprover =
       this.$store.getters.currentUser.role == 'partnerApprover';
     this.isPartnerAdmin =
       this.$store.getters.currentUser.role == 'partnerAdministrator';
