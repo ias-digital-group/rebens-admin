@@ -91,6 +91,24 @@
               sortable="custom"
             >
             </el-table-column>
+            <el-table-column
+              :min-width="135"
+              align="right"
+              :label="$t('pages.users.grid.actions')"
+            >
+              <div slot-scope="props">
+                <base-button
+                  @click.native="resendValidation(props.row.id)"
+                  class="edit btn-link"
+                  type="info"
+                  size="sm"
+                  icon
+                  title="Reenviar senha"
+                >
+                  <i class="tim-icons icon-send"></i>
+                </base-button>
+              </div>
+            </el-table-column>
           </el-table>
         </div>
         <div
@@ -182,6 +200,27 @@ export default {
           self.$data.loading = false;
         }
       );
+    },
+    resendValidation(id) {
+      if (confirm('Deseja reenviar o e-mail de validação?')) {
+        const self = this;
+        self.$data.loading = true;
+        promoterService.resendValidation(id).then(
+          response => {
+            if (response.status === 'ok' ) {
+              self.$notify({
+                type: 'success',
+                message: 'E-mail reenviado com sucesso!',
+                icon: 'tim-icons icon-bell-55'
+              });
+              self.$data.loading = false;  
+            }
+          },
+          () => {
+            self.$data.loading = false;
+          }
+        );
+      }
     }
   },
   watch: {

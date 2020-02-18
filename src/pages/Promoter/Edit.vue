@@ -5,7 +5,7 @@
         <h4 slot="header" class="card-title">Cliente</h4>
         <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
           <div class="row">
-            <label class="col-md-3 col-form-label">Nome</label>
+            <label class="col-md-3 col-form-label">Nome Completo</label>
             <div class="col-md-9">
               <base-input
                 required
@@ -14,9 +14,17 @@
                 type="text"
                 :error="getError('nome')"
                 name="nome"
-                placeholder="Nome"
+                placeholder="Nome Completo"
                 maxlength="300"
               ></base-input>
+              <label v-show="customErros.includes('name')" class="text-danger"
+                >O campo Nome é obrigatório</label
+              >
+              <label
+                v-show="customErros.includes('name-length')"
+                class="text-danger"
+                >O campo Nome possui um limite de 300 caracteres</label
+              >
             </div>
           </div>
           <div class="row">
@@ -33,6 +41,9 @@
                 :inputMask="['###.###.###-##']"
                 maxlength="50"
               ></base-input>
+              <label v-show="customErros.includes('cpf')" class="text-danger"
+                >O campo CPF é obrigatório</label
+              >
             </div>
           </div>
           <div class="row">
@@ -48,6 +59,19 @@
                 placeholder="email"
                 maxlength="500"
               ></base-input>
+              <label v-show="customErros.includes('email')" class="text-danger"
+                >O campo E-mail é obrigatório</label
+              >
+              <label
+                v-show="customErros.includes('email-length')"
+                class="text-danger"
+                >O campo E-mail possui um limite de 300 caracteres</label
+              >
+              <label
+                v-show="customErros.includes('email-format')"
+                class="text-danger"
+                >O E-mail digitado não é válido</label
+              >
             </div>
           </div>
           <div class="row">
@@ -91,6 +115,8 @@ export default {
       selectLoading: false,
       formLoading: false,
       submitLoading: false,
+      customErros: [],
+      reg: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
       model: {
         name: '',
         cpf: '',
@@ -117,6 +143,25 @@ export default {
     },
     validateCustomer() {
       const self = this;
+      self.customErros = [];
+      if (
+        !self.model.name ||
+        self.model.name === '' ||
+        self.model.name.indexOf(' ') <= 0
+      )
+        self.customErros.push('name');
+      else if (self.model.name.length > 300)
+        self.customErros.push('name-length');
+      else if (self.model.name.split(' ').length < 2)
+        self.customErros.push('name');
+      if (!self.model.cpf || self.model.cpf === '')
+        self.customErros.push('cpf');
+      if (!self.model.email || self.model.email === '')
+        self.customErros.push('email');
+      else if (!self.reg.test(self.model.email))
+        self.customErros.push('email-format');
+      else if (!self.model.email.length > 300)
+        self.customErros.push('email-length');
 
       this.$validator.validateAll().then(isValid => {
         if (isValid) {
@@ -137,16 +182,25 @@ export default {
         if (isValid) {
           promoterService.create(self.model).then(
             response => {
-              self.$notify({
-                type: 'primary',
-                message: response
-                  ? response.message
-                  : 'Cliente cadastrado com sucesso.',
-                icon: 'tim-icons icon-bell-55'
-              });
-              self.clearForm();
-              self.submitLoading = false;
-              self.$router.push('/promoter');
+              if (response.status === 'ok') {
+                self.$notify({
+                  type: 'primary',
+                  message: response
+                    ? response.message
+                    : 'Cliente cadastrado com sucesso.',
+                  icon: 'tim-icons icon-bell-55'
+                });
+                self.clearForm();
+                self.submitLoading = false;
+                self.$router.push('/promoter');
+              } else {
+                self.$notify({
+                  type: 'danger',
+                  message: response.message,
+                  icon: 'tim-icons icon-bell-55'
+                });
+                self.submitLoading = false;
+              }
             },
             err => {
               self.$notify({

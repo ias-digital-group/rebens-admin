@@ -22,7 +22,11 @@ export default {
           resolve(response.data);
         },
         error => {
-          reject(error);
+          if (error.response.status === 400) {
+            resolve(error.response.data);
+          } else {
+            reject(error);
+          }
         }
       );
     });
@@ -34,7 +38,11 @@ export default {
           resolve(response.data);
         },
         error => {
-          reject(error);
+          if (error.response.status === 400) {
+            resolve(error.response.data);
+          } else {
+            reject(error);
+          }
         }
       );
     });
@@ -46,7 +54,11 @@ export default {
           resolve(response.data);
         },
         error => {
-          reject(error);
+          if (error.response.status === 400) {
+            resolve(error.response.data);
+          } else {
+            reject(error);
+          }
         }
       );
     });
@@ -74,7 +86,27 @@ export default {
           resolve(response.data);
         },
         error => {
-          reject(error);
+          if (error.response.status === 400) {
+            resolve(error.response.data);
+          } else {
+            reject(error);
+          }
+        }
+      );
+    });
+  },
+  resendValidation: id => {
+    return new Promise((resolve, reject) => {
+      HTTP.post(config.apiEndpoints.promoterUri.concat('ResendValidation'), { id }).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          if (error.response.status === 400) {
+            resolve(error.response.data);
+          } else {
+            reject(error);
+          }
         }
       );
     });
