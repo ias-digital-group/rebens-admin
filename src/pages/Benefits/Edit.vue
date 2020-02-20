@@ -934,7 +934,7 @@ export default {
         );
       }
       this.partnerLoading = true;
-      partnerService.findAllActive(null).then(
+      partnerService.listActive(1).then(
         response => {
           _.each(response.data, function(el) {
             self.partnerList.push({ value: el.name, id: el.id });

@@ -48,7 +48,7 @@
             <div class="col-md-12">
               <base-link
                 class="btn mt-3 btn-simple btn-primary"
-                to="freeCourse/categories"
+                to="/freeCourse/categories"
                 >Voltar</base-link
               >
               <base-button
@@ -200,7 +200,7 @@ export default {
         );
       }
       this.selectLoading = true;
-      categoryService.getListTree(this.$route.params.type).then(
+      categoryService.getListTree(2).then(
         response => {
           self.categoriesList.push({ id: null, value: 'Raiz' });
           _.each(response.data, function(el) {

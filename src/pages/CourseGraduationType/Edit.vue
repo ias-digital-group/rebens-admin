@@ -20,6 +20,40 @@
             </div>
           </div>
           <div class="row">
+            <label class="col-md-3 col-form-label">Tipo</label>
+            <div class="col-md-4">
+              <div class="form-group">
+                <el-select
+                  class="select-info"
+                  placeholder="Tipo"
+                  v-model="model.parentId"
+                  v-loading.lock="selectLoading"
+                  lock
+                >
+                  <el-option
+                    class="select-primary"
+                    value="1"
+                    label="Graduação"
+                    key="1"
+                  >
+                  </el-option>
+                  <el-option
+                    class="select-primary"
+                    value="2"
+                    label="Pós Graduação"
+                    key="2"
+                  >
+                  </el-option>
+                </el-select>
+                <label
+                  v-show="customErros.includes('parent')"
+                  class="text-danger"
+                  >O campo Tipo é obrigatório</label
+                >
+              </div>
+            </div>
+          </div>
+          <div class="row">
             <label class="col-md-3 col-form-label">Operação</label>
             <div class="col-md-4">
               <div class="form-group">
@@ -104,6 +138,7 @@ export default {
         id: 0,
         name: '',
         idOperation: 0,
+        parentId: 1,
         active: true
       },
       operations: [],
@@ -114,6 +149,9 @@ export default {
           max: 200
         },
         idOperation: {
+          required: true
+        },
+        parentId: {
           required: true
         }
       }

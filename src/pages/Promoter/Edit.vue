@@ -5,17 +5,17 @@
         <h4 slot="header" class="card-title">Cliente</h4>
         <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
           <div class="row">
-            <label class="col-md-3 col-form-label">Nome Completo</label>
-            <div class="col-md-9">
+            <label class="col-md-3 col-form-label">Nome</label>
+            <div class="col-md-4">
               <base-input
                 required
                 v-model="model.name"
-                v-validate="modelValidations.nome"
+                v-validate="modelValidations.name"
                 type="text"
                 :error="getError('nome')"
                 name="nome"
-                placeholder="Nome Completo"
-                maxlength="300"
+                placeholder="Nome"
+                maxlength="150"
               ></base-input>
               <label v-show="customErros.includes('name')" class="text-danger"
                 >O campo Nome é obrigatório</label
@@ -24,6 +24,28 @@
                 v-show="customErros.includes('name-length')"
                 class="text-danger"
                 >O campo Nome possui um limite de 300 caracteres</label
+              >
+            </div>
+            <div class="col-md-4">
+              <base-input
+                required
+                v-model="model.surname"
+                v-validate="modelValidations.surname"
+                type="text"
+                :error="getError('surname')"
+                name="surname"
+                placeholder="Sobrenome"
+                maxlength="150"
+              ></base-input>
+              <label
+                v-show="customErros.includes('surname')"
+                class="text-danger"
+                >O campo Sobrenome é obrigatório</label
+              >
+              <label
+                v-show="customErros.includes('surname-length')"
+                class="text-danger"
+                >O campo Sobrenome possui um limite de 300 caracteres</label
               >
             </div>
           </div>
@@ -43,6 +65,11 @@
               ></base-input>
               <label v-show="customErros.includes('cpf')" class="text-danger"
                 >O campo CPF é obrigatório</label
+              >
+              <label
+                v-show="customErros.includes('cpf-registered')"
+                class="text-danger"
+                >O CPF digitado já está cadastrado em nossa base</label
               >
             </div>
           </div>
@@ -71,6 +98,11 @@
                 v-show="customErros.includes('email-format')"
                 class="text-danger"
                 >O E-mail digitado não é válido</label
+              >
+              <label
+                v-show="customErros.includes('email-registered')"
+                class="text-danger"
+                >O E-mail digitado já está cadastrado em nossa base</label
               >
             </div>
           </div>
@@ -119,13 +151,18 @@ export default {
       reg: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
       model: {
         name: '',
+        surname: '',
         cpf: '',
         email: null
       },
       modelValidations: {
-        nome: {
+        name: {
           required: true,
-          max: 300
+          max: 150
+        },
+        surname: {
+          required: true,
+          max: 150
         },
         cpf: {
           max: 50,
@@ -144,16 +181,14 @@ export default {
     validateCustomer() {
       const self = this;
       self.customErros = [];
-      if (
-        !self.model.name ||
-        self.model.name === '' ||
-        self.model.name.indexOf(' ') <= 0
-      )
+      if (!self.model.name || self.model.name === '')
         self.customErros.push('name');
-      else if (self.model.name.length > 300)
+      else if (self.model.name.length > 150)
         self.customErros.push('name-length');
-      else if (self.model.name.split(' ').length < 2)
-        self.customErros.push('name');
+      if (!self.model.surname || self.model.surname === '')
+        self.customErros.push('surname');
+      else if (self.model.surname.length > 150)
+        self.customErros.push('surname-length');
       if (!self.model.cpf || self.model.cpf === '')
         self.customErros.push('cpf');
       if (!self.model.email || self.model.email === '')
@@ -193,6 +228,12 @@ export default {
                 self.clearForm();
                 self.submitLoading = false;
                 self.$router.push('/promoter');
+              } else if (response.status === 'cpf-registered') {
+                self.customErros.push('cpf-registered');
+                self.submitLoading = false;
+              } else if (response.status === 'email-registered') {
+                self.customErros.push('email-registered');
+                self.submitLoading = false;
               } else {
                 self.$notify({
                   type: 'danger',

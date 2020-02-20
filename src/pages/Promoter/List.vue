@@ -88,7 +88,7 @@
               :min-width="column.minWidth"
               :prop="column.prop"
               :label="column.label"
-              sortable="custom"
+              :sortable="column.sortable"
             >
             </el-table-column>
             <el-table-column
@@ -151,23 +151,28 @@ export default {
       tableColumns: [
         {
           prop: 'name',
-          label: 'Nome'
+          label: 'Nome',
+          sortable: 'custom'
         },
         {
           prop: 'cpf',
-          label: 'CPF'
+          label: 'CPF',
+          sortable: false
         },
         {
           prop: 'email',
-          label: 'E-mail'
+          label: 'E-mail',
+          sortable: false
         },
         {
           prop: 'created',
-          label: 'Data'
+          label: 'Data',
+          sortable: false
         },
         {
           prop: 'statusName',
-          label: 'Status'
+          label: 'Status',
+          sortable: false
         }
       ]
     };
