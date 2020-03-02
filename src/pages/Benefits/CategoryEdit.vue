@@ -200,7 +200,7 @@ export default {
         );
       }
       this.selectLoading = true;
-      categoryService.getListTree(this.$route.params.type).then(
+      categoryService.getListTree(1).then(
         response => {
           self.categoriesList.push({ id: null, value: 'Raiz' });
           _.each(response.data, function(el) {

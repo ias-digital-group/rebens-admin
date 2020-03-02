@@ -20,6 +20,34 @@
               ></base-input>
             </div>
           </div>
+          <div class="row">
+            <label class="col-md-3 col-form-label">Operação</label>
+            <div class="col-md-4">
+              <div class="form-group">
+                <el-select
+                  class="select-info"
+                  placeholder="Operação"
+                  v-model="model.idOperation"
+                  v-loading.lock="selectLoading"
+                  lock
+                >
+                  <el-option
+                    class="select-primary"
+                    v-for="type in operations"
+                    :value="type.id"
+                    :label="type.title"
+                    :key="type.id"
+                  >
+                  </el-option>
+                </el-select>
+                <label
+                  v-show="customErros.includes('operation')"
+                  class="text-danger"
+                  >O campo Operação é obrigatório</label
+                >
+              </div>
+            </div>
+          </div>
           <h4>
             Perguntas
             <a
@@ -85,9 +113,16 @@
   </div>
 </template>
 <script>
+import { Select, Option } from 'element-ui';
 import staticTextService from '../../services/StaticText/staticTextService';
+import operationService from '../../services/Operation/operationService';
+import _ from 'lodash';
 
 export default {
+  components: {
+    [Option.name]: Option,
+    [Select.name]: Select
+  },
   props: {
     id: String,
     removeText: {
@@ -100,6 +135,8 @@ export default {
       selectLoading: false,
       formLoading: false,
       submitLoading: false,
+      operations: [],
+      customErros: [],
       model: {
         id: 0,
         page: 'course-faq',
@@ -108,7 +145,7 @@ export default {
           default: false,
           items: []
         },
-        idOperation: 1,
+        idOperation: 0,
         active: true,
         idStaticTextType: 17
       }
@@ -122,8 +159,12 @@ export default {
   methods: {
     validateForm() {
       const self = this;
-      self.submitLoading = true;
-      self.saveStaticText(self);
+      if (self.model.idOperation == null || self.model.idOperation === 0) {
+        self.customErros.push('operation');
+      } else {
+        self.submitLoading = true;
+        self.saveStaticText(self);
+      }
     },
     saveStaticText(self) {
       self.formLoading = true;
@@ -180,6 +221,20 @@ export default {
         },
         () => {
           self.formLoading = false;
+        }
+      );
+
+      self.selectLoading = true;
+      operationService.findAll().then(
+        response => {
+          self.operations.push({ id: null, title: 'selecione' });
+          _.each(response.data, function(el) {
+            self.operations.push({ id: el.id, title: el.title });
+          });
+          self.selectLoading = false;
+        },
+        () => {
+          self.selectLoading = false;
         }
       );
     },

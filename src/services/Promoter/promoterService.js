@@ -97,7 +97,9 @@ export default {
   },
   resendValidation: id => {
     return new Promise((resolve, reject) => {
-      HTTP.post(config.apiEndpoints.promoterUri.concat('ResendValidation'), { id }).then(
+      HTTP.post(
+        config.apiEndpoints.promoterUri.concat(`ResendValidation/${id}`)
+      ).then(
         response => {
           resolve(response.data);
         },

@@ -88,7 +88,7 @@
               :min-width="column.minWidth"
               :prop="column.prop"
               :label="column.label"
-              sortable="custom"
+              :sortable="column.sortable"
             >
             </el-table-column>
             <el-table-column
@@ -151,23 +151,28 @@ export default {
       tableColumns: [
         {
           prop: 'name',
-          label: 'Nome'
+          label: 'Nome',
+          sortable: 'custom'
         },
         {
           prop: 'cpf',
-          label: 'CPF'
+          label: 'CPF',
+          sortable: false
         },
         {
           prop: 'email',
-          label: 'E-mail'
+          label: 'E-mail',
+          sortable: false
         },
         {
           prop: 'created',
-          label: 'Data'
+          label: 'Data',
+          sortable: false
         },
         {
           prop: 'statusName',
-          label: 'Status'
+          label: 'Status',
+          sortable: false
         }
       ]
     };
@@ -207,13 +212,13 @@ export default {
         self.$data.loading = true;
         promoterService.resendValidation(id).then(
           response => {
-            if (response.status === 'ok' ) {
+            if (response.status === 'ok') {
               self.$notify({
                 type: 'success',
                 message: 'E-mail reenviado com sucesso!',
                 icon: 'tim-icons icon-bell-55'
               });
-              self.$data.loading = false;  
+              self.$data.loading = false;
             }
           },
           () => {
