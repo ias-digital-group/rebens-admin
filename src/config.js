@@ -39,6 +39,8 @@ export default {
     courseUri: process.env.VUE_APP_API_URI.concat('course/'),
     freeCourseUri: process.env.VUE_APP_API_URI.concat('freeCourse/'),
     promoterUri: process.env.VUE_APP_API_URI.concat('promoter/'),
+    scratchcardUri: process.env.VUE_APP_API_URI.concat('scratchcard/'),
+    scratchcardPrizeUri: process.env.VUE_APP_API_URI.concat('scratchcardPrize/'),
     viaCepUri: process.env.VUE_APP_VIACEP_URI
   }
 };

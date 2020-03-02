@@ -96,6 +96,9 @@ const PromoterList = () => import('src/pages/Promoter/List.vue');
 const PromoterEdit = () => import('src/pages/Promoter/Edit.vue');
 const PromoterReport = () => import('src/pages/Promoter/Report.vue');
 
+const ScratchcardList = () => import('src/pages/Scratchcard/List.vue');
+const ScratchcardEdit = () => import('src/pages/Scratchcard/Edit.vue');
+
 let operationsPages = {
   path: '/operations',
   component: DashboardLayout,
@@ -1367,6 +1370,49 @@ let promoterPages = {
   ]
 };
 
+let scratchcardPages = {
+  path: '/scratchcard',
+  component: DashboardLayout,
+  meta: {
+    requiresAuth: true,
+    roles: ['publisherRebens', 'administratorRebens', 'master'],
+    title: i18n.t('pages.scratchcard.title')
+  },
+  children: [
+    {
+      path: '',
+      name: 'scratchcard',
+      component: ScratchcardList,
+      meta: {
+        requiresAuth: true,
+        roles: ['publisherRebens', 'administratorRebens', 'master'],
+        title: i18n.t('pages.scratchcard.title')
+      }
+    },
+    {
+      path: 'new',
+      name: `new_scratchcard`,
+      component: ScratchcardEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['publisherRebens', 'administratorRebens', 'master'],
+        title: i18n.t('pages.scratchcard.title')
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_scratchcard',
+      props: true,
+      component: ScratchcardEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['publisherRebens', 'administratorRebens', 'master'],
+        title: i18n.t('pages.scratchcard.title')
+      }
+    }
+  ]
+};
+
 const routes = [
   {
     path: '/',
@@ -1479,7 +1525,8 @@ const routes = [
   courseFaqPages,
   courseRegulationPages,
   freeCoursePages,
-  promoterPages
+  promoterPages,
+  scratchcardPages
 ];
 
 export default routes;

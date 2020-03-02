@@ -1,0 +1,431 @@
+<template>
+  <div class="row">
+    <div class="col-md-12">
+      <card title="Campanha de Raspadinhas">
+        <h4 slot="header" class="card-title">Campanha de Raspadinhas</h4>
+        <el-tabs>
+          <el-tab-pane label="Campanha">
+            <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
+              <div class="row">
+                <label class="col-md-3 col-form-label">Nome</label>
+                <div class="col-md-9">
+                  <base-input
+                    required
+                    v-model="model.name"
+                    type="text"
+                    :error="getError('name')"
+                    name="name"
+                    placeholder="Nome"
+                    maxlength="200"
+                  ></base-input>
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-md-3 col-form-label">Data</label>
+                <div class="col-md-9 col-lg-4">
+                  <base-input label="Início">
+                    <el-date-picker
+                      type="date"
+                      name="start"
+                      data-vv-name="start"
+                      placeholder="Início"
+                      v-model="model.start"
+                    >
+                    </el-date-picker>
+                  </base-input>
+                </div>
+                <div class="col-md-9 offset-md-3 offset-lg-0 col-lg-4">
+                  <base-input label="Fim">
+                    <el-date-picker
+                      type="date"
+                      name="end"
+                      data-vv-name="end"
+                      placeholder="Fim"
+                      v-model="model.end"
+                    >
+                    </el-date-picker>
+                  </base-input>
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-md-3 col-form-label">Quantidade</label>
+                <div class="col-md-3">
+                  <base-input
+                    required
+                    v-model="model.quantity"
+                    type="number"
+                    :error="getError('quantity')"
+                    name="quantity"
+                    placeholder="Quantidade"
+                    maxlength="10"
+                  ></base-input>
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-md-3 col-form-label">Operação</label>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <el-select
+                      class="select-info"
+                      placeholder="Operação"
+                      v-model="model.idOperation"
+                      v-loading.lock="selectLoading"
+                      lock
+                    >
+                      <el-option
+                        class="select-primary"
+                        v-for="type in operations"
+                        :value="type.id"
+                        :label="type.title"
+                        :key="type.id"
+                      >
+                      </el-option>
+                    </el-select>
+                    <label
+                      v-show="customErros.includes('idOperation')"
+                      class="text-danger"
+                      >O campo Operação é obrigatório</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-md-3 col-form-label">Tipo</label>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <el-select
+                      class="select-info"
+                      placeholder="Tipo"
+                      v-model="model.type"
+                      lock
+                    >
+                      <el-option class="select-primary" value="1" label="Aberto" key="1"></el-option>
+                      <el-option class="select-primary" value="2" label="Fechado" key="2"></el-option>
+                      <el-option class="select-primary" value="3" label="Fechado + parceiro" key="3"></el-option>
+                      <el-option class="select-primary" value="4" label="Assinatura" key="4"></el-option>
+                    </el-select>
+                    <label
+                      v-show="customErros.includes('type')"
+                      class="text-danger"
+                      >O campo Tipo é obrigatório</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-md-3 col-form-label">distribuição</label>
+                <div class="col-md-3">
+                  <div class="form-group has-label">
+                    <label>Tipo</label>
+                    <el-select 
+                      class="select-info"
+                      placeholder="Tipo de distribuição"
+                      v-model="model.distributionType"
+                      lock
+                    >
+                      <el-option class="select-primary" value="1" label="Diária" key="1"></el-option>
+                      <el-option class="select-primary" value="2" label="Semanal" key="2"></el-option>
+                      <el-option class="select-primary" value="3" label="Mensal" key="3"></el-option>
+                    </el-select>
+                    <label
+                      v-show="customErros.includes('distributionType')"
+                      class="text-danger"
+                      >O campo Tipo de distribuição é obrigatório</label
+                    >
+                  </div>
+                </div>
+                <div class="col-md-3" v-show="model.distributionType !== '1'">
+                  <div class="form-group">
+                    <base-input label="Quantidade"
+                      required
+                      v-model="model.distributionQuantity"
+                      type="number"
+                      :error="getError('distributionQuantity')"
+                      name="distributionQuantity"
+                      placeholder="Quantidade"
+                      maxlength="3"
+                  ></base-input>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-md-3 col-form-label">O bilhete expira</label>
+                <div class="col-md-9">
+                  <div class="form-group">
+                    <base-checkbox v-model="model.scratchcardExpire">&nbsp;</base-checkbox>
+                  </div>
+                </div>
+              </div>
+              <template v-if="model.noPrizeImage1">
+                <div class="row">
+                  <label class="col-md-3 col-form-label"
+                    >Imagem sem prêmio <br />
+                    <span>(200x200)</span>
+                  </label>
+                  <div class="col-md-9">
+                    <div class="fileinput">
+                      <div class="thumbnail">
+                        <img :src="model.noPrizeImage1" class="img-preview" />
+                      </div>
+                      <div>
+                        <base-button
+                          @click="model.noPrizeImage1 = ''"
+                          class="btn-simple btn-file"
+                          type="danger"
+                        >
+                          <i class="fas fa-times"></i> {{ removeText }}
+                        </base-button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </template>
+              <template v-else>
+                <div class="row">
+                  <label class="col-md-3 col-form-label"
+                    >Imagem sem prêmio<br />
+                    <span>(200x200)</span></label
+                  >
+                  <div class="col-md-9">
+                    <image-upload
+                      @change="onImageChange"
+                      change-text="Alterar"
+                      remove-text="Remover"
+                      select-text="Selecione uma imagem"
+                    />
+                  </div>
+                </div>
+              </template>
+              <div class="row">
+                <div class="col-md-12">
+                  <base-link class="btn mt-3 btn-simple btn-primary" to="/faqs"
+                    >Voltar</base-link
+                  >
+                  <base-button
+                    class="mt-3 pull-right"
+                    native-type="submit"
+                    type="info"
+                    @click.native.prevent="validate"
+                    :loading="submitLoading"
+                  >
+                    Salvar
+                  </base-button>
+                </div>
+              </div>
+            </form>
+          </el-tab-pane>
+          <el-tab-pane
+              label="Prêmios"
+              v-if="viewAction != 'new'"
+            >
+            <scratchcardPize
+              v-loading="formLoading"
+              parent="scratchcard"
+              :parentId="model.id"
+              ref="scratchcard"
+            ></scratchcardPize>
+          </el-tab-pane>
+        </el-tabs>
+      </card>
+    </div>
+  </div>
+</template>
+<script>
+import { Select, Option, DatePicker, Tabs, TabPane } from 'element-ui';
+import operationService from '../../services/Operation/operationService';
+import scratchcardService from '../../services/Scratchcard/scratchcardService';
+import { ImageUpload } from 'src/components/index';
+import ScratchcardPrizes from 'src/components/ScratchcardPrize';
+import _ from 'lodash';
+
+export default {
+  components: {
+    [Option.name]: Option,
+    [Select.name]: Select,
+    [Tabs.name]: Tabs,
+    [TabPane.name]: TabPane,
+    [DatePicker.name]: DatePicker,
+    ImageUpload,
+    ScratchcardPrizes
+  },
+  props: {
+    id: String,
+    removeText: {
+      type: String,
+      default: 'Remove'
+    }
+  },
+  data() {
+    return {
+      selectLoading: false,
+      formLoading: false,
+      submitLoading: false,
+      model: {
+        id: 0,
+        name: '',
+        start: null,
+        end: null,
+        quantity: 0,
+        noPrizeImage1: '',
+        type: 0,
+        distributionType: 0,
+        distributionQuantity: 0,
+        idOperation: 0,
+        scratchcardExpire: true
+      },
+      operations: [],
+      customErros: [],
+      modelValidations: {
+        question: {
+          name: true,
+          max: 200
+        },
+        quantity: {
+          required: true,
+          max: 10
+        },
+        noPrizeImage1: {
+          required: true,
+          max: 500
+        },
+        type: {
+          required: true
+        },
+        distributionType: {
+          required: true
+        },
+        idOperation: {
+          required: true
+        }
+      }
+    };
+  },
+  computed: {
+    viewAction() {
+      return this.$route.name == 'edit_scratchcard' ? 'edit' : 'new';
+    }
+  },
+  methods: {
+    getError(fieldName) {
+      return this.errors.first(fieldName);
+    },
+    validate() {
+      const self = this;
+      if (
+        self.model.name !== '' &&
+        self.model.name.length <= 200 &&
+        self.model.type !== '' &&
+        self.model.distributionType != ''
+      ) {
+        self.submitLoading = true;
+        if (self.noPrizeImage1) {
+          scratchcardService.uploadFile(self.noPrizeImage1).then(
+            response => {
+              if (response.status != 200) {
+                self.$notify({
+                  type: 'primary',
+                  message: response.message,
+                  icon: 'tim-icons icon-bell-55'
+                });
+                self.submitLoading = false;
+                return;
+              }
+              self.model.noPrizeImage1 = response.data.url;
+              self.save(self);
+            },
+            err => {
+              self.$notify({
+                type: 'warning',
+                message: err.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+              self.submitLoading = false;
+            }
+          );
+        } else {
+          self.save(self);
+        }
+      }
+    },
+    save(vm) {
+      vm = vm ? vm : this;
+      if (!vm.model.idOperation)
+        vm.model.idOperation = this.$store.getters.currentUser.idOperation;
+      if (vm.model.id === 0) {
+        scratchcardService.create(vm.model).then(
+          (data) => {
+            vm.$notify({
+              type: 'success',
+              message: 'Campanha criada com sucesso!',
+              icon: 'tim-icons icon-bell-55'
+            });
+            vm.submitLoading = false;
+            vm.$router.push(`/scratchcard/${data.id}`);
+          },
+          err => {
+            vm.$notify({
+              type: 'primary',
+              message: err.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+            vm.submitLoading = false;
+          }
+        );
+      } else {
+        scratchcardService.update(vm.model).then(
+          response => {
+            vm.$notify({
+              type: 'primary',
+              message: response.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+            vm.submitLoading = false;
+          },
+          err => {
+            vm.$notify({
+              type: 'primary',
+              message: err.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+            vm.submitLoading = false;
+          }
+        );
+      }
+    },
+    fetchData() {
+      const self = this;
+      if (this.viewAction == 'edit') {
+        this.formLoading = true;
+        scratchcardService.get(self.id).then(
+          response => {
+            self.model = response.data;
+            self.formLoading = false;
+          },
+          () => {
+            self.formLoading = false;
+          }
+        );
+      }
+
+      self.selectLoading = true;
+      operationService.findAll().then(
+        response => {
+          _.each(response.data, function(el) {
+            self.operations.push({ id: el.id, title: el.title });
+          });
+          self.selectLoading = false;
+        },
+        () => {
+          self.selectLoading = false;
+        }
+      );
+    },
+    onImageChange(file) {
+      this.noPrizeImage1 = file;
+    }
+  },
+  created() {
+    this.fetchData();
+  }
+};
+</script>

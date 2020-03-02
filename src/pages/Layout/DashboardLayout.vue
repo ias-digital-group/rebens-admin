@@ -188,6 +188,14 @@
           }"
         ></sidebar-item>
         <sidebar-item
+          v-show="isRebens"
+          :link="{
+            name: 'Raspadinhas',
+            icon: 'tim-icons icon-paper',
+            path: '/scratchcard'
+          }"
+        ></sidebar-item>
+        <sidebar-item
           v-show="!isPublisher && !isPartnerAdmin"
           :link="{ name: $t('sidebar.report'), icon: 'fas fa-chart-pie' }"
         >

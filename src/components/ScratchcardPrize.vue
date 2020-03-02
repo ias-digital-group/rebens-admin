@@ -1,0 +1,418 @@
+<template>
+<div class="row">
+    <div class="col-12" v-if="showTable">
+        <el-table
+            ref="table"
+            :data="tableData"
+            v-loading="loading"
+            :empty-text="$t('pages.faqs.emptytext')"
+            @sort-change="onSortChanged"
+            :default-sort="{ prop: sortField, order: sortOrder }"
+        >
+            <el-table-column
+            v-for="column in tableColumns"
+            :key="column.label"
+            :min-width="column.minWidth"
+            :prop="column.prop"
+            :label="column.label"
+            sortable="custom"
+            >
+            </el-table-column>
+            <el-table-column
+            :min-width="135"
+            align="right"
+            :label="$t('pages.faqs.grid.actions')"
+            >
+            <div slot-scope="props">
+                <base-button
+                @click.native="handleEdit(props.$index, props.row)"
+                class="edit btn-link"
+                type="info"
+                size="sm"
+                icon
+                >
+                <i class="tim-icons icon-pencil"></i>
+                </base-button>
+                <base-button
+                @click.native="handleDelete(props.$index, props.row)"
+                class="remove btn-link"
+                type="danger"
+                size="sm"
+                icon
+                >
+                <i class="tim-icons icon-simple-remove"></i>
+                </base-button>
+            </div>
+            </el-table-column>
+        </el-table>
+    </div>
+    <div
+    class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
+    >
+        <base-button
+            class="mt-3 pull-right"
+            native-type="button"
+            type="info"
+            @click.native.prevent="newPrize"
+            v-show="!showForm"
+        >
+            Novo
+        </base-button>
+    </div>
+    <div class="col-12" v-if="showForm">
+    <hr />
+        <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
+            <div class="row">
+                <label class="col-md-3 col-form-label">Nome</label>
+                <div class="col-md-9">
+                    <base-input
+                    required
+                    v-model="model.name"
+                    type="text"
+                    :error="getError('name')"
+                    name="name"
+                    placeholder="Nome"
+                    maxlength="200"
+                    ></base-input>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-md-3 col-form-label">Título</label>
+                <div class="col-md-9">
+                    <base-input
+                    required
+                    v-model="model.title"
+                    type="text"
+                    :error="getError('title')"
+                    name="title"
+                    placeholder="Título"
+                    maxlength="200"
+                    ></base-input>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-md-3 col-form-label">Descrição</label>
+                <div class="col-md-9">
+                    <wysiwyg v-model="model.description" placeholder="Descrição" />
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-md-3 col-form-label">Quantidade</label>
+                <div class="col-md-2">
+                    <base-input
+                    required
+                    v-model="model.quantity"
+                    type="number"
+                    :error="getError('quantity')"
+                    name="quantity"
+                    placeholder="Quantidade"
+                    maxlength="10"
+                    ></base-input>
+                </div>
+            </div>
+            <template v-if="model.image">
+                <div class="row">
+                  <label class="col-md-3 col-form-label"
+                    >Imagem do prêmio <br />
+                    <span>(200x200)</span>
+                  </label>
+                  <div class="col-md-9">
+                    <div class="fileinput">
+                      <div class="thumbnail">
+                        <img :src="model.image" class="img-preview" />
+                      </div>
+                      <div>
+                        <base-button
+                          @click="model.image = ''"
+                          class="btn-simple btn-file"
+                          type="danger"
+                        >
+                          <i class="fas fa-times"></i> {{ removeText }}
+                        </base-button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </template>
+              <template v-else>
+                <div class="row">
+                  <label class="col-md-3 col-form-label"
+                    >Imagem do prêmio<br />
+                    <span>(200x200)</span></label
+                  >
+                  <div class="col-md-9">
+                    <image-upload
+                      @change="onImageChange"
+                      change-text="Alterar"
+                      remove-text="Remover"
+                      select-text="Selecione uma imagem"
+                    />
+                  </div>
+                </div>
+              </template>
+            <div class="row">
+                <div class="col-md-12">
+                    <a class="btn mt-3 btn-secondary btn-simple" @click="clearModel()"
+                    >Cancelar</a
+                    >
+                    <base-button
+                    class="mt-3 pull-right"
+                    native-type="submit"
+                    type="info"
+                    @click.native.prevent="validatePrize"
+                    >
+                    Salvar
+                    </base-button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <modal :show.sync="modal.visible" headerClasses="justify-content-center">
+    <h4 slot="header" class="title title-up">Remover prêmio</h4>
+    <form
+        class="modal-form"
+        ref="modalForm"
+        @submit.prevent
+        v-loading="modal.formLoading"
+    >
+        <input type="hidden" name="nome" value="DELETE" ref="nome" />
+        <base-input
+        required
+        v-model="modal.nameConfirmation"
+        label="Digite DELETE para confirmar"
+        placeholder="Digite DELETE para confirmar"
+        :error="getError('confirmação')"
+        type="text"
+        v-validate="modal.modelValidations.name_confirm"
+        name="confirmação"
+        >
+        </base-input>
+    </form>
+    <template slot="footer">
+        <base-button @click.native.prevent="validateModal" type="danger"
+        >Remover</base-button
+        >
+        <base-button type="info" @click.native="modal.visible = false"
+        >Fechar</base-button
+        >
+    </template>
+    </modal>
+</div>
+</template>
+<script>
+import { Table, TableColumn, Select, Option } from 'element-ui';
+import { BasePagination, Modal } from 'src/components';
+import scratchcardPrizeService from '../services/Scratchcard/scratchcardPrizeService';
+import { ImageUpload } from 'src/components/index';
+import listPage from '../mixins/listPage';
+import _ from 'lodash';
+
+export default {
+  mixins: [listPage],
+  components: {
+    Modal,
+    BasePagination,
+    [Select.name]: Select,
+    [Option.name]: Option,
+    [Table.name]: Table,
+    ImageUpload,
+    [TableColumn.name]: TableColumn
+  },
+  props: {
+    parent: String,
+    parentId: [String, Number]
+  },
+  data() {
+    return {
+      internalName: 'scratchcardPrizes',
+      sortField: 'name',
+      formLoading: false,
+      showForm: false,
+      showTable: false,
+      tableColumns: [
+        {
+          prop: 'id',
+          label: 'ID',
+          minWidth: 0
+        },
+        {
+          prop: 'name',
+          label: 'Nome',
+          minWidth: 100
+        },
+        {
+          prop: 'title',
+          label: 'Título',
+          minWidth: 100
+        },
+        {
+          prop: 'quantity',
+          label: 'QTD',
+          minWidth: 30
+        }
+      ],
+      model: {
+        id: 0,
+        name: '',
+        title: '',
+        image: '',
+        idScratchcard: 0,
+        quantity: 0,
+        description: ''
+      }
+    };
+  },
+  methods: {
+    getError(fieldName) {
+      return this.errors.first(fieldName);
+    },
+    newPrize() {
+      this.clearModel();
+      this.showForm = true;
+    },
+    validatePrize() {
+      const self = this;
+      if (
+        self.model.name !== '' &&
+        self.model.name.length <= 200 &&
+        self.model.title !== '' &&
+        self.model.title.length <= 200 &&
+        self.model.quantity > 0 &&
+        self.model.image !== '',
+        self.model.description <= 2000
+      ) {
+        self.submitLoading = true;
+        self.savePrize(self);
+      }
+    },
+    savePrize(vm) {
+      vm = vm ? vm : this;
+      vm.model.idOperation = vm.parentId;
+      if (vm.model.id === 0) {
+        scratchcardPrizeService.create(vm.model).then(
+          () => {
+            vm.$notify({
+              type: 'success',
+              message: 'Prêmio cadastrado com sucesso!',
+              icon: 'tim-icons icon-bell-55'
+            });
+            vm.clearModel();
+            vm.submitLoading = false;
+            vm.fetchData();
+          },
+          err => {
+            vm.$notify({
+              type: 'primary',
+              message: err.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+            vm.submitLoading = false;
+          }
+        );
+      } else {
+        scratchcardPrizeService.update(vm.model).then(
+          response => {
+            vm.$notify({
+              type: 'primary',
+              message: response.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+            vm.clearModel();
+            vm.submitLoading = false;
+            vm.fetchData();
+          },
+          err => {
+            vm.$notify({
+              type: 'primary',
+              message: err.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+            vm.submitLoading = false;
+          }
+        );
+      }
+    },
+    handleEdit(index, row) {
+      this.formLoading = true;
+      this.clearModel();
+      this.showForm = true;
+      let obj = _.cloneDeep(row);
+      this.model.name = obj.name;
+      this.model.title = obj.title;
+      this.model.description = obj.description;
+      this.model.idScratchcard = obj.idScratchcard;
+      this.model.id = obj.id;
+      this.model.quantity = obj.quantity;
+      this.model.image = obj.image;
+      this.formLoading = false;
+    },
+    fetchData() {
+      const self = this;
+      const request = {
+        page: this.$data.pagination.currentPage - 1,
+        pageItems: this.$data.pagination.perPage,
+        searchWord: this.searchQuery,
+        sort: this.formatSortFieldParam,
+        idOperation: this.parentId
+      };
+      this.$data.loading = true;
+      scratchcardPrizeService.list(this.parentId).then(
+        response => {
+          self.$data.tableData = response;
+          self.$data.loading = false;
+          self.showTable = response.length > 0;
+        },
+        () => {
+          self.$data.loading = false;
+        }
+      );
+    },
+    validateModal() {
+      const self = this;
+      this.$validator.validateAll().then(isValid => {
+        if (isValid) {
+          self.modal.formLoading = true;
+          scratchcardPrizeService.delete(self.modal.model.id).then(
+            response => {
+              self.$notify({
+                type: 'primary',
+                message: response.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+              self.resetModal();
+              self.pagination.currentPage = 1;
+              self.fetchData();
+            },
+            err => {
+              self.$notify({
+                type: 'primary',
+                message: err.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+              self.modal.formLoading = false;
+            }
+          );
+        }
+      });
+    },
+    clearModel() {
+      this.model.id = 0;
+      this.model.idScratchcard = this.parentId;
+      this.model.name = '';
+      this.model.title = '';
+      this.model.description = '';
+      this.model.image = '';
+      this.model.quantity = 0;
+      this.$validator.reset();
+      this.showForm = false;
+    }
+  }
+};
+</script>
+<style lang="scss" scoped>
+.modal-form {
+  .has-label::after {
+    top: 43px !important;
+  }
+}
+</style>
