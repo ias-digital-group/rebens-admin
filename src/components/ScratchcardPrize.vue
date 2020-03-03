@@ -47,7 +47,8 @@
         </el-table-column>
       </el-table>
     </div>
-    <div v-if="canEdit"
+    <div
+      v-if="canEdit"
       class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
     >
       <base-button

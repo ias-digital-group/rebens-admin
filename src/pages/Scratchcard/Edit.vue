@@ -14,7 +14,7 @@
                 <label class="col-md-3 col-form-label">Nome</label>
                 <div class="col-md-9">
                   <base-input
-                    :disabled="!canEdit"
+                    :disabled="!model.canEdit"
                     required
                     v-model="model.name"
                     type="text"
@@ -30,7 +30,7 @@
                 <div class="col-md-9 col-lg-4">
                   <base-input label="Início">
                     <el-date-picker
-                      :disabled="!canEdit"
+                      :disabled="!model.canEdit"
                       type="date"
                       name="start"
                       data-vv-name="start"
@@ -43,7 +43,7 @@
                 <div class="col-md-9 offset-md-3 offset-lg-0 col-lg-4">
                   <base-input label="Fim">
                     <el-date-picker
-                      :disabled="!canEdit"
+                      :disabled="!model.canEdit"
                       type="date"
                       name="end"
                       data-vv-name="end"
@@ -58,7 +58,7 @@
                 <label class="col-md-3 col-form-label">Quantidade</label>
                 <div class="col-md-3">
                   <base-input
-                    :disabled="!canEdit"
+                    :disabled="!model.canEdit"
                     required
                     v-model="model.quantity"
                     type="number"
@@ -74,7 +74,7 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <el-select
-                      :disabled="!canEdit"
+                      v-if="model.canEdit"
                       class="select-info"
                       placeholder="Operação"
                       v-model="model.idOperation"
@@ -90,6 +90,13 @@
                       >
                       </el-option>
                     </el-select>
+                    <base-input
+                      disabled
+                      type="text"
+                      name="operation"
+                      v-if="!model.canEdit"
+                      v-model="disabledOperation"
+                    ></base-input>
                     <label
                       v-show="customErros.includes('idOperation')"
                       class="text-danger"
@@ -103,42 +110,25 @@
                 <div class="col-md-3">
                   <div class="form-group">
                     <el-select
-                      v-if="canEdit"
+                      v-if="model.canEdit"
                       class="select-info"
                       placeholder="Tipo"
                       v-model="model.type"
                       lock
                     >
                       <el-option
+                        v-for="item in typeOptions"
+                        :key="item.value"
                         class="select-primary"
-                        value="1"
-                        label="Aberto"
-                        key="1"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        value="2"
-                        label="Fechado"
-                        key="2"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        value="3"
-                        label="Fechado + parceiro"
-                        key="3"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        value="4"
-                        label="Assinatura"
-                        key="4"
+                        :value="item.value"
+                        :label="item.label"
                       ></el-option>
                     </el-select>
                     <base-input
                       disabled
                       type="text"
                       name="quantity"
-                      v-if="!canEdit"
+                      v-if="!model.canEdit"
                       v-model="disabledType"
                     ></base-input>
                     <label
@@ -155,31 +145,27 @@
                   <div class="form-group has-label">
                     <label>Tipo</label>
                     <el-select
-                      :disabled="!canEdit"
+                      v-if="model.canEdit"
                       class="select-info"
                       placeholder="Tipo de distribuição"
                       v-model="model.distributionType"
                       lock
                     >
                       <el-option
+                        v-for="item in distributionTypeOptions"
                         class="select-primary"
-                        value="1"
-                        label="Diária"
-                        key="1"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        value="2"
-                        label="Semanal"
-                        key="2"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        value="3"
-                        label="Mensal"
-                        key="3"
+                        :value="item.value"
+                        :label="item.label"
+                        :key="item.value"
                       ></el-option>
                     </el-select>
+                    <base-input
+                      disabled
+                      type="text"
+                      name="distributionType"
+                      v-if="!model.canEdit"
+                      v-model="disabledDistributionType"
+                    ></base-input>
                     <label
                       v-show="customErros.includes('distributionType')"
                       class="text-danger"
@@ -187,10 +173,10 @@
                     >
                   </div>
                 </div>
-                <div class="col-md-3" v-show="model.distributionType !== '1'">
+                <div class="col-md-3" v-show="model.distributionType != 1">
                   <div class="form-group">
                     <base-input
-                      :disabled="!canEdit"
+                      :disabled="!model.canEdit"
                       label="Quantidade"
                       required
                       v-model="model.distributionQuantity"
@@ -207,9 +193,14 @@
                 <label class="col-md-3 col-form-label">O bilhete expira</label>
                 <div class="col-md-9">
                   <div class="form-group">
-                    <base-checkbox v-model="model.scratchcardExpire" v-if="canEdit"
-                      >&nbsp;</base-checkbox>
-                    <label class="col-form-label" v-if="!canEdit">{{ model.scratchcardExpire ? 'sim' : 'não' }}</label>
+                    <base-checkbox
+                      v-model="model.scratchcardExpire"
+                      v-if="model.canEdit"
+                      >&nbsp;</base-checkbox
+                    >
+                    <label class="col-form-label" v-if="!model.canEdit">{{
+                      model.scratchcardExpire ? 'sim' : 'não'
+                    }}</label>
                   </div>
                 </div>
               </div>
@@ -226,7 +217,7 @@
                       </div>
                       <div>
                         <base-button
-                          v-if="canEdit"
+                          v-if="model.canEdit"
                           @click="model.noPrizeImage1 = ''"
                           class="btn-simple btn-file"
                           type="danger"
@@ -254,20 +245,39 @@
                   </div>
                 </div>
               </template>
+              <div class="row" v-if="model.id > 0">
+                <label class="col-md-3 col-form-label">Status</label>
+                <div class="col-md-9">
+                  <div class="form-group">
+                    <label class="col-form-label">{{ model.statusName }}</label>
+                  </div>
+                </div>
+              </div>
               <div class="row">
-                <div class="col-md-12">
+                <div
+                  class="col-md-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
+                >
                   <base-link
                     class="btn mt-3 btn-simple btn-primary"
                     to="/scratchcard"
                     >Voltar</base-link
                   >
                   <base-button
-                    class="mt-3 pull-right"
+                    class="mt-3"
+                    native-type="button"
+                    type="info"
+                    @click="generate"
+                    v-if="model.canPublish"
+                  >
+                    Gerar Raspadinhas
+                  </base-button>
+                  <base-button
+                    class="mt-3"
                     native-type="submit"
                     type="info"
                     @click.native.prevent="validate"
                     :loading="submitLoading"
-                    v-if="canEdit"
+                    v-if="model.canEdit"
                   >
                     Salvar
                   </base-button>
@@ -278,7 +288,7 @@
           <el-tab-pane label="Prêmios" v-if="viewAction != 'new'">
             <scratchcardPrizes
               v-loading="formLoading"
-              :canEdit="canEdit"
+              :canEdit="model.canEdit"
               :parentId="id"
               ref="scratchcard"
             ></scratchcardPrizes>
@@ -320,9 +330,41 @@ export default {
       formLoading: false,
       submitLoading: false,
       image: null,
-      canEdit: false,
-      canPublish: false,
       disabledType: '',
+      disabledDistributionType: '',
+      disabledOperation: '',
+      typeOptions: [
+        {
+          value: 1,
+          label: 'Aberto'
+        },
+        {
+          value: 2,
+          label: 'Fechado'
+        },
+        {
+          value: 3,
+          label: 'Fechado + parceiro'
+        },
+        {
+          value: 4,
+          label: 'Assinatura'
+        }
+      ],
+      distributionTypeOptions: [
+        {
+          value: 1,
+          label: 'Diária'
+        },
+        {
+          value: 2,
+          label: 'Semanal'
+        },
+        {
+          value: 3,
+          label: 'Mensal'
+        }
+      ],
       model: {
         id: 0,
         name: '',
@@ -334,7 +376,10 @@ export default {
         distributionType: 0,
         distributionQuantity: 0,
         idOperation: 0,
-        scratchcardExpire: true
+        scratchcardExpire: true,
+        canEdit: false,
+        canPublish: false,
+        statusName: ''
       },
       operations: [],
       customErros: [],
@@ -371,6 +416,30 @@ export default {
   methods: {
     getError(fieldName) {
       return this.errors.first(fieldName);
+    },
+    generate() {
+      const self = this;
+      self.formLoading = true;
+      scratchcardService.generate(self.model.id).then(response => {
+        if (response.status === 'ok') {
+          self.model.statusName = response.data;
+          self.$notify({
+            type: 'primary',
+            message: response.message,
+            icon: 'tim-icons icon-bell-55'
+          });
+          self.model.canEdit = false;
+          self.model.canPublish = false;
+          self.formLoading = false;
+        } else {
+          self.$notify({
+            type: 'primary',
+            message: response.message,
+            icon: 'tim-icons icon-bell-55'
+          });
+          self.formLoading = false;
+        }
+      });
     },
     validate() {
       const self = this;
@@ -462,27 +531,25 @@ export default {
         scratchcardService.get(self.id).then(
           response => {
             self.model = response.data;
-            switch(self.model.type){
-              case 1:
-                self.disabledType = 'Aberto';
-                break;
-              case 2:
-                self.disabledType = 'Fechado';
-                break;
-              case 3:
-                self.disabledType = 'Fechado + parceiro';
-                break;
-              case 4:
-                self.disabledType = 'Assinatura';
-                break;
+            for (const item of self.typeOptions) {
+              if (item.value == self.model.type) {
+                self.disabledType = item.label;
+              }
             }
-            
+            for (const item of self.distributionTypeOptions) {
+              if (item.value == self.model.distributionType) {
+                self.disabledDistributionType = item.label;
+              }
+            }
+
             self.formLoading = false;
           },
           () => {
             self.formLoading = false;
           }
         );
+      } else {
+        self.model.canEdit = true;
       }
 
       self.selectLoading = true;
@@ -490,6 +557,9 @@ export default {
         response => {
           _.each(response.data, function(el) {
             self.operations.push({ id: el.id, title: el.title });
+            if (self.model.id > 0 && el.id == self.model.idOperation) {
+              self.disabledOperation = el.title;
+            }
           });
           self.selectLoading = false;
         },
