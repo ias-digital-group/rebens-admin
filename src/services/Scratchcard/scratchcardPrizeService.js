@@ -20,7 +20,9 @@ export default {
   },
   get: id => {
     return new Promise((resolve, reject) => {
-      HTTP.get(config.apiEndpoints.scratchcardPrizeUri.concat(`read/${id}`)).then(
+      HTTP.get(
+        config.apiEndpoints.scratchcardPrizeUri.concat(`read/${id}`)
+      ).then(
         response => {
           resolve(response.data);
         },
@@ -52,34 +54,34 @@ export default {
   },
   update: model => {
     return new Promise((resolve, reject) => {
-        HTTP.put(config.apiEndpoints.scratchcardPrizeUri, model).then(
-          response => {
-            resolve(response.data);
-          },
-          error => {
-            if (error.response.status === 400) {
-              resolve(error.response.data);
-            } else {
-              reject(error);
-            }
+      HTTP.put(config.apiEndpoints.scratchcardPrizeUri, model).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          if (error.response.status === 400) {
+            resolve(error.response.data);
+          } else {
+            reject(error);
           }
-        );
-      });
+        }
+      );
+    });
   },
   delete: id => {
     return new Promise((resolve, reject) => {
-        HTTP.delete(config.apiEndpoints.scratchcardPrizeUri.concat(id)).then(
-          response => {
-            resolve(response.data);
-          },
-          error => {
-            if (error.response.status === 400) {
-              resolve(error.response.data);
-            } else {
-              reject(error);
-            }
+      HTTP.delete(config.apiEndpoints.scratchcardPrizeUri.concat(id)).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          if (error.response.status === 400) {
+            resolve(error.response.data);
+          } else {
+            reject(error);
           }
-        );
-      });
+        }
+      );
+    });
   }
 };

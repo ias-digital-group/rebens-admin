@@ -18,7 +18,11 @@ export default {
       HTTP.get(
         config.apiEndpoints.scratchcardUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}&status=${request.status}` +
-          `${request.idOperation !== 0 ? '&idOperation=' + request.idOperation : ''}`
+            `${
+              request.idOperation !== 0
+                ? '&idOperation=' + request.idOperation
+                : ''
+            }`
         )
       ).then(
         response => {
@@ -68,46 +72,50 @@ export default {
   },
   update: model => {
     return new Promise((resolve, reject) => {
-        HTTP.put(config.apiEndpoints.scratchcardUri, model).then(
-          response => {
-            resolve(response.data);
-          },
-          error => {
-            if (error.response.status === 400) {
-              resolve(error.response.data);
-            } else {
-              reject(error);
-            }
+      HTTP.put(config.apiEndpoints.scratchcardUri, model).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          if (error.response.status === 400) {
+            resolve(error.response.data);
+          } else {
+            reject(error);
           }
-        );
-      });
+        }
+      );
+    });
   },
   delete: id => {
     return new Promise((resolve, reject) => {
-        HTTP.delete(config.apiEndpoints.scratchcardUri.concat(id)).then(
-          response => {
-            resolve(response.data);
-          },
-          error => {
-            if (error.response.status === 400) {
-              resolve(error.response.data);
-            } else {
-              reject(error);
-            }
+      HTTP.delete(config.apiEndpoints.scratchcardUri.concat(id)).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          if (error.response.status === 400) {
+            resolve(error.response.data);
+          } else {
+            reject(error);
           }
-        );
-      });
+        }
+      );
+    });
   },
   uploadImage: file => {
     return new Promise((resolve, reject) => {
       var formData = new FormData();
       formData.append('file', file);
       axios
-        .post(config.apiEndpoints.scratchcardUri.concat('UploadImage'), formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
+        .post(
+          config.apiEndpoints.scratchcardUri.concat('UploadImage'),
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
           }
-        })
+        )
         .then(
           response => {
             resolve(response);
@@ -120,18 +128,20 @@ export default {
   },
   generate: id => {
     return new Promise((resolve, reject) => {
-        HTTP.post(config.apiEndpoints.scratchcardUri.concat(id + '/Generate')).then(
-          response => {
-            resolve(response.data);
-          },
-          error => {
-            if (error.response.status === 400) {
-              resolve(error.response.data);
-            } else {
-              reject(error);
-            }
+      HTTP.post(
+        config.apiEndpoints.scratchcardUri.concat(id + '/Generate')
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          if (error.response.status === 400) {
+            resolve(error.response.data);
+          } else {
+            reject(error);
           }
-        );
-      });
+        }
+      );
+    });
   }
 };

@@ -14,6 +14,7 @@ export default {
     purpleGradient: ['rgba(253,93,147,0.8)', 'rgba(253,93,147,0)']
   },
   apiEndpoints: {
+    defaultUri: process.env.VUE_APP_API_URI,
     accountUri: process.env.VUE_APP_API_URI.concat('account/'),
     addressUri: process.env.VUE_APP_API_URI.concat('address/'),
     categoryUri: process.env.VUE_APP_API_URI.concat('category/'),
@@ -40,7 +41,9 @@ export default {
     freeCourseUri: process.env.VUE_APP_API_URI.concat('freeCourse/'),
     promoterUri: process.env.VUE_APP_API_URI.concat('promoter/'),
     scratchcardUri: process.env.VUE_APP_API_URI.concat('scratchcard/'),
-    scratchcardPrizeUri: process.env.VUE_APP_API_URI.concat('scratchcardPrize/'),
+    scratchcardPrizeUri: process.env.VUE_APP_API_URI.concat(
+      'scratchcardPrize/'
+    ),
     viaCepUri: process.env.VUE_APP_VIACEP_URI
   }
 };

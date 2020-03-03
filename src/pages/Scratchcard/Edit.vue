@@ -5,7 +5,11 @@
         <h4 slot="header" class="card-title">Campanha de Raspadinhas</h4>
         <el-tabs>
           <el-tab-pane label="Campanha">
-            <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
+            <form
+              class="form-horizontal"
+              v-loading="formLoading"
+              @submit.prevent
+            >
               <div class="row">
                 <label class="col-md-3 col-form-label">Nome</label>
                 <div class="col-md-9">
@@ -99,10 +103,30 @@
                       v-model="model.type"
                       lock
                     >
-                      <el-option class="select-primary" value="1" label="Aberto" key="1"></el-option>
-                      <el-option class="select-primary" value="2" label="Fechado" key="2"></el-option>
-                      <el-option class="select-primary" value="3" label="Fechado + parceiro" key="3"></el-option>
-                      <el-option class="select-primary" value="4" label="Assinatura" key="4"></el-option>
+                      <el-option
+                        class="select-primary"
+                        value="1"
+                        label="Aberto"
+                        key="1"
+                      ></el-option>
+                      <el-option
+                        class="select-primary"
+                        value="2"
+                        label="Fechado"
+                        key="2"
+                      ></el-option>
+                      <el-option
+                        class="select-primary"
+                        value="3"
+                        label="Fechado + parceiro"
+                        key="3"
+                      ></el-option>
+                      <el-option
+                        class="select-primary"
+                        value="4"
+                        label="Assinatura"
+                        key="4"
+                      ></el-option>
                     </el-select>
                     <label
                       v-show="customErros.includes('type')"
@@ -117,15 +141,30 @@
                 <div class="col-md-3">
                   <div class="form-group has-label">
                     <label>Tipo</label>
-                    <el-select 
+                    <el-select
                       class="select-info"
                       placeholder="Tipo de distribuição"
                       v-model="model.distributionType"
                       lock
                     >
-                      <el-option class="select-primary" value="1" label="Diária" key="1"></el-option>
-                      <el-option class="select-primary" value="2" label="Semanal" key="2"></el-option>
-                      <el-option class="select-primary" value="3" label="Mensal" key="3"></el-option>
+                      <el-option
+                        class="select-primary"
+                        value="1"
+                        label="Diária"
+                        key="1"
+                      ></el-option>
+                      <el-option
+                        class="select-primary"
+                        value="2"
+                        label="Semanal"
+                        key="2"
+                      ></el-option>
+                      <el-option
+                        class="select-primary"
+                        value="3"
+                        label="Mensal"
+                        key="3"
+                      ></el-option>
                     </el-select>
                     <label
                       v-show="customErros.includes('distributionType')"
@@ -136,7 +175,8 @@
                 </div>
                 <div class="col-md-3" v-show="model.distributionType !== '1'">
                   <div class="form-group">
-                    <base-input label="Quantidade"
+                    <base-input
+                      label="Quantidade"
                       required
                       v-model="model.distributionQuantity"
                       type="number"
@@ -144,7 +184,7 @@
                       name="distributionQuantity"
                       placeholder="Quantidade"
                       maxlength="3"
-                  ></base-input>
+                    ></base-input>
                   </div>
                 </div>
               </div>
@@ -152,7 +192,9 @@
                 <label class="col-md-3 col-form-label">O bilhete expira</label>
                 <div class="col-md-9">
                   <div class="form-group">
-                    <base-checkbox v-model="model.scratchcardExpire">&nbsp;</base-checkbox>
+                    <base-checkbox v-model="model.scratchcardExpire"
+                      >&nbsp;</base-checkbox
+                    >
                   </div>
                 </div>
               </div>
@@ -198,7 +240,9 @@
               </template>
               <div class="row">
                 <div class="col-md-12">
-                  <base-link class="btn mt-3 btn-simple btn-primary" to="/faqs"
+                  <base-link
+                    class="btn mt-3 btn-simple btn-primary"
+                    to="/scratchcard"
                     >Voltar</base-link
                   >
                   <base-button
@@ -214,16 +258,13 @@
               </div>
             </form>
           </el-tab-pane>
-          <el-tab-pane
-              label="Prêmios"
-              v-if="viewAction != 'new'"
-            >
-            <scratchcardPize
+          <el-tab-pane label="Prêmios" v-if="viewAction != 'new'">
+            <scratchcardPrizes
               v-loading="formLoading"
               parent="scratchcard"
-              :parentId="model.id"
+              :parentId="id"
               ref="scratchcard"
-            ></scratchcardPize>
+            ></scratchcardPrizes>
           </el-tab-pane>
         </el-tabs>
       </card>
@@ -236,6 +277,7 @@ import operationService from '../../services/Operation/operationService';
 import scratchcardService from '../../services/Scratchcard/scratchcardService';
 import { ImageUpload } from 'src/components/index';
 import ScratchcardPrizes from 'src/components/ScratchcardPrize';
+
 import _ from 'lodash';
 
 export default {
@@ -260,6 +302,7 @@ export default {
       selectLoading: false,
       formLoading: false,
       submitLoading: false,
+      image: null,
       model: {
         id: 0,
         name: '',
@@ -318,8 +361,8 @@ export default {
         self.model.distributionType != ''
       ) {
         self.submitLoading = true;
-        if (self.noPrizeImage1) {
-          scratchcardService.uploadFile(self.noPrizeImage1).then(
+        if (self.image) {
+          scratchcardService.uploadImage(self.image).then(
             response => {
               if (response.status != 200) {
                 self.$notify({
@@ -353,14 +396,14 @@ export default {
         vm.model.idOperation = this.$store.getters.currentUser.idOperation;
       if (vm.model.id === 0) {
         scratchcardService.create(vm.model).then(
-          (data) => {
+          data => {
             vm.$notify({
               type: 'success',
               message: 'Campanha criada com sucesso!',
               icon: 'tim-icons icon-bell-55'
             });
             vm.submitLoading = false;
-            vm.$router.push(`/scratchcard/${data.id}`);
+            vm.$router.push(`/scratchcard/${data.id}/edit`);
           },
           err => {
             vm.$notify({
@@ -421,7 +464,7 @@ export default {
       );
     },
     onImageChange(file) {
-      this.noPrizeImage1 = file;
+      this.image = file;
     }
   },
   created() {

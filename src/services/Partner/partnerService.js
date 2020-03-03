@@ -33,7 +33,13 @@ export default {
     return new Promise((resolve, reject) => {
       request = request
         ? request
-        : { type: 1, page: 0, pageItems: 1000, searchWord: '', sort: 'name ASC' };
+        : {
+            type: 1,
+            page: 0,
+            pageItems: 1000,
+            searchWord: '',
+            sort: 'name ASC'
+          };
       HTTP.get(
         config.apiEndpoints.partnerUri.concat(
           `?type=${request.type}&page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}`
@@ -50,11 +56,7 @@ export default {
   },
   listActive: type => {
     return new Promise((resolve, reject) => {
-      HTTP.get(
-        config.apiEndpoints.partnerUri.concat(
-          `?type=${type}`
-        )
-      ).then(
+      HTTP.get(config.apiEndpoints.partnerUri.concat(`?type=${type}`)).then(
         response => {
           resolve(response.data);
         },
