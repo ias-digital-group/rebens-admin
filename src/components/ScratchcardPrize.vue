@@ -19,6 +19,7 @@
         >
         </el-table-column>
         <el-table-column
+          v-if="canEdit"
           :min-width="135"
           align="right"
           :label="$t('pages.faqs.grid.actions')"
@@ -46,7 +47,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <div
+    <div v-if="canEdit"
       class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
     >
       <base-button
@@ -220,7 +221,7 @@ export default {
     [TableColumn.name]: TableColumn
   },
   props: {
-    parent: String,
+    canEdit: Boolean,
     parentId: [String, Number]
   },
   data() {
