@@ -314,7 +314,7 @@ export default {
       } else if (self.model.name.length > 200) {
         self.customErrors.push('nameMax');
       }
-      if (self.model.image == '') {
+      if (self.model.image == '' && self.image == null) {
         self.customErrors.push('image');
       } else if (self.model.image.length > 500) {
         self.customErrors.push('imageMax');
