@@ -76,6 +76,12 @@
               placeholder="Nome"
               maxlength="200"
             ></base-input>
+            <label v-show="customErrors.includes('name')" class="text-danger"
+              >O campo Nome é obrigatório.</label
+            >
+            <label v-show="customErrors.includes('nameMax')" class="text-danger"
+              >O campo Nome aceita no máximo 200 caracteres.</label
+            >
           </div>
         </div>
         <div class="row">
@@ -90,12 +96,26 @@
               placeholder="Título"
               maxlength="200"
             ></base-input>
+            <label v-show="customErrors.includes('title')" class="text-danger"
+              >O campo Título é obrigatório.</label
+            >
+            <label
+              v-show="customErrors.includes('titleMax')"
+              class="text-danger"
+              >O campo Título aceita no máximo 200 caracteres.</label
+            >
           </div>
         </div>
         <div class="row">
           <label class="col-md-3 col-form-label">Descrição</label>
           <div class="col-md-9">
             <wysiwyg v-model="model.description" placeholder="Descrição" />
+            <label v-show="customErrors.includes('desc')" class="text-danger"
+              >O campo Descrição é obrigatório.</label
+            >
+            <label v-show="customErrors.includes('descMax')" class="text-danger"
+              >O campo Descrição aceita no máximo 2000 caracteres.</label
+            >
           </div>
         </div>
         <div class="row">
@@ -110,6 +130,9 @@
               placeholder="Quantidade"
               maxlength="10"
             ></base-input>
+            <label v-show="customErrors.includes('qty')" class="text-danger"
+              >O campo Quantidade é obrigatório.</label
+            >
           </div>
         </div>
         <template v-if="model.image">
@@ -148,7 +171,15 @@
                 change-text="Alterar"
                 remove-text="Remover"
                 select-text="Selecione uma imagem"
-              />
+              /><br />
+              <label v-show="customErrors.includes('image')" class="text-danger"
+                >O campo Imagem é obrigatório.</label
+              >
+              <label
+                v-show="customErrors.includes('imageMax')"
+                class="text-danger"
+                >O campo Imagem aceita até 500 caracteres.</label
+              >
             </div>
           </div>
         </template>
@@ -233,6 +264,7 @@ export default {
       showForm: false,
       showTable: false,
       image: null,
+      customErrors: [],
       tableColumns: [
         {
           prop: 'id',
@@ -275,25 +307,33 @@ export default {
       this.showForm = true;
     },
     validatePrize() {
-      let error = false;
       const self = this;
-      if (self.model.name === '' || self.model.name.length > 200) {
-        error = true;
+      self.customErrors = [];
+      if (self.model.name == '') {
+        self.customErrors.push('name');
+      } else if (self.model.name.length > 200) {
+        self.customErrors.push('nameMax');
       }
-      if (self.model.title === '' || self.model.title.length > 200) {
-        error = true;
+      if (self.model.image == '') {
+        self.customErrors.push('image');
+      } else if (self.model.image.length > 500) {
+        self.customErrors.push('imageMax');
+      }
+      if (self.model.title == '') {
+        self.customErrors.push('title');
+      } else if (self.model.title.length > 200) {
+        self.customErrors.push('titleMax');
       }
       if (self.model.quantity <= 0) {
-        error = true;
+        self.customErrors.push('qty');
       }
-      if (
-        self.model.description === '' ||
-        self.model.description.length > 2000
-      ) {
-        error = true;
+      if (self.model.description == '') {
+        self.customErrors.push('desc');
+      } else if (self.model.description.length > 2000) {
+        self.customErrors.push('descMax');
       }
 
-      if (!error) {
+      if (self.customErrors.length == 0) {
         self.submitLoading = true;
         if (self.image) {
           scratchcardService.uploadImage(self.image).then(

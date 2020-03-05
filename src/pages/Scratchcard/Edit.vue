@@ -2,7 +2,19 @@
   <div class="row">
     <div class="col-md-12">
       <card title="Campanha de Raspadinhas">
-        <h4 slot="header" class="card-title">Campanha de Raspadinhas</h4>
+        <h4 slot="header" class="card-title">
+          Campanha de Raspadinhas
+          <small v-if="model.id > 0">({{ model.statusName }})</small>
+          <base-button
+            class="pull-right"
+            native-type="button"
+            type="info"
+            @click="generate"
+            v-if="model.canPublish"
+          >
+            Gerar Raspadinhas</base-button
+          >
+        </h4>
         <el-tabs>
           <el-tab-pane label="Campanha">
             <form
@@ -23,6 +35,16 @@
                     placeholder="Nome"
                     maxlength="200"
                   ></base-input>
+                  <label
+                    v-show="customErrors.includes('name')"
+                    class="text-danger"
+                    >O campo Nome é obrigatório.</label
+                  >
+                  <label
+                    v-show="customErrors.includes('nameMax')"
+                    class="text-danger"
+                    >O campo Nome aceita no máximo 200 caracteres.</label
+                  >
                 </div>
               </div>
               <div class="row">
@@ -67,6 +89,11 @@
                     placeholder="Quantidade"
                     maxlength="10"
                   ></base-input>
+                  <label
+                    v-show="customErrors.includes('qty')"
+                    class="text-danger"
+                    >O campo Quantidade é obrigatório.</label
+                  >
                 </div>
               </div>
               <div class="row">
@@ -98,7 +125,7 @@
                       v-model="disabledOperation"
                     ></base-input>
                     <label
-                      v-show="customErros.includes('idOperation')"
+                      v-show="customErrors.includes('idOperation')"
                       class="text-danger"
                       >O campo Operação é obrigatório</label
                     >
@@ -132,7 +159,7 @@
                       v-model="disabledType"
                     ></base-input>
                     <label
-                      v-show="customErros.includes('type')"
+                      v-show="customErrors.includes('type')"
                       class="text-danger"
                       >O campo Tipo é obrigatório</label
                     >
@@ -140,7 +167,7 @@
                 </div>
               </div>
               <div class="row">
-                <label class="col-md-3 col-form-label">distribuição</label>
+                <label class="col-md-3 col-form-label">Distribuição</label>
                 <div class="col-md-3">
                   <div class="form-group has-label">
                     <label>Tipo</label>
@@ -167,7 +194,7 @@
                       v-model="disabledDistributionType"
                     ></base-input>
                     <label
-                      v-show="customErros.includes('distributionType')"
+                      v-show="customErrors.includes('distributionType')"
                       class="text-danger"
                       >O campo Tipo de distribuição é obrigatório</label
                     >
@@ -241,18 +268,15 @@
                       change-text="Alterar"
                       remove-text="Remover"
                       select-text="Selecione uma imagem"
-                    />
+                    /><br />
+                    <label
+                      v-show="customErrors.includes('image')"
+                      class="text-danger"
+                      >O campo Logo é obrigatório.</label
+                    >
                   </div>
                 </div>
               </template>
-              <div class="row" v-if="model.id > 0">
-                <label class="col-md-3 col-form-label">Status</label>
-                <div class="col-md-9">
-                  <div class="form-group">
-                    <label class="col-form-label">{{ model.statusName }}</label>
-                  </div>
-                </div>
-              </div>
               <div class="row">
                 <div
                   class="col-md-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
@@ -262,15 +286,6 @@
                     to="/scratchcard"
                     >Voltar</base-link
                   >
-                  <base-button
-                    class="mt-3"
-                    native-type="button"
-                    type="info"
-                    @click="generate"
-                    v-if="model.canPublish"
-                  >
-                    Gerar Raspadinhas
-                  </base-button>
                   <base-button
                     class="mt-3"
                     native-type="submit"
@@ -293,6 +308,13 @@
               ref="scratchcard"
             ></scratchcardPrizes>
           </el-tab-pane>
+          <el-tab-pane label="Raspadinhas" v-if="viewAction != 'new'">
+            <scratchcardBillet
+              v-loading="formLoading"
+              :parentId="id"
+              ref="scratchcard"
+            ></scratchcardBillet>
+          </el-tab-pane>
         </el-tabs>
       </card>
     </div>
@@ -300,10 +322,10 @@
 </template>
 <script>
 import { Select, Option, DatePicker, Tabs, TabPane } from 'element-ui';
-import operationService from '../../services/Operation/operationService';
 import scratchcardService from '../../services/Scratchcard/scratchcardService';
 import { ImageUpload } from 'src/components/index';
 import ScratchcardPrizes from 'src/components/ScratchcardPrize';
+import ScratchcardBillet from 'src/components/ScratchcardBillet';
 
 import _ from 'lodash';
 
@@ -315,7 +337,8 @@ export default {
     [TabPane.name]: TabPane,
     [DatePicker.name]: DatePicker,
     ImageUpload,
-    ScratchcardPrizes
+    ScratchcardPrizes,
+    ScratchcardBillet
   },
   props: {
     id: String,
@@ -382,7 +405,7 @@ export default {
         statusName: ''
       },
       operations: [],
-      customErros: [],
+      customErrors: [],
       modelValidations: {
         question: {
           name: true,
@@ -443,12 +466,28 @@ export default {
     },
     validate() {
       const self = this;
-      if (
-        self.model.name !== '' &&
-        self.model.name.length <= 200 &&
-        self.model.type !== '' &&
-        self.model.distributionType != ''
-      ) {
+      self.customErrors = [];
+      if (self.model.name == '') {
+        self.customErrors.push('name');
+      } else if (self.model.name.length > 200) {
+        self.customErrors.push('nameMax');
+      }
+      if (self.model.quantity == '') {
+        self.customErrors.push('qty');
+      }
+      if (self.model.type == 0) {
+        self.customErrors.push('type');
+      }
+      if (self.model.distributionType == 0) {
+        self.customErrors.push('distributionType');
+      }
+      if (self.model.noPrizeImage1 == '' && self.image == null) {
+        self.customErrors.push('image');
+      }
+      if (self.model.idOperation == 0) {
+        self.customErrors.push('idOperation');
+      }
+      if (self.customErrors.length == 0) {
         self.submitLoading = true;
         if (self.image) {
           scratchcardService.uploadImage(self.image).then(
@@ -553,7 +592,7 @@ export default {
       }
 
       self.selectLoading = true;
-      operationService.findAll().then(
+      scratchcardService.operations().then(
         response => {
           _.each(response.data, function(el) {
             self.operations.push({ id: el.id, title: el.title });

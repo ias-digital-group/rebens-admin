@@ -143,5 +143,37 @@ export default {
         }
       );
     });
+  },
+  billets: id => {
+    return new Promise((resolve, reject) => {
+      HTTP.get(config.apiEndpoints.scratchcardUri.concat(id + '/Billets')).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          if (error.response.status === 400) {
+            resolve(error.response.data);
+          } else {
+            reject(error);
+          }
+        }
+      );
+    });
+  },
+  operations: () => {
+    return new Promise((resolve, reject) => {
+      HTTP.get(config.apiEndpoints.scratchcardUri.concat('Operations')).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          if (error.response.status === 400) {
+            resolve(error.response.data);
+          } else {
+            reject(error);
+          }
+        }
+      );
+    });
   }
 };
