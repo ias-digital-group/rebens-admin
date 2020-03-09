@@ -347,7 +347,7 @@ export default {
                 self.submitLoading = false;
                 return;
               }
-              self.model.image = response.data.url;
+              self.model.image = response.data.fileName;
               self.savePrize(self);
             },
             err => {

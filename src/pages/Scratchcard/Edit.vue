@@ -501,7 +501,7 @@ export default {
                 self.submitLoading = false;
                 return;
               }
-              self.model.noPrizeImage1 = response.data.url;
+              self.model.noPrizeImage1 = response.data.fileName;
               self.save(self);
             },
             err => {
