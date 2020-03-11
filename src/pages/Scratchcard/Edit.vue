@@ -217,6 +217,20 @@
                 </div>
               </div>
               <div class="row">
+                <label class="col-md-3 col-form-label">Instruções de resgate <br />(500 caracteres)</label>
+                <div class="col-md-8">
+                  <wysiwyg placeholder="Regulamento" v-model="model.instructions" v-if="model.canEdit" />
+                  <textarea v-model="model.instructions" class="form-control" disabled v-if="!model.canEdit"></textarea>
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-md-3 col-form-label">Regulamento</label>
+                <div class="col-md-8">
+                  <wysiwyg placeholder="Regulamento" v-model="model.regulation" v-if="model.canEdit" />
+                  <textarea v-model="model.regulation" class="form-control" disabled v-if="!model.canEdit"></textarea>
+                </div>
+              </div>
+              <div class="row">
                 <label class="col-md-3 col-form-label">O bilhete expira</label>
                 <div class="col-md-9">
                   <div class="form-group">
@@ -227,6 +241,21 @@
                     >
                     <label class="col-form-label" v-if="!model.canEdit">{{
                       model.scratchcardExpire ? 'sim' : 'não'
+                    }}</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-md-3 col-form-label">Receber notificações</label>
+                <div class="col-md-9">
+                  <div class="form-group">
+                    <base-checkbox
+                      v-model="model.getNotifications"
+                      v-if="model.canEdit"
+                      >&nbsp;</base-checkbox
+                    >
+                    <label class="col-form-label" v-if="!model.getNotifications">{{
+                      model.getNotifications ? 'sim' : 'não'
                     }}</label>
                   </div>
                 </div>
@@ -315,6 +344,13 @@
               ref="scratchcard"
             ></scratchcardBillet>
           </el-tab-pane>
+          <el-tab-pane label="Raspadinhas Premiadas" v-if="viewAction != 'new'">
+            <scratchcardPrizeBillet
+              v-loading="formLoading"
+              :parentId="id"
+              ref="scratchcard"
+            ></scratchcardPrizeBillet>
+          </el-tab-pane>
         </el-tabs>
       </card>
     </div>
@@ -326,6 +362,7 @@ import scratchcardService from '../../services/Scratchcard/scratchcardService';
 import { ImageUpload } from 'src/components/index';
 import ScratchcardPrizes from 'src/components/ScratchcardPrize';
 import ScratchcardBillet from 'src/components/ScratchcardBillet';
+import scratchcardPrizeBillet from 'src/components/ScratchcardPrizeBillet';
 
 import _ from 'lodash';
 
@@ -338,7 +375,8 @@ export default {
     [DatePicker.name]: DatePicker,
     ImageUpload,
     ScratchcardPrizes,
-    ScratchcardBillet
+    ScratchcardBillet,
+    scratchcardPrizeBillet
   },
   props: {
     id: String,
