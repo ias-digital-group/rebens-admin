@@ -217,17 +217,39 @@
                 </div>
               </div>
               <div class="row">
-                <label class="col-md-3 col-form-label">Instruções de resgate <br />(500 caracteres)</label>
+                <label class="col-md-3 col-form-label"
+                  >Instruções de resgate <br />(max. 500 caracteres)</label
+                >
                 <div class="col-md-8">
-                  <wysiwyg placeholder="Regulamento" v-model="model.instructions" v-if="model.canEdit" />
-                  <textarea v-model="model.instructions" class="form-control" disabled v-if="!model.canEdit"></textarea>
+                  <wysiwyg
+                    placeholder="Instruções de resgate (max. 500 caracteres)"
+                    v-model="model.instructions"
+                    v-if="model.canEdit"
+                  />
+                  <textarea
+                    v-model="model.instructions"
+                    class="form-control"
+                    disabled
+                    v-if="!model.canEdit"
+                    style="margin-botom:10px"
+                  ></textarea>
                 </div>
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Regulamento</label>
                 <div class="col-md-8">
-                  <wysiwyg placeholder="Regulamento" v-model="model.regulation" v-if="model.canEdit" />
-                  <textarea v-model="model.regulation" class="form-control" disabled v-if="!model.canEdit"></textarea>
+                  <wysiwyg
+                    placeholder="Regulamento"
+                    v-model="model.regulation"
+                    v-if="model.canEdit"
+                  />
+                  <textarea
+                    v-model="model.regulation"
+                    class="form-control"
+                    disabled
+                    v-if="!model.canEdit"
+                    style="margin-botom:10px"
+                  ></textarea>
                 </div>
               </div>
               <div class="row">
@@ -246,7 +268,9 @@
                 </div>
               </div>
               <div class="row">
-                <label class="col-md-3 col-form-label">Receber notificações</label>
+                <label class="col-md-3 col-form-label"
+                  >Receber notificações</label
+                >
                 <div class="col-md-9">
                   <div class="form-group">
                     <base-checkbox
@@ -254,7 +278,7 @@
                       v-if="model.canEdit"
                       >&nbsp;</base-checkbox
                     >
-                    <label class="col-form-label" v-if="!model.getNotifications">{{
+                    <label class="col-form-label" v-if="!model.canEdit">{{
                       model.getNotifications ? 'sim' : 'não'
                     }}</label>
                   </div>
@@ -269,7 +293,7 @@
                   <div class="col-md-9">
                     <div class="fileinput">
                       <div class="thumbnail">
-                        <img :src="model.noPrizeImage1" class="img-preview" />
+                        <img :src="noPrizeImage" class="img-preview" />
                       </div>
                       <div>
                         <base-button
@@ -391,6 +415,7 @@ export default {
       formLoading: false,
       submitLoading: false,
       image: null,
+      noPrizeImage: '',
       disabledType: '',
       disabledDistributionType: '',
       disabledOperation: '',
@@ -437,10 +462,13 @@ export default {
         distributionType: 0,
         distributionQuantity: 0,
         idOperation: 0,
-        scratchcardExpire: true,
+        scratchcardExpire: false,
         canEdit: false,
         canPublish: false,
-        statusName: ''
+        statusName: '',
+        getNotifications: false,
+        instructions: '',
+        regulation: ''
       },
       operations: [],
       customErrors: [],
@@ -540,6 +568,7 @@ export default {
                 return;
               }
               self.model.noPrizeImage1 = response.data.fileName;
+              self.noPrizeImage = response.data.url;
               self.save(self);
             },
             err => {
@@ -618,6 +647,8 @@ export default {
                 self.disabledDistributionType = item.label;
               }
             }
+            self.noPrizeImage =
+              response.data.imagesPath + self.model.noPrizeImage1;
 
             self.formLoading = false;
           },
