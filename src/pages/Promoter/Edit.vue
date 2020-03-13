@@ -10,9 +10,7 @@
               <base-input
                 required
                 v-model="model.name"
-                v-validate="modelValidations.name"
                 type="text"
-                :error="getError('nome')"
                 name="nome"
                 placeholder="Nome"
                 maxlength="150"
@@ -30,9 +28,7 @@
               <base-input
                 required
                 v-model="model.surname"
-                v-validate="modelValidations.surname"
                 type="text"
-                :error="getError('surname')"
                 name="surname"
                 placeholder="Sobrenome"
                 maxlength="150"
@@ -55,9 +51,7 @@
               <base-input
                 required
                 v-model="model.cpf"
-                v-validate="modelValidations.cpf"
                 type="text"
-                :error="getError('cpf')"
                 name="cpf"
                 placeholder="CPF"
                 :inputMask="['###.###.###-##']"
@@ -79,9 +73,7 @@
               <base-input
                 required
                 v-model="model.email"
-                v-validate="modelValidations.email"
                 type="email"
-                :error="getError('email')"
                 name="email1"
                 placeholder="email"
                 maxlength="500"
@@ -154,23 +146,6 @@ export default {
         surname: '',
         cpf: '',
         email: null
-      },
-      modelValidations: {
-        name: {
-          required: true,
-          max: 150
-        },
-        surname: {
-          required: true,
-          max: 150
-        },
-        cpf: {
-          max: 50,
-          required: true
-        },
-        email: {
-          max: 500
-        }
       }
     };
   },

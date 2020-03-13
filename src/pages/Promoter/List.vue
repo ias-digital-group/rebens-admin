@@ -167,7 +167,7 @@ export default {
         {
           prop: 'created',
           label: 'Data',
-          sortable: false
+          sortable: true
         },
         {
           prop: 'statusName',
