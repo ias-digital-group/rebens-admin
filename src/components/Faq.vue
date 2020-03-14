@@ -83,12 +83,26 @@
               placeholder="Pergunta"
               maxlength="200"
             ></base-input>
+            <label v-show="customErrors.includes('question')" class="error"
+              >&nbsp;&nbsp;O campo Resposta é obrigatório.</label
+            >
+            <label v-show="customErrors.includes('questionMax')" class="error"
+              >&nbsp;&nbsp;O campo Título aceita no máximo 1000
+              caracteres.</label
+            >
           </div>
         </div>
         <div class="row">
           <label class="col-md-3 col-form-label">Resposta</label>
           <div class="col-md-9">
             <wysiwyg v-model="model.answer" placeholder="Resposta" />
+            <label v-show="customErrors.includes('answer')" class="error"
+              >&nbsp;&nbsp;O campo Resposta é obrigatório.</label
+            >
+            <label v-show="customErrors.includes('answerMax')" class="error"
+              >&nbsp;&nbsp;O campo Título aceita no máximo 1000
+              caracteres.</label
+            >
           </div>
         </div>
         <div class="row">
@@ -190,6 +204,7 @@ export default {
       formLoading: false,
       showForm: false,
       showTable: false,
+      customErrors: [],
       tableColumns: [
         {
           prop: 'id',
@@ -227,16 +242,23 @@ export default {
     },
     validateFaq() {
       const self = this;
-      if (
-        self.model.question !== '' &&
-        self.model.question.length <= 1000 &&
-        self.model.answer !== '' &&
-        self.model.answer.length <= 1000 &&
-        self.model.order !== ''
-      ) {
-        self.submitLoading = true;
-        self.saveFaq(self);
+      self.customErrors = [];
+      if (self.model.question === '') {
+        self.customErrors.push('question');
+      } else if (self.model.question.length > 1000) {
+        self.customErrors.push('questionMax');
       }
+
+      if (self.model.answer === '') {
+        self.customErrors.push('answer');
+      } else if (self.model.answer.length > 1000) {
+        self.customErrors.push('answerMax');
+      }
+      if (self.customErrors.length > 0) {
+        return false;
+      }
+      self.submitLoading = true;
+      self.saveFaq(self);
     },
     saveFaq(vm) {
       vm = vm ? vm : this;
