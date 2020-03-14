@@ -217,17 +217,37 @@
                 </div>
               </div>
               <div class="row">
-                <label class="col-md-3 col-form-label">Instruções de resgate <br />(500 caracteres)</label>
+                <label class="col-md-3 col-form-label"
+                  >Instruções de resgate <br />(500 caracteres)</label
+                >
                 <div class="col-md-8">
-                  <wysiwyg placeholder="Regulamento" v-model="model.instructions" v-if="model.canEdit" />
-                  <textarea v-model="model.instructions" class="form-control" disabled v-if="!model.canEdit"></textarea>
+                  <wysiwyg
+                    placeholder="Regulamento"
+                    v-model="model.instructions"
+                    v-if="model.canEdit"
+                  />
+                  <textarea
+                    v-model="model.instructions"
+                    class="form-control"
+                    disabled
+                    v-if="!model.canEdit"
+                  ></textarea>
                 </div>
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Regulamento</label>
                 <div class="col-md-8">
-                  <wysiwyg placeholder="Regulamento" v-model="model.regulation" v-if="model.canEdit" />
-                  <textarea v-model="model.regulation" class="form-control" disabled v-if="!model.canEdit"></textarea>
+                  <wysiwyg
+                    placeholder="Regulamento"
+                    v-model="model.regulation"
+                    v-if="model.canEdit"
+                  />
+                  <textarea
+                    v-model="model.regulation"
+                    class="form-control"
+                    disabled
+                    v-if="!model.canEdit"
+                  ></textarea>
                 </div>
               </div>
               <div class="row">
@@ -246,7 +266,9 @@
                 </div>
               </div>
               <div class="row">
-                <label class="col-md-3 col-form-label">Receber notificações</label>
+                <label class="col-md-3 col-form-label"
+                  >Receber notificações</label
+                >
                 <div class="col-md-9">
                   <div class="form-group">
                     <base-checkbox
@@ -254,9 +276,11 @@
                       v-if="model.canEdit"
                       >&nbsp;</base-checkbox
                     >
-                    <label class="col-form-label" v-if="!model.getNotifications">{{
-                      model.getNotifications ? 'sim' : 'não'
-                    }}</label>
+                    <label
+                      class="col-form-label"
+                      v-if="!model.getNotifications"
+                      >{{ model.getNotifications ? 'sim' : 'não' }}</label
+                    >
                   </div>
                 </div>
               </div>
