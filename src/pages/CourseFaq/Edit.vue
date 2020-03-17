@@ -79,7 +79,7 @@
                   href="javascript:void(0)"
                   @click="removeItem(index)"
                   class="btn btn-icon btn-simple btn-sm btn-youtube"
-                  ><i class="tim-icons icon-simple-add"></i
+                  ><i class="tim-icons icon-simple-delete"></i
                 ></a>
               </div>
             </div>

@@ -554,11 +554,18 @@ export default {
             self.partners.push({ id: el.id, value: el.name });
           });
           self.partnerLoading = false;
+          self.populatePartner();
         },
         () => {
           self.partnerLoading = false;
         }
       );
+    },
+    populatePartner() {
+      if (!this.formLoading && !this.partnerLoading) {
+        var part = this.partners.filter(o => o.id == this.model.idPartner);
+        if (part.length == 1) this.partnerName = part[0].value;
+      }
     },
     onImageChange(file) {
       this.image = file;
