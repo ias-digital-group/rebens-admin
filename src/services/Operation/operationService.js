@@ -226,8 +226,8 @@ export default {
       );
     });
   },
-  saveConfiguration: function(id, data, modules) {
-    const postData = { fields: data.fields, modules: modules };
+  saveConfiguration: function(id, data, modules, wirecard) {
+    const postData = { fields: data.fields, wirecard, modules };
     return new Promise((resolve, reject) => {
       HTTP.post(
         config.apiEndpoints.operationUri.concat(`${id}/Configuration`),

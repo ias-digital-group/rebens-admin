@@ -120,7 +120,6 @@ export default {
       return { field: field, index: idx, data: field.data, img: null };
     },
     removeImage(field, idx) {
-      //this.staticText.images.push({field: field, index: idx, data: field.data, img: null});
       field.data = '';
       _.remove(this.staticText.images, el => {
         return el.index == idx;

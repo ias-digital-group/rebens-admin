@@ -6,6 +6,32 @@
           ref="staticTextForm"
           :staticText.sync="model"
         ></static-text-form>
+        <div
+          class="form-horizontal"
+          style="margin-top:10px"
+          v-show="showWirecard"
+        >
+          <div class="row">
+            <label class="col-md-3 col-form-label">Token Wirecard</label>
+            <div class="col-md-9">
+              <base-input
+                v-model="wirecard.token"
+                type="text"
+                placeholder="Token Wirecard"
+              ></base-input>
+            </div>
+          </div>
+          <div class="row">
+            <label class="col-md-3 col-form-label">Token JS Wirecard</label>
+            <div class="col-md-9">
+              <base-input
+                v-model="wirecard.jsToken"
+                type="text"
+                placeholder="Token JS Wirecard"
+              ></base-input>
+            </div>
+          </div>
+        </div>
         <hr />
         <div class="row">
           <div class="col-md-12"><h4>Módulos</h4></div>
@@ -93,22 +119,51 @@ export default {
         active: true,
         images: []
       },
-      modules: []
+      modules: [],
+      wirecard: {
+        token: '',
+        jsToken: ''
+      }
     };
+  },
+  computed: {
+    showWirecard: function() {
+      const self = this;
+      let ret = false;
+      if (self.model.data) {
+        if (self.model.data.fields) {
+          for (var field of self.model.data.fields) {
+            if (field.name === 'register-type' && field.data === 'signature') {
+              ret = true;
+            }
+          }
+        }
+        if (self.modules) {
+          for (var mod of self.modules) {
+            if (mod.info.needWirecard && mod.checked) {
+              ret = true;
+            }
+          }
+        }
+      }
+
+      return ret;
+    }
   },
   methods: {
     fetchData() {
       const self = this;
-      this.$data.loading = true;
-      operationService.getConfiguration(this.parentId).then(
+      self.$data.loading = true;
+      operationService.getConfiguration(self.parentId).then(
         response => {
-          this.model.images = [];
-          this.model.data = response.data;
+          self.model.images = [];
+          self.model.data = response.data;
+          self.wirecard = response.data.wirecard;
           self.$data.loading = false;
-          if (this.model.data && this.model.data.fields) {
-            for (var field of this.model.data.fields) {
+          if (self.model.data && self.model.data.fields) {
+            for (var field of self.model.data.fields) {
               if (field.name === 'register-type') {
-                this.$emit('change', field.data);
+                self.$emit('change', field.data);
               }
             }
           }
@@ -118,7 +173,7 @@ export default {
         }
       );
       operationService.listModules(this.parentId).then(response => {
-        this.modules = response;
+        self.modules = response;
       });
     },
     validateForm() {
@@ -173,7 +228,12 @@ export default {
         });
       } else {
         operationService
-          .saveConfiguration(self.parentId, self.model.data, self.modules)
+          .saveConfiguration(
+            self.parentId,
+            self.model.data,
+            self.modules,
+            self.wirecard
+          )
           .then(
             response => {
               self.$notify({
@@ -184,9 +244,6 @@ export default {
                 icon: 'tim-icons icon-bell-55'
               });
               self.$router.go();
-              //window.location.reload(true);
-              // self.formLoading = false;
-              // self.fetchData();
             },
             () => {
               console.log('erro');
