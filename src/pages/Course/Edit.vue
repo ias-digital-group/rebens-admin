@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-md-12">
-      <card title="Faculdade">
+      <card title="Curso">
         <h4 slot="header" class="card-title">Curso</h4>
         <!-- <el-tabs>
           <el-tab-pane label="Cadastro"> -->
@@ -44,7 +44,15 @@
             <label class="col-md-3 col-form-label">Operação</label>
             <div class="col-md-4">
               <div class="form-group">
+                <base-input
+                  v-model="operation"
+                  type="text"
+                  name="operation"
+                  disabled
+                  v-if="model.id > 0"
+                ></base-input>
                 <el-select
+                  v-if="model.id === 0"
                   class="select-info"
                   placeholder="Operação"
                   v-model="model.idOperation"
@@ -308,39 +316,6 @@
               ></base-input>
             </div>
           </div>
-          <!-- <div class="row">
-            <label class="col-md-3 col-form-label">Data</label>
-            <div class="col-md-9 col-lg-3">
-              <base-input label="Validade">
-                <el-date-picker
-                  type="date"
-                  placeholder="Validade"
-                  v-model="model.dueDate"
-                >
-                </el-date-picker>
-              </base-input>
-            </div>
-            <div class="col-md-9 col-lg-3">
-              <base-input label="Início">
-                <el-date-picker
-                  type="date"
-                  placeholder="Início"
-                  v-model="model.startDate"
-                >
-                </el-date-picker>
-              </base-input>
-            </div>
-            <div class="col-md-9 offset-md-3 offset-lg-0 col-lg-3">
-              <base-input label="Fim">
-                <el-date-picker
-                  type="date"
-                  placeholder="Fim"
-                  v-model="model.endDate"
-                >
-                </el-date-picker>
-              </base-input>
-            </div>
-          </div> -->
           <div class="row" style="padding-bottom:10px;">
             <label class="col-md-3 col-form-label">Descrição</label>
             <div class="col-md-9">
@@ -352,20 +327,6 @@
               >
             </div>
           </div>
-          <!-- <div class="row" style="padding-bottom:10px;">
-            <label class="col-md-3 col-form-label">Texto do voucher</label>
-            <div class="col-md-9">
-              <wysiwyg
-                v-model="model.voucherText"
-                placeholder="Texto do voucher"
-              />
-              <label
-                v-show="customErros.includes('voucherText')"
-                class="text-danger"
-                >O campo Texto do voucher é obrigatório!</label
-              >
-            </div>
-          </div> -->
           <template v-if="model.image">
             <div class="row" style="padding-bottom:10px;">
               <label class="col-md-3 col-form-label">Imagem (1200x500)</label>
@@ -605,19 +566,6 @@
             </div>
           </div>
         </form>
-        <!--</el-tab-pane>
-           <el-tab-pane
-            label="Endereços"
-            :disabled="viewAction == 'new' ? true : false"
-          >
-            <addresses
-              v-loading="formLoading"
-              parent="courses"
-              :parentId="id"
-              ref="addresses"
-            ></addresses>
-          </el-tab-pane>
-        </el-tabs> -->
       </card>
     </div>
   </div>
@@ -710,6 +658,7 @@ export default {
         precision: 2,
         masked: false
       },
+      operation: 'teste teset',
       operations: [],
       colleges: [],
       periods: [],
@@ -947,6 +896,21 @@ export default {
           self.selectLoading = false;
         }
       );
+
+      setTimeout(() => {
+        self.populateOperation();
+      }, 500);
+    },
+    populateOperation() {
+      const self = this;
+      if (self.model.id > 0 && self.operations) {
+        var op = self.operations.find(item => {
+          return item.id == self.model.idOperation;
+        });
+        if (op) {
+          self.operation = op.title;
+        }
+      }
     },
     onImageChange(file) {
       this.image = file;
