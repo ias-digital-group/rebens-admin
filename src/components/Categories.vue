@@ -71,6 +71,9 @@ export default {
     },
     fetchData() {
       const self = this;
+      if (!self.parentId || self.parentId < 1) {
+        return false;
+      }
       self.loading = true;
       categoryService.getListTree(self.type).then(response => {
         self.categoryList = response.data;

@@ -56,7 +56,9 @@ export default {
   },
   listActive: type => {
     return new Promise((resolve, reject) => {
-      HTTP.get(config.apiEndpoints.partnerUri.concat(`?type=${type}`)).then(
+      HTTP.get(
+        config.apiEndpoints.partnerUri.concat(`?type=${type}&pageItems=1000`)
+      ).then(
         response => {
           resolve(response.data);
         },

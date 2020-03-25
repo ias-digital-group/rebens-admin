@@ -48,7 +48,7 @@
             <div class="col-md-12">
               <base-link
                 class="btn mt-3 btn-simple btn-primary"
-                to="benefits/categories"
+                to="/benefits/categories"
                 >Voltar</base-link
               >
               <base-button

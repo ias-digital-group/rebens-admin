@@ -405,15 +405,18 @@ export default {
   methods: {
     fetchData() {
       const self = this;
+      if (!self.parentId || self.parentId < 1) {
+        return false;
+      }
       const request = {
-        page: this.$data.pagination.currentPage - 1,
-        pageItems: this.$data.pagination.perPage,
-        searchWord: this.searchQuery,
-        sort: this.formatSortFieldParam,
-        parentId: this.parentId,
-        parent: this.parent
+        page: self.$data.pagination.currentPage - 1,
+        pageItems: self.$data.pagination.perPage,
+        searchWord: self.searchQuery,
+        sort: self.formatSortFieldParam,
+        parentId: self.parentId,
+        parent: self.parent
       };
-      this.$data.loading = true;
+      self.$data.loading = true;
       addressService.findAllbyAssociation(request).then(
         response => {
           self.$data.tableData = response.data;

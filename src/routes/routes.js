@@ -393,7 +393,7 @@ let benefitsPages = {
     },
     {
       path: 'categories/',
-      name: 'category',
+      name: 'categoryBenefit',
       component: BenefitCategoriesList,
       meta: {
         requiresAuth: true,
@@ -409,7 +409,7 @@ let benefitsPages = {
     },
     {
       path: 'categories/new/',
-      name: `new_category`,
+      name: `new_categoryBenefit`,
       component: BenefitCategoriesEdit,
       meta: {
         requiresAuth: true,
@@ -424,7 +424,7 @@ let benefitsPages = {
     },
     {
       path: 'categories/:id/edit/',
-      name: 'edit_category',
+      name: 'edit_categoryBenefit',
       props: true,
       component: BenefitCategoriesEdit,
       meta: {
@@ -440,7 +440,7 @@ let benefitsPages = {
     },
     {
       path: 'partner/',
-      name: 'partner',
+      name: 'partnerBenefit',
       component: BenefitPartnersList,
       meta: {
         requiresAuth: true,
@@ -450,7 +450,7 @@ let benefitsPages = {
     },
     {
       path: 'partner/new',
-      name: `new_partner`,
+      name: `new_partnerBenefit`,
       component: BenefitPartnersEdit,
       meta: {
         requiresAuth: true,
@@ -460,7 +460,7 @@ let benefitsPages = {
     },
     {
       path: 'partner/:id/edit',
-      name: 'edit_partner',
+      name: 'edit_partnerBenefit',
       props: true,
       component: BenefitPartnersEdit,
       meta: {
@@ -1097,7 +1097,7 @@ let freeCoursePages = {
     },
     {
       path: 'categories/',
-      name: 'category',
+      name: 'categoryFreeCourse',
       component: FreeCourseCategoriesList,
       meta: {
         requiresAuth: true,
@@ -1113,7 +1113,7 @@ let freeCoursePages = {
     },
     {
       path: 'categories/new/',
-      name: `new_category`,
+      name: `new_categoryFreeCourse`,
       component: FreeCourseCategoriesEdit,
       meta: {
         requiresAuth: true,
@@ -1128,7 +1128,7 @@ let freeCoursePages = {
     },
     {
       path: 'categories/:id/edit/',
-      name: 'edit_category',
+      name: 'edit_categoryFreeCourse',
       props: true,
       component: FreeCourseCategoriesEdit,
       meta: {
@@ -1144,7 +1144,7 @@ let freeCoursePages = {
     },
     {
       path: 'partner/',
-      name: 'partner',
+      name: 'partnerFreeCourse',
       component: FreeCoursePartnersList,
       meta: {
         requiresAuth: true,
@@ -1154,7 +1154,7 @@ let freeCoursePages = {
     },
     {
       path: 'partner/new',
-      name: `new_partner`,
+      name: `new_partnerFreeCourse`,
       component: FreeCoursePartnersEdit,
       meta: {
         requiresAuth: true,
@@ -1164,7 +1164,7 @@ let freeCoursePages = {
     },
     {
       path: 'partner/:id/edit',
-      name: 'edit_partner',
+      name: 'edit_partnerFreeCourse',
       props: true,
       component: FreeCoursePartnersEdit,
       meta: {
