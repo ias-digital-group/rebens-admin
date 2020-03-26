@@ -13,11 +13,20 @@
                 required
                 v-model="model.name"
                 type="text"
-                :error="getError('name')"
                 name="name"
                 placeholder="Nome"
                 maxlength="200"
               ></base-input>
+              <label
+                v-show="customErros.includes('name')"
+                class="text-danger"
+                >O campo Name é obrigatório</label
+              >
+              <label
+                v-show="customErros.includes('nameLength')"
+                class="text-danger"
+                >O campo Name aceita no máximo 200 caracteres</label
+              >
             </div>
           </div>
           <div class="row">
@@ -73,6 +82,11 @@
                   placeholder="Pergunta"
                   maxlength="500"
                 ></base-input>
+                <label
+                  v-show="customErros.includes(`question-${index}`)"
+                  class="text-danger"
+                  >O campo Pergunta é obrigatório</label
+                >
               </div>
               <div class="col-md-1">
                 <a
@@ -87,6 +101,11 @@
               <label class="col-md-3 col-form-label">Resposta</label>
               <div class="col-md-8">
                 <wysiwyg placeholder="Resposta" v-model="item.answer" />
+                <label
+                  v-show="customErros.includes(`answer-${index}`)"
+                  class="text-danger"
+                  >O campo Resposta é obrigatório</label
+                >
               </div>
             </div>
           </div>
@@ -159,9 +178,31 @@ export default {
   methods: {
     validateForm() {
       const self = this;
+      self.customErros = new Array();
       if (self.model.idOperation == null || self.model.idOperation === 0) {
         self.customErros.push('operation');
-      } else {
+      }
+      if (self.model.name == null || self.model.name === '') {
+        self.customErros.push('name');
+      } else if (self.model.name.length > 200) {
+        self.customErros.push('nameLength');
+      }
+      for (let i = 0; i < self.model.data.items.length; i++) {
+        if (
+          self.model.data.items[i].question === null ||
+          self.model.data.items[i].question === ''
+        ) {
+          self.customErros.push(`question-${i}`);
+        }
+        if (
+          self.model.data.items[i].answer === null ||
+          self.model.data.items[i].answer === ''
+        ) {
+          self.customErros.push(`answer-${i}`);
+        }
+      }
+
+      if (self.customErros.length <= 0) {
         self.submitLoading = true;
         self.saveStaticText(self);
       }
