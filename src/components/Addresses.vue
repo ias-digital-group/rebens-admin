@@ -396,7 +396,8 @@ export default {
     };
   },
   watch: {
-    'address.zipcode': function(value) {
+    'model.zipcode': function(value) {
+      console.log('watch', value);
       if (value && value.length == 8) {
         this.getAddressData(value);
       }
@@ -594,11 +595,11 @@ export default {
       const self = this;
       helperService.getAddressFromZipCode(zipCode).then(
         response => {
-          self.address.street = response.logradouro;
-          self.address.complement = response.complemento;
-          self.address.neighborhood = response.bairro;
-          self.address.city = response.localidade;
-          self.address.state = response.uf;
+          self.model.street = response.logradouro;
+          self.model.complement = response.complemento;
+          self.model.neighborhood = response.bairro;
+          self.model.city = response.localidade;
+          self.model.state = response.uf;
           self.addressFormLoading = false;
         },
         () => {
