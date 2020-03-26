@@ -16,25 +16,32 @@
               <base-input
                 required
                 v-model="model.name"
-                v-validate="modelValidations.name"
                 type="text"
-                :error="getError('name')"
                 name="name"
                 placeholder="Nome"
                 maxlength="200"
               ></base-input>
+              <label v-show="nameError" class="text-danger"
+                >O campo Nome é obrigatório!</label
+              >
+              <label v-show="nameLenght" class="text-danger"
+                >O campo Nome aceita no máximo 200 caracteres!</label
+              >
             </div>
           </div>
           <div class="row">
             <label class="col-md-3 col-form-label">Descrição</label>
             <div class="col-md-9">
               <wysiwyg v-model="model.description" placeholder="Descrição" />
+              <label v-show="descError" class="text-danger"
+                >O campo Descrição é obrigatório!</label
+              >
             </div>
           </div>
-          <template v-if="model.logo">
-            <div class="row">
-              <label class="col-md-3 col-form-label">Logo (250x250)</label>
-              <div class="col-md-9">
+          <div class="row">
+            <label class="col-md-3 col-form-label">Logo (250x250)</label>
+            <div class="col-md-9">
+              <template v-if="model.logo">
                 <div>
                   <img :src="model.logo" class="img-preview" />
                   <base-button
@@ -45,22 +52,21 @@
                     <i class="fas fa-times"></i>
                   </base-button>
                 </div>
-              </div>
-            </div>
-          </template>
-          <template v-else>
-            <div class="row">
-              <label class="col-md-3 col-form-label">Logo (250x250)</label>
-              <div class="col-md-9">
+              </template>
+              <template v-else>
                 <image-upload
                   @change="onImageChange"
                   change-text="Alterar"
                   remove-text="Remover"
                   select-text="Selecione uma imagem"
                 />
-              </div>
+              </template>
+              <br />
+              <label v-show="imgError" class="text-danger"
+                >O campo Logo é obrigatório!</label
+              >
             </div>
-          </template>
+          </div>
           <div class="row">
             <label class="col-md-3 col-form-label">Ativo</label>
             <div class="col-md-9">
@@ -111,18 +117,16 @@ export default {
       formLoading: false,
       submitLoading: false,
       image: null,
+      imgError: false,
+      nameError: false,
+      nameLenght: false,
+      descError: false,
       model: {
         name: '',
         active: false,
         logo: '',
         description: '',
         type: 2
-      },
-      modelValidations: {
-        name: {
-          required: true,
-          max: 200
-        }
       }
     };
   },
@@ -137,10 +141,24 @@ export default {
     },
     validate() {
       const self = this;
-      this.$validator.validateAll().then(isValid => {
+      self.$validator.validateAll().then(isValid => {
         if (isValid) {
+          self.imgError = self.nameError = self.descError = self.nameLenght = false;
+          if (self.model.name === '') {
+            self.nameError = true;
+          } else if (self.model.name.length > 200) {
+            self.nameLenght = true;
+          }
+          if (self.model.description === '') {
+            self.descError = true;
+          }
+          if (!self.image && !self.model.logo) {
+            self.imgError = true;
+          }
+
           self.submitLoading = true;
           if (self.image) {
+            self.imgError = false;
             helperService.uploadFile(self.image).then(
               response => {
                 if (response.status != 200) {
@@ -167,11 +185,6 @@ export default {
           } else if (self.model.logo) {
             self.savePartner(self);
           } else {
-            self.$notify({
-              type: 'danger',
-              message: 'O Logo é obrigatório',
-              icon: 'tim-icons icon-bell-55'
-            });
             self.submitLoading = false;
           }
         }
