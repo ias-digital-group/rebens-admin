@@ -111,7 +111,7 @@ export default {
   },
   computed: {
     viewAction() {
-      return this.$route.name == 'edit_category' ? 'edit' : 'new';
+      return this.$route.name == 'edit_categoryBenefit' ? 'edit' : 'new';
     }
   },
   methods: {

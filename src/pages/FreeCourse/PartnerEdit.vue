@@ -5,126 +5,95 @@
         <h4 slot="header" class="card-title">
           {{ $t('pages.partners.title') }}
         </h4>
-        <el-tabs>
-          <el-tab-pane label="Parceiro">
-            <form
-              class="form-horizontal mt-3"
-              v-loading="formLoading"
-              @submit.prevent
-            >
-              <div class="row">
-                <label class="col-md-3 col-form-label">Nome</label>
-                <div class="col-md-9">
-                  <base-input
-                    required
-                    v-model="model.name"
-                    v-validate="modelValidations.name"
-                    type="text"
-                    :error="getError('name')"
-                    name="name"
-                    placeholder="Nome"
-                    maxlength="200"
-                  ></base-input>
-                </div>
-              </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label">Descrição</label>
-                <div class="col-md-9">
-                  <wysiwyg
-                    v-model="model.description"
-                    placeholder="Descrição"
-                  />
-                </div>
-              </div>
-              <template v-if="model.logo">
-                <div class="row">
-                  <label class="col-md-3 col-form-label">Logo (250x250)</label>
-                  <div class="col-md-9">
-                    <div>
-                      <img :src="model.logo" class="img-preview" />
-                      <base-button
-                        @click="model.logo = ''"
-                        class="btn-simple btn-file"
-                        type="danger"
-                      >
-                        <i class="fas fa-times"></i>
-                      </base-button>
-                    </div>
-                  </div>
-                </div>
-              </template>
-              <template v-else>
-                <div class="row">
-                  <label class="col-md-3 col-form-label">Logo (250x250)</label>
-                  <div class="col-md-9">
-                    <image-upload
-                      @change="onImageChange"
-                      change-text="Alterar"
-                      remove-text="Remover"
-                      select-text="Selecione uma imagem"
-                    />
-                  </div>
-                </div>
-              </template>
-              <div class="row">
-                <label class="col-md-3 col-form-label">Ativo</label>
-                <div class="col-md-9">
-                  <div class="form-group">
-                    <base-checkbox v-model="model.active">&nbsp;</base-checkbox>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <base-link
-                    class="btn mt-3 btn-primary btn-simple"
-                    to="/freeCourse/partner"
-                    >Voltar</base-link
-                  >
+        <form
+          class="form-horizontal mt-3"
+          v-loading="formLoading"
+          @submit.prevent
+        >
+          <div class="row">
+            <label class="col-md-3 col-form-label">Nome</label>
+            <div class="col-md-9">
+              <base-input
+                required
+                v-model="model.name"
+                v-validate="modelValidations.name"
+                type="text"
+                :error="getError('name')"
+                name="name"
+                placeholder="Nome"
+                maxlength="200"
+              ></base-input>
+            </div>
+          </div>
+          <div class="row">
+            <label class="col-md-3 col-form-label">Descrição</label>
+            <div class="col-md-9">
+              <wysiwyg v-model="model.description" placeholder="Descrição" />
+            </div>
+          </div>
+          <template v-if="model.logo">
+            <div class="row">
+              <label class="col-md-3 col-form-label">Logo (250x250)</label>
+              <div class="col-md-9">
+                <div>
+                  <img :src="model.logo" class="img-preview" />
                   <base-button
-                    class="mt-3 pull-right"
-                    native-type="submit"
-                    type="info"
-                    @click.native.prevent="validate"
-                    :loading="submitLoading"
+                    @click="model.logo = ''"
+                    class="btn-simple btn-file"
+                    type="danger"
                   >
-                    Salvar
+                    <i class="fas fa-times"></i>
                   </base-button>
                 </div>
               </div>
-            </form>
-          </el-tab-pane>
-          <el-tab-pane
-            label="Contatos"
-            :disabled="viewAction == 'new' ? true : false"
-          >
-            <contacts
-              v-loading="formLoading"
-              parent="partners"
-              :parentId="id"
-              ref="contacts"
-            ></contacts>
-          </el-tab-pane>
-          <el-tab-pane
-            label="Endereços"
-            :disabled="viewAction == 'new' ? true : false"
-          >
-            <addresses
-              v-loading="formLoading"
-              parent="partners"
-              :parentId="id"
-              ref="addresses"
-            ></addresses>
-          </el-tab-pane>
-        </el-tabs>
+            </div>
+          </template>
+          <template v-else>
+            <div class="row">
+              <label class="col-md-3 col-form-label">Logo (250x250)</label>
+              <div class="col-md-9">
+                <image-upload
+                  @change="onImageChange"
+                  change-text="Alterar"
+                  remove-text="Remover"
+                  select-text="Selecione uma imagem"
+                />
+              </div>
+            </div>
+          </template>
+          <div class="row">
+            <label class="col-md-3 col-form-label">Ativo</label>
+            <div class="col-md-9">
+              <div class="form-group">
+                <base-checkbox v-model="model.active">&nbsp;</base-checkbox>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <base-link
+                class="btn mt-3 btn-primary btn-simple"
+                to="/freeCourse/partner"
+                >Voltar</base-link
+              >
+              <base-button
+                class="mt-3 pull-right"
+                native-type="submit"
+                type="info"
+                @click.native.prevent="validate"
+                :loading="submitLoading"
+              >
+                Salvar
+              </base-button>
+            </div>
+          </div>
+        </form>
       </card>
     </div>
   </div>
 </template>
 <script>
-import { Select, Option, Tabs, TabPane } from 'element-ui';
-import Contacts from 'src/components/Contacts';
-import Addresses from 'src/components/Addresses';
+import { Select, Option } from 'element-ui';
 import partnerService from '../../services/Partner/partnerService';
 import helperService from '../../services/Helper/helperService';
 import { ImageUpload } from 'src/components/index';
@@ -132,10 +101,6 @@ export default {
   components: {
     [Option.name]: Option,
     [Select.name]: Select,
-    [Tabs.name]: Tabs,
-    [TabPane.name]: TabPane,
-    Contacts,
-    Addresses,
     ImageUpload
   },
   props: {
@@ -163,7 +128,7 @@ export default {
   },
   computed: {
     viewAction() {
-      return this.$route.name == 'edit_partner' ? 'edit' : 'new';
+      return this.$route.name == 'edit_partnerFreeCourse' ? 'edit' : 'new';
     }
   },
   methods: {
