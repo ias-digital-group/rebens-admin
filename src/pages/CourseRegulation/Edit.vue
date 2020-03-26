@@ -13,11 +13,18 @@
                 required
                 v-model="model.name"
                 type="text"
-                :error="getError('name')"
                 name="name"
                 placeholder="Nome"
                 maxlength="200"
               ></base-input>
+              <label v-show="customErros.includes('name')" class="text-danger"
+                >O campo Nome é obrigatório</label
+              >
+              <label
+                v-show="customErros.includes('nameLength')"
+                class="text-danger"
+                >O campo Nome aceita no máximo 200 caracteres</label
+              >
             </div>
           </div>
           <div class="row">
@@ -52,6 +59,11 @@
             <label class="col-md-3 col-form-label">Regulamento</label>
             <div class="col-md-8">
               <wysiwyg placeholder="Regulamento" v-model="model.data" />
+              <label
+                v-show="customErros.includes('regulation')"
+                class="text-danger"
+                >O campo Regulamento é obrigatório</label
+              >
             </div>
           </div>
           <div class="row">
@@ -124,9 +136,20 @@ export default {
   methods: {
     validateForm() {
       const self = this;
+      self.customErros = new Array();
       if (self.model.idOperation == null || self.model.idOperation === 0) {
         self.customErros.push('operation');
-      } else {
+      }
+      if (self.model.name == null || self.model.name === '') {
+        self.customErros.push('name');
+      } else if (self.model.name.length > 200) {
+        self.customErros.push('nameLength');
+      }
+      if (self.model.data == null || self.model.data === '') {
+        self.customErros.push('regulation');
+      }
+
+      if (self.customErros.length <= 0) {
         self.submitLoading = true;
         self.saveStaticText(self);
       }
