@@ -16,7 +16,9 @@
                 placeholder="Nome"
                 maxlength="200"
               ></base-input>
-              <label v-show="customErros.includes('name')" class="text-danger">O campo Nome é obrigatório</label>
+              <label v-show="customErros.includes('name')" class="text-danger"
+                >O campo Nome é obrigatório</label
+              >
               <label
                 v-show="customErros.includes('nameLength')"
                 class="text-danger"
