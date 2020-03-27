@@ -92,19 +92,14 @@
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Parceiro *</label>
-                <div class="col-md-9 col-lg-4">
-                  <div class="form-group">
-                    <el-autocomplete
-                      :fetch-suggestions="querySearch"
-                      @select="handleSelect"
-                      placeholder=""
-                      style="width:100%"
-                      v-model="partnerName"
-                      :trigger-on-focus="false"
-                    >
-                    </el-autocomplete>
-                    <input type="hidden" v-model="model.idPartner" />
-                  </div>
+                <div class="col-md-4">
+                  <v-select
+                    :options="partnerList"
+                    :reduce="op => op.code"
+                    :key="model.idPartner"
+                    v-model="model.idPartner"
+                  >
+                  </v-select>
                 </div>
                 <div class="col-md-3">
                   <label
@@ -572,19 +567,14 @@
               </div>
               <div class="row" v-show="model.exclusive && isRebens">
                 <label class="col-md-3 col-form-label">Operação</label>
-                <div class="col-md-9 col-lg-4">
-                  <div class="form-group">
-                    <el-autocomplete
-                      :fetch-suggestions="querySearchOp"
-                      @select="handleSelectOp"
-                      placeholder=""
-                      v-model="operationName"
-                      :trigger-on-focus="false"
-                      style="width:100%"
-                    >
-                    </el-autocomplete>
-                    <input type="hidden" v-model="model.idOperation" />
-                  </div>
+                <div class="col-md-4">
+                  <v-select
+                    :options="operationList"
+                    :reduce="op => op.code"
+                    :key="model.idOperation"
+                    v-model="model.idOperation"
+                  >
+                  </v-select>
                 </div>
                 <div class="col-md-3">
                   <label
@@ -699,15 +689,11 @@ export default {
       submitLoading: false,
       benefitTypeLoading: false,
       integrationTypeLoading: false,
-      partnerLoading: false,
-      operationLoading: false,
       image: null,
       partnerList: [],
-      customErros: [],
       operationList: [],
+      customErros: [],
       operationKey: 0,
-      partnerName: '',
-      operationName: '',
       isRebens: false,
       selectLoading: false,
       money: {
@@ -764,29 +750,6 @@ export default {
     }
   },
   methods: {
-    querySearch(query, cb) {
-      var list = this.partnerList;
-      var results = query ? list.filter(this.createFilter(query)) : list;
-      var top3 = results.slice(0, 3);
-      cb(top3);
-    },
-    querySearchOp(query, cb) {
-      var list = this.operationList;
-      var results = query ? list.filter(this.createFilter(query)) : list;
-      var top3 = results.slice(0, 3);
-      cb(top3);
-    },
-    createFilter(query) {
-      return partner => {
-        return partner.value.toLowerCase().includes(query.toLowerCase());
-      };
-    },
-    handleSelect(item) {
-      this.model.idPartner = item.id;
-    },
-    handleSelectOp(item) {
-      this.model.idOperation = item.id;
-    },
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
@@ -925,7 +888,6 @@ export default {
           response => {
             self.model = response.data;
             self.formLoading = false;
-            this.populatePartner();
             this.populateOperation();
           },
           () => {
@@ -933,48 +895,20 @@ export default {
           }
         );
       }
-      this.partnerLoading = true;
       partnerService.listActive(1).then(
         response => {
           _.each(response.data, function(el) {
-            self.partnerList.push({ value: el.name, id: el.id });
+            self.partnerList.push({ label: el.name, code: el.id });
           });
-          self.partnerLoading = false;
-          this.populatePartner();
-        },
-        () => {
-          self.partnerLoading = false;
         }
       );
-      this.operationLoading = true;
       operationService.findAll(null).then(
         response => {
           _.each(response.data, function(el) {
-            self.operationList.push({ value: el.title, id: el.id });
+            self.operationList.push({ label: el.title, code: el.id });
           });
-          self.operationLoading = false;
-          this.populateOperation();
-        },
-        () => {
-          self.operationLoading = false;
         }
       );
-    },
-    populatePartner() {
-      if (!this.formLoading && !this.partnerLoading) {
-        var part = this.partnerList.filter(o => o.id == this.model.idPartner);
-        if (part.length == 1) this.partnerName = part[0].value;
-      }
-    },
-    populateOperation() {
-      if (
-        !this.formLoading &&
-        !this.operationLoading &&
-        this.model.idOperation
-      ) {
-        var op = this.operationList.filter(o => o.id == this.model.idOperation);
-        if (op.length == 1) this.operationName = op[0].value;
-      }
     },
     onImageChange(file) {
       this.image = file;
