@@ -11,7 +11,7 @@
           ></base-input>
         </div>
       </template>
-      <template v-else-if="field.type == 'tel'">
+      <template v-else-if="field.type == 'tel' || field.type == 'phone'">
         <div class="col-md-9">
           <base-input
             type="tel"
