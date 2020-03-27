@@ -183,28 +183,15 @@
           </div>
           <div class="row">
             <label class="col-md-3 col-form-label">Estado</label>
-            <div class="col-md-2">
+            <div class="col-md-4">
               <div class="form-group">
-                <el-select
-                  :class="{
-                    'select-info': true,
-                    'has-danger': errors.has('estado')
-                  }"
-                  placeholder="Estado"
+                <v-select
+                  :options="stateList"
+                  :reduce="op => op.code"
+                  :key="model.state"
                   v-model="model.state"
-                  v-validate="modelValidations.estado"
-                  name="estado"
-                  lock
                 >
-                  <el-option
-                    v-for="state in stateList"
-                    class="select-primary"
-                    :value="state"
-                    :label="state"
-                    :key="state"
-                  >
-                  </el-option>
-                </el-select>
+                </v-select>
                 <label
                   v-show="errors.has('estado')"
                   class="error"
@@ -365,33 +352,33 @@ export default {
         }
       },
       stateList: [
-        'AC',
-        'AL',
-        'AM',
-        'AP',
-        'BA',
-        'CE',
-        'DF',
-        'ES',
-        'GO',
-        'MA',
-        'MG',
-        'MS',
-        'MT',
-        'PA',
-        'PB',
-        'PE',
-        'PI',
-        'PR',
-        'RJ',
-        'RN',
-        'RO',
-        'RR',
-        'RS',
-        'SC',
-        'SE',
-        'SP',
-        'TO'
+        { code: 'AC', label: 'Acre' },
+        { code: 'AL', label: 'Alagoas' },
+        { code: 'AM', label: 'Amazonas' },
+        { code: 'AP', label: 'Amapa' },
+        { code: 'BA', label: 'Bahia' },
+        { code: 'CE', label: 'Ceará' },
+        { code: 'DF', label: 'Distrito Federal' },
+        { code: 'ES', label: 'Espirito Santo' },
+        { code: 'GO', label: 'Goiás' },
+        { code: 'MA', label: 'Maranhão' },
+        { code: 'MG', label: 'Minas Gerais' },
+        { code: 'MS', label: 'Mato Grosso do Sul' },
+        { code: 'MT', label: 'Mato Grosso' },
+        { code: 'PA', label: 'Para' },
+        { code: 'PB', label: 'Paraíba' },
+        { code: 'PE', label: 'Pernambuco' },
+        { code: 'PI', label: 'Piauí' },
+        { code: 'PR', label: 'Parana' },
+        { code: 'RJ', label: 'Rio de Janeiro' },
+        { code: 'RN', label: 'Rio Grande do Norte' },
+        { code: 'RO', label: 'Rondônia' },
+        { code: 'RR', label: 'Roraima' },
+        { code: 'RS', label: 'Rio Grande do Sul' },
+        { code: 'SC', label: 'Santa Catarina' },
+        { code: 'SE', label: 'Sergipe' },
+        { code: 'SP', label: 'São Paulo' },
+        { code: 'TO', label: 'Tocantins' }
       ]
     };
   },
