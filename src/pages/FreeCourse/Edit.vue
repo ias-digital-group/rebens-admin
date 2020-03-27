@@ -112,6 +112,11 @@
                     placeholder="Título"
                     maxlength="500"
                   ></base-input>
+                  <label
+                    v-show="customErros.includes('summary')"
+                    class="text-danger"
+                    >O campo Descrição Listagem é obrigatório!</label
+                  >
                 </div>
               </div>
               <div class="row" style="padding-bottom:10px;">
@@ -334,14 +339,7 @@ export default {
       customErros: [],
       image: null,
       listImage: null,
-      operationKey: 0,
-      modelValidations: {
-        name: { required: true, max: 200 },
-        title: { required: true, max: 300 },
-        idOperation: { required: true },
-        idPartner: { required: true },
-        price: { required: true }
-      }
+      operationKey: 0
     };
   },
   computed: {
@@ -373,6 +371,8 @@ export default {
       if (!self.model.listImage && !self.listImage)
         self.customErros.push('listImage');
       if (!self.model.image && !self.image) self.customErros.push('image');
+      if (!self.model.summary && self.model.summary === '')
+        self.customErros.push('summary');
       if (!self.model.description && self.model.description === '')
         self.customErros.push('description');
       if (!self.model.howToUse && self.model.howToUse === '')
