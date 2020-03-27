@@ -14,7 +14,7 @@
 
  */
 
- // Core
+ // Core 
 
 @import "dashboard/custom/functions";
 @import "dashboard/bootstrap/functions";
@@ -95,6 +95,8 @@
  @import "dashboard/custom/misc.scss";
  @import "dashboard/custom/timeline.scss";
 
+ @import "~vue-select/src/scss/vue-select.scss";
+
  // Vendor / Plugins
 
 @import "dashboard/custom/vendor/plugin-datetimepicker.scss";
@@ -149,3 +151,4 @@
 @import "~vue-wysiwyg/dist/vueWysiwyg.css";
 
 .editr{margin-bottom:10px;}
+.v-select .vs__dropdown-toggle{padding-top: 5px;}
