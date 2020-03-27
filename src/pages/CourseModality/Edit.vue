@@ -12,11 +12,16 @@
                 required
                 v-model="model.name"
                 type="text"
-                :error="getError('name')"
                 name="name"
                 placeholder="Nome"
                 maxlength="200"
               ></base-input>
+              <label v-show="customErros.includes('name')" class="text-danger">O campo Nome é obrigatório</label>
+              <label
+                v-show="customErros.includes('nameLength')"
+                class="text-danger"
+                >O campo Nome aceita no máximo 200 caracteres</label
+              >
             </div>
           </div>
           <div class="row">
@@ -107,16 +112,7 @@ export default {
         active: true
       },
       operations: [],
-      customErros: [],
-      modelValidations: {
-        name: {
-          required: true,
-          max: 200
-        },
-        idOperation: {
-          required: true
-        }
-      }
+      customErros: []
     };
   },
   computed: {
@@ -132,13 +128,16 @@ export default {
       const self = this;
       self.customErros = [];
 
-      if (self.model.idOperation == null || self.model.idOperation === 0)
+      if (self.model.idOperation == null || self.model.idOperation === 0) {
         self.customErros.push('operation');
-      if (
-        self.model.name !== '' &&
-        self.model.name.length <= 200 &&
-        self.customErros.length === 0
-      ) {
+      }
+      if (self.model.name == null || self.model.name === '') {
+        self.customErros.push('name');
+      }
+      if (self.model.name.length > 200) {
+        self.customErros.push('nameLength');
+      }
+      if (self.customErros.length === 0) {
         self.submitLoading = true;
         self.saveModality(self);
       }
@@ -208,7 +207,7 @@ export default {
       self.selectLoading = true;
       operationService.findAll().then(
         response => {
-          self.operations.push({ id: null, title: 'selecione' });
+          self.operations.push({ id: 0, title: 'selecione' });
           _.each(response.data, function(el) {
             self.operations.push({ id: el.id, title: el.title });
           });
