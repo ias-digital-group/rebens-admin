@@ -36,11 +36,15 @@
                     required
                     v-model="model.name"
                     type="text"
-                    :error="getError('name')"
                     name="name"
                     placeholder="Nome"
                     maxlength="200"
                   ></base-input>
+                  <label
+                    v-show="customErros.includes('name')"
+                    class="text-danger"
+                    >O campo Nome é obrigatório</label
+                  >
                 </div>
               </div>
               <div class="row">
@@ -54,7 +58,7 @@
                     name="doc"
                     placeholder="CNPJ"
                     maxlength="50"
-                    masked="true"
+                    :masked="true"
                     :inputMask="['##.###.###/####-##']"
                   ></base-input>
                   <label
@@ -92,10 +96,10 @@
                   </div>
                 </div>
               </div>
-              <template v-if="model.logo">
-                <div class="row">
-                  <label class="col-md-3 col-form-label">Logo (184x36)</label>
-                  <div class="col-md-9">
+              <div class="row">
+                <label class="col-md-3 col-form-label">Logo (184x36)</label>
+                <div class="col-md-9">
+                  <template v-if="model.logo">
                     <div>
                       <img :src="model.logo" class="img-preview" />
                       <base-button
@@ -106,22 +110,23 @@
                         <i class="fas fa-times"></i>
                       </base-button>
                     </div>
-                  </div>
-                </div>
-              </template>
-              <template v-else>
-                <div class="row">
-                  <label class="col-md-3 col-form-label">Logo (184x36)</label>
-                  <div class="col-md-9">
+                  </template>
+                  <template v-else>
                     <image-upload
                       @change="onImageChange"
                       change-text="Alterar"
                       remove-text="Remover"
                       select-text="Selecione uma imagem"
                     />
-                  </div>
+                  </template>
+                  <br />
+                  <label
+                    v-show="customErros.includes('image')"
+                    class="text-danger"
+                    >O Logo é obrigatório</label
+                  >
                 </div>
-              </template>
+              </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Ativo</label>
                 <div class="col-md-9">
@@ -206,24 +211,7 @@ export default {
       },
       operations: [],
       customErros: [],
-      image: null,
-      modelValidations: {
-        name: {
-          required: true,
-          max: 200
-        },
-        legalName: {
-          required: true,
-          max: 500
-        },
-        doc: {
-          required: true,
-          max: 50
-        },
-        idOperation: {
-          required: true
-        }
-      }
+      image: null
     };
   },
   computed: {
@@ -243,13 +231,12 @@ export default {
         self.customErros.push('operation');
       if (self.model.legalName == null || self.model.legalName.length < 3)
         self.customErros.push('legalName');
+      if (self.model.name == null || self.model.name === '')
+        self.customErros.push('name');
       if (self.model.doc == null || self.model.doc.length !== 18)
         self.customErros.push('doc');
-      if (
-        self.model.name !== '' &&
-        self.model.name.length <= 200 &&
-        self.customErros.length === 0
-      ) {
+      if (!self.image && !self.model.logo) self.customErros.push('image');
+      if (self.customErros.length === 0) {
         self.submitLoading = true;
         if (self.image) {
           helperService.uploadFile(self.image).then(
@@ -277,13 +264,6 @@ export default {
           );
         } else if (self.model.logo) {
           self.saveCollege(self);
-        } else {
-          self.$notify({
-            type: 'danger',
-            message: 'O Logo é obrigatório',
-            icon: 'tim-icons icon-bell-55'
-          });
-          self.submitLoading = false;
         }
       }
     },
