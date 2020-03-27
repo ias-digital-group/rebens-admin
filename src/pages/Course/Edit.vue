@@ -370,7 +370,7 @@
           <template v-if="model.listImage">
             <div class="row" style="padding-bottom:10px;">
               <label class="col-md-3 col-form-label"
-                >Imagem da Listagem (216x174)</label
+                >Imagem da Listagem (278x165)</label
               >
               <div class="col-md-9">
                 <div>
@@ -394,7 +394,7 @@
           <template v-else>
             <div class="row" style="padding-bottom:10px;">
               <label class="col-md-3 col-form-label"
-                >Imagem da Listagem (216x174)</label
+                >Imagem da Listagem (278x165)</label
               >
               <div class="col-md-9">
                 <image-upload

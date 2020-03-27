@@ -51,51 +51,35 @@
               <div class="row">
                 <label class="col-md-3 col-form-label">Operação</label>
                 <div class="col-md-4">
-                  <div class="form-group">
-                    <el-select
-                      class="select-info"
-                      placeholder="Operação"
-                      v-model="model.idOperation"
-                      v-loading.lock="operationLoading"
-                      lock
-                    >
-                      <el-option
-                        class="select-primary"
-                        v-for="type in operations"
-                        :value="type.id"
-                        :label="type.title"
-                        :key="type.id"
-                      >
-                      </el-option>
-                    </el-select>
-                    <label
-                      v-show="customErros.includes('idOperation')"
-                      class="text-danger"
-                      >O campo Operação é obrigatório</label
-                    >
-                  </div>
+                  <v-select
+                    :options="operations"
+                    :reduce="op => op.code"
+                    :key="model.idOperation"
+                    v-model="model.idOperation"
+                  >
+                  </v-select>
+                  <label
+                    v-show="customErros.includes('idOperation')"
+                    class="text-danger"
+                    >O campo Operação é obrigatório</label
+                  >
                 </div>
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Parceiro</label>
                 <div class="col-md-4">
-                  <div class="form-group">
-                    <el-autocomplete
-                      :fetch-suggestions="querySearch"
-                      @select="handleSelect"
-                      placeholder=""
-                      style="width:100%"
-                      v-model="partnerName"
-                      :trigger-on-focus="false"
-                    >
-                    </el-autocomplete>
-                    <input type="hidden" v-model="model.idPartner" />
-                    <label
-                      v-show="customErros.includes('idPartner')"
-                      class="text-danger"
-                      >O campo Parceiro é obrigatório</label
-                    >
-                  </div>
+                  <v-select
+                    :options="partners"
+                    :reduce="op => op.code"
+                    :key="model.idPartner"
+                    v-model="model.idPartner"
+                  >
+                  </v-select>
+                  <label
+                    v-show="customErros.includes('idPartner')"
+                    class="text-danger"
+                    >O campo Parceiro é obrigatório</label
+                  >
                 </div>
               </div>
               <div class="row">
@@ -321,8 +305,6 @@ export default {
   data() {
     return {
       partnerName: '',
-      operationLoading: false,
-      partnerLoading: false,
       formLoading: false,
       submitLoading: false,
       model: {
@@ -376,20 +358,6 @@ export default {
     }
   },
   methods: {
-    querySearch(query, cb) {
-      var list = this.partners;
-      var results = query ? list.filter(this.createFilter(query)) : list;
-      var top3 = results.slice(0, 3);
-      cb(top3);
-    },
-    createFilter(query) {
-      return partner => {
-        return partner.value.toLowerCase().includes(query.toLowerCase());
-      };
-    },
-    handleSelect(item) {
-      this.model.idPartner = item.id;
-    },
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
@@ -534,38 +502,17 @@ export default {
         );
       }
 
-      self.operationLoading = true;
-      operationService.findAll().then(
-        response => {
-          _.each(response.data, function(el) {
-            self.operations.push({ id: el.id, title: el.title });
-          });
-          self.operationLoading = false;
-        },
-        () => {
-          self.operationLoading = false;
-        }
-      );
+      operationService.findAll().then(response => {
+        _.each(response.data, function(el) {
+          self.operations.push({ code: el.id, label: el.title });
+        });
+      });
 
-      self.partnerLoading = true;
-      partnerService.listActive(2).then(
-        response => {
-          _.each(response.data, function(el) {
-            self.partners.push({ id: el.id, value: el.name });
-          });
-          self.partnerLoading = false;
-          self.populatePartner();
-        },
-        () => {
-          self.partnerLoading = false;
-        }
-      );
-    },
-    populatePartner() {
-      if (!this.formLoading && !this.partnerLoading) {
-        var part = this.partners.filter(o => o.id == this.model.idPartner);
-        if (part.length == 1) this.partnerName = part[0].value;
-      }
+      partnerService.listActive(2).then(response => {
+        _.each(response.data, function(el) {
+          self.partners.push({ code: el.id, label: el.name });
+        });
+      });
     },
     onImageChange(file) {
       this.image = file;

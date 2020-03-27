@@ -895,20 +895,16 @@ export default {
           }
         );
       }
-      partnerService.listActive(1).then(
-        response => {
-          _.each(response.data, function(el) {
-            self.partnerList.push({ label: el.name, code: el.id });
-          });
-        }
-      );
-      operationService.findAll(null).then(
-        response => {
-          _.each(response.data, function(el) {
-            self.operationList.push({ label: el.title, code: el.id });
-          });
-        }
-      );
+      partnerService.listActive(1).then(response => {
+        _.each(response.data, function(el) {
+          self.partnerList.push({ label: el.name, code: el.id });
+        });
+      });
+      operationService.findAll(null).then(response => {
+        _.each(response.data, function(el) {
+          self.operationList.push({ label: el.title, code: el.id });
+        });
+      });
     },
     onImageChange(file) {
       this.image = file;
