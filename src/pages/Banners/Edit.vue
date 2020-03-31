@@ -148,7 +148,7 @@
                 <label class="col-md-3 col-form-label"
                   >Imagem <br />
                   <span v-show="model.idType == 1">(1200x500)</span>
-                  <span v-show="model.idType == 3">(578x578)</span>
+                  <span v-show="model.idType == 3">(554x277)</span>
                 </label>
                 <div class="col-md-9">
                   <template v-if="model.image">
