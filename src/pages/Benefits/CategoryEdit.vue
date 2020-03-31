@@ -190,7 +190,7 @@ export default {
         categoryService.get(self.id).then(
           response => {
             self.model = response.data;
-            if(!self.model.idParent) self.model.idParent = 0;
+            if (!self.model.idParent) self.model.idParent = 0;
             self.formLoading = false;
           },
           () => {

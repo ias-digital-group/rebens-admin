@@ -31,12 +31,12 @@
             <div class="col-md-4">
               <div class="form-group">
                 <v-select
-                    :options="operations"
-                    :reduce="op => op.code"
-                    :key="model.idOperation"
-                    v-model="model.idOperation"
-                  >
-                  </v-select>
+                  :options="operations"
+                  :reduce="op => op.code"
+                  :key="model.idOperation"
+                  v-model="model.idOperation"
+                >
+                </v-select>
                 <label
                   v-show="customErros.includes('operation')"
                   class="text-danger"

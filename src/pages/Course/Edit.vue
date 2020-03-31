@@ -45,13 +45,13 @@
             <div class="col-md-4">
               <div class="form-group">
                 <v-select
-                    v-if="model.id === 0"
-                    :options="operations"
-                    :reduce="op => op.code"
-                    :key="model.idOperation"
-                    v-model="model.idOperation"
-                    @input="onOperationChange"
-                  >
+                  v-if="model.id === 0"
+                  :options="operations"
+                  :reduce="op => op.code"
+                  :key="model.idOperation"
+                  v-model="model.idOperation"
+                  @input="onOperationChange"
+                >
                 </v-select>
                 <base-input
                   v-model="operation"

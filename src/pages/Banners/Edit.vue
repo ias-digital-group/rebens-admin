@@ -67,41 +67,14 @@
                       >Home de benefícios</base-checkbox
                     >
                   </div>
+                  <label
+                    v-show="customErros.includes('whereToShow')"
+                    class="text-danger"
+                    >Este campo é obrigatório!</label
+                  >
                 </div>
               </div>
               <div class="row">
-                <label class="col-md-3 col-form-label">É de benefício?</label>
-                <div class="col-md-9">
-                  <div class="form-group">
-                    <base-checkbox v-model="model.isBenefit"
-                      >&nbsp;</base-checkbox
-                    >
-                  </div>
-                </div>
-              </div>
-              <div class="row" v-if="model.isBenefit">
-                <label class="col-md-3 col-form-label">Benefício</label>
-                <div class="col-md-9 col-lg-4">
-                  <div class="form-group">
-                    <el-autocomplete
-                      style="width:100%"
-                      :fetch-suggestions="querySearch"
-                      @select="handleSelect"
-                      placeholder=""
-                      v-model="benefitName"
-                      :trigger-on-focus="false"
-                    >
-                    </el-autocomplete>
-                    <input type="hidden" v-model="model.idBenefit" />
-                    <label
-                      v-show="customErros.includes('benefit')"
-                      class="text-danger"
-                      >Este campo é obrigatório!</label
-                    >
-                  </div>
-                </div>
-              </div>
-              <div class="row" v-if="!model.isBenefit">
                 <label class="col-md-3 col-form-label">Link</label>
                 <div class="col-md-9">
                   <base-input
@@ -171,14 +144,14 @@
                   >
                 </div>
               </div>
-              <template v-if="model.image">
-                <div class="row">
-                  <label class="col-md-3 col-form-label"
-                    >Imagem <br />
-                    <span v-show="model.idType == 1">(1200x500)</span>
-                    <span v-show="model.idType == 3">(578x578)</span>
-                  </label>
-                  <div class="col-md-9">
+              <div class="row">
+                <label class="col-md-3 col-form-label"
+                  >Imagem <br />
+                  <span v-show="model.idType == 1">(1200x500)</span>
+                  <span v-show="model.idType == 3">(578x578)</span>
+                </label>
+                <div class="col-md-9">
+                  <template v-if="model.image">
                     <div class="fileinput">
                       <div class="thumbnail">
                         <img :src="model.image" class="img-preview" />
@@ -193,27 +166,22 @@
                         </base-button>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </template>
-              <template v-else>
-                <div class="row">
-                  <label class="col-md-3 col-form-label"
-                    >Imagem <br />
-                    <span v-show="model.idType == 1">(1200x500)</span>
-                    <span v-show="model.idType == 3">(554x277)</span></label
-                  >
-                  <div class="col-md-9">
+                  </template>
+                  <template v-else>
                     <image-upload
                       @change="onImageChange"
                       change-text="Alterar"
                       remove-text="Remover"
                       select-text="Selecione uma imagem"
-                    />
-                  </div>
+                    /> </template
+                  ><br />
+                  <label
+                    v-show="customErros.includes('image')"
+                    class="text-danger"
+                    >O campo imagem é obrigatório!</label
+                  >
                 </div>
-              </template>
-
+              </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Ordem</label>
                 <div class="col-md-2">
@@ -393,6 +361,14 @@ export default {
       if (!self.model.end) self.customErros.push('end');
       if (self.model.isBenefit && !self.model.idBenefit)
         self.customErros.push('benefit');
+      if (
+        !self.model.bannerShowHome &&
+        !self.model.bannerShowHomeLogged &&
+        !self.model.bannerShowBenefit
+      )
+        self.customErros.push('whereToShow');
+
+      if (!self.image && !self.model.image) self.customErros.push('image');
 
       this.$validator.validateAll().then(isValid => {
         if (isValid && self.customErros.length == 0) {
@@ -423,13 +399,6 @@ export default {
             );
           } else if (self.model.image) {
             self.saveBanner(self);
-          } else {
-            self.$notify({
-              type: 'danger',
-              message: 'A imagem é obrigatória',
-              icon: 'tim-icons icon-bell-55'
-            });
-            self.submitLoading = false;
           }
         }
       });
