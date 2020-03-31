@@ -22,7 +22,7 @@
             </div>
           </div>
           <div class="row">
-            <label class="col-md-3 col-form-label">Categoria pai 2</label>
+            <label class="col-md-3 col-form-label">Categoria pai</label>
             <div class="col-md-4">
               <v-select
                 :options="parents"
@@ -87,7 +87,7 @@ export default {
       model: {
         name: '',
         order: 1,
-        idParent: null,
+        idParent: 0,
         active: false,
         icon: '',
         type: 1
@@ -169,22 +169,10 @@ export default {
     },
     fetchData() {
       const self = this;
-      if (this.viewAction == 'edit') {
-        this.formLoading = true;
-        categoryService.get(self.id).then(
-          response => {
-            self.model = response.data;
-            self.formLoading = false;
-          },
-          () => {
-            self.formLoading = false;
-          }
-        );
-      }
-      this.selectLoading = true;
+      self.selectLoading = true;
       categoryService.getListTree(1).then(
         response => {
-          self.parents.push({ code: null, label: 'Raiz' });
+          self.parents.push({ code: 0, label: 'Raiz' });
           _.each(response.data, function(el) {
             if (el.id != self.id) {
               self.parents.push({ code: el.id, label: el.name });
@@ -196,6 +184,20 @@ export default {
           self.selectLoading = false;
         }
       );
+
+      if (self.viewAction == 'edit') {
+        self.formLoading = true;
+        categoryService.get(self.id).then(
+          response => {
+            self.model = response.data;
+            if(!self.model.idParent) self.model.idParent = 0;
+            self.formLoading = false;
+          },
+          () => {
+            self.formLoading = false;
+          }
+        );
+      }
     }
   },
   created() {

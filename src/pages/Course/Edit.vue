@@ -44,6 +44,15 @@
             <label class="col-md-3 col-form-label">Operação</label>
             <div class="col-md-4">
               <div class="form-group">
+                <v-select
+                    v-if="model.id === 0"
+                    :options="operations"
+                    :reduce="op => op.code"
+                    :key="model.idOperation"
+                    v-model="model.idOperation"
+                    @input="onOperationChange"
+                  >
+                </v-select>
                 <base-input
                   v-model="operation"
                   type="text"
@@ -51,24 +60,6 @@
                   disabled
                   v-if="model.id > 0"
                 ></base-input>
-                <el-select
-                  v-if="model.id === 0"
-                  class="select-info"
-                  placeholder="Operação"
-                  v-model="model.idOperation"
-                  v-loading.lock="selectLoading"
-                  @change="onOperationChange"
-                  lock
-                >
-                  <el-option
-                    class="select-primary"
-                    v-for="type in operations"
-                    :value="type.id"
-                    :label="type.title"
-                    :key="type.id"
-                  >
-                  </el-option>
-                </el-select>
                 <label
                   v-show="customErros.includes('idOperation')"
                   class="text-danger"
@@ -314,6 +305,11 @@
                 placeholder="Início das aulas"
                 maxlength="100"
               ></base-input>
+              <label
+                v-show="customErros.includes('courseBegin')"
+                class="text-danger"
+                >O campo Início das aulas é obrigatório!</label
+              >
             </div>
           </div>
           <div class="row" style="padding-bottom:10px;">
@@ -630,7 +626,7 @@ export default {
         idFaq: 0,
         idRegulation: 0,
         disclaimer:
-          'Consulte este curso no portal do MEC. Todos os cursos ofertados pelo UNICAMPI EDUCAÇÃO são autorizados pelo MEC',
+          'Consulte este curso no portal do MEC. Todos os cursos ofertados pelo CLUBE DE EDUCAÇÃO são autorizados pelo MEC',
         benefitBoxTitle: 'Beneficios',
         benefitBoxDescription:
           'Isenção da Taxa de vestibular<br />Primeira mensalidade isenta',
@@ -638,7 +634,7 @@ export default {
           '<b>PRESENCIAL</b><p>O curso presencial é ideal para os que preferem ter mais contato com outros alunos de forma mais tradicional e também para quem aprecia estar com uma rotina mais fixa durante a semana.</p><b>EAD</b><p>As pessoas têm cada vez mais atividades, e neste sentido, um formato flexível é ideal, em que a pessoa estuda no horário e onde quiser! No parque, no café, na praia, no conforto de casa, não há distância entre você e o conhecimento! Econômico e prático e barato! Você pode estudar de onde e quando quiser, no seu tempo, com a mesma qualidade e profundidade de um curso presencial.</p><b>SEMIPRESENCIAL</b><p>A Graduação EAD é flexível. Você pode optar por Ensino a Distância totalmente on-line, ou uma imersão mais profunda, na modalidade semipresencial, na qual você comparece ao campus duas vezes por semana para interagir mais com os professores, os colegas e as matérias. Seja qual for a escolha, você tem a certeza de fazer o melhor para unir você ao sucesso.</p>',
         helpStudentTitle: 'AJUDE UM ALUNO',
         helpStudentDescription:
-          'Torne o seu sonho realidade com a revenda de produtos UNICAMPI e conquiste sua independência financeira.',
+          'Torne o seu sonho realidade com a revenda de produtos CLUBE DE EDUCAÇÃO e conquiste sua independência financeira.',
         helpStudentLink: '',
         courseBegin: ''
       },
@@ -713,6 +709,7 @@ export default {
       if (!self.model.originalPrice) self.customErros.push('originalPrice');
       if (!self.model.discount) self.customErros.push('discount');
       if (!self.model.duration) self.customErros.push('duration');
+      if (!self.model.courseBegin) self.customErros.push('courseBegin');
       if (!self.model.description) self.customErros.push('description');
       if (!self.model.periodIds || self.model.periodIds.length == 0)
         self.customErros.push('period');
@@ -852,7 +849,7 @@ export default {
       operationService.findAll().then(
         response => {
           _.each(response.data, function(el) {
-            self.operations.push({ id: el.id, title: el.title });
+            self.operations.push({ code: el.id, label: el.title });
           });
           self.selectLoading = false;
         },
@@ -920,6 +917,11 @@ export default {
     },
     onOperationChange() {
       const self = this;
+
+      self.colleges = new Array();
+      self.modalities = new Array();
+      self.graduationTypes = new Array();
+      self.periods = new Array();
 
       courseCollegeService
         .findAll({

@@ -169,19 +169,7 @@ export default {
     },
     fetchData() {
       const self = this;
-      if (this.viewAction == 'edit') {
-        this.formLoading = true;
-        categoryService.get(self.id).then(
-          response => {
-            self.model = response.data;
-            self.formLoading = false;
-          },
-          () => {
-            self.formLoading = false;
-          }
-        );
-      }
-      this.selectLoading = true;
+      self.selectLoading = true;
       categoryService.getListTree(2).then(
         response => {
           self.parents.push({ code: 0, label: 'Raiz' });
@@ -196,6 +184,18 @@ export default {
           self.selectLoading = false;
         }
       );
+      if (self.viewAction == 'edit') {
+        self.formLoading = true;
+        categoryService.get(self.id).then(
+          response => {
+            self.model = response.data;
+            self.formLoading = false;
+          },
+          () => {
+            self.formLoading = false;
+          }
+        );
+      }
     }
   },
   created() {
