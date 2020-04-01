@@ -266,12 +266,12 @@
                   </div>
                 </div>
               </div>
-              <template v-if="model.image">
-                <div class="row">
-                  <label class="col-md-3 col-form-label"
-                    >Imagem * <br />(1200x500)</label
-                  >
-                  <div class="col-md-9">
+              <div class="row">
+                <label class="col-md-3 col-form-label"
+                  >Imagem * <br />(1200x500)</label
+                >
+                <div class="col-md-9">
+                  <template v-if="model.image">
                     <div class="fileinput">
                       <div class="thumbnail">
                         <img :src="model.image" class="img-preview" />
@@ -286,104 +286,32 @@
                         <i class="fas fa-times"></i>
                       </base-button>
                     </div>
-                    <label v-show="customErros.includes('image')" class="error"
-                      >O campo Imagem é obrigatório!</label
-                    >
-                  </div>
-                </div>
-              </template>
-              <template v-else>
-                <div class="row">
-                  <label class="col-md-3 col-form-label"
-                    >Imagem * (1200x500)</label
-                  >
-                  <div class="col-md-9">
+                  </template>
+                  <template v-else>
                     <image-upload
                       @change="onImageChange"
                       change-text="Alterar"
                       remove-text="Remover"
                       select-text="Selecione uma imagem"
                     />
-                    <label
-                      v-show="customErros.includes('image')"
-                      class="text-danger"
-                      >O campo Imagem é obrigatório!</label
-                    >
-                  </div>
+                  </template>
+                  <br />
+                  <label v-show="customErros.includes('image')" class="error"
+                    >O campo Imagem é obrigatório!</label
+                  >
                 </div>
-              </template>
+              </div>
               <div class="row m-b-10">
                 <label class="col-md-3 col-form-label">Destaque Home?</label>
                 <div class="col-md-3">
                   <div class="form-group">
-                    <el-select
-                      class="select-info"
-                      placeholder="selecione"
+                    <v-select
+                      :options="highlights.filter(item => item.code < 9)"
+                      :reduce="item => item.code"
+                      :key="model.homeHighlight"
                       v-model="model.homeHighlight"
-                      v-loading.lock="selectLoading"
-                      lock
                     >
-                      <el-option
-                        class="select-primary"
-                        :value="-1"
-                        :key="-1"
-                        label="Sem Destaque"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="0"
-                        :key="0"
-                        label="Randomico"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="1"
-                        :key="1"
-                        label="Posição 1"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="2"
-                        :key="2"
-                        label="Posição 2"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="3"
-                        :key="3"
-                        label="Posição 3"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="4"
-                        :key="4"
-                        label="Posição 4"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="5"
-                        :key="5"
-                        label="Posição 5"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="6"
-                        :key="6"
-                        label="Posição 6"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="7"
-                        :key="7"
-                        label="Posição 7"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="8"
-                        :key="8"
-                        label="Posição 8"
-                      ></el-option>
-                    </el-select>
+                    </v-select>
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -400,98 +328,13 @@
                 >
                 <div class="col-md-3">
                   <div class="form-group">
-                    <el-select
-                      class="select-info"
-                      placeholder="selecione"
+                    <v-select
+                      :options="highlights"
+                      :reduce="item => item.code"
+                      :key="model.homeBenefitHighlight"
                       v-model="model.homeBenefitHighlight"
-                      v-loading.lock="selectLoading"
-                      lock
                     >
-                      <el-option
-                        class="select-primary"
-                        :value="-1"
-                        :key="-1"
-                        label="Sem Destaque"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="0"
-                        :key="0"
-                        label="Randomico"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="1"
-                        :key="1"
-                        label="Posição 1"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="2"
-                        :key="2"
-                        label="Posição 2"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="3"
-                        :key="3"
-                        label="Posição 3"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="4"
-                        :key="4"
-                        label="Posição 4"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="5"
-                        :key="5"
-                        label="Posição 5"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="6"
-                        :key="6"
-                        label="Posição 6"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="7"
-                        :key="7"
-                        label="Posição 7"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="8"
-                        :key="8"
-                        label="Posição 8"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="9"
-                        :key="9"
-                        label="Posição 9"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="10"
-                        :key="10"
-                        label="Posição 10"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="11"
-                        :key="11"
-                        label="Posição 11"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="12"
-                        :key="12"
-                        label="Posição 12"
-                      ></el-option>
-                    </el-select>
+                    </v-select>
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -696,6 +539,22 @@ export default {
       operationKey: 0,
       isRebens: false,
       selectLoading: false,
+      highlights: [
+        { code: -1, label: 'Sem Destaque' },
+        { code: 0, label: 'Randomico' },
+        { code: 1, label: 'Posição 1' },
+        { code: 2, label: 'Posição 2' },
+        { code: 3, label: 'Posição 3' },
+        { code: 4, label: 'Posição 4' },
+        { code: 5, label: 'Posição 5' },
+        { code: 6, label: 'Posição 6' },
+        { code: 7, label: 'Posição 7' },
+        { code: 8, label: 'Posição 8' },
+        { code: 9, label: 'Posição 9' },
+        { code: 10, label: 'Posição 10' },
+        { code: 11, label: 'Posição 11' },
+        { code: 12, label: 'Posição 12' }
+      ],
       money: {
         decimal: ',',
         thousands: '.',

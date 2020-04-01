@@ -55,60 +55,13 @@
             <label class="col-md-3 col-form-label">Papel</label>
             <div class="col-md-3">
               <div class="form-group">
-                <el-select
-                  class="select-info"
-                  placeholder="Papel"
+                <v-select
+                  :options="roles"
+                  :reduce="op => op.code"
+                  :key="model.roles"
                   v-model="model.roles"
-                  v-loading.lock="selectLoading"
-                  v-validate="modelValidations.roles"
-                  lock
                 >
-                  <el-option
-                    v-show="isMaster"
-                    class="select-primary"
-                    value="master"
-                    label="Master"
-                  ></el-option>
-                  <el-option
-                    v-show="!isPartnerUser"
-                    class="select-primary"
-                    value="publisher"
-                    label="Publicador"
-                  ></el-option>
-                  <el-option
-                    v-show="!isPartnerUser"
-                    class="select-primary"
-                    value="administrator"
-                    label="Administrador"
-                  ></el-option>
-                  <el-option
-                    v-show="isRebens && !isPartnerUser"
-                    class="select-primary"
-                    value="publisherRebens"
-                    label="Publicador Rebens"
-                  ></el-option>
-                  <el-option
-                    v-show="isRebens && !isPartnerUser"
-                    class="select-primary"
-                    value="administratorRebens"
-                    label="Administrador Rebens"
-                  ></el-option>
-                  <el-option
-                    class="select-primary"
-                    value="partnerAdministrator"
-                    label="Administrador Parceiro"
-                  ></el-option>
-                  <el-option
-                    class="select-primary"
-                    value="partnerApprover"
-                    label="Aprovador Parceiro"
-                  ></el-option>
-                  <el-option
-                    class="select-primary"
-                    value="promoter"
-                    label="Promotor"
-                  ></el-option>
-                </el-select>
+                </v-select>
                 <label
                   v-show="customErros.includes('roles')"
                   class="text-danger"
@@ -242,6 +195,7 @@ export default {
       isRebens: false,
       isPartnerUser: false,
       customErros: [],
+      roles: [],
       reg: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
       model: {
         name: '',
@@ -425,6 +379,30 @@ export default {
     },
     fetchData() {
       const self = this;
+
+      if (self.isMaster) {
+        self.roles.push({ code: 'master', label: 'Master' });
+      }
+      if (!self.isPartnerUser) {
+        self.roles.push({ code: 'publisher', label: 'publisher' });
+        self.roles.push({ code: 'administrator', label: 'Administrador' });
+        if (self.isRebens) {
+          self.roles.push({
+            code: 'publisherRebens',
+            label: 'Publicador Rebens'
+          });
+          self.roles.push({
+            code: 'administratorRebens',
+            label: 'Administrador Rebens'
+          });
+        }
+      }
+      self.roles.push({
+        code: 'partnerAdministrator',
+        label: 'Administrador Parceiro'
+      });
+      self.roles.push({ code: 'partnerApprover', label: 'Aprovador Parceiro' });
+      self.roles.push({ code: 'promoter', label: 'Promotor' });
 
       if (this.viewAction == 'edit') {
         this.formLoading = true;

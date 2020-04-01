@@ -100,23 +100,14 @@
                 <label class="col-md-3 col-form-label">Operação</label>
                 <div class="col-md-4">
                   <div class="form-group">
-                    <el-select
+                    <v-select
                       v-if="model.canEdit"
-                      class="select-info"
-                      placeholder="Operação"
+                      :options="operations"
+                      :reduce="op => op.code"
+                      :key="model.idOperation"
                       v-model="model.idOperation"
-                      v-loading.lock="selectLoading"
-                      lock
                     >
-                      <el-option
-                        class="select-primary"
-                        v-for="type in operations"
-                        :value="type.id"
-                        :label="type.title"
-                        :key="type.id"
-                      >
-                      </el-option>
-                    </el-select>
+                    </v-select>
                     <base-input
                       disabled
                       type="text"
@@ -136,21 +127,14 @@
                 <label class="col-md-3 col-form-label">Tipo</label>
                 <div class="col-md-3">
                   <div class="form-group">
-                    <el-select
+                    <v-select
                       v-if="model.canEdit"
-                      class="select-info"
-                      placeholder="Tipo"
+                      :options="typeOptions"
+                      :reduce="op => op.code"
+                      :key="model.type"
                       v-model="model.type"
-                      lock
                     >
-                      <el-option
-                        v-for="item in typeOptions"
-                        :key="item.value"
-                        class="select-primary"
-                        :value="item.value"
-                        :label="item.label"
-                      ></el-option>
-                    </el-select>
+                    </v-select>
                     <base-input
                       disabled
                       type="text"
@@ -171,21 +155,14 @@
                 <div class="col-md-3">
                   <div class="form-group has-label">
                     <label>Tipo</label>
-                    <el-select
+                    <v-select
                       v-if="model.canEdit"
-                      class="select-info"
-                      placeholder="Tipo de distribuição"
+                      :options="distributionTypeOptions"
+                      :reduce="op => op.code"
+                      :key="model.distributionType"
                       v-model="model.distributionType"
-                      lock
                     >
-                      <el-option
-                        v-for="item in distributionTypeOptions"
-                        class="select-primary"
-                        :value="item.value"
-                        :label="item.label"
-                        :key="item.value"
-                      ></el-option>
-                    </el-select>
+                    </v-select>
                     <base-input
                       disabled
                       type="text"
@@ -420,36 +397,15 @@ export default {
       disabledDistributionType: '',
       disabledOperation: '',
       typeOptions: [
-        {
-          value: 1,
-          label: 'Aberto'
-        },
-        {
-          value: 2,
-          label: 'Fechado'
-        },
-        {
-          value: 3,
-          label: 'Fechado + parceiro'
-        },
-        {
-          value: 4,
-          label: 'Assinatura'
-        }
+        { code: 1, label: 'Aberto' },
+        { code: 2, label: 'Fechado' },
+        { code: 3, label: 'Fechado + parceiro' },
+        { code: 4, label: 'Assinatura' }
       ],
       distributionTypeOptions: [
-        {
-          value: 1,
-          label: 'Diária'
-        },
-        {
-          value: 2,
-          label: 'Semanal'
-        },
-        {
-          value: 3,
-          label: 'Mensal'
-        }
+        { code: 1, label: 'Diária' },
+        { code: 2, label: 'Semanal' },
+        { code: 3, label: 'Mensal' }
       ],
       model: {
         id: 0,
@@ -664,7 +620,7 @@ export default {
       scratchcardService.operations().then(
         response => {
           _.each(response.data, function(el) {
-            self.operations.push({ id: el.id, title: el.title });
+            self.operations.push({ code: el.id, label: el.title });
             if (self.model.id > 0 && el.id == self.model.idOperation) {
               self.disabledOperation = el.title;
             }

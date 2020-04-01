@@ -72,22 +72,13 @@
             <label class="col-md-3 col-form-label">Faculdade</label>
             <div class="col-md-4">
               <div class="form-group">
-                <el-select
-                  class="select-info"
-                  placeholder="Faculdade"
+                <v-select
+                  :options="colleges"
+                  :reduce="op => op.code"
+                  :key="model.idCollege"
                   v-model="model.idCollege"
-                  v-loading.lock="selectLoading"
-                  lock
                 >
-                  <el-option
-                    class="select-primary"
-                    v-for="type in colleges"
-                    :value="type.id"
-                    :label="type.title"
-                    :key="type.id"
-                  >
-                  </el-option>
-                </el-select>
+                </v-select>
                 <label
                   v-show="customErros.includes('idCollege')"
                   class="text-danger"
@@ -100,22 +91,13 @@
             <label class="col-md-3 col-form-label">Tipo de Graduação</label>
             <div class="col-md-4">
               <div class="form-group">
-                <el-select
-                  class="select-info"
-                  placeholder="Tipo de Graduação"
+                <v-select
+                  :options="graduationTypes"
+                  :reduce="op => op.code"
+                  :key="model.idGraduationType"
                   v-model="model.idGraduationType"
-                  v-loading.lock="selectLoading"
-                  lock
                 >
-                  <el-option
-                    class="select-primary"
-                    v-for="type in graduationTypes"
-                    :value="type.id"
-                    :label="type.title"
-                    :key="type.id"
-                  >
-                  </el-option>
-                </el-select>
+                </v-select>
                 <label
                   v-show="customErros.includes('idGraduationType')"
                   class="text-danger"
@@ -128,22 +110,13 @@
             <label class="col-md-3 col-form-label">Modalidade</label>
             <div class="col-md-4">
               <div class="form-group">
-                <el-select
-                  class="select-info"
-                  placeholder="Modalidade"
+                <v-select
+                  :options="modalities"
+                  :reduce="op => op.code"
+                  :key="model.idModality"
                   v-model="model.idModality"
-                  v-loading.lock="selectLoading"
-                  lock
                 >
-                  <el-option
-                    class="select-primary"
-                    v-for="type in modalities"
-                    :value="type.id"
-                    :label="type.title"
-                    :key="type.id"
-                  >
-                  </el-option>
-                </el-select>
+                </v-select>
                 <label
                   v-show="customErros.includes('idModality')"
                   class="text-danger"
@@ -156,25 +129,13 @@
             <label class="col-md-3 col-form-label">Período</label>
             <div class="col-md-4">
               <div class="form-group">
-                <el-select
-                  class="select-info"
-                  placeholder="Período"
-                  v-loading.lock="selectLoading"
-                  value-key="id"
+                <v-select
+                  :options="periods"
+                  :reduce="op => op.code"
+                  :key="model.periodIds"
                   v-model="model.periodIds"
-                  ref="id"
-                  multiple
-                  lock
                 >
-                  <el-option
-                    class="select-primary"
-                    v-for="type in periods"
-                    :value="type.id"
-                    :label="type.title"
-                    :key="type.id"
-                  >
-                  </el-option>
-                </el-select>
+                </v-select>
                 <label
                   v-show="customErros.includes('period')"
                   class="text-danger"
@@ -187,24 +148,13 @@
             <label class="col-md-3 col-form-label">Perguntas Frequentes</label>
             <div class="col-md-4">
               <div class="form-group">
-                <el-select
-                  class="select-info"
-                  placeholder="Perguntas Frequentes"
-                  v-loading.lock="selectLoading"
-                  value-key="value"
+                <v-select
+                  :options="faqs"
+                  :reduce="op => op.code"
+                  :key="model.idFaq"
                   v-model="model.idFaq"
-                  ref="value"
-                  lock
                 >
-                  <el-option
-                    class="select-primary"
-                    v-for="faq in faqs"
-                    :value="faq.value"
-                    :label="faq.display"
-                    :key="faq.value"
-                  >
-                  </el-option>
-                </el-select>
+                </v-select>
               </div>
             </div>
           </div>
@@ -212,24 +162,13 @@
             <label class="col-md-3 col-form-label">Regulamento</label>
             <div class="col-md-4">
               <div class="form-group">
-                <el-select
-                  class="select-info"
-                  placeholder="Regulamento"
-                  v-loading.lock="selectLoading"
-                  value-key="value"
+                <v-select
+                  :options="regulations"
+                  :reduce="op => op.code"
+                  :key="model.idRegulation"
                   v-model="model.idRegulation"
-                  ref="value"
-                  lock
                 >
-                  <el-option
-                    class="select-primary"
-                    v-for="reg in regulations"
-                    :value="reg.value"
-                    :label="reg.display"
-                    :key="reg.value"
-                  >
-                  </el-option>
-                </el-select>
+                </v-select>
               </div>
             </div>
           </div>
@@ -858,42 +797,6 @@ export default {
         }
       );
 
-      courseService.listFaqs().then(
-        response => {
-          _.each(response.data, function(el) {
-            self.faqs.push(el);
-            if (
-              self.model.idFaq === 0 &&
-              el.display === 'Perguntas Frequentes - Padrão'
-            ) {
-              self.model.idFaq = el.value;
-            }
-          });
-          self.selectLoading = false;
-        },
-        () => {
-          self.selectLoading = false;
-        }
-      );
-
-      courseService.listRegulations().then(
-        response => {
-          _.each(response.data, function(el) {
-            self.regulations.push(el);
-            if (
-              self.model.idRegulation === 0 &&
-              el.display === 'Regulamento - Padrão'
-            ) {
-              self.model.idRegulation = el.value;
-            }
-          });
-          self.selectLoading = false;
-        },
-        () => {
-          self.selectLoading = false;
-        }
-      );
-
       setTimeout(() => {
         self.populateOperation();
       }, 500);
@@ -922,6 +825,44 @@ export default {
       self.modalities = new Array();
       self.graduationTypes = new Array();
       self.periods = new Array();
+      self.regulations = new Array();
+      self.faqs = new Array();
+
+      courseService.listFaqs(self.model.idOperation).then(
+        response => {
+          _.each(response.data, function(el) {
+            self.faqs.push({ code: el.value, label: el.display });
+            if (
+              self.model.idFaq === 0 &&
+              el.display === 'Perguntas Frequentes - Padrão'
+            ) {
+              self.model.idFaq = el.value;
+            }
+          });
+          self.selectLoading = false;
+        },
+        () => {
+          self.selectLoading = false;
+        }
+      );
+
+      courseService.listRegulations(self.model.idOperation).then(
+        response => {
+          _.each(response.data, function(el) {
+            self.regulations.push({ code: el.value, label: el.display });
+            if (
+              self.model.idRegulation === 0 &&
+              el.display === 'Regulamento - Padrão'
+            ) {
+              self.model.idRegulation = el.value;
+            }
+          });
+          self.selectLoading = false;
+        },
+        () => {
+          self.selectLoading = false;
+        }
+      );
 
       courseCollegeService
         .findAll({
@@ -934,7 +875,7 @@ export default {
         .then(
           response => {
             _.each(response.data, function(el) {
-              self.colleges.push({ id: el.id, title: el.name });
+              self.colleges.push({ code: el.id, label: el.name });
             });
             self.selectLoading = false;
           },
@@ -954,7 +895,7 @@ export default {
         .then(
           response => {
             _.each(response.data, function(el) {
-              self.modalities.push({ id: el.id, title: el.name });
+              self.modalities.push({ code: el.id, label: el.name });
             });
             self.selectLoading = false;
           },
@@ -974,7 +915,7 @@ export default {
         .then(
           response => {
             _.each(response.data, function(el) {
-              self.graduationTypes.push({ id: el.id, title: el.name });
+              self.graduationTypes.push({ code: el.id, label: el.name });
             });
             self.selectLoading = false;
           },
@@ -994,7 +935,7 @@ export default {
         .then(
           response => {
             _.each(response.data, function(el) {
-              self.periods.push({ id: el.id, title: el.name });
+              self.periods.push({ code: el.id, label: el.name });
             });
             self.selectLoading = false;
           },

@@ -210,29 +210,27 @@
               <div class="row mb-2">
                 <label class="col-md-3 col-form-label">Tipo</label>
                 <div
-                  class="col-md-9"
+                  class="col-md-3"
                   :class="
                     customErrors.includes('idOperationType') ? 'has-danger' : ''
                   "
                 >
-                  <el-select
-                    class="select-info"
-                    required
-                    placeholder="Tipo de operação"
+                  <v-select
+                    :options="operationTypeList"
+                    :reduce="op => op.code"
+                    :key="model.idOperationType"
                     v-model="model.idOperationType"
-                    v-loading.lock="selectLoading"
-                    :disabled="!isMaster"
-                    lock
+                    v-if="isMaster"
                   >
-                    <el-option
-                      v-for="t in operationTypeList"
-                      class="select-primary"
-                      :value="t.id"
-                      :label="t.name"
-                      :key="t.id"
-                    >
-                    </el-option>
-                  </el-select>
+                  </v-select>
+                  <base-input
+                    v-if="!isMaster"
+                    v-model="selectedOperationType"
+                    type="text"
+                    name="selectedOperationType"
+                    disabled
+                  >
+                  </base-input>
                 </div>
               </div>
               <template v-if="model.logo">
@@ -436,6 +434,7 @@ export default {
       isMaster: false,
       configKey: 0,
       customErrors: [],
+      selectedOperationType: '',
       model: {
         title: '',
         companyName: '',
@@ -663,9 +662,9 @@ export default {
       helperService.findAllOperationTypes().then(
         response => {
           _.each(response.data, function(el) {
-            if (el.id != self.id) {
-              self.operationTypeList.push({ id: el.id, name: el.name });
-            }
+            self.operationTypeList.push({ code: el.id, label: el.name });
+            if (el.id === self.model.idOperationType)
+              self.selectedOperationType = el.name;
           });
           self.selectLoading = false;
         },
@@ -679,7 +678,6 @@ export default {
     },
     onRegisterType(type) {
       this.registerType = type;
-      console.log('registertype', type);
     }
   },
   created() {

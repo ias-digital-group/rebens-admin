@@ -72,22 +72,13 @@
                 <label class="col-md-3 col-form-label">Operação</label>
                 <div class="col-md-4">
                   <div class="form-group">
-                    <el-select
-                      class="select-info"
-                      placeholder="Operação"
+                    <v-select
+                      :options="operations"
+                      :reduce="op => op.code"
+                      :key="model.idOperation"
                       v-model="model.idOperation"
-                      v-loading.lock="selectLoading"
-                      lock
                     >
-                      <el-option
-                        class="select-primary"
-                        v-for="type in operations"
-                        :value="type.id"
-                        :label="type.title"
-                        :key="type.id"
-                      >
-                      </el-option>
-                    </el-select>
+                    </v-select>
                     <label
                       v-show="customErros.includes('operation')"
                       class="text-danger"
@@ -332,9 +323,8 @@ export default {
       self.selectLoading = true;
       operationService.findAll().then(
         response => {
-          self.operations.push({ id: null, title: 'selecione' });
           _.each(response.data, function(el) {
-            self.operations.push({ id: el.id, title: el.title });
+            self.operations.push({ code: el.id, label: el.title });
           });
           self.selectLoading = false;
         },

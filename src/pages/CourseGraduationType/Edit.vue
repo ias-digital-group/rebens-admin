@@ -30,28 +30,13 @@
             <label class="col-md-3 col-form-label">Tipo</label>
             <div class="col-md-4">
               <div class="form-group">
-                <el-select
-                  class="select-info"
-                  placeholder="Tipo"
+                <v-select
+                  :options="parentTypes"
+                  :reduce="op => op.code"
+                  :key="model.parentId"
                   v-model="model.parentId"
-                  v-loading.lock="selectLoading"
-                  lock
                 >
-                  <el-option
-                    class="select-primary"
-                    value="1"
-                    label="Graduação"
-                    key="1"
-                  >
-                  </el-option>
-                  <el-option
-                    class="select-primary"
-                    value="2"
-                    label="Pós Graduação"
-                    key="2"
-                  >
-                  </el-option>
-                </el-select>
+                </v-select>
                 <label
                   v-show="customErros.includes('parent')"
                   class="text-danger"
@@ -136,11 +121,15 @@ export default {
         id: 0,
         name: '',
         idOperation: 0,
-        parentId: 1,
+        parentId: 0,
         active: true
       },
       operations: [],
-      customErros: []
+      customErros: [],
+      parentTypes: [
+        { code: 1, label: 'Graduação' },
+        { code: 2, label: 'Pós Graduação' }
+      ]
     };
   },
   computed: {

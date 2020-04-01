@@ -5,6 +5,7 @@
         <static-text-form
           ref="staticTextForm"
           :staticText.sync="model"
+          :customErrors.sync="customErrors"
         ></static-text-form>
         <div
           class="form-horizontal"
@@ -119,6 +120,7 @@ export default {
         active: true,
         images: []
       },
+      customErrors: [],
       modules: [],
       wirecard: {
         token: '',
@@ -207,26 +209,16 @@ export default {
     },
     saveConfig(self) {
       self.formLoading = true;
-      let errors = '';
+      self.customErrors = new Array();
       for (let i = 0; i < self.model.data.fields.length; i++) {
         if (
           self.model.data.fields[i].isRequired &&
           self.model.data.fields[i].data === ''
         ) {
-          errors += ` ${self.model.data.fields[i].label} |`;
+          self.customErrors.push(self.model.data.fields[i].name);
         }
       }
-      if (errors !== '') {
-        errors = `Campo(s) ${errors.substring(
-          0,
-          errors.length - 1
-        )} obrigatório(s)!`;
-        self.$notify({
-          type: 'primary',
-          message: errors,
-          icon: 'tim-icons icon-bell-55'
-        });
-      } else {
+      if (self.customErrors.length === 0) {
         operationService
           .saveConfiguration(
             self.parentId,
@@ -246,7 +238,6 @@ export default {
               self.$router.go();
             },
             () => {
-              console.log('erro');
               self.formLoading = false;
             }
           );
