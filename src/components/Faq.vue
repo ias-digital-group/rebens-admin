@@ -83,11 +83,15 @@
               placeholder="Pergunta"
               maxlength="200"
             ></base-input>
-            <label v-show="customErrors.includes('question')" class="error"
-              >&nbsp;&nbsp;O campo Resposta é obrigatório.</label
+            <label
+              v-show="customErrors.includes('question')"
+              class="text-danger"
+              >&nbsp;&nbsp;O campo Pergunta é obrigatório.</label
             >
-            <label v-show="customErrors.includes('questionMax')" class="error"
-              >&nbsp;&nbsp;O campo Título aceita no máximo 1000
+            <label
+              v-show="customErrors.includes('questionMax')"
+              class="text-danger"
+              >&nbsp;&nbsp;O campo Pergunta aceita no máximo 200
               caracteres.</label
             >
           </div>
@@ -96,11 +100,13 @@
           <label class="col-md-3 col-form-label">Resposta</label>
           <div class="col-md-9">
             <wysiwyg v-model="model.answer" placeholder="Resposta" />
-            <label v-show="customErrors.includes('answer')" class="error"
+            <label v-show="customErrors.includes('answer')" class="text-danger"
               >&nbsp;&nbsp;O campo Resposta é obrigatório.</label
             >
-            <label v-show="customErrors.includes('answerMax')" class="error"
-              >&nbsp;&nbsp;O campo Título aceita no máximo 1000
+            <label
+              v-show="customErrors.includes('answerMax')"
+              class="text-danger"
+              >&nbsp;&nbsp;O campo Resposta aceita no máximo 1000
               caracteres.</label
             >
           </div>
@@ -245,7 +251,7 @@ export default {
       self.customErrors = [];
       if (self.model.question === '') {
         self.customErrors.push('question');
-      } else if (self.model.question.length > 1000) {
+      } else if (self.model.question.length > 200) {
         self.customErrors.push('questionMax');
       }
 

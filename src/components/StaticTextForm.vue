@@ -78,10 +78,11 @@
             </div>
           </template>
         </template>
+        <br />
         <label
           v-if="field.isRequired"
           v-show="customErrors.includes(field.name)"
-          class="error"
+          class="text-danger"
           >&nbsp;&nbsp;O campo {{ field.label }} é obrigatório.</label
         >
       </div>
