@@ -49,7 +49,11 @@
           <div class="row">
             <label class="col-md-3 col-form-label">Regulamento</label>
             <div class="col-md-8">
-              <wysiwyg placeholder="Regulamento" v-model="model.data" />
+              <vue-editor
+                :editorToolbar="customToolbar"
+                v-model="model.data"
+                placeholder="Regulamento"
+              />
               <label
                 v-show="customErros.includes('regulation')"
                 class="text-danger"
@@ -116,7 +120,13 @@ export default {
         idOperation: 0,
         active: true,
         idStaticTextType: 18
-      }
+      },
+      customToolbar: [
+        ['bold', 'italic', 'underline'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['link'],
+        ['clean']
+      ]
     };
   },
   computed: {

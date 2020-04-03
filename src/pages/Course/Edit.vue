@@ -593,7 +593,7 @@ export default {
         precision: 2,
         masked: false
       },
-      operation: 'teste teset',
+      operation: '',
       operations: [],
       colleges: [],
       periods: [],
@@ -776,6 +776,13 @@ export default {
           response => {
             self.model = response.data;
             self.onOperationChange();
+            if (self.operations.length > 0) {
+              _.each(self.operations, el => {
+                if (self.model.idOperation === el.code) {
+                  self.operation = el.label;
+                }
+              });
+            }
             self.formLoading = false;
           },
           () => {
@@ -787,8 +794,11 @@ export default {
       self.selectLoading = true;
       operationService.findAll().then(
         response => {
-          _.each(response.data, function(el) {
+          _.each(response.data, el => {
             self.operations.push({ code: el.id, label: el.title });
+            if (self.model.idOperation === el.id) {
+              self.operation = el.title;
+            }
           });
           self.selectLoading = false;
         },

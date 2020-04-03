@@ -153,3 +153,45 @@
 .editr{margin-bottom:10px;}
 .v-select{ margin-bottom: 10px;}
 .v-select .vs__dropdown-toggle{padding-top: 5px;}
+
+.ql-snow .ql-editor{
+    color:#777;
+    font-size: 14px;
+    font-weight: normal;
+    a{
+        color: #777;
+    }
+    strong{
+        font-weight: bold !important;
+    }
+    ul{
+        padding-left: 30px;
+        list-style:none;
+        li{
+            list-style-type: disc;
+            padding-left: 0 !important;
+            font-size: 14px;
+            
+        }
+        li::before{
+            display: none !important;
+            opacity: 0;
+            visibility: hidden;
+        }
+    }
+    ol{
+        padding-left: 30px;
+        list-style:none;
+        li{
+            list-style-type: decimal;
+            padding-left: 0 !important;
+            font-size: 14px;
+        }
+        li::before{
+            display: none !important;
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+    }
+}
