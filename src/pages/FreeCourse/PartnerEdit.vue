@@ -32,7 +32,11 @@
           <div class="row">
             <label class="col-md-3 col-form-label">Descrição</label>
             <div class="col-md-9">
-              <wysiwyg v-model="model.description" placeholder="Descrição" />
+              <vue-editor
+                :editorToolbar="customToolbar"
+                v-model="model.description"
+                placeholder="Descrição"
+              />
               <label v-show="descError" class="text-danger"
                 >O campo Descrição é obrigatório!</label
               >
@@ -103,6 +107,8 @@ import { Select, Option } from 'element-ui';
 import partnerService from '../../services/Partner/partnerService';
 import helperService from '../../services/Helper/helperService';
 import { ImageUpload } from 'src/components/index';
+import config from '../../config';
+
 export default {
   components: {
     [Option.name]: Option,
@@ -121,6 +127,7 @@ export default {
       nameError: false,
       nameLenght: false,
       descError: false,
+      customToolbar: [],
       model: {
         name: '',
         active: false,
@@ -235,8 +242,9 @@ export default {
     },
     fetchData() {
       const self = this;
-      if (this.viewAction == 'edit') {
-        this.formLoading = true;
+      self.customToolbar = config.customToolbar;
+      if (self.viewAction == 'edit') {
+        self.formLoading = true;
         partnerService.get(self.id).then(
           response => {
             self.model = response.data;

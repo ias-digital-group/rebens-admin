@@ -89,7 +89,11 @@
             <div class="row">
               <label class="col-md-3 col-form-label">Resposta</label>
               <div class="col-md-8">
-                <wysiwyg placeholder="Resposta" v-model="item.answer" />
+                <vue-editor
+                  :editorToolbar="customToolbar"
+                  v-model="item.answer"
+                  placeholder="Resposta"
+                />
                 <label
                   v-show="customErros.includes(`answer-${index}`)"
                   class="text-danger"
@@ -124,6 +128,7 @@
 import { Select, Option } from 'element-ui';
 import staticTextService from '../../services/StaticText/staticTextService';
 import operationService from '../../services/Operation/operationService';
+import config from '../../config';
 import _ from 'lodash';
 
 export default {
@@ -145,6 +150,7 @@ export default {
       submitLoading: false,
       operations: [],
       customErros: [],
+      customToolbar: [],
       model: {
         id: 0,
         page: 'course-faq',
@@ -243,6 +249,7 @@ export default {
     },
     fetchData() {
       const self = this;
+      self.customToolbar = config.customToolbar;
       self.formLoading = true;
       staticTextService.get(self.id).then(
         response => {

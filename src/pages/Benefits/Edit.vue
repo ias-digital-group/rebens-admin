@@ -71,7 +71,11 @@
               <div class="row">
                 <label class="col-md-3 col-form-label">Detalhes *</label>
                 <div class="col-md-9">
-                  <wysiwyg v-model="model.detail" placeholder="Detalhes" />
+                  <vue-editor
+                    :editorToolbar="customToolbar"
+                    v-model="model.detail"
+                    placeholder="Detalhes"
+                  />
                   <label
                     v-show="customErros.includes('detail')"
                     class="text-danger"
@@ -82,12 +86,17 @@
               <div class="row m-b-20">
                 <label class="col-md-3 col-form-label">Como usar *</label>
                 <div class="col-md-9">
-                  <wysiwyg v-model="model.howToUse" placeholder="Como usar" />
+                  <vue-editor
+                    :editorToolbar="customToolbar"
+                    v-model="model.howToUse"
+                    placeholder="Como usar"
+                  />
                   <label
                     v-show="customErros.includes('howToUse')"
                     class="text-danger"
                     >O campo Como Usar é obrigatório</label
                   >
+                  <div>{{ model.howToUse }}</div>
                 </div>
               </div>
               <div class="row">
@@ -510,6 +519,8 @@ import partnerService from '../../services/Partner/partnerService';
 import _ from 'lodash';
 import { ImageUpload } from 'src/components/index';
 import { Money } from 'v-money';
+import config from '../../config';
+
 export default {
   components: {
     [Option.name]: Option,
@@ -528,6 +539,7 @@ export default {
   },
   data() {
     return {
+      customToolbar: [],
       formLoading: false,
       submitLoading: false,
       benefitTypeLoading: false,
@@ -741,13 +753,13 @@ export default {
     },
     fetchData() {
       const self = this;
+      self.customToolbar = config.customToolbar;
       if (this.viewAction == 'edit') {
         this.formLoading = true;
         benefitService.get(self.id).then(
           response => {
             self.model = response.data;
             self.formLoading = false;
-            this.populateOperation();
           },
           () => {
             self.formLoading = false;

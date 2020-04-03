@@ -24,10 +24,10 @@
           <base-checkbox v-model="field.checked">&nbsp;</base-checkbox>
         </template>
         <template v-else-if="field.type == 'html'">
-          <wysiwyg
+          <vue-editor
+            :editorToolbar="customToolbar"
             v-model="field.data"
             placeholder="Digite o texto ..."
-            style="margin-bottom:10px;"
           />
         </template>
         <template v-else-if="field.type == 'select'">
@@ -78,7 +78,6 @@
             </div>
           </template>
         </template>
-        <br />
         <label
           v-if="field.isRequired"
           v-show="customErrors.includes(field.name)"
@@ -92,7 +91,9 @@
 <script>
 import { Select, Option } from 'element-ui';
 import { ImageUpload } from 'src/components/index';
+import config from '../config';
 import _ from 'lodash';
+
 export default {
   name: 'static-text-form',
   inject: {
@@ -109,7 +110,8 @@ export default {
   },
   data() {
     return {
-      staticTextFormLoading: false
+      staticTextFormLoading: false,
+      customToolbar: []
     };
   },
   methods: {
@@ -142,7 +144,13 @@ export default {
           }
         });
       }
+    },
+    fetchData() {
+      this.customToolbar = config.customToolbar;
     }
+  },
+  created() {
+    this.fetchData();
   }
 };
 </script>

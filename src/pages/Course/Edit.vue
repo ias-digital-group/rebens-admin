@@ -254,7 +254,11 @@
           <div class="row" style="padding-bottom:10px;">
             <label class="col-md-3 col-form-label">Descrição</label>
             <div class="col-md-9">
-              <wysiwyg v-model="model.description" placeholder="Descrição" />
+              <vue-editor
+                :editorToolbar="customToolbar"
+                v-model="model.description"
+                placeholder="Descrição"
+              />
               <label
                 v-show="customErros.includes('description')"
                 class="text-danger"
@@ -370,7 +374,8 @@
               >Descrição dos tipos de curso</label
             >
             <div class="col-md-9">
-              <wysiwyg
+              <vue-editor
+                :editorToolbar="customToolbar"
                 v-model="model.courseTypeDescription"
                 placeholder="Descrição dos tipos de curso"
               />
@@ -517,6 +522,7 @@ import operationService from '../../services/Operation/operationService';
 import helperService from '../../services/Helper/helperService';
 import { ImageUpload } from 'src/components/index';
 import { Money } from 'v-money';
+import config from '../../config';
 import _ from 'lodash';
 export default {
   components: {
@@ -541,6 +547,7 @@ export default {
       selectLoading: false,
       formLoading: false,
       submitLoading: false,
+      customToolbar: [],
       model: {
         id: 0,
         title: '',
@@ -769,7 +776,7 @@ export default {
     },
     fetchData() {
       const self = this;
-
+      self.customToolbar = config.customToolbar;
       if (self.viewAction == 'edit') {
         self.formLoading = true;
         courseService.get(self.id).then(

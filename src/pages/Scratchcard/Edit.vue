@@ -198,9 +198,10 @@
                   >Instruções de resgate <br />(max. 500 caracteres)</label
                 >
                 <div class="col-md-8">
-                  <wysiwyg
-                    placeholder="Instruções de resgate (max. 500 caracteres)"
+                  <vue-editor
+                    :editorToolbar="customToolbar"
                     v-model="model.instructions"
+                    placeholder="Instruções de resgate (max. 500 caracteres)"
                     v-if="model.canEdit"
                   />
                   <textarea
@@ -208,16 +209,16 @@
                     class="form-control"
                     disabled
                     v-if="!model.canEdit"
-                    style="margin-botom:10px"
                   ></textarea>
                 </div>
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Regulamento</label>
                 <div class="col-md-8">
-                  <wysiwyg
-                    placeholder="Regulamento"
+                  <vue-editor
+                    :editorToolbar="customToolbar"
                     v-model="model.regulation"
+                    placeholder="Regulamento"
                     v-if="model.canEdit"
                   />
                   <textarea
@@ -225,7 +226,6 @@
                     class="form-control"
                     disabled
                     v-if="!model.canEdit"
-                    style="margin-botom:10px"
                   ></textarea>
                 </div>
               </div>
@@ -261,13 +261,13 @@
                   </div>
                 </div>
               </div>
-              <template v-if="model.noPrizeImage1">
-                <div class="row">
-                  <label class="col-md-3 col-form-label"
-                    >Imagem sem prêmio <br />
-                    <span>(200x200)</span>
-                  </label>
-                  <div class="col-md-9">
+              <div class="row">
+                <label class="col-md-3 col-form-label"
+                  >Imagem sem prêmio <br />
+                  <span>(200x200)</span>
+                </label>
+                <div class="col-md-9">
+                  <template v-if="model.noPrizeImage1">
                     <div class="fileinput">
                       <div class="thumbnail">
                         <img :src="noPrizeImage" class="img-preview" />
@@ -283,16 +283,8 @@
                         </base-button>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </template>
-              <template v-else>
-                <div class="row">
-                  <label class="col-md-3 col-form-label"
-                    >Imagem sem prêmio<br />
-                    <span>(200x200)</span></label
-                  >
-                  <div class="col-md-9">
+                  </template>
+                  <template v-else>
                     <image-upload
                       @change="onImageChange"
                       change-text="Alterar"
@@ -304,9 +296,9 @@
                       class="text-danger"
                       >O campo Logo é obrigatório.</label
                     >
-                  </div>
+                  </template>
                 </div>
-              </template>
+              </div>
               <div class="row">
                 <div
                   class="col-md-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
@@ -364,7 +356,7 @@ import { ImageUpload } from 'src/components/index';
 import ScratchcardPrizes from 'src/components/ScratchcardPrize';
 import ScratchcardBillet from 'src/components/ScratchcardBillet';
 import scratchcardPrizeBillet from 'src/components/ScratchcardPrizeBillet';
-
+import config from '../../config';
 import _ from 'lodash';
 
 export default {
@@ -396,6 +388,7 @@ export default {
       disabledType: '',
       disabledDistributionType: '',
       disabledOperation: '',
+      customToolbar: [],
       typeOptions: [
         { code: 1, label: 'Aberto' },
         { code: 2, label: 'Fechado' },
@@ -588,8 +581,9 @@ export default {
     },
     fetchData() {
       const self = this;
-      if (this.viewAction == 'edit') {
-        this.formLoading = true;
+      self.customToolbar = config.customToolbar;
+      if (self.viewAction == 'edit') {
+        self.formLoading = true;
         scratchcardService.get(self.id).then(
           response => {
             self.model = response.data;
@@ -641,3 +635,8 @@ export default {
   }
 };
 </script>
+<style scoped>
+textarea {
+  margin-bottom: 10px;
+}
+</style>

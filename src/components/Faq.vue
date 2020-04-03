@@ -99,7 +99,11 @@
         <div class="row">
           <label class="col-md-3 col-form-label">Resposta</label>
           <div class="col-md-9">
-            <wysiwyg v-model="model.answer" placeholder="Resposta" />
+            <vue-editor
+              :editorToolbar="customToolbar"
+              v-model="model.answer"
+              placeholder="Resposta"
+            />
             <label v-show="customErrors.includes('answer')" class="text-danger"
               >&nbsp;&nbsp;O campo Resposta é obrigatório.</label
             >
@@ -187,6 +191,7 @@ import { Table, TableColumn, Select, Option } from 'element-ui';
 import { BasePagination, Modal } from 'src/components';
 import faqService from '../services/Faq/faqService';
 import listPage from '../mixins/listPage';
+import config from '../config';
 import _ from 'lodash';
 
 export default {
@@ -211,6 +216,7 @@ export default {
       showForm: false,
       showTable: false,
       customErrors: [],
+      customToolbar: [],
       tableColumns: [
         {
           prop: 'id',
@@ -328,6 +334,7 @@ export default {
     },
     fetchData() {
       const self = this;
+      self.customToolbar = config.customToolbar;
       const request = {
         page: this.$data.pagination.currentPage - 1,
         pageItems: this.$data.pagination.perPage,

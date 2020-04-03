@@ -122,7 +122,8 @@
               <div class="row" style="padding-bottom:10px;">
                 <label class="col-md-3 col-form-label">Descrição</label>
                 <div class="col-md-9">
-                  <wysiwyg
+                  <vue-editor
+                    :editorToolbar="customToolbar"
                     v-model="model.description"
                     placeholder="Descrição"
                   />
@@ -136,7 +137,8 @@
               <div class="row">
                 <label class="col-md-3 col-form-label">Como Funciona</label>
                 <div class="col-md-9">
-                  <wysiwyg
+                  <vue-editor
+                    :editorToolbar="customToolbar"
                     v-model="model.howToUse"
                     placeholder="Como Funciona"
                   />
@@ -289,7 +291,9 @@ import partnerService from '../../services/Partner/partnerService';
 import Categories from 'src/components/Categories';
 import { ImageUpload } from 'src/components/index';
 import { Money } from 'v-money';
+import config from '../../config';
 import _ from 'lodash';
+
 export default {
   components: {
     [Option.name]: Option,
@@ -312,6 +316,7 @@ export default {
       partnerName: '',
       formLoading: false,
       submitLoading: false,
+      customToolbar: [],
       model: {
         id: 0,
         name: '',
@@ -488,6 +493,7 @@ export default {
     },
     fetchData() {
       const self = this;
+      self.customToolbar = config.customToolbar;
 
       if (self.viewAction == 'edit') {
         self.formLoading = true;

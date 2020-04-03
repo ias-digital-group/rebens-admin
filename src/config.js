@@ -45,5 +45,11 @@ export default {
       'scratchcardPrize/'
     ),
     viaCepUri: process.env.VUE_APP_VIACEP_URI
-  }
+  },
+  customToolbar: [
+    ['bold', 'italic', 'underline'],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['link'],
+    ['clean']
+  ]
 };

@@ -89,6 +89,7 @@ import { Select, Option, DatePicker } from 'element-ui';
 import StaticTextForm from '../../components/StaticTextForm.vue';
 import staticTextService from '../../services/StaticText/staticTextService';
 import operationService from '../../services/Operation/operationService';
+import config from '../../config';
 import _ from 'lodash';
 
 export default {
@@ -112,6 +113,7 @@ export default {
       submitLoading: false,
       operations: [],
       customErros: [],
+      customToolbar: [],
       model: {
         id: 0,
         page: 'course-regulation',
@@ -120,13 +122,7 @@ export default {
         idOperation: 0,
         active: true,
         idStaticTextType: 18
-      },
-      customToolbar: [
-        ['bold', 'italic', 'underline'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        ['link'],
-        ['clean']
-      ]
+      }
     };
   },
   computed: {
@@ -201,16 +197,19 @@ export default {
     },
     fetchData() {
       const self = this;
-      self.formLoading = true;
-      staticTextService.get(self.id).then(
-        response => {
-          self.model = response.data;
-          self.formLoading = false;
-        },
-        () => {
-          self.formLoading = false;
-        }
-      );
+      self.customToolbar = config.customToolbar;
+      if (self.id > 0) {
+        self.formLoading = true;
+        staticTextService.get(self.id).then(
+          response => {
+            self.model = response.data;
+            self.formLoading = false;
+          },
+          () => {
+            self.formLoading = false;
+          }
+        );
+      }
 
       self.selectLoading = true;
       operationService.findAll().then(
