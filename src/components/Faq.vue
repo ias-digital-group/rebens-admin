@@ -107,12 +107,6 @@
             <label v-show="customErrors.includes('answer')" class="text-danger"
               >&nbsp;&nbsp;O campo Resposta é obrigatório.</label
             >
-            <label
-              v-show="customErrors.includes('answerMax')"
-              class="text-danger"
-              >&nbsp;&nbsp;O campo Resposta aceita no máximo 1000
-              caracteres.</label
-            >
           </div>
         </div>
         <div class="row">
@@ -263,9 +257,7 @@ export default {
 
       if (self.model.answer === '') {
         self.customErrors.push('answer');
-      } else if (self.model.answer.length > 1000) {
-        self.customErrors.push('answerMax');
-      }
+      } 
       if (self.customErrors.length > 0) {
         return false;
       }
