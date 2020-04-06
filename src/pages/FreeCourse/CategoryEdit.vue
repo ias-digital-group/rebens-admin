@@ -12,13 +12,14 @@
               <base-input
                 required
                 v-model="model.name"
-                v-validate="modelValidations.name"
                 type="text"
-                :error="getError('name')"
                 name="name"
                 placeholder="Nome"
                 maxlength="200"
               ></base-input>
+              <label v-show="customErrors.includes('name')" class="text-danger"
+                >Este campo é obrigatório!</label
+              >
             </div>
           </div>
           <div class="row">
@@ -31,6 +32,11 @@
                 v-model="model.idParent"
               >
               </v-select>
+              <label
+                v-show="customErrors.includes('idParent')"
+                class="text-danger"
+                >Este campo é obrigatório!</label
+              >
             </div>
           </div>
           <div class="row">
@@ -84,6 +90,7 @@ export default {
       formLoading: false,
       submitLoading: false,
       image: null,
+      customErrors: [],
       model: {
         name: '',
         order: 1,
@@ -91,16 +98,6 @@ export default {
         active: false,
         icon: '',
         type: 2
-      },
-      modelValidations: {
-        name: {
-          required: true,
-          max: 200
-        },
-        order: {
-          required: true,
-          max: 4
-        }
       },
       parents: []
     };
@@ -116,12 +113,20 @@ export default {
     },
     validate() {
       const self = this;
-      this.$validator.validateAll().then(isValid => {
-        if (isValid) {
-          self.submitLoading = true;
-          self.saveCategory(self);
-        }
-      });
+      self.customErrors = [];
+      if (!self.model.name || self.model.name === '')
+        self.customErrors.push('name');
+      if (
+        self.model.idParent == null ||
+        self.model.idParent == undefined ||
+        self.model.idParent < 0
+      )
+        self.customErrors.push('idParent');
+
+      if (self.customErrors.length === 0) {
+        self.submitLoading = true;
+        self.saveCategory(self);
+      }
     },
     saveCategory(vm) {
       vm = vm ? vm : this;

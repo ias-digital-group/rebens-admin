@@ -36,9 +36,7 @@
                 v-model="model.answer"
                 placeholder="Resposta"
               />
-              <label
-                v-show="customErros.includes('answer')"
-                class="text-danger"
+              <label v-show="customErros.includes('answer')" class="text-danger"
                 >O campo Resposta é obrigatório</label
               >
             </div>

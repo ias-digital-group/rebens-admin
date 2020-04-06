@@ -18,13 +18,16 @@
                   <base-input
                     required
                     v-model="model.name"
-                    v-validate="modelValidations.name"
                     type="text"
-                    :error="getError('name')"
                     name="name"
                     placeholder="Nome"
                     maxlength="200"
                   ></base-input>
+                  <label
+                    v-show="customErrors.includes('name')"
+                    class="text-danger"
+                    >Este campo é obrigatório!</label
+                  >
                 </div>
               </div>
               <div class="row">
@@ -68,7 +71,7 @@
                     >
                   </div>
                   <label
-                    v-show="customErros.includes('whereToShow')"
+                    v-show="customErrors.includes('whereToShow')"
                     class="text-danger"
                     >Este campo é obrigatório!</label
                   >
@@ -80,13 +83,16 @@
                   <base-input
                     required
                     v-model="model.link"
-                    v-validate="modelValidations.link"
                     type="text"
-                    :error="getError('link')"
                     name="link"
                     placeholder="link"
                     maxlength="500"
                   ></base-input>
+                  <label
+                    v-show="customErrors.includes('link')"
+                    class="text-danger"
+                    >Este campo é obrigatório!</label
+                  >
                 </div>
               </div>
               <div class="row" v-if="!model.isBenefit">
@@ -110,15 +116,13 @@
                       required
                       name="start"
                       data-vv-name="start"
-                      v-validate="modelValidations.start"
                       placeholder="Início"
-                      :error="getError('start')"
                       v-model="model.start"
                     >
                     </el-date-picker>
                   </base-input>
                   <label
-                    v-show="customErros.includes('start')"
+                    v-show="customErrors.includes('start')"
                     class="text-danger"
                     >Este campo é obrigatório!</label
                   >
@@ -131,14 +135,12 @@
                       required
                       data-vv-name="end"
                       placeholder="Fim"
-                      v-validate="modelValidations.end"
-                      :error="getError('end')"
                       v-model="model.end"
                     >
                     </el-date-picker>
                   </base-input>
                   <label
-                    v-show="customErros.includes('end')"
+                    v-show="customErrors.includes('end')"
                     class="text-danger"
                     >Este campo é obrigatório!</label
                   >
@@ -176,7 +178,7 @@
                     /> </template
                   ><br />
                   <label
-                    v-show="customErros.includes('image')"
+                    v-show="customErrors.includes('image')"
                     class="text-danger"
                     >O campo imagem é obrigatório!</label
                   >
@@ -188,9 +190,7 @@
                   <base-input
                     required
                     v-model="model.order"
-                    v-validate="modelValidations.order"
                     type="number"
-                    :error="getError('order')"
                     name="order"
                     placeholder="Ordem"
                     maxlength="3"
@@ -276,7 +276,7 @@ export default {
       image: null,
       operationKey: 0,
       benefitName: '',
-      customErros: [],
+      customErrors: [],
       isRebens: false,
       model: {
         name: '',
@@ -294,31 +294,6 @@ export default {
         bannerShowHome: false,
         bannerShowHomeLogged: false,
         bannerShowBenefit: false
-      },
-      modelValidations: {
-        name: {
-          required: true,
-          max: 200
-        },
-        order: {
-          required: true,
-          max: 4
-        },
-        type: {
-          required: true
-        },
-        start: {
-          required: true
-        },
-        end: {
-          required: true
-        },
-        benefit: {
-          required: this.isBenefit
-        },
-        link: {
-          required: !this.isBenefit
-        }
       },
       benefits: []
     };
@@ -356,52 +331,54 @@ export default {
     },
     validate() {
       const self = this;
-      self.customErros = [];
-      if (!self.model.start) self.customErros.push('start');
-      if (!self.model.end) self.customErros.push('end');
+      self.customErrors = [];
+      if (!self.model.name || self.model.name === '')
+        self.customErrors.push('name');
+      if (!self.model.link || self.model.link === '')
+        self.customErrors.push('link');
+      if (!self.model.start) self.customErrors.push('start');
+      if (!self.model.end) self.customErrors.push('end');
       if (self.model.isBenefit && !self.model.idBenefit)
-        self.customErros.push('benefit');
+        self.customErrors.push('benefit');
       if (
         !self.model.bannerShowHome &&
         !self.model.bannerShowHomeLogged &&
         !self.model.bannerShowBenefit
       )
-        self.customErros.push('whereToShow');
+        self.customErrors.push('whereToShow');
 
-      if (!self.image && !self.model.image) self.customErros.push('image');
+      if (!self.image && !self.model.image) self.customErrors.push('image');
 
-      this.$validator.validateAll().then(isValid => {
-        if (isValid && self.customErros.length == 0) {
-          self.submitLoading = true;
-          if (self.image) {
-            helperService.uploadFile(self.image).then(
-              response => {
-                if (response.status != 200) {
-                  self.$notify({
-                    type: 'primary',
-                    message: response.message,
-                    icon: 'tim-icons icon-bell-55'
-                  });
-                  self.submitLoading = false;
-                  return;
-                }
-                self.model.image = response.data.url;
-                self.saveBanner(self);
-              },
-              err => {
+      if (self.customErrors.length == 0) {
+        self.submitLoading = true;
+        if (self.image) {
+          helperService.uploadFile(self.image).then(
+            response => {
+              if (response.status != 200) {
                 self.$notify({
-                  type: 'warning',
-                  message: err.message,
+                  type: 'primary',
+                  message: response.message,
                   icon: 'tim-icons icon-bell-55'
                 });
                 self.submitLoading = false;
+                return;
               }
-            );
-          } else if (self.model.image) {
-            self.saveBanner(self);
-          }
+              self.model.image = response.data.url;
+              self.saveBanner(self);
+            },
+            err => {
+              self.$notify({
+                type: 'warning',
+                message: err.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+              self.submitLoading = false;
+            }
+          );
+        } else if (self.model.image) {
+          self.saveBanner(self);
         }
-      });
+      }
     },
     saveBanner(vm) {
       vm = vm ? vm : this;

@@ -24,7 +24,7 @@
                     maxlength="300"
                   ></base-input>
                   <label
-                    v-show="customErros.includes('name')"
+                    v-show="customErrors.includes('name')"
                     class="text-danger"
                     >O campo Nome é obrigatório!</label
                   >
@@ -42,7 +42,7 @@
                     maxlength="400"
                   ></base-input>
                   <label
-                    v-show="customErros.includes('title')"
+                    v-show="customErrors.includes('title')"
                     class="text-danger"
                     >O campo Título é obrigatório!</label
                   >
@@ -62,7 +62,7 @@
                     maxlength="500"
                   ></base-input>
                   <label
-                    v-show="customErros.includes('benefitCall')"
+                    v-show="customErrors.includes('benefitCall')"
                     class="text-danger"
                     >O campo Chamada do Benefício é obrigatório!</label
                   >
@@ -77,7 +77,7 @@
                     placeholder="Detalhes"
                   />
                   <label
-                    v-show="customErros.includes('detail')"
+                    v-show="customErrors.includes('detail')"
                     class="text-danger"
                     >O campo Detalhes é obrigatório!</label
                   >
@@ -92,7 +92,7 @@
                     placeholder="Como usar"
                   />
                   <label
-                    v-show="customErros.includes('howToUse')"
+                    v-show="customErrors.includes('howToUse')"
                     class="text-danger"
                     >O campo Como Usar é obrigatório</label
                   >
@@ -112,7 +112,7 @@
                 </div>
                 <div class="col-md-3">
                   <label
-                    v-show="customErros.includes('partner')"
+                    v-show="customErrors.includes('partner')"
                     class="text-danger"
                     >O campo Parceiro é obrigatório!</label
                   >
@@ -144,7 +144,7 @@
                       >Cashback</base-radio
                     >
                     <label
-                      v-show="customErros.includes('benefitType')"
+                      v-show="customErrors.includes('benefitType')"
                       class="text-danger"
                       >O campo Tipo é obrigatório</label
                     >
@@ -162,7 +162,7 @@
                     ></money>
                   </base-input>
                   <label
-                    v-show="customErros.includes('minDiscount')"
+                    v-show="customErrors.includes('minDiscount')"
                     class="text-danger"
                     >O campo Desconto Mínimo é obrigatório!</label
                   >
@@ -176,7 +176,7 @@
                     ></money>
                   </base-input>
                   <label
-                    v-show="customErros.includes('maxDiscount')"
+                    v-show="customErrors.includes('maxDiscount')"
                     class="text-danger"
                     >O campo Desconto Máximo é obrigatório!</label
                   >
@@ -193,7 +193,7 @@
                     ></money>
                   </base-input>
                   <label
-                    v-show="customErros.includes('cpv')"
+                    v-show="customErrors.includes('cpv')"
                     class="text-danger"
                     >O campo CPV é obrigatório</label
                   >
@@ -208,7 +208,7 @@
                     maxlength="500"
                   ></base-input>
                   <label
-                    v-show="customErros.includes('link')"
+                    v-show="customErrors.includes('link')"
                     class="text-danger"
                     >O campo Link é obrigatório!</label
                   >
@@ -227,7 +227,7 @@
                     ></money>
                   </base-input>
                   <label
-                    v-show="customErros.includes('cashbackAmount')"
+                    v-show="customErrors.includes('cashbackAmount')"
                     class="text-danger"
                     >O campo Valor do cashback é obrigatório!</label
                   >
@@ -243,7 +243,7 @@
                     placeholder="Texto do voucher"
                   />
                   <label
-                    v-show="customErros.includes('voucherText')"
+                    v-show="customErrors.includes('voucherText')"
                     class="text-danger"
                     >O campo Texto do voucher é obrigatório!</label
                   >
@@ -268,7 +268,7 @@
                       >Zanox</base-radio
                     >
                     <label
-                      v-show="customErros.includes('integrationType')"
+                      v-show="customErrors.includes('integrationType')"
                       class="text-danger"
                       >O campo Integração é obrigatório!</label
                     >
@@ -305,7 +305,7 @@
                     />
                   </template>
                   <br />
-                  <label v-show="customErros.includes('image')" class="error"
+                  <label v-show="customErrors.includes('image')" class="error"
                     >O campo Imagem é obrigatório!</label
                   >
                 </div>
@@ -325,7 +325,7 @@
                 </div>
                 <div class="col-md-6">
                   <label
-                    v-show="customErros.includes('homeHighlight')"
+                    v-show="customErrors.includes('homeHighlight')"
                     class="text-danger"
                     >O campo Destaque Home? é obrigatório!</label
                   >
@@ -348,7 +348,7 @@
                 </div>
                 <div class="col-md-6">
                   <label
-                    v-show="customErros.includes('homeBenefitHighlight')"
+                    v-show="customErrors.includes('homeBenefitHighlight')"
                     class="text-danger"
                     >O campo Destaque Home Benefício? é obrigatório!</label
                   >
@@ -368,7 +368,7 @@
                 </div>
                 <div class="col-md-7">
                   <label
-                    v-show="customErros.includes('dueDate')"
+                    v-show="customErrors.includes('dueDate')"
                     class="text-danger"
                     >O campo Validade é obrigatório!</label
                   >
@@ -386,7 +386,7 @@
                     </el-date-picker>
                   </base-input>
                   <label
-                    v-show="customErros.includes('start')"
+                    v-show="customErrors.includes('start')"
                     class="text-danger"
                     >O campo Início é obrigatório!</label
                   >
@@ -401,7 +401,7 @@
                     </el-date-picker>
                   </base-input>
                   <label
-                    v-show="customErros.includes('end')"
+                    v-show="customErrors.includes('end')"
                     class="text-danger"
                     >O campo Fim é obrigatório!</label
                   >
@@ -430,7 +430,7 @@
                 </div>
                 <div class="col-md-3">
                   <label
-                    v-show="customErros.includes('operation')"
+                    v-show="customErrors.includes('operation')"
                     class="text-danger"
                     >O campo Operação é obrigatório!</label
                   >
@@ -547,7 +547,7 @@ export default {
       image: null,
       partnerList: [],
       operationList: [],
-      customErros: [],
+      customErrors: [],
       operationKey: 0,
       isRebens: false,
       selectLoading: false,
@@ -599,8 +599,7 @@ export default {
         active: false,
         homeHighlight: null,
         homeBenefitHighlight: null
-      },
-      modelValidations: {}
+      }
     };
   },
   computed: {
@@ -626,77 +625,75 @@ export default {
     },
     validate() {
       const self = this;
-      self.customErros = [];
+      self.customErrors = [];
 
-      if (!self.model.name) self.customErros.push('name');
-      if (!self.model.title) self.customErros.push('title');
-      if (!self.model.benefitCall) self.customErros.push('benefitCall');
-      if (!self.model.detail) self.customErros.push('detail');
-      if (!self.model.howToUse) self.customErros.push('howToUse');
-      if (!self.model.idPartner) self.customErros.push('partner');
-      if (!self.model.idBenefitType) self.customErros.push('benefitType');
+      if (!self.model.name) self.customErrors.push('name');
+      if (!self.model.title) self.customErrors.push('title');
+      if (!self.model.benefitCall) self.customErrors.push('benefitCall');
+      if (!self.model.detail) self.customErrors.push('detail');
+      if (!self.model.howToUse) self.customErrors.push('howToUse');
+      if (!self.model.idPartner) self.customErrors.push('partner');
+      if (!self.model.idBenefitType) self.customErrors.push('benefitType');
       if (self.model.idBenefitType == 2) {
-        if (!self.model.voucherText) self.customErros.push('voucherText');
+        if (!self.model.voucherText) self.customErrors.push('voucherText');
       } else {
         if (!self.model.link || self.model.link == '')
-          self.customErros.push('link');
+          self.customErrors.push('link');
       }
 
       if (self.isRebens && self.model.idBenefitType != 3) {
         if (!self.model.maxDiscountPercentage)
-          self.customErros.push('maxDiscount');
+          self.customErrors.push('maxDiscount');
         if (!self.model.minDiscountPercentage)
-          self.customErros.push('minDiscount');
+          self.customErrors.push('minDiscount');
       } else {
         if (self.isRebens && !self.model.cashbackAmount)
-          self.customErros.push('cashbackAmount');
+          self.customErrors.push('cashbackAmount');
       }
       if (self.isRebens && !self.model.idIntegrationType)
-        self.customErros.push('integrationType');
-      if (!self.model.image && !self.image) self.customErros.push('image');
-      if (!self.model.dueDate) self.customErros.push('dueDate');
+        self.customErrors.push('integrationType');
+      if (!self.model.image && !self.image) self.customErrors.push('image');
+      if (!self.model.dueDate) self.customErrors.push('dueDate');
       if (self.model.exclusive && !self.model.idOperation)
-        self.customErros.push('operation');
+        self.customErrors.push('operation');
       if (!self.model.homeHighlight && self.model.homeHighlight != 0)
-        self.customErros.push('homeHighlight');
+        self.customErrors.push('homeHighlight');
       if (
         !self.model.homeBenefitHighlight &&
         self.model.homeBenefitHighlight != 0
       )
-        self.customErros.push('homeBenefitHighlight');
+        self.customErrors.push('homeBenefitHighlight');
 
-      this.$validator.validateAll().then(isValid => {
-        if (isValid && self.customErros.length == 0) {
-          self.submitLoading = true;
-          if (self.image) {
-            helperService.uploadFile(self.image).then(
-              response => {
-                if (response.status != 200) {
-                  self.$notify({
-                    type: 'primary',
-                    message: response.message,
-                    icon: 'tim-icons icon-bell-55'
-                  });
-                  self.submitLoading = false;
-                  return;
-                }
-                self.model.image = response.data.url;
-                self.saveBenefit(self);
-              },
-              err => {
+      if (self.customErrors.length == 0) {
+        self.submitLoading = true;
+        if (self.image) {
+          helperService.uploadFile(self.image).then(
+            response => {
+              if (response.status != 200) {
                 self.$notify({
                   type: 'primary',
-                  message: err.message,
+                  message: response.message,
                   icon: 'tim-icons icon-bell-55'
                 });
                 self.submitLoading = false;
+                return;
               }
-            );
-          } else {
-            self.saveBenefit(self);
-          }
+              self.model.image = response.data.url;
+              self.saveBenefit(self);
+            },
+            err => {
+              self.$notify({
+                type: 'primary',
+                message: err.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+              self.submitLoading = false;
+            }
+          );
+        } else {
+          self.saveBenefit(self);
         }
-      });
+      }
     },
     saveBenefit(vw) {
       vw = vw ? vw : this;

@@ -257,7 +257,7 @@ export default {
 
       if (self.model.answer === '') {
         self.customErrors.push('answer');
-      } 
+      }
       if (self.customErrors.length > 0) {
         return false;
       }
