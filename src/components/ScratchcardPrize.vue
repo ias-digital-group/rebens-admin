@@ -109,7 +109,12 @@
         <div class="row">
           <label class="col-md-3 col-form-label">Descrição</label>
           <div class="col-md-9">
-            <wysiwyg v-model="model.description" placeholder="Descrição" />
+            <vue-editor
+              :editorToolbar="customToolbar"
+              v-model="model.description"
+              placeholder="Descrição"
+            />
+
             <label v-show="customErrors.includes('desc')" class="text-danger"
               >O campo Descrição é obrigatório.</label
             >
@@ -122,10 +127,8 @@
           <label class="col-md-3 col-form-label">Quantidade</label>
           <div class="col-md-2">
             <base-input
-              required
               v-model="model.quantity"
               type="number"
-              :error="getError('quantity')"
               name="quantity"
               placeholder="Quantidade"
               maxlength="10"
@@ -135,13 +138,13 @@
             >
           </div>
         </div>
-        <template v-if="model.image">
-          <div class="row">
-            <label class="col-md-3 col-form-label"
-              >Imagem do prêmio <br />
-              <span>(200x200)</span>
-            </label>
-            <div class="col-md-9">
+        <div class="row">
+          <label class="col-md-3 col-form-label"
+            >Imagem do prêmio <br />
+            <span>(200x200)</span>
+          </label>
+          <div class="col-md-9">
+            <template v-if="model.image">
               <div class="fileinput">
                 <div class="thumbnail">
                   <img :src="model.image" class="img-preview" />
@@ -156,33 +159,26 @@
                   </base-button>
                 </div>
               </div>
-            </div>
-          </div>
-        </template>
-        <template v-else>
-          <div class="row">
-            <label class="col-md-3 col-form-label"
-              >Imagem do prêmio<br />
-              <span>(200x200)</span></label
-            >
-            <div class="col-md-9">
+            </template>
+            <template v-else>
               <image-upload
                 @change="onImageChange"
                 change-text="Alterar"
                 remove-text="Remover"
                 select-text="Selecione uma imagem"
-              /><br />
-              <label v-show="customErrors.includes('image')" class="text-danger"
-                >O campo Imagem é obrigatório.</label
-              >
-              <label
-                v-show="customErrors.includes('imageMax')"
-                class="text-danger"
-                >O campo Imagem aceita até 500 caracteres.</label
-              >
-            </div>
+              />
+            </template>
+            <br />
+            <label v-show="customErrors.includes('image')" class="text-danger"
+              >O campo Imagem é obrigatório.</label
+            >
+            <label
+              v-show="customErrors.includes('imageMax')"
+              class="text-danger"
+              >O campo Imagem aceita até 500 caracteres.</label
+            >
           </div>
-        </template>
+        </div>
         <div class="row">
           <div class="col-md-12">
             <a class="btn mt-3 btn-secondary btn-simple" @click="clearModel()"
@@ -239,6 +235,7 @@ import scratchcardPrizeService from '../services/Scratchcard/scratchcardPrizeSer
 import scratchcardService from '../services/Scratchcard/scratchcardService';
 import { ImageUpload } from 'src/components/index';
 import listPage from '../mixins/listPage';
+import config from '../config';
 import _ from 'lodash';
 
 export default {
@@ -265,6 +262,7 @@ export default {
       showTable: false,
       image: null,
       customErrors: [],
+      customToolbar: [],
       tableColumns: [
         {
           prop: 'id',
@@ -427,6 +425,7 @@ export default {
     },
     fetchData() {
       const self = this;
+      self.customToolbar = config.customToolbar;
       self.$data.loading = true;
       scratchcardPrizeService.list(self.parentId).then(
         response => {

@@ -541,13 +541,21 @@ export default {
       if (vm.model.id === 0) {
         scratchcardService.create(vm.model).then(
           data => {
-            vm.$notify({
-              type: 'success',
-              message: 'Campanha criada com sucesso!',
-              icon: 'tim-icons icon-bell-55'
-            });
+            if (data.status === 'ok') {
+              vm.$notify({
+                type: 'success',
+                message: 'Campanha criada com sucesso!',
+                icon: 'tim-icons icon-bell-55'
+              });
+              vm.$router.push(`/scratchcard/${data.id}/edit`);
+            } else {
+              vm.$notify({
+                type: 'primary',
+                message: data.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+            }
             vm.submitLoading = false;
-            vm.$router.push(`/scratchcard/${data.id}/edit`);
           },
           err => {
             vm.$notify({
@@ -561,11 +569,19 @@ export default {
       } else {
         scratchcardService.update(vm.model).then(
           response => {
-            vm.$notify({
-              type: 'primary',
-              message: response.message,
-              icon: 'tim-icons icon-bell-55'
-            });
+            if (response.status === 'ok') {
+              vm.$notify({
+                type: 'primary',
+                message: response.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+            } else {
+              vm.$notify({
+                type: 'primary',
+                message: response.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+            }
             vm.submitLoading = false;
           },
           err => {

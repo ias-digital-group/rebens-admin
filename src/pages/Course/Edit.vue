@@ -134,6 +134,7 @@
                   :reduce="op => op.code"
                   :key="model.periodIds"
                   v-model="model.periodIds"
+                  :multiple="true"
                 >
                 </v-select>
                 <label
@@ -799,7 +800,7 @@ export default {
       }
 
       self.selectLoading = true;
-      operationService.findAll().then(
+      operationService.listByModule('course').then(
         response => {
           _.each(response.data, el => {
             self.operations.push({ code: el.id, label: el.title });

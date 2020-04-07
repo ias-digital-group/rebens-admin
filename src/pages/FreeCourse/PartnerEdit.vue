@@ -21,10 +21,12 @@
                 placeholder="Nome"
                 maxlength="200"
               ></base-input>
-              <label v-show="nameError" class="text-danger"
+              <label v-show="customErrors.includes('name')" class="text-danger"
                 >O campo Nome é obrigatório!</label
               >
-              <label v-show="nameLenght" class="text-danger"
+              <label
+                v-show="customErrors.includes('nameLength')"
+                class="text-danger"
                 >O campo Nome aceita no máximo 200 caracteres!</label
               >
             </div>
@@ -37,7 +39,9 @@
                 v-model="model.description"
                 placeholder="Descrição"
               />
-              <label v-show="descError" class="text-danger"
+              <label
+                v-show="customErrors.includes('description')"
+                class="text-danger"
                 >O campo Descrição é obrigatório!</label
               >
             </div>
@@ -66,7 +70,7 @@
                 />
               </template>
               <br />
-              <label v-show="imgError" class="text-danger"
+              <label v-show="customErrors.includes('logo')" class="text-danger"
                 >O campo Logo é obrigatório!</label
               >
             </div>
@@ -128,6 +132,7 @@ export default {
       nameLenght: false,
       descError: false,
       customToolbar: [],
+      customErrors: [],
       model: {
         name: '',
         active: false,
@@ -148,54 +153,53 @@ export default {
     },
     validate() {
       const self = this;
-      self.$validator.validateAll().then(isValid => {
-        if (isValid) {
-          self.imgError = self.nameError = self.descError = self.nameLenght = false;
-          if (self.model.name === '') {
-            self.nameError = true;
-          } else if (self.model.name.length > 200) {
-            self.nameLenght = true;
-          }
-          if (self.model.description === '') {
-            self.descError = true;
-          }
-          if (!self.image && !self.model.logo) {
-            self.imgError = true;
-          }
+      self.customErrors = [];
 
-          self.submitLoading = true;
-          if (self.image) {
-            self.imgError = false;
-            helperService.uploadFile(self.image).then(
-              response => {
-                if (response.status != 200) {
-                  self.$notify({
-                    type: 'primary',
-                    message: response.message,
-                    icon: 'tim-icons icon-bell-55'
-                  });
-                  self.submitLoading = false;
-                  return;
-                }
-                self.model.logo = response.data.url;
-                self.savePartner(self);
-              },
-              err => {
+      if (self.model.name === '') {
+        self.customErrors.push('name');
+      } else if (self.model.name.length > 200) {
+        self.customErrors.push('nameLength');
+      }
+      if (self.model.description === '') {
+        self.customErrors.push('description');
+      }
+      if (!self.image && !self.model.logo) {
+        self.customErrors.push('logo');
+      }
+
+      if (self.customErrors.length === 0) {
+        self.submitLoading = true;
+        if (self.image) {
+          self.imgError = false;
+          helperService.uploadFile(self.image).then(
+            response => {
+              if (response.status != 200) {
                 self.$notify({
                   type: 'primary',
-                  message: err.message,
+                  message: response.message,
                   icon: 'tim-icons icon-bell-55'
                 });
                 self.submitLoading = false;
+                return;
               }
-            );
-          } else if (self.model.logo) {
-            self.savePartner(self);
-          } else {
-            self.submitLoading = false;
-          }
+              self.model.logo = response.data.url;
+              self.savePartner(self);
+            },
+            err => {
+              self.$notify({
+                type: 'primary',
+                message: err.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+              self.submitLoading = false;
+            }
+          );
+        } else if (self.model.logo) {
+          self.savePartner(self);
+        } else {
+          self.submitLoading = false;
         }
-      });
+      }
     },
     savePartner(vw) {
       if (vw.viewAction == 'new') {

@@ -96,7 +96,6 @@
                     class="text-danger"
                     >O campo Como Usar é obrigatório</label
                   >
-                  <div>{{ model.howToUse }}</div>
                 </div>
               </div>
               <div class="row">

@@ -360,5 +360,19 @@ export default {
         }
       );
     });
+  },
+  listByModule: function(module) {
+    return new Promise((resolve, reject) => {
+      HTTP.get(
+        config.apiEndpoints.operationUri.concat(`ListByModule/${module}`)
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
   }
 };

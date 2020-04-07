@@ -274,7 +274,7 @@
           </el-tab-pane>
           <el-tab-pane
             label="Configurações"
-            v-if="viewAction != 'new' && isMaster"
+            :disabled="viewAction == 'new' ? true : isMaster ? false : true"
           >
             <operation-config
               v-loading="formLoading"
