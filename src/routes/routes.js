@@ -1,3 +1,4 @@
+import MainLayout from 'src/pages/Layout/MainLayout.vue';
 import DashboardLayout from 'src/pages/Layout/DashboardLayout.vue';
 import AuthLayout from 'src/pages/Layout/AuthLayout.vue';
 // GeneralViews
@@ -474,7 +475,7 @@ let benefitsPages = {
 
 let usersPages = {
   path: '/users',
-  component: DashboardLayout,
+  component: MainLayout,
   meta: {
     requiresAuth: true,
     roles: [

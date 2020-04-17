@@ -200,14 +200,12 @@
           :link="{ name: $t('sidebar.report'), icon: 'fas fa-chart-pie' }"
         >
           <sidebar-item
-            v-show="!isPublisher && !isPartnerAdmin"
             :link="{
               name: $t('sidebar.benefitUse'),
               path: '/report/benefit-use'
             }"
           ></sidebar-item>
           <sidebar-item
-            v-show="!isPublisher && !isPartnerAdmin"
             :link="{
               name: $t('sidebar.promoterReport'),
               path: '/promoter/report'
