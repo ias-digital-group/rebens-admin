@@ -6,55 +6,38 @@
                 ><img src="/img/logo-rebens.png" alt="Rebens"
                 /></base-link>
             </div>
+            <div class="user-box" :class="{on: showMenu}" @mouseover="showMenu = true" @mouseleave="showMenu=false">
+              <div class="text">
+                <span>Israel Silva</span>
+                <strong>Master</strong>
+              </div>
+              <div class="avatar">
+                <p>IS</p>
+              </div>
+              <div class="user-menu">
+                <ul>
+                  <!-- <li><a href="#">Editar Meu perfil</a></li> -->
+                  <li><router-link to="/account/changePassword">Alterar Senha</router-link></li>
+                  <li><a href="javascript:void(0)" @click="signout">Sair</a></li>
+                </ul>
+              </div>
+            </div>
         </header>
         <div class="main-content">
             <div class="side-menu">
                 <ul>
-                    <li><router-link to="/">Dashboard</router-link></li>
-                    <li v-show="!isPartnerAdmin">
-                        <a href="#" class="parent">Benefícios</a>
-                        <ul class="sub-item" hidden>
-                            <li><router-link to="/benefits">Benefícios</router-link></li>
-                            <li v-show="isRebens"><router-link to="/benefits/categories">Categorias</router-link></li>
-                            <li v-show="isRebens"><router-link to="/benefits/partner">Parceiros</router-link></li>
-                        </ul>
-                    </li>
-                    <li v-show="!isPartnerAdmin && !isPartnerApprover"><router-link to="/banners">Banners</router-link></li>
-                    <li v-show="isRebens"><router-link to="/operations">Operações</router-link></li>
-                    <li v-show="!isPublisher && !isPartnerAdmin"><router-link to="/report/customer">Clientes</router-link></li>
-                    <li v-show="!isPublisher"><router-link to="/users">Usuários</router-link></li>
-                    <li v-show="showCourses">
-                        <a href="#" class="parent">Cursos</a>
-                        <ul class="sub-item" hidden>
-                            <li><router-link to="/course">Cursos</router-link></li>
-                            <li><router-link to="/courseCollege">Faculdades</router-link></li>
-                            <li><router-link to="/courseModality">Modalidade</router-link></li>
-                            <li><router-link to="/coursePeriod">Períodos</router-link></li>
-                            <li><router-link to="/courseGraduationType">Tipo de graduação</router-link></li>
-                            <li><router-link to="/courseFaq">Perguntas frequentes</router-link></li>
-                            <li><router-link to="/courseRegulation">Regulamento</router-link></li>
-                        </ul>
-                    </li>
-                    <li v-show="showFreeCourses">
-                        <a href="#" class="parent">Cursos Livres</a>
-                        <ul class="sub-item" hidden>
-                            <li><router-link to="/freeCourse">Cursos Livres</router-link></li>
-                            <li><router-link to="/freeCourse/categories">Categorias</router-link></li>
-                            <li><router-link to="/freeCourse/partner">Parceiros</router-link></li>
-                        </ul>
-                    </li>
-                    <li v-show="!isRebens && !isPartnerAdmin"><router-link to="/customers">Clientes</router-link></li>
-                    <li v-show="!isRebens && !isPartnerAdmin"><router-link to="/faqs">Perguntas frequentes</router-link></li>
-                    <li v-show="!isRebens && !isPartnerAdmin"><router-link to="/pages">Páginas</router-link></li>
-                    <li v-show="showOperationPartner"><router-link to="/operationPartner">Parceiros</router-link></li>
-                    <li v-show="showOperationPartner"><router-link to="/operationPartner/approve">Aprovação de clientes</router-link></li>
-                    <li v-show="isRebens"><router-link to="/scratchcard">Raspadinhas</router-link></li>
-                    <li v-show="!isPublisher && !isPartnerAdmin" class="active">
-                        <a href="#">Relatórios</a>
+                    <li v-for="(item, idx) in filteredMenu" :key="idx" :class="{ active: item.active }">
+                      <template v-if="item.subitens.length > 0">
+                        <a href="javascript:void(0)" @click.prevent="item.active = !item.active" class="parent">{{ item.name }}</a>
                         <ul class="sub-item">
-                            <li><router-link to="/report/benefit-use">Utilização</router-link></li>
-                            <li><router-link to="/promoter/report">Promotores</router-link></li>
+                            <li v-for="(subitem, idx2) in item.subitens" :key="idx2">
+                              <router-link :to="subitem.path">{{ subitem.name }}</router-link>
+                            </li>
                         </ul>
+                      </template>
+                      <template v-else>
+                        <router-link :to="item.path">{{ item.name }}</router-link>
+                      </template>
                     </li>
                 </ul>
             </div>
@@ -62,81 +45,91 @@
                 <router-view></router-view>
             </div>
         </div>
-        
-
     </div>
 </template>
 <script>
 
-import PerfectScrollbar from 'perfect-scrollbar';
-import 'perfect-scrollbar/css/perfect-scrollbar.css';
-
-function hasElement(className) {
-  return document.getElementsByClassName(className).length > 0;
-}
-
-function initScrollbar(className) {
-  if (hasElement(className)) {
-    new PerfectScrollbar(`.${className}`);
-  } else {
-    setTimeout(() => {
-      initScrollbar(className);
-    }, 100);
-  }
-}
-
-
 export default {
   data() {
     return {
+      isPromoter: false,
       isRebens: false,
       isPublisher: false,
       isPartnerApprover: false,
       isPartnerAdmin: false,
       showCourses: true,
       showFreeCourses: true,
+      showOperationPartner: false,
+      showMenu: false,
+      menuItens: [
+        { name: 'Dashboard', path: '/', active: false, roles: '', needModule: '', subitens: [] },
+        { name: 'Benefícios', path: '#', active: false, roles: 'master,administratorRebens,publisherRebens,publisher', needModule: '',
+          subitens: [
+            { name: 'Benefícios', path: '/benefits', active: false, roles: 'master,administratorRebens,publisherRebens,publisher' },
+            { name: 'Categorias', path: '/benefits/categories', active: false, roles: 'master,administratorRebens,publisherRebens' },
+            { name: 'Parceiros', path: '/benefits/partners', active: false, roles: 'master,administratorRebens,publisherRebens' }
+          ]
+        },
+        { name: 'Banners', path: '/banners', active: false, roles: 'master,administratorRebens,publisherRebens,publisher', needModule: '', subitens: [] },
+        { name: 'Operações', path: '/operations', active: false, roles: 'master,administratorRebens,publisherRebens', needModule: '', subitens: [] },
+        { name: 'Clientes', path: '/report/customer', active: false, roles: 'master,administratorRebens,publisherRebens', needModule: '', subitens: [] },
+        { name: 'Usuários', path: '/users', active: false, roles: 'master,administratorRebens,publisherRebens,partnerAdministrator', needModule: '', subitens: [] },
+        { name: 'Cursos', path: '#', active: false, roles: 'master,administratorRebens,publisherRebens,publisher', needModule: 'course', 
+          subitens: [
+            { name: 'Cursos', path: '/course', active: false, roles: '' },
+            { name: 'Faculdades', path: '/courseCollege', active: false, roles: '' },
+            { name: 'Modalidade', path: '/courseModality', active: false, roles: '' },
+            { name: 'Períodos', path: '/coursePeriod', active: false, roles: '' },
+            { name: 'Tipo de graduação', path: '/courseGraduationType', active: false, roles: '' },
+            { name: 'Perguntas frequentes', path: '/courseFaq', active: false, roles: '' },
+            { name: 'Regulamento', path: '/courseRegulation', active: false, roles: '' }
+          ] 
+        },
+        { name: 'Cursos Livres', path: '#', active: false, roles: 'master,administratorRebens,publisherRebens,publisher', needModule: 'freeCourse', 
+          subitens: [
+            { name: 'Cursos Livres', path: '/freeCourse', active: false, roles: '' },
+            { name: 'Categorias', path: '/freeCourse/categories', active: false, roles: '' },
+            { name: 'Parceiros', path: '/freeCourse/partner', active: false, roles: '' }
+          ] 
+        },
+        { name: 'Clientes', path: '/customers', active: false, roles: 'publisher', needModule: '', subitens: [] },
+        { name: 'Perguntas frequentes', path: '/faqs', active: false, roles: 'publisher', needModule: '', subitens: [] },
+        { name: 'Páginas', path: '/pages', active: false, roles: 'publisher', needModule: '', subitens: [] },
+        { name: 'Parceiros', path: '/operationPartner', active: false, roles: 'partnerAdministrator', needModule: '', subitens: [] },
+        { name: 'Aprovação de clientes', path: '/operationPartner/approve', active: false, roles: 'partnerAdministrator', needModule: '', subitens: [] },
+        { name: 'Raspadinhas', path: '/scratchcard', active: false, roles: 'master,administratorRebens,publisherRebens', needModule: '', subitens: [] },
+        { name: 'Relatórios', path: '#', active: false, roles: 'master,administratorRebens', 
+          subitens: [
+            { name: 'Utilização', path: '/report/benefit-use', active: false, roles: '' },
+            { name: 'Promotores', path: '/promoter/report', active: false, roles: '' },
+          ] 
+        }
+      ]
     };
   },
-  methods: {
-    initScrollbar() {
-      let docClasses = document.body.classList;
-      let isWindows = navigator.platform.startsWith('Win');
-      if (isWindows) {
-        // if we are on windows OS we activate the perfectScrollbar function
-        initScrollbar('sidebar');
-        initScrollbar('sidebar-wrapper');
-
-        docClasses.add('perfect-scrollbar-on');
-      } else {
-        docClasses.add('perfect-scrollbar-off');
-      }
-      if (this.isPromoter || this.isPartnerApprover) {
-        this.$sidebar.displaySidebar(false);
-      }
+  computed: {
+    filteredMenu() {
+      return this.menuItens.filter( item => {
+        if (item.roles === '') {
+          return true;
+        } else if (item.roles.includes(this.$store.getters.currentUser.role)) {
+          if (item.needModule === '') {
+            return true;
+          } else if (this.$store.getters.currentUser.role === 'publisher') {
+            return this.$store.getters.currentUser.modules.includes('course');
+          } else {
+            return true;
+          }
+        }
+        return false;
+      });
     }
   },
-  created() {
-    this.isPromoter = this.$store.getters.currentUser.role == 'promoter';
-    this.isRebens =
-      this.$store.getters.currentUser.role == 'master' ||
-      this.$store.getters.currentUser.role == 'administratorRebens' ||
-      this.$store.getters.currentUser.role == 'publisherRebens';
-    this.isPublisher =
-      this.$store.getters.currentUser.role == 'publisher' ||
-      this.$store.getters.currentUser.role == 'publisherRebens';
-    this.isPartnerApprover =
-      this.$store.getters.currentUser.role == 'partnerApprover';
-    this.isPartnerAdmin =
-      this.$store.getters.currentUser.role == 'partnerAdministrator';
-    this.showCourses =
-      this.isRebens ||
-      this.$store.getters.currentUser.modules.includes('course');
-    this.showFreeCourses =
-      this.isRebens ||
-      this.$store.getters.currentUser.modules.includes('freeCourse');
-    this.showOperationPartner = this.$store.getters.currentUser.modules.includes(
-      'closed-partner'
-    );
+  methods: {
+    signout() {
+      this.$store.dispatch('removeUser');
+      this.$router.push('/login');
+    }
   }
 };
 </script>
