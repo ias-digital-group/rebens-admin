@@ -1,4 +1,5 @@
 @import 'variables';
+@import 'patterns/colors';
 
 .wrapper {
     font-family: $font-family-base;
@@ -231,11 +232,6 @@
         &.bt-square {
             width: 48px;
             text-align: center;
-            background-color: $white;
-            color: $light-blue;
-        }
-        &.bt-orange{
-            color:$orange;
         }
     }
     .input-post-icon{
@@ -379,6 +375,77 @@
                 &:nth-child(even) {
                     background-color: $white;
                 }
+            }
+        }
+    }
+    .box-pagination{
+        height: 80px;
+        width: 100%;
+        border-radius: 0 0 10px 10px;
+        background-color: $white;
+        padding: 16px;
+        .box-qty{
+            a{
+                margin-right:8px;
+            }
+        }
+        .box-pag{
+            width:336px;
+            height:48px;
+            text-align: right;
+            display: flex;
+            margin: 0;
+            padding: 0;
+            li{
+                list-style:none;
+                margin-right:8px;
+                cursor: pointer;
+                &.bt-arrow{
+                    width:24px;
+                    height:24px;
+                    margin: 12px 8px 12px 0;
+                    text-align: center;
+                }
+                &:last-child{
+                    margin-right:0;
+                }
+                &.disabled{
+                    cursor: not-allowed;
+                }
+            }
+        }
+        .change-page{
+            border:1px solid $light-gray;
+            width:148px;
+            height:48px;
+            border-radius:5px;
+            display:flex;
+            input{
+                height: 46px;
+                line-height: 46px;
+                border:none;
+                color:$light-blue;
+                font-size: $font-size-medium;
+                font-weight: $font-weight-black;
+                width:48px;
+                text-align: right;
+                margin-right: 4px;
+            }
+            span{
+                color:$dark-gray;
+                font-size: $font-size-medium;
+                font-weight: $font-weight-black;
+                line-height: 46px;
+                width:48px;
+            }
+            i{
+                width: 48px;
+                height: 48px;
+                line-height: 48px;
+                margin: -1px;
+                background-color:$light-gray;
+                border-radius:5px;
+                text-align:center;
             }
         }
     }

@@ -9,8 +9,8 @@ export default {
       pagination: {
         perPage: 10,
         currentPage: 1,
-        perPageOptions: [5, 10, 25, 50],
-        total: 0
+        totalPages: 0,
+        totalItems: 0
       },
       tableData: [],
       modal: {
@@ -59,6 +59,8 @@ export default {
     if (c) {
       this.pagination.perPage = c.pagination.perPage;
       this.pagination.currentPage = c.pagination.currentPage;
+      this.pagination.totalPages = c.pagination.totalPages;
+      this.pagination.totalItems = c.pagination.totalItems;
       this.searchQuery = c.searchQuery;
       this.sortField = c.sortField;
       this.sortOrder = c.sortOrder;

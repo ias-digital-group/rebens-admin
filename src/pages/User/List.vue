@@ -11,12 +11,12 @@
             </svg>
           </i>
         </div>
-        <button type="button" class="bt bt-square">
+        <button type="button" class="bt bt-square bg-white c-primay">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M23.8975 0.66381C24.0904 1.12904 24.011 1.5262 23.6592 1.85526L15.268 10.2465V22.8759C15.268 23.3525 15.0467 23.6872 14.6042 23.8801C14.4567 23.9369 14.3148 23.9652 14.1787 23.9652C13.8723 23.9652 13.617 23.8575 13.4127 23.6419L9.05541 19.2845C8.83981 19.0689 8.73201 18.8136 8.73201 18.5186V10.2465L0.34077 1.85526C-0.0109926 1.5262 -0.0904229 1.12904 0.102479 0.66381C0.295381 0.22127 0.630123 0 1.10671 0H22.8933C23.3699 0 23.7046 0.22127 23.8975 0.66381Z" fill="#41B0CE"/>
           </svg>
         </button>
-        <base-link to="/users/new" class="bt bt-square bt-white" >
+        <base-link to="/users/new" class="bt bt-square bg-white c-primay" >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.5 9H15V1.5C15 0.675 14.325 0 13.5 0H10.5C9.675 0 9 0.675 9 1.5V9H1.5C0.675 9 0 9.675 0 10.5V13.5C0 14.325 0.675 15 1.5 15H9V22.5C9 23.325 9.675 24 10.5 24H13.5C14.325 24 15 23.325 15 22.5V15H22.5C23.325 15 24 14.325 24 13.5V10.5C24 9.675 23.325 9 22.5 9Z" fill="#41B0CE"/>
           </svg>
@@ -123,7 +123,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in tableItems" :key="item.id">
+          <tr v-for="item in tableData" :key="item.id">
             <td class="td-flex">
               <div class="avatar">
                 <span>FB</span>
@@ -180,81 +180,16 @@
           
         </tbody>
       </table>
-<el-table
-        ref="table"
-        :data="tableData"
-        v-loading="loading"
-        hidden
-        :empty-text="$t('pages.users.emptytext')"
-        @sort-change="onSortChanged"
-        :default-sort="{ prop: sortField, order: sortOrder }"
-      >
-        <el-table-column
-          v-for="column in tableColumns"
-          :key="column.label"
-          :min-width="column.minWidth"
-          :prop="column.prop"
-          :label="column.label"
-          sortable="custom"
-        >
-        </el-table-column>
-        <el-table-column
-          :min-width="135"
-          align="right"
-          :label="$t('pages.users.grid.actions')"
-        >
-          <div slot-scope="props">
-            <base-button
-              @click.native="handleResendPassword(props.$index, props.row)"
-              class="edit btn-link"
-              type="info"
-              size="sm"
-              icon
-              title="Reenviar senha"
-            >
-              <i class="tim-icons icon-send"></i>
-            </base-button>
-            <base-button
-              @click.native="handleEdit(props.$index, props.row)"
-              class="edit btn-link"
-              type="info"
-              size="sm"
-              icon
-              title="Editar"
-            >
-              <i class="tim-icons icon-pencil"></i>
-            </base-button>
-            <base-button
-              @click.native="handleDelete(props.$index, props.row)"
-              class="remove btn-link"
-              type="danger"
-              size="sm"
-              icon
-              title="Excluir"
-            >
-              <i class="tim-icons icon-simple-remove"></i>
-            </base-button>
-          </div>
-        </el-table-column>
-      </el-table>
-    </div>
-    <div
-      slot="footer"
-      class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
-    >
-      <div>
-        <p class="card-category"></p>
-      </div>
-      <base-pagination
-        class="pagination-no-border"
+      <pagination
+        class="box-pagination"
         v-model="pagination.currentPage"
         :per-page="pagination.perPage"
-        :total="total"
+        :total-items="pagination.totalItems"
+        :total-pages="pagination.totalPages"
         v-on:input="onPageChanged"
       >
-      </base-pagination>
+      </pagination>
     </div>
-    <!-- Classic Modal -->
     <modal :show.sync="modal.visible" headerClasses="justify-content-center">
       <h4 slot="header" class="title title-up">Remover usuário</h4>
       <form
@@ -289,14 +224,14 @@
 </template>
 <script>
 import { Table, TableColumn, Select, Option } from 'element-ui';
-import { BasePagination, Modal } from 'src/components';
+import { Modal, Pagination } from 'src/components';
 import userService from '../../services/User/userService';
 import listPage from '../../mixins/listPage';
 export default {
   mixins: [listPage],
   components: {
     Modal,
-    BasePagination,
+    Pagination,
     [Select.name]: Select,
     [Option.name]: Option,
     [Table.name]: Table,
@@ -374,7 +309,6 @@ export default {
       userService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;
-          self.tableItems = response.data;
           self.savePageSettings(self, response.totalItems);
           self.$data.loading = false;
         },

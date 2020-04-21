@@ -35,6 +35,7 @@ import LoadingPanel from './LoadingPanel.vue';
 //import AsyncWorldMap from './WorldMap/AsyncWorldMap.vue';
 
 import BasePagination from './BasePagination.vue';
+import Pagination from './Pagination.vue';
 
 import BaseRouterLink from './BaseRouterLink.vue';
 import SidebarPlugin from './SidebarPlugin';
@@ -51,6 +52,7 @@ export {
   BaseAlert,
   BaseProgress,
   BasePagination,
+  Pagination,
   BaseRadio,
   BaseInput,
   TagsInput,
