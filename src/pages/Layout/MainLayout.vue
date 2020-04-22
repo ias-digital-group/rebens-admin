@@ -8,11 +8,12 @@
             </div>
             <div class="user-box" :class="{on: showMenu}" @mouseover="showMenu = true" @mouseleave="showMenu=false">
               <div class="text">
-                <span>Israel Silva</span>
-                <strong>Master</strong>
+                <span>{{ fullName }}</span>
+                <strong>{{ roleName }}</strong>
               </div>
               <div class="avatar">
-                <p>IS</p>
+                <p v-if="!picture || picture === ''">{{ initials }}</p>
+                <img v-else :src="picture" :alt="fullName">
               </div>
               <div class="user-menu">
                 <ul>
@@ -48,6 +49,7 @@
     </div>
 </template>
 <script>
+import '../../assets/sass/app.scss';
 
 export default {
   data() {
@@ -67,7 +69,7 @@ export default {
           subitens: [
             { name: 'Benefícios', path: '/benefits', active: false, roles: 'master,administratorRebens,publisherRebens,publisher' },
             { name: 'Categorias', path: '/benefits/categories', active: false, roles: 'master,administratorRebens,publisherRebens' },
-            { name: 'Parceiros', path: '/benefits/partners', active: false, roles: 'master,administratorRebens,publisherRebens' }
+            { name: 'Parceiros', path: '/benefits/partner', active: false, roles: 'master,administratorRebens,publisherRebens' }
           ]
         },
         { name: 'Banners', path: '/banners', active: false, roles: 'master,administratorRebens,publisherRebens,publisher', needModule: '', subitens: [] },
@@ -108,6 +110,18 @@ export default {
     };
   },
   computed: {
+    picture() {
+      return this.$store.getters.currentUser.picture;
+    },
+    roleName() {
+      return this.$store.getters.currentUser.roleName;
+    },
+    fullName() {
+      return this.$store.getters.currentUser.name + ' ' + this.$store.getters.currentUser.surname;
+    },
+    initials() {
+      return this.$store.getters.currentUser.initials;
+    },
     filteredMenu() {
       return this.menuItens.filter( item => {
         if (item.roles === '') {

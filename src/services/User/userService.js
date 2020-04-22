@@ -94,5 +94,19 @@ export default {
         }
       );
     });
+  },
+  toggleActive: id => {
+    return new Promise((resolve, reject) => {
+      HTTP.post(
+        config.apiEndpoints.userUri.concat(`${id}/ToggleActive`)
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
   }
 };

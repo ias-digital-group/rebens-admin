@@ -1,29 +1,56 @@
 .bg-light-blue{
     background-color: $light-blue !important;
+    &:hover{
+        background-color: $light-blue !important;
+    }
 }
-.bg-white{
+.bg-white-2{
     background-color: $white !important;
+    &:hover{
+        background-color: $white !important;
+    }
 }
 .bg-light-blue-5 {
     background-color: $light-blue-5 !important;
+    &:hover{
+        background-color: $light-blue-5 !important;
+    }
 }
 .bg-green{
     background-color: $green !important;
+    &:hover{
+        background-color: $green !important;
+    }
 }
 .bg-orange{
     background-color: $orange !important;
+    &:hover{
+        background-color: $orange !important;
+    }
 }
 .bg-dark-gray{
     background-color:$dark-gray !important;
+    &:hover{
+        background-color: $dark-gray !important;
+    }
 }
 .bg-blue{
     background-color:$blue !important;
+    &:hover{
+        background-color: $blue !important;
+    }
 }
 .bg-light-gray{
     background-color: $light-gray !important;
+    &:hover{
+        background-color: $light-gray !important;
+    }
 }
 .bg-red{
     background-color: $red !important;
+    &:hover{
+        background-color: $red !important;
+    }
 }
 
 .c-light-blue{

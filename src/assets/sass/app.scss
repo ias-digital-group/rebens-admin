@@ -1,5 +1,6 @@
 @import 'variables';
 @import 'patterns/colors';
+@import 'patterns/elements';
 
 .wrapper {
     font-family: $font-family-base;
@@ -8,6 +9,7 @@
     background-color: $bg-body;
     width: 100%;
     height: 100%;
+    outline: none;
     header {
         width: 100%;
         height: 96px;
@@ -46,12 +48,17 @@
                     height: 48px;
                     background-color: $light-blue;
                     color:$white;
-                    font-size: 30px;
+                    font-size: 20px;
                     font-weight: $font-weight-bold;
                     margin: 0;
                     padding: 0;
                     border:0;
                     text-align: center;
+                }
+                img{
+                    width: 48px;
+                    height: 48px;
+                    border-radius: 24px;
                 }
             }
             .text{
@@ -229,6 +236,7 @@
         border:0;
         margin:0;
         padding:0;
+        outline: none;
         &.bt-square {
             width: 48px;
             text-align: center;
@@ -267,10 +275,11 @@
     padding: 0 32px 32px;
     .list-header{
         width:100%;
-        height:96px;
+        height:auto;
+        margin: 32px 0 24px 0;
         h2{
             line-height:48px;
-            margin: 32px 0 24px 0;
+            margin: 0;
             display: inline-block;
             font-size: $font-size-title;
             color: $light-blue;
@@ -279,7 +288,7 @@
         }
         .box-actions{
             float:right;
-            margin: 32px 0 24px 0;
+            margin: 0;
             .search{
                 font-size: $font-size-medium;
                 font-weight: $font-weight-medium;
@@ -289,14 +298,41 @@
                     color:$dark-gray;
                     font-size: $font-size-medium;
                     font-weight: $font-weight-medium;
+                    outline: none;
+                }
+            }
+            .filter{
+                width: 64px;
+                height: 64px;
+                display: inline-block;
+                padding: 8px;
+                margin: -8px 8px;
+                border-radius: 5px 5px 0 0;
+                background-color: transparent;
+                &.active{
+                    background-color: $light-blue-5;
                 }
             }
             .bt{
-                margin-left: 16px;
+                cursor:pointer;
             }
         }
         .filters{
-            display:none;
+            padding: 16px;
+            width: 100%;
+            height: auto;
+            display: flex;
+            flex-direction: row;
+            background-color: $light-blue-5;
+            margin-top:9px;
+            border-radius:5px;
+            .v-select{
+                width: 23%;
+                margin-left: 2%;
+                &.no-margin{
+                    margin:0;
+                }
+            }
         }
     }
     table{
@@ -360,12 +396,13 @@
                     }
                     &.actions{
                         margin: 24px 0;
-                        button{
+                        .bt{
                             height:24px;
                             width: 24px;
                             margin-right: 24px;
                             display: inline-flex;
                             background:transparent;
+                            cursor:pointer;
                         }
                     }
                     &.td-flex{
@@ -384,68 +421,96 @@
         border-radius: 0 0 10px 10px;
         background-color: $white;
         padding: 16px;
+        display:flex;
+        justify-content: space-between;
         .box-qty{
             a{
                 margin-right:8px;
+                cursor:pointer;
+                &.bg-light-blue{
+                    cursor: default;
+                    pointer-events: none;
+                }
             }
         }
-        .box-pag{
-            width:336px;
-            height:48px;
-            text-align: right;
+        .box-right{
             display: flex;
-            margin: 0;
-            padding: 0;
-            li{
-                list-style:none;
-                margin-right:8px;
-                cursor: pointer;
-                &.bt-arrow{
-                    width:24px;
-                    height:24px;
-                    margin: 12px 8px 12px 0;
-                    text-align: center;
-                }
-                &:last-child{
-                    margin-right:0;
-                }
-                &.disabled{
-                    cursor: not-allowed;
+            justify-content: flex-end;
+            .box-pag{
+                width:336px;
+                height:48px;
+                display: flex;
+                justify-content: flex-end;
+                margin: 0 16px 0 0;
+                padding: 0;
+                li{
+                    list-style:none;
+                    margin-right:8px;
+                    cursor: pointer;
+                    &.bt-arrow{
+                        width:24px;
+                        height:24px;
+                        margin: 12px 8px 12px 0;
+                        text-align: center;
+                    }
+                    &:last-child{
+                        margin-right:0;
+                    }
+                    &.disabled{
+                        cursor: not-allowed;
+                    }
+                    &.active{
+                        pointer-events: none;
+                        cursor:default;
+                        a{
+                            pointer-events: none;
+                            cursor:default;
+                        }
+                    }
                 }
             }
-        }
-        .change-page{
-            border:1px solid $light-gray;
-            width:148px;
-            height:48px;
-            border-radius:5px;
-            display:flex;
-            input{
-                height: 46px;
-                line-height: 46px;
-                border:none;
-                color:$light-blue;
-                font-size: $font-size-medium;
-                font-weight: $font-weight-black;
-                width:48px;
-                text-align: right;
-                margin-right: 4px;
-            }
-            span{
-                color:$dark-gray;
-                font-size: $font-size-medium;
-                font-weight: $font-weight-black;
-                line-height: 46px;
-                width:48px;
-            }
-            i{
-                width: 48px;
-                height: 48px;
-                line-height: 48px;
-                margin: -1px;
-                background-color:$light-gray;
+            .change-page{
+                border:1px solid $light-gray;
+                width:148px;
+                height:48px;
                 border-radius:5px;
-                text-align:center;
+                display:flex;
+                input{
+                    height: 46px;
+                    line-height: 46px;
+                    border:none;
+                    color:$light-blue;
+                    font-size: $font-size-medium;
+                    font-weight: $font-weight-black;
+                    width:48px;
+                    text-align: right;
+                    margin-right: 4px;
+                    border-radius: 5px;
+                    outline: none;
+                    &.disabled{
+                        pointer-events: none;
+                    }
+                }
+                span{
+                    color:$dark-gray;
+                    font-size: $font-size-medium;
+                    font-weight: $font-weight-black;
+                    line-height: 46px;
+                    width:48px;
+                }
+                i{
+                    width: 48px;
+                    height: 48px;
+                    line-height: 48px;
+                    margin: -1px;
+                    background-color:$light-gray;
+                    border-radius:5px;
+                    text-align:center;
+                    cursor: pointer;
+                    &.disabled{
+                        cursor: not-allowed;
+                    }
+                }
             }
         }
     }
