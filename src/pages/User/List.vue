@@ -1,6 +1,6 @@
 <template>
   <div class="list-box">
-    <div class="list-header">
+    <div class="page-header">
       <h2>{{ $t('pages.users.title') }}</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
