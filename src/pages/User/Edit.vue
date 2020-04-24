@@ -81,10 +81,12 @@
                 :key="model.roles"
                 v-model="model.roles"
                 placeholder="Papel"
-                :class="{'has-error': customErrors.get('roles')}"
+                :class="{ 'has-error': customErrors.get('roles') }"
               >
               </v-select>
-              <label v-if="customErrors.get('roles')" class="ias-error">{{ customErrors.get('roles') }}</label>
+              <label v-if="customErrors.get('roles')" class="ias-error">{{
+                customErrors.get('roles')
+              }}</label>
             </div>
           </div>
           <div class="ias-row">
@@ -94,10 +96,13 @@
                 :reduce="op => op.code"
                 :key="model.idOperation"
                 v-model="model.idOperation"
+                :class="{ 'has-error': customErrors.get('operation') }"
                 placeholder="Clube"
               >
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">{{ customErrors.get('operation') }}</label>
+              <label v-if="customErrors.get('operation')" class="ias-error">{{
+                customErrors.get('operation')
+              }}</label>
             </div>
           </div>
           <div class="ias-row">
@@ -293,25 +298,32 @@ export default {
       if (!self.model.doc) self.customErrors.set('doc', 'Campo obrigatório');
       if (!self.model.name) self.customErrors.set('name', 'Campo obrigatório');
       else if (!self.model.name.length > 200)
-         self.customErrors.set('name', 'Máximo 200 caracteres');
-      if (!self.model.surname) self.customErrors.set('surname', 'Campo obrigatório');
+        self.customErrors.set('name', 'Máximo 200 caracteres');
+      if (!self.model.surname)
+        self.customErrors.set('surname', 'Campo obrigatório');
       else if (!self.model.surname.length > 200)
-         self.customErrors.set('surname', 'Máximo 200 caracteres');
-      if (!self.model.email) self.customErrors.set('email', 'Campo obrigatório');
+        self.customErrors.set('surname', 'Máximo 200 caracteres');
+      if (!self.model.email)
+        self.customErrors.set('email', 'Campo obrigatório');
       else if (!self.reg.test(self.model.email))
-         self.customErrors.set('email', 'E-mail inválido');
+        self.customErrors.set('email', 'E-mail inválido');
       else if (!self.model.email.length > 300)
-         self.customErrors.set('email', 'Máximo 300 caracteres');
+        self.customErrors.set('email', 'Máximo 300 caracteres');
       if (self.viewAction === 'new') {
-        if (!self.emailConfirm) self.customErrors.set('email-confirm', 'Campo obrigatório');
+        if (!self.emailConfirm)
+          self.customErrors.set('email-confirm', 'Campo obrigatório');
         else if (!self.reg.test(self.emailConfirm))
           self.customErrors.set('email-confirm', 'E-mail inválido');
         else if (!self.emailConfirm.length > 300)
           self.customErrors.set('email-confirm', 'Máximo 300 caracteres');
-        else if(self.emailConfirm !== self.model.email)
-          self.customErrors.set('email-confirm', 'Este campo deve ser igual ao E-mail');
+        else if (self.emailConfirm !== self.model.email)
+          self.customErrors.set(
+            'email-confirm',
+            'Este campo deve ser igual ao E-mail'
+          );
       }
-      if (self.model.roles == '') self.customErrors.set('roles', 'Campo obrigatorio');
+      if (self.model.roles == null || self.model.roles === '')
+        self.customErrors.set('roles', 'Campo obrigatorio');
       if (
         self.isRebens &&
         (self.model.roles === 'publisher' ||
@@ -323,7 +335,7 @@ export default {
       )
         self.customErrors.set('operation', 'Campo obrigatório');
 
-      if (self.customErrors.keys.length === 0) {
+      if (self.customErrors.size === 0) {
         self.submitLoading = true;
         if (self.image) {
           helperService.uploadFile(self.image).then(

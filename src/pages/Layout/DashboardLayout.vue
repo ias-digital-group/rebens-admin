@@ -193,8 +193,7 @@
         ></sidebar-item>
         <sidebar-item
           v-show="!isPublisher && !isPartnerAdmin"
-          :link="{ name: $t('sidebar.report'), 
-          icon: 'fas fa-chart-bar' }"
+          :link="{ name: $t('sidebar.report'), icon: 'fas fa-chart-bar' }"
         >
           <sidebar-item
             :link="{

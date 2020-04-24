@@ -66,7 +66,11 @@
           <tr v-for="item in tableData" :key="item.id">
             <td class="td-flex">
               <div class="avatar">
-                <img v-if="item.picture && item.picture !== ''" :src="item.picture" :alt="item.name">
+                <img
+                  v-if="item.picture && item.picture !== ''"
+                  :src="item.picture"
+                  :alt="item.name"
+                />
                 <span v-else>{{ item.initials }}</span>
               </div>
               <div class="two-lines">
@@ -85,39 +89,42 @@
             </td>
             <td>
               <div class="actions">
-              <button
-                @click="toggleActive(item)"
-                type="button"
-                :title="item.active ? 'Inativar' : 'Ativar'"
-                class="bt"
-                :class="{ 'c-green': item.active, 'c-light-gray': !item.active }"
-              >
-                <i class="icon-icon-check"></i>
-              </button>
-              <button
-                @click="handleResendPassword(item)"
-                type="button"
-                title="Reenviar validação"
-                class="bt c-orange"
-              >
-                <i class="icon-icon-send"></i>
-              </button>
-              <button
-                @click="handleEdit(item)"
-                type="button"
-                title="Editar"
-                class="bt c-light-blue"
-              >
-                <i class="icon-icon-edit"></i>
-              </button>
-              <button
-                @click="handleDelete(item)"
-                type="button"
-                title="apagar"
-                class="bt c-red"
-              >
-                <i class="icon-icon-delete"></i>
-              </button>
+                <button
+                  @click="toggleActive(item)"
+                  type="button"
+                  :title="item.active ? 'Inativar' : 'Ativar'"
+                  class="bt"
+                  :class="{
+                    'c-green': item.active,
+                    'c-light-gray': !item.active
+                  }"
+                >
+                  <i class="icon-icon-check"></i>
+                </button>
+                <button
+                  @click="handleResendPassword(item)"
+                  type="button"
+                  title="Reenviar validação"
+                  class="bt c-orange"
+                >
+                  <i class="icon-icon-send"></i>
+                </button>
+                <button
+                  @click="handleEdit(item)"
+                  type="button"
+                  title="Editar"
+                  class="bt c-light-blue"
+                >
+                  <i class="icon-icon-edit"></i>
+                </button>
+                <button
+                  @click="handleDelete(item)"
+                  type="button"
+                  title="apagar"
+                  class="bt c-red"
+                >
+                  <i class="icon-icon-delete"></i>
+                </button>
               </div>
             </td>
           </tr>
@@ -250,7 +257,6 @@ export default {
           ? self.operationPartnerFilter
           : ''
       };
-      console.log('filters', request);
       this.$data.loading = true;
       userService.findAll(request).then(
         response => {

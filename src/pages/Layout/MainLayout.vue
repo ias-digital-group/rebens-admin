@@ -22,7 +22,11 @@
         </div>
         <div class="user-menu">
           <ul>
-            <li><router-link :to="`/users/${userId}/edit/`">Editar Meu perfil</router-link></li>
+            <li>
+              <router-link :to="`/users/${userId}/edit/`"
+                >Editar Meu perfil</router-link
+              >
+            </li>
             <li>
               <router-link to="/account/changePassword"
                 >Alterar Senha</router-link
@@ -311,7 +315,7 @@ export default {
         this.$store.getters.currentUser.surname
       );
     },
-    userId(){
+    userId() {
       return this.$store.getters.currentUser.id;
     },
     initials() {

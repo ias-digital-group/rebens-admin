@@ -29,7 +29,7 @@
       </template>
     </slot>
     <div v-if="hasIcon" class="ias-icon-holder">
-        <i :class="iconName"></i>
+      <i :class="iconName"></i>
     </div>
     <label v-if="error" class="ias-error">{{ error }}</label>
   </div>
