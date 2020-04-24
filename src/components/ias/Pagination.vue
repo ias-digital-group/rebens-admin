@@ -100,10 +100,10 @@
         <input
           type="text"
           v-model="currentPage"
-          :class="{ disabled: value === totalPages }"
+          :class="{ disabled: totalPages === 1 }"
         />
         <span>/ {{ totalPages }}</span>
-        <i @click="goToPage" :class="{ disabled: value === totalPages }">
+        <i @click="goToPage" :class="{ disabled: totalPages === 1 }">
           <svg
             width="20"
             height="20"

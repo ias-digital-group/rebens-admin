@@ -1,8 +1,28 @@
 <template>
   <div class="edit-box">
     <div class="page-header">
-      <h2>{{ $t('pages.users.title') }}</h2>
+      <h2><span v-if="viewAction === 'new'">Cadastro Usuário</span><span v-else>Editar Usuário</span></h2>
       <div class="box-actions">
+        <button @click="resendValidation"
+                type="button"
+                class="bt bt-square bg-white-2 c-orang">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10.4102 16.4991L8 19.3642V24L21 7L10.4102 16.4991Z"
+              fill="#FFC229"
+            />
+            <path
+              d="M0 12.1765L7.476 16.2218H7.484L18.6667 6.76471L10.3667 16.7183L12 18.6449L20 23L24 0L0 12.1765Z"
+              fill="#FFC229"
+            />
+          </svg>
+        </button>
         <base-link to="/users" class="bt bt-square bg-white-2 c-primay">
           <svg width="15" height="24" viewBox="0 0 15 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M0.676452 10.8118L11.5446 0.492523C12.236 -0.16425 13.3569 -0.16425 14.0479 0.492523C14.7389 1.14871 14.7389 2.21299 14.0479 2.86912L4.43122 12.0001L14.0476 21.1308C14.7386 21.7873 14.7386 22.8515 14.0476 23.5077C13.3565 24.1641 12.2357 24.1641 11.5443 23.5077L0.676171 13.1882C0.330638 12.8599 0.158067 12.4302 0.158067 12.0002C0.158067 11.57 0.330975 11.1399 0.676452 10.8118Z" fill="#41B0CE"/>
@@ -10,149 +30,148 @@
         </base-link>
       </div>
     </div>
-      <card :title="$t('pages.users.title')">
-        <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
-          <div class="row">
-            <label class="col-md-3 col-form-label">Nome</label>
-            <div class="col-md-9">
-              <base-input
-                required
-                v-model="model.name"
-                type="text"
-                name="name"
-                placeholder="Nome"
-                maxlength="300"
-              ></base-input>
-              <label v-show="customErrors.includes('name')" class="text-danger"
-                >Este campo é obrigatório</label
+    <div class="ias-card">
+      <form v-loading="formLoading" @submit.prevent>
+        <div class="form-left">
+          <div class="ias-row">
+            <custom-input
+              :required="true"
+              v-model="model.name"
+              type="text"
+              name="name"
+              label="Nome"
+              maxlength="200"
+            ></custom-input>
+            <custom-input
+              :required="true"
+              v-model="model.surname"
+              type="text"
+              name="surname"
+              label="Sobrenome"
+              maxlength="200"
+            ></custom-input>
+          </div>
+          <div class="ias-row">
+            <custom-input
+              :required="true"
+              v-model="model.email"
+              type="text"
+              name="email"
+              label="E-mail"
+              maxlength="500"
+            ></custom-input>
+          </div>
+          <div class="ias-row" v-if="viewAction === 'new'">
+            <custom-input
+              :required="true"
+              v-model="emailConfirm"
+              type="text"
+              name="emailConfirm"
+              label="Confirmação E-mail"
+              maxlength="500"
+            ></custom-input>
+          </div>
+          <div class="ias-row">
+            <custom-input
+              :required="true"
+              v-model="model.doc"
+              type="text"
+              name="doc"
+              label="CPF"
+              :inputMask="['###.###.###-##']"
+              maxlength="50"
+            ></custom-input>
+            <v-select
+                :options="roles"
+                :reduce="op => op.code"
+                :key="model.roles"
+                v-model="model.roles"
+                placeholder="Papel"
               >
-              <label
-                v-show="customErrors.includes('name-length')"
-                class="text-danger"
-                >Este campo aceita no máximo 300 caracteres</label
-              >
-            </div>
+            </v-select>
           </div>
-          <div class="row">
-            <label class="col-md-3 col-form-label">Email</label>
-            <div class="col-md-9">
-              <base-input
-                required
-                v-model="model.email"
-                type="email"
-                name="email"
-                placeholder="Email"
-                maxlength="300"
-              ></base-input>
-              <label v-show="customErrors.includes('email')" class="text-danger"
-                >Este campo é obrigatório</label
-              >
-              <label
-                v-show="customErrors.includes('email-length')"
-                class="text-danger"
-                >Este campo aceite no máximo 300 caracteres</label
-              >
-              <label
-                v-show="customErrors.includes('email-format')"
-                class="text-danger"
-                >O E-mail digitado não é válido</label
-              >
-            </div>
-          </div>
-          <div class="row">
-            <label class="col-md-3 col-form-label">Papel</label>
-            <div class="col-md-3">
-              <div class="form-group">
-                <v-select
-                  :options="roles"
-                  :reduce="op => op.code"
-                  :key="model.roles"
-                  v-model="model.roles"
-                >
-                </v-select>
-                <label
-                  v-show="customErrors.includes('roles')"
-                  class="text-danger"
-                  >Este campo é obrigatório</label
-                >
-              </div>
-            </div>
-          </div>
-          <div class="row" v-if="showOperations">
-            <label class="col-md-3 col-form-label">Operação</label>
-            <div class="col-md-3">
-              <div class="form-group">
-                <v-select
-                  :options="operations"
-                  :reduce="op => op.code"
-                  :key="model.idOperation"
-                  v-model="model.idOperation"
-                >
-                </v-select>
-                <label
-                  v-show="customErrors.includes('operation')"
-                  class="text-danger"
-                  >Este campo é obrigatório</label
-                >
-              </div>
-            </div>
-          </div>
-          <div class="row" v-if="showOperationPartners">
-            <label class="col-md-3 col-form-label">Parceiro da operação</label>
-            <div class="col-md-3">
-              <div class="form-group">
-                <v-select
-                  :options="operationPartners"
-                  :reduce="op => op.code"
-                  :key="model.idOperationPartner"
-                  v-model="model.idOperationPartner"
-                >
-                </v-select>
-                <label
-                  v-show="customErrors.includes('operationPartner')"
-                  class="text-danger"
-                  >O campo Parceiro da Operação é obrigatório</label
-                >
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <label class="col-md-3 col-form-label"></label>
-            <div class="col-md-9">
-              <div class="form-group">
-                <base-checkbox v-model="model.active">Ativo</base-checkbox>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div
-              class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
+          <div class="ias-row">
+            <v-select
+              :options="operations"
+              :reduce="op => op.code"
+              :key="model.idOperation"
+              v-model="model.idOperation"
+              placeholder="Clube"
             >
-              <base-link class="btn mt-3 btn-simple btn-primary" to="/users"
-                >Voltar</base-link
-              >
-              <base-button
-                class="mt-3"
-                native-type="button"
-                type="info"
-                @click="resendValidation"
-                :loading="sendingLoading"
-              >
-                Reenviar o email de validação
-              </base-button>
-              <base-button
-                class="mt-3 pull-right"
+            </v-select>
+          </div>
+          <div class="ias-row">
+            <v-select 
+              :options="operationPartners"
+              :reduce="op => op.code"
+              :key="model.idOperationPartner"
+              v-model="model.idOperationPartner"
+              placeholder="Empresa"
+            >
+            </v-select>
+            <custom-input
+              v-model="model.phoneMobile"
+              type="text"
+              name="phoneMobile"
+              label="Telefone"
+              maxlength="50"
+              :inputMask="['(##) ####-####', '(##) #####-####']"
+            ></custom-input>
+          </div>
+          <div class="ias-row">
+            <custom-input
+              v-model="model.phoneComercialMobile"
+              type="text"
+              name="phoneComercialMobile"
+              label="Celular Comercial"
+              maxlength="50"
+              :inputMask="['(##) ####-####', '(##) #####-####']"
+            ></custom-input>
+            <div class="phone-branch">
+              <custom-input
+                v-model="model.phoneComercial"
+                type="text"
+                name="phoneComercial"
+                label="Telefone Comercial"
+                maxlength="50"
+                :inputMask="['(##) ####-####']"
+              ></custom-input>
+              <custom-input
+                v-model="model.phoneComercialBranch"
+                type="text"
+                name="phone"
+                label="Ramal"
+                maxlength="50"
+              ></custom-input>
+            </div>
+          </div>
+          <div class="ias-row">
+            <div class="actions">
+              <button
+                class="bt bg-green c-white"
                 native-type="submit"
                 type="info"
                 @click.native.prevent="validate"
-                :loading="submitLoading"
               >
-                Salvar
-              </base-button>
+                <span v-if="viewAction === 'new'">Cadastrar</span>
+                <span v-else>Salvar</span>
+              </button>
+
+              <ias-checkbox v-model="model.active">Ativo</ias-checkbox>
+            </div>
+            <div class="div-spacer">
             </div>
           </div>
-        </form>
-      </card>
+        </div>
+        <div class="form-right">
+          <ias-image-upload
+              @change="onImageChange"
+              img-size="(100x100)"
+              :src="model.picture"
+            />
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 <script>
@@ -184,27 +203,24 @@ export default {
       isPartnerUser: false,
       customErrors: [],
       roles: [],
+      image: null,
+      emailConfirm: '',
       reg: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
       model: {
+        id: 0,
         name: '',
+        surname: '',
+        doc: '',
+        phoneComercial: '',
+        phoneComercialBranch: '',
+        phoneComercialMobile: '',
+        phoneMobile: '',
         email: '',
         status: false,
         idOperation: null,
         idOperationPartner: null,
-        roles: ''
-      },
-      modelValidations: {
-        name: {
-          required: true,
-          max: 300
-        },
-        email: {
-          required: true,
-          max: 300
-        },
-        roles: {
-          required: true
-        }
+        roles: '',
+        picture: ''
       },
       operations: [],
       operationPartners: []
@@ -235,6 +251,9 @@ export default {
     }
   },
   methods: {
+    onImageChange(file){
+      this.image = file;
+    },
     onOperationChange() {
       const self = this;
       if (self.isRebens) {

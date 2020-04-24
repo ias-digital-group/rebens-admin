@@ -1,10 +1,204 @@
+.ias-radio{
+    position: relative;
+    height: 56px;
+    border: none;
+    background-color: $bg-side-menu-30;
+    flex-grow: 1;
+    margin-right: 24px;
+    flex-basis: 100%;
+    padding:12px;
+    border-radius: 28px;
+    label{
+        padding-left: 48px;
+        line-height: 32px;
+        height: 32px;
+        display: block;
+        position: relative;
+        color:$dark-gray;
+        font-size: $font-size-large;
+        font-weight: $font-weight-medium;
+        input[type=radio]{
+            box-sizing: border-box;
+            padding: 0;
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            opacity: 0;
+            outline: none;
+        }
+        span{
+            cursor: pointer;
+            &::before{
+                content: ' ';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 32px;
+                height: 32px;
+                background-color: $white;
+                border-radius: 16px;
+                border: 1px solid $light-gray;
+            }
+            &::after{
+                content:' ';
+                position: absolute;
+                top: 8px;
+                left: 8px;
+                width: 16px;
+                height: 16px;
+                background-color: $light-blue;
+                border-radius: 8px;
+                opacity: 0;
+            }
+        }
+    }
+    &:hover{
+        label{
+            span{
+                &::before{
+                    border-color: $light-blue;
+                }
+            }
+        }
+    }
+}
+.ias-radio label input[type=radio]:checked + span::after {
+    opacity: 1;
+}
+.ias-check{
+    position: relative;
+    height: 56px;
+    border: none;
+    background-color: $bg-side-menu-30;
+    flex-grow: 1;
+    margin-left: 24px;
+    flex-basis: 100%;
+    padding:12px;
+    border-radius: 5px;
+    overflow: hidden;
+    label{
+        padding-left: 48px;
+        line-height: 32px;
+        height: 32px;
+        display: block;
+        position: relative;
+        color: $dark-gray-60;
+        font-size: $font-size-large;
+        font-weight: $font-weight-medium;
+
+        input[type=checkbox]{
+            box-sizing: border-box;
+            padding: 0;
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            opacity: 0;
+            outline: none;
+        }
+        span{
+            cursor: pointer;
+            &::before{
+                content: ' ';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 32px;
+                height: 32px;
+                background-color: $white;
+                border-radius: 5px;
+                border: 1px solid $light-gray;
+            }
+            &::after{
+                content:' ';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 32px;
+                height: 32px;
+                background: url(/img/check.png) center center no-repeat $light-blue;
+                border-radius: 5px;
+                opacity: 0;
+            }
+        }
+    }
+    &:hover{
+        label{
+            span{
+                &::before{
+                    border-color: $light-blue;
+                }
+            }
+        }
+    }
+}
+.ias-check label input[type=checkbox]:checked + span::after {
+    opacity: 1;
+}
+.ias-input-group{
+    position: relative;
+    height: 56px;
+    border: none;
+    border-radius: 5px;
+    background-color: $bg-side-menu-30;
+    flex-grow: 1;
+    margin-right: 24px;
+    flex-basis: 100%;
+    .ias-label{
+        position: absolute;
+        top:0;
+        left: 24px;
+        line-height: 56px;
+        font-size:$font-size-medium;
+        font-weight: $font-weight-medium;
+        color:$dark-gray;
+        transition: all .2s;
+        opacity: .6;
+    }
+    .ias-input{
+        width: 100%;
+        background: transparent;
+        height: 36px;
+        font-size: $font-size-large;
+        font-weight: $font-weight-medium;
+        margin-top: 16px;
+        padding:0 24px;
+        border:none;
+        color:$dark-gray;
+        outline: none;
+    }
+    &.ias-focus{
+        .ias-label{
+            line-height: 30px;
+            font-size: $font-size-small;
+            color: $light-blue;
+            opacity: 1;
+        }
+    }
+}
+.phone-branch{
+    flex-grow: 1;
+    flex-basis: 100%;
+    height: 56px;
+    margin-right: 24px;
+    .ias-input-group:first-child{
+        width: 68%;
+        display: inline-block;
+        margin-right: 5%;
+    }
+    .ias-input-group:last-child{
+        width:27%;
+        display: inline-block;
+        margin: 0;
+    }
+}
 .v-select{
     height: 56px;
-    width: 100%;
+    margin-right: 24px;
+    flex-basis: 100%;
     .vs__dropdown-toggle{
         height: 56px;
-        background-color: $white;
-        border: 1px solid $light-gray;
+        background-color: $bg-side-menu-30;
+        border: none;
         border-radius: 5px;
         padding: 0;
         line-height: 56px;
@@ -13,7 +207,7 @@
             .vs__search{
                 margin: 0;
                 line-height: 56px;
-                padding: 0 7px 0 16px;
+                padding: 0 7px 0 24px;
                 border: none;
                 font-size: $font-size-large;
                 font-weight: $font-weight-medium;
@@ -21,7 +215,7 @@
             }
             .vs__selected{
                 margin: 0;
-                padding: 0 0 0 16px;
+                padding: 0 0 0 24px;
                 font-size: $font-size-large;
                 font-weight: $font-weight-medium;
                 color: $dark-gray;
@@ -40,6 +234,10 @@
     .vs__dropdown-menu{
         border:1px solid $light-gray;
         border-top:none;
+        box-shadow: none;
+        border-radius: 0 0 5px 5px;
+        padding: 10px 0 5px 0;
+        margin-top: -5px;
         .vs__dropdown-option{
             height: 40px;
             line-height: 40px;
@@ -52,5 +250,88 @@
                 background-color: $light-blue-5;
             }
         }
+    }
+}
+.filters{
+    .v-select{
+        width: 100%;
+        margin: 0;
+        .vs__dropdown-toggle{
+            background-color: $white;
+            border: 1px solid $light-gray;
+            .vs__search{
+                padding: 0 7px 0 16px;
+            }
+            .vs__selected{
+                padding: 0 0 0 16px;
+            }
+        }              
+    }   
+}
+.ias-image-upload{
+    width: 100%;
+    background-color: $bg-side-menu-30;
+    border-radius: 5px;
+    position: relative;    
+    overflow: hidden;
+    .thumb-preview{
+        img{
+            max-width: 100%;
+            border:none;
+        }
+        .bt-remove{
+            position: absolute;
+            top:0;
+            right: 0;
+            background-color: $red;
+            border-bottom-left-radius: 48px;
+            float: left;
+            width: 48px;
+            height: 48px;
+            text-align: right;
+            padding-top: 7px;
+            padding-right: 7px;
+            cursor: pointer;
+        }
+    }
+    .no-image{
+        width: 100%;
+        font-size: $font-size-large;
+        font-weight: $font-weight-medium;
+        background: url(/img/img-holder.png) center center no-repeat;
+        cursor: pointer;
+        span{
+            position: absolute;
+            left:0;
+            right: 0;
+            bottom: 48px;
+            text-align: center;
+            color:$dark-gray-60;
+            line-height: 24px;
+        }
+        strong{
+            position: absolute;
+            left:0;
+            right: 0;
+            bottom: 24px;
+            line-height: 24px;
+            text-align: center;
+            color:$light-blue;
+        }
+        input[type=file]{
+            position: absolute;
+            top:0;
+            left:0;
+            right: 0;
+            bottom:0;
+            outline: none;
+            opacity: 0;
+        }
+        &::after{
+            content: " ";
+            padding-bottom: 100%;
+            display: block;
+        }
+
     }
 }

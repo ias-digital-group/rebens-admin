@@ -353,7 +353,7 @@ export default {
         pageItems: self.$data.pagination.perPage,
         searchWord: self.searchQuery,
         sort: self.formatSortFieldParam,
-        active: self.activeFilter ? self.activeFilter : '',
+        active: self.activeFilter,
         role: self.roleFilter ? self.roleFilter : '',
         idOperation: self.operationFilter ? self.operationFilter : '',
         idOperationPartner: self.operationPartnerFilter
@@ -471,6 +471,12 @@ export default {
       this.fetchData();
     },
     roleFilter() {
+      this.fetchData();
+    },
+    operationFilter() {
+      this.fetchData();
+    },
+    operationPartnerFilter() {
       this.fetchData();
     }
   }
