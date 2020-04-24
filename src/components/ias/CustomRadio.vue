@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="ias-radio"
-  >
+  <div class="ias-radio">
     <label :for="cbId">
       <input
         :id="cbId"
@@ -10,7 +8,7 @@
         :value="name"
         v-model="model"
       />
-      <slot></slot> 
+      <slot></slot>
       <span></span>
     </label>
   </div>

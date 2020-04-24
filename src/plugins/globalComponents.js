@@ -21,7 +21,7 @@ const GlobalComponents = {
     Vue.component(CustomRadio.name, CustomRadio);
     Vue.component(CustomCheckbox.name, CustomCheckbox);
     Vue.component(CustomImageUpload.name, CustomImageUpload);
-    
+
     Vue.component(BaseInput.name, BaseInput);
     Vue.component(BaseDropdown.name, BaseDropdown);
     Vue.component(Card.name, Card);

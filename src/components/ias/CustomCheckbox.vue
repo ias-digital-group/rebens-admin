@@ -1,14 +1,8 @@
 <template>
   <div class="ias-check">
     <label :for="cbId">
-      <input
-        :id="cbId"
-        type="checkbox"
-        :disabled="disabled"
-        v-model="model"
-      />
-      <span>
-      </span>
+      <input :id="cbId" type="checkbox" :disabled="disabled" v-model="model" />
+      <span> </span>
       <slot></slot>
     </label>
   </div>

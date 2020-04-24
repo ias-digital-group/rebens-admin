@@ -1,11 +1,16 @@
 <template>
   <div class="edit-box">
     <div class="page-header">
-      <h2><span v-if="viewAction === 'new'">Cadastro Usuário</span><span v-else>Editar Usuário</span></h2>
+      <h2>
+        <span v-if="viewAction === 'new'">Cadastro Usuário</span
+        ><span v-else>Editar Usuário</span>
+      </h2>
       <div class="box-actions">
-        <button @click="resendValidation"
-                type="button"
-                class="bt bt-square bg-white-2 c-orang">
+        <button
+          @click="resendValidation"
+          type="button"
+          class="bt bt-square bg-white-2 c-orang"
+        >
           <svg
             width="24"
             height="24"
@@ -24,8 +29,17 @@
           </svg>
         </button>
         <base-link to="/users" class="bt bt-square bg-white-2 c-primay">
-          <svg width="15" height="24" viewBox="0 0 15 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0.676452 10.8118L11.5446 0.492523C12.236 -0.16425 13.3569 -0.16425 14.0479 0.492523C14.7389 1.14871 14.7389 2.21299 14.0479 2.86912L4.43122 12.0001L14.0476 21.1308C14.7386 21.7873 14.7386 22.8515 14.0476 23.5077C13.3565 24.1641 12.2357 24.1641 11.5443 23.5077L0.676171 13.1882C0.330638 12.8599 0.158067 12.4302 0.158067 12.0002C0.158067 11.57 0.330975 11.1399 0.676452 10.8118Z" fill="#41B0CE"/>
+          <svg
+            width="15"
+            height="24"
+            viewBox="0 0 15 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0.676452 10.8118L11.5446 0.492523C12.236 -0.16425 13.3569 -0.16425 14.0479 0.492523C14.7389 1.14871 14.7389 2.21299 14.0479 2.86912L4.43122 12.0001L14.0476 21.1308C14.7386 21.7873 14.7386 22.8515 14.0476 23.5077C13.3565 24.1641 12.2357 24.1641 11.5443 23.5077L0.676171 13.1882C0.330638 12.8599 0.158067 12.4302 0.158067 12.0002C0.158067 11.57 0.330975 11.1399 0.676452 10.8118Z"
+              fill="#41B0CE"
+            />
           </svg>
         </base-link>
       </div>
@@ -82,12 +96,12 @@
               maxlength="50"
             ></custom-input>
             <v-select
-                :options="roles"
-                :reduce="op => op.code"
-                :key="model.roles"
-                v-model="model.roles"
-                placeholder="Papel"
-              >
+              :options="roles"
+              :reduce="op => op.code"
+              :key="model.roles"
+              v-model="model.roles"
+              placeholder="Papel"
+            >
             </v-select>
           </div>
           <div class="ias-row">
@@ -101,7 +115,7 @@
             </v-select>
           </div>
           <div class="ias-row">
-            <v-select 
+            <v-select
               :options="operationPartners"
               :reduce="op => op.code"
               :key="model.idOperationPartner"
@@ -159,16 +173,15 @@
 
               <ias-checkbox v-model="model.active">Ativo</ias-checkbox>
             </div>
-            <div class="div-spacer">
-            </div>
+            <div class="div-spacer"></div>
           </div>
         </div>
         <div class="form-right">
           <ias-image-upload
-              @change="onImageChange"
-              img-size="(100x100)"
-              :src="model.picture"
-            />
+            @change="onImageChange"
+            img-size="(100x100)"
+            :src="model.picture"
+          />
         </div>
       </form>
     </div>
@@ -251,7 +264,7 @@ export default {
     }
   },
   methods: {
-    onImageChange(file){
+    onImageChange(file) {
       this.image = file;
     },
     onOperationChange() {
