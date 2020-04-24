@@ -8,7 +8,7 @@
             <base-link
               to="/promoter/new"
               class="btn btn-icon btn-simple btn-twitter btn-sm"
-              ><i class="tim-icons icon-simple-add"></i
+              ><i class="fas fa-plus"></i
             ></base-link>
           </h4>
         </template>

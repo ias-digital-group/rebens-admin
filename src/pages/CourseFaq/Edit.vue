@@ -52,7 +52,7 @@
               href="javascript:void(0)"
               @click="addItem"
               class="btn btn-icon btn-simple btn-sm btn-twitter"
-              ><i class="tim-icons icon-simple-add"></i
+              ><i class="fas fa-plus"></i
             ></a>
           </h4>
           <div

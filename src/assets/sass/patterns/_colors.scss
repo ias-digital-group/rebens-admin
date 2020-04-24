@@ -52,9 +52,18 @@
         background-color: $red !important;
     }
 }
+.bg-red-20{
+    background-color: $red-20 !important;
+    &:hover{
+        background-color: $red-20 !important;
+    }
+}
 
 .c-light-blue{
     color: $light-blue !important;
+    &.bt:hover{
+        color: $light-blue-50 !important;
+    }
 }
 .c-white{
     color: $white !important;
@@ -64,19 +73,34 @@
 }
 .c-green{
     color: $green !important;
+    &.bt:hover{
+        color: $green-50 !important;
+    }
 }
 .c-orange{
     color: $orange !important;
+    &.bt:hover{
+        color: $orange-50 !important;
+    }
 }
 .c-dark-gray{
     color:$dark-gray !important;
+    &.bt:hover{
+        color: $dark-gray-50 !important;
+    }
 }
 .c-blue{
     color:$blue !important;
+    &.bt:hover{
+        color: $blue-50 !important;
+    }
 }
 .c-light-gray{
     color: $light-gray !important;
 }
 .c-red{
     color: $red !important;
+    &.bt:hover{
+        color: $red-50 !important;
+    }
 }

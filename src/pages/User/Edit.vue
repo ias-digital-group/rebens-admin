@@ -9,38 +9,12 @@
         <button
           @click="resendValidation"
           type="button"
-          class="bt bt-square bg-white-2 c-orang"
+          class="bt bt-square bg-white-2 c-orange"
         >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M10.4102 16.4991L8 19.3642V24L21 7L10.4102 16.4991Z"
-              fill="#FFC229"
-            />
-            <path
-              d="M0 12.1765L7.476 16.2218H7.484L18.6667 6.76471L10.3667 16.7183L12 18.6449L20 23L24 0L0 12.1765Z"
-              fill="#FFC229"
-            />
-          </svg>
+          <i class="icon-icon-send"></i>
         </button>
-        <base-link to="/users" class="bt bt-square bg-white-2 c-primay">
-          <svg
-            width="15"
-            height="24"
-            viewBox="0 0 15 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M0.676452 10.8118L11.5446 0.492523C12.236 -0.16425 13.3569 -0.16425 14.0479 0.492523C14.7389 1.14871 14.7389 2.21299 14.0479 2.86912L4.43122 12.0001L14.0476 21.1308C14.7386 21.7873 14.7386 22.8515 14.0476 23.5077C13.3565 24.1641 12.2357 24.1641 11.5443 23.5077L0.676171 13.1882C0.330638 12.8599 0.158067 12.4302 0.158067 12.0002C0.158067 11.57 0.330975 11.1399 0.676452 10.8118Z"
-              fill="#41B0CE"
-            />
-          </svg>
+        <base-link to="/users" class="bt bt-square bg-white-2 c-light-blue">
+          <i class="icon-icon-arrow-left"></i>
         </base-link>
       </div>
     </div>
@@ -54,6 +28,7 @@
               type="text"
               name="name"
               label="Nome"
+              :error="customErrors.get('name')"
               maxlength="200"
             ></custom-input>
             <custom-input
@@ -62,6 +37,7 @@
               type="text"
               name="surname"
               label="Sobrenome"
+              :error="customErrors.get('surname')"
               maxlength="200"
             ></custom-input>
           </div>
@@ -71,6 +47,7 @@
               v-model="model.email"
               type="text"
               name="email"
+              :error="customErrors.get('email')"
               label="E-mail"
               maxlength="500"
             ></custom-input>
@@ -81,6 +58,7 @@
               v-model="emailConfirm"
               type="text"
               name="emailConfirm"
+              :error="customErrors.get('email-confirm')"
               label="Confirmação E-mail"
               maxlength="500"
             ></custom-input>
@@ -92,37 +70,47 @@
               type="text"
               name="doc"
               label="CPF"
+              :error="customErrors.get('doc')"
               :inputMask="['###.###.###-##']"
               maxlength="50"
             ></custom-input>
-            <v-select
-              :options="roles"
-              :reduce="op => op.code"
-              :key="model.roles"
-              v-model="model.roles"
-              placeholder="Papel"
-            >
-            </v-select>
+            <div class="select-holder">
+              <v-select
+                :options="roles"
+                :reduce="op => op.code"
+                :key="model.roles"
+                v-model="model.roles"
+                placeholder="Papel"
+                :class="{'has-error': customErrors.get('roles')}"
+              >
+              </v-select>
+              <label v-if="customErrors.get('roles')" class="ias-error">{{ customErrors.get('roles') }}</label>
+            </div>
           </div>
           <div class="ias-row">
-            <v-select
-              :options="operations"
-              :reduce="op => op.code"
-              :key="model.idOperation"
-              v-model="model.idOperation"
-              placeholder="Clube"
-            >
-            </v-select>
+            <div class="select-holder">
+              <v-select
+                :options="operations"
+                :reduce="op => op.code"
+                :key="model.idOperation"
+                v-model="model.idOperation"
+                placeholder="Clube"
+              >
+              </v-select>
+              <label v-if="customErrors.get('operation')" class="ias-error">{{ customErrors.get('operation') }}</label>
+            </div>
           </div>
           <div class="ias-row">
-            <v-select
-              :options="operationPartners"
-              :reduce="op => op.code"
-              :key="model.idOperationPartner"
-              v-model="model.idOperationPartner"
-              placeholder="Empresa"
-            >
-            </v-select>
+            <div class="select-holder">
+              <v-select
+                :options="operationPartners"
+                :reduce="op => op.code"
+                :key="model.idOperationPartner"
+                v-model="model.idOperationPartner"
+                placeholder="Empresa"
+              >
+              </v-select>
+            </div>
             <custom-input
               v-model="model.phoneMobile"
               type="text"
@@ -160,12 +148,11 @@
             </div>
           </div>
           <div class="ias-row">
-            <div class="actions">
+            <div class="form-actions">
               <button
                 class="bt bg-green c-white"
-                native-type="submit"
-                type="info"
-                @click.native.prevent="validate"
+                type="button"
+                @click.prevent="validate"
               >
                 <span v-if="viewAction === 'new'">Cadastrar</span>
                 <span v-else>Salvar</span>
@@ -192,6 +179,7 @@ import { Select, Option } from 'element-ui';
 import userService from '../../services/User/userService';
 import operationService from '../../services/Operation/operationService';
 import operationPartnerService from '../../services/OperationPartner/operationPartnerService';
+import helperService from '../../services/Helper/helperService';
 import _ from 'lodash';
 export default {
   components: {
@@ -214,7 +202,7 @@ export default {
       isMaster: false,
       isRebens: false,
       isPartnerUser: false,
-      customErrors: [],
+      customErrors: new Map(),
       roles: [],
       image: null,
       emailConfirm: '',
@@ -300,17 +288,30 @@ export default {
     },
     validate() {
       const self = this;
-      self.customErrors = [];
+      self.customErrors = new Map();
 
-      if (!self.model.name) self.customErrors.push('name');
-      else if (!self.model.name.length > 300)
-        self.customErrors.push('name-length');
-      if (!self.model.email) self.customErrors.push('email');
+      if (!self.model.doc) self.customErrors.set('doc', 'Campo obrigatório');
+      if (!self.model.name) self.customErrors.set('name', 'Campo obrigatório');
+      else if (!self.model.name.length > 200)
+         self.customErrors.set('name', 'Máximo 200 caracteres');
+      if (!self.model.surname) self.customErrors.set('surname', 'Campo obrigatório');
+      else if (!self.model.surname.length > 200)
+         self.customErrors.set('surname', 'Máximo 200 caracteres');
+      if (!self.model.email) self.customErrors.set('email', 'Campo obrigatório');
       else if (!self.reg.test(self.model.email))
-        self.customErrors.push('email-format');
+         self.customErrors.set('email', 'E-mail inválido');
       else if (!self.model.email.length > 300)
-        self.customErrors.push('email-length');
-      if (self.model.roles == '') self.customErrors.push('roles');
+         self.customErrors.set('email', 'Máximo 300 caracteres');
+      if (self.viewAction === 'new') {
+        if (!self.emailConfirm) self.customErrors.set('email-confirm', 'Campo obrigatório');
+        else if (!self.reg.test(self.emailConfirm))
+          self.customErrors.set('email-confirm', 'E-mail inválido');
+        else if (!self.emailConfirm.length > 300)
+          self.customErrors.set('email-confirm', 'Máximo 300 caracteres');
+        else if(self.emailConfirm !== self.model.email)
+          self.customErrors.set('email-confirm', 'Este campo deve ser igual ao E-mail');
+      }
+      if (self.model.roles == '') self.customErrors.set('roles', 'Campo obrigatorio');
       if (
         self.isRebens &&
         (self.model.roles === 'publisher' ||
@@ -320,11 +321,37 @@ export default {
           self.model.roles == 'partnerApprover') &&
         self.model.idOperation == null
       )
-        self.customErrors.push('operation');
+        self.customErrors.set('operation', 'Campo obrigatório');
 
-      if (self.customErrors.length == 0) {
+      if (self.customErrors.keys.length === 0) {
         self.submitLoading = true;
-        self.saveUser(self);
+        if (self.image) {
+          helperService.uploadFile(self.image).then(
+            response => {
+              if (response.status != 200) {
+                self.$notify({
+                  type: 'primary',
+                  message: response.message,
+                  icon: 'tim-icons icon-bell-55'
+                });
+                self.submitLoading = false;
+                return;
+              }
+              self.model.picture = response.data.url;
+              self.saveUser(self);
+            },
+            err => {
+              self.$notify({
+                type: 'primary',
+                message: err.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+              self.submitLoading = false;
+            }
+          );
+        } else {
+          self.saveUser(self);
+        }
       }
     },
     resendValidation() {

@@ -22,7 +22,7 @@
         </div>
         <div class="user-menu">
           <ul>
-            <!-- <li><a href="#">Editar Meu perfil</a></li> -->
+            <li><router-link :to="`/users/${userId}/edit/`">Editar Meu perfil</router-link></li>
             <li>
               <router-link to="/account/changePassword"
                 >Alterar Senha</router-link
@@ -69,7 +69,8 @@
   </div>
 </template>
 <script>
-import '../../assets/sass/app.scss';
+import 'src/assets/sass/app.scss';
+import 'src/assets/sass/patterns/icons.css';
 
 export default {
   data() {
@@ -309,6 +310,9 @@ export default {
         ' ' +
         this.$store.getters.currentUser.surname
       );
+    },
+    userId(){
+      return this.$store.getters.currentUser.id;
     },
     initials() {
       return this.$store.getters.currentUser.initials;

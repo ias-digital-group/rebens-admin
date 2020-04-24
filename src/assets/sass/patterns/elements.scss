@@ -71,7 +71,7 @@
     border: none;
     background-color: $bg-side-menu-30;
     flex-grow: 1;
-    margin-left: 24px;
+    margin-right: 24px;
     flex-basis: 100%;
     padding:12px;
     border-radius: 5px;
@@ -174,6 +174,16 @@
             opacity: 1;
         }
     }
+    .ias-error{
+        position: absolute;
+        bottom:-24px;
+        font-size: $font-size-small;
+        font-weight: $font-weight-medium;
+        color:$red;
+        font-style: italic;
+        left:0;
+        margin:0;
+    }
 }
 .phone-branch{
     flex-grow: 1;
@@ -191,9 +201,24 @@
         margin: 0;
     }
 }
+.select-holder{
+    height: 56px;
+    flex-basis: 100%;
+    margin-right: 24px;
+    position: relative;
+    .ias-error{
+        position: absolute;
+        bottom:-24px;
+        font-size: $font-size-small;
+        font-weight: $font-weight-medium;
+        color:$red;
+        font-style: italic;
+        left:0;
+        margin:0;
+    }
+}
 .v-select{
     height: 56px;
-    margin-right: 24px;
     flex-basis: 100%;
     .vs__dropdown-toggle{
         height: 56px;
@@ -249,6 +274,11 @@
             &.vs__dropdown-option--highlight{
                 background-color: $light-blue-5;
             }
+        }
+    }
+    &.has-error{
+        .vs__dropdown-toggle{
+            background-color: $red-20;
         }
     }
 }

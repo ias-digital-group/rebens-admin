@@ -14,7 +14,7 @@
           placement="top"
         >
           <base-button type="link">
-            <i class="tim-icons icon-pencil"></i>
+            <i class="fas fa-edit"></i>
           </base-button>
         </el-tooltip>
       </td>

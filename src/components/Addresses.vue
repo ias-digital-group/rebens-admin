@@ -24,7 +24,7 @@
               size="sm"
               icon
             >
-              <i class="tim-icons icon-pencil"></i>
+              <i class="fas fa-edit"></i>
             </base-button>
             <base-button
               @click.native="handleDelete(props.$index, props.row)"
@@ -33,7 +33,7 @@
               size="sm"
               icon
             >
-              <i class="tim-icons icon-simple-remove"></i>
+              <i class="fas fa-times"></i>
             </base-button>
           </div>
         </el-table-column>
