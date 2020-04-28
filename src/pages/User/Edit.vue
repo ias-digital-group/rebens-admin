@@ -83,6 +83,7 @@
                 placeholder="Papel"
                 :class="{ 'has-error': customErrors.get('roles') }"
               >
+                <span slot="no-options">Nenhum papel encontrado</span>
               </v-select>
               <label v-if="customErrors.get('roles')" class="ias-error">{{
                 customErrors.get('roles')
@@ -99,6 +100,7 @@
                 :class="{ 'has-error': customErrors.get('operation') }"
                 placeholder="Clube"
               >
+                <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
               <label v-if="customErrors.get('operation')" class="ias-error">{{
                 customErrors.get('operation')
@@ -114,6 +116,7 @@
                 v-model="model.idOperationPartner"
                 placeholder="Empresa"
               >
+                <span slot="no-options">Nenhuma empresa encontrada</span>
               </v-select>
             </div>
             <custom-input
@@ -171,7 +174,7 @@
         <div class="form-right">
           <ias-image-upload
             @change="onImageChange"
-            img-size="(100x100)"
+            img-size="(360x360)"
             :src="model.picture"
           />
         </div>
@@ -259,6 +262,9 @@ export default {
   methods: {
     onImageChange(file) {
       this.image = file;
+      if (file == null) {
+        this.model.picture = file;
+      }
     },
     onOperationChange() {
       const self = this;
@@ -342,9 +348,8 @@ export default {
             response => {
               if (response.status != 200) {
                 self.$notify({
-                  type: 'primary',
-                  message: response.message,
-                  icon: 'tim-icons icon-bell-55'
+                  type: 'danger',
+                  message: response.message
                 });
                 self.submitLoading = false;
                 return;
@@ -354,9 +359,8 @@ export default {
             },
             err => {
               self.$notify({
-                type: 'primary',
-                message: err.message,
-                icon: 'tim-icons icon-bell-55'
+                type: 'danger',
+                message: err.message
               });
               self.submitLoading = false;
             }
@@ -373,8 +377,7 @@ export default {
         () => {
           self.$notify({
             type: 'success',
-            message: 'E-mail reenviado com sucesso!',
-            icon: 'tim-icons icon-bell-55'
+            message: 'E-mail reenviado com sucesso!'
           });
           self.sendingLoading = false;
         },
@@ -397,17 +400,15 @@ export default {
           () => {
             vm.$notify({
               type: 'success',
-              message: 'usuário cadastrado com sucesso!',
-              icon: 'tim-icons icon-bell-55'
+              message: 'usuário cadastrado com sucesso!'
             });
             vm.$router.push('/users');
             vm.submitLoading = false;
           },
           err => {
             vm.$notify({
-              type: 'primary',
-              message: err.message,
-              icon: 'tim-icons icon-bell-55'
+              type: 'danger',
+              message: err.message
             });
             vm.submitLoading = false;
           }
@@ -416,18 +417,16 @@ export default {
         userService.update(vm.model).then(
           response => {
             vm.$notify({
-              type: 'primary',
-              message: response.message,
-              icon: 'tim-icons icon-bell-55'
+              type: 'success',
+              message: response.message
             });
             vm.$router.push('/users');
             vm.submitLoading = false;
           },
           err => {
             vm.$notify({
-              type: 'primary',
-              message: err.message,
-              icon: 'tim-icons icon-bell-55'
+              type: 'danger',
+              message: err.message
             });
             vm.submitLoading = false;
           }

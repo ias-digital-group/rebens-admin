@@ -4,7 +4,11 @@
       <h2>{{ $t('pages.users.title') }}</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input type="text" v-model="searchQuery" />
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Digite aqui o que deseja encontrar"
+          />
           <i class="icon-icon-search"></i>
         </div>
         <div class="filter" :class="{ active: showFilters }">
@@ -27,6 +31,7 @@
           class="no-margin"
           placeholder="Filtre pelo Clube"
         >
+          <span slot="no-options">Nenhum clube encontrado</span>
         </v-select>
         <v-select
           :options="operationPartners"
@@ -34,6 +39,7 @@
           v-model="operationPartnerFilter"
           placeholder="Filtre por Empresa"
         >
+          <span slot="no-options">Nenhuma empresa encontrada</span>
         </v-select>
         <v-select
           :options="roles"
@@ -42,6 +48,7 @@
           v-show="isRebens"
           placeholder="Filtre pelo Papel"
         >
+          <span slot="no-options">Nenhum papel encontrado</span>
         </v-select>
         <v-select
           :options="statuses"
@@ -49,6 +56,7 @@
           v-model="activeFilter"
           placeholder="Filtre pelo Status"
         >
+          <span slot="no-options">Nenhum status encontrado</span>
         </v-select>
       </div>
     </div>
@@ -80,8 +88,8 @@
             </td>
             <td>
               <div class="two-lines">
-                <span>{{ item.idOperation }}</span>
-                <span class="blue">{{ item.idOperationPartner }}</span>
+                <span>{{ item.operation }}</span>
+                <span class="blue">{{ item.operationPartner }}</span>
               </div>
             </td>
             <td>
@@ -218,9 +226,16 @@ export default {
       this.$router.push(`/users/${row.id}/edit/`);
     },
     toggleActive(row) {
+      const self = this;
       userService.toggleActive(row.id).then(data => {
         if (data.status === 'ok') {
           row.active = data.data;
+          self.$notify({
+            type: 'success',
+            message: `Usuário ${
+              row.active ? 'ativado' : 'inativado'
+            } com sucesso`
+          });
         }
       });
     },
@@ -232,8 +247,7 @@ export default {
           () => {
             self.$notify({
               type: 'success',
-              message: 'E-mail reenviado com sucesso!',
-              icon: 'tim-icons icon-bell-55'
+              message: 'E-mail reenviado com sucesso!'
             });
             self.$data.loading = false;
           },
@@ -280,9 +294,8 @@ export default {
           userService.delete(self.modal.model.id).then(
             response => {
               self.$notify({
-                type: 'primary',
-                message: response.message,
-                icon: 'tim-icons icon-bell-55'
+                type: 'success',
+                message: response.message
               });
               self.resetModal();
               self.pagination.currentPage = 1;
@@ -290,9 +303,8 @@ export default {
             },
             err => {
               self.$notify({
-                type: 'primary',
-                message: err.message,
-                icon: 'tim-icons icon-bell-55'
+                type: 'danger',
+                message: err.message
               });
               self.modal.formLoading = false;
             }

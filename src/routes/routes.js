@@ -661,7 +661,7 @@ let operationPartnerPages = {
 
 let accountPages = {
   path: '/account',
-  component: DashboardLayout,
+  component: MainLayout,
   meta: {
     requiresAuth: true,
     roles: [

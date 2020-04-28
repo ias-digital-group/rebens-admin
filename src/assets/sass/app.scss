@@ -240,6 +240,7 @@
         font-weight: $font-weight-black;
         text-transform: uppercase;
         outline: none;
+        cursor:pointer;
         &.bt-square {
             width: 48px;
             height: 48px;
@@ -277,14 +278,18 @@
     margin:0;
     width:100%;
     padding: 0 32px 32px;
+    .list-table{
+        max-width: 1128px;
+    }
     table{
         width:100%;
         margin:0;
         padding:0;
+        border-radius: 10px 10px 0 0;
+        overflow: hidden;
         thead{
             height: 64px;
             background-color: $white;
-            border-radius: 10px 10px 0 0;
             tr{
                 height:64px;
                 th{
@@ -354,7 +359,7 @@
                                 display: block;
                                 width: 24px;
                                 height: 24px;
-                                font-size: 20px;
+                                font-size: 24px;
                             }
                             &.c-light-gray{
                                 .icon-icon-check:before{
@@ -536,6 +541,7 @@
     width:100%;
     height:auto;
     margin: 24px 0;
+    max-width: 1128px;
     h2{
         line-height:48px;
         margin: 8px 0 0 0;
@@ -562,6 +568,11 @@
                 font-size: $font-size-medium;
                 font-weight: $font-weight-medium;
                 outline: none;
+                &::placeholder{
+                    color: $dark-gray;
+                    font-weight: $font-weight-medium;
+                    font-size: $font-size-medium;
+                }
             }
         }
         .bt{

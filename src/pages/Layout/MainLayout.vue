@@ -1,5 +1,6 @@
 <template>
   <div class="wrapper">
+    <notifications></notifications>
     <header>
       <div class="logo">
         <base-link class="simple-text logo-mini" to="/dashboard"
@@ -343,6 +344,24 @@ export default {
       this.$store.dispatch('removeUser');
       this.$router.push('/login');
     }
+  },
+  mounted() {
+    const self = this;
+    const actualPath = this.$router.currentRoute.path;
+    self.menuItens.forEach(item => {
+      if (item.path === actualPath) {
+        item.active = true;
+      } else {
+        if (item.subitens) {
+          item.subitens.forEach(sub => {
+            if (sub.path === actualPath) {
+              sub.active = true;
+              item.active = true;
+            }
+          });
+        }
+      }
+    });
   }
 };
 </script>

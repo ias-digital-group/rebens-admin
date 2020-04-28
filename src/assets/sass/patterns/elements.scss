@@ -153,6 +153,7 @@
         color:$dark-gray;
         transition: all .2s;
         opacity: .6;
+        z-index:0;
     }
     .ias-input{
         width: 100%;
@@ -165,6 +166,8 @@
         border:none;
         color:$dark-gray;
         outline: none;
+        position: relative;
+        z-index: 10;
     }
     &.ias-focus{
         .ias-label{
@@ -306,7 +309,7 @@
     overflow: hidden;
     .thumb-preview{
         img{
-            max-width: 100%;
+            width: 100%;
             border:none;
         }
         .bt-remove{

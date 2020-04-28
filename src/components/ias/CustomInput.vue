@@ -86,7 +86,7 @@ export default {
       };
     },
     floatLabel() {
-      return this.focused || this.value !== '';
+      return this.focused || (this.value && this.value !== '');
     }
   },
   methods: {
