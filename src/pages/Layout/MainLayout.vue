@@ -326,7 +326,9 @@ export default {
       return this.menuItens.filter(item => {
         if (item.roles === '') {
           return true;
-        } else if (item.roles.includes(this.$store.getters.currentUser.role)) {
+        } else if (
+          item.roles.split(',').includes(this.$store.getters.currentUser.role)
+        ) {
           if (item.needModule === '') {
             return true;
           } else if (this.$store.getters.currentUser.role === 'publisher') {
