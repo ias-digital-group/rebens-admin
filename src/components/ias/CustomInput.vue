@@ -64,6 +64,10 @@ export default {
     inputMask: {
       type: Array,
       description: 'Input mask'
+    },
+    hasFocus: {
+      type: Boolean,
+      description: 'Input focus'
     }
   },
   model: {
@@ -86,7 +90,7 @@ export default {
       };
     },
     floatLabel() {
-      return this.focused || (this.value && this.value !== '');
+      return this.focused || (this.value && this.value !== '') || this.hasFocus;
     }
   },
   methods: {

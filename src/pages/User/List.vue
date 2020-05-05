@@ -183,7 +183,7 @@
   </div>
 </template>
 <script>
-import { Table, TableColumn, Select, Option } from 'element-ui';
+import { Select, Option } from 'element-ui';
 import { Modal, Pagination } from 'src/components';
 import userService from '../../services/User/userService';
 import operationService from '../../services/Operation/operationService';
@@ -197,9 +197,7 @@ export default {
     Modal,
     Pagination,
     [Select.name]: Select,
-    [Option.name]: Option,
-    [Table.name]: Table,
-    [TableColumn.name]: TableColumn
+    [Option.name]: Option
   },
   data() {
     return {

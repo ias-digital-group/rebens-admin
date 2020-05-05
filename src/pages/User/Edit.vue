@@ -180,19 +180,19 @@
         </div>
       </form>
     </div>
+    <success-modal :show="showSuccessModal" link="/users"> </success-modal>
   </div>
 </template>
 <script>
-import { Select, Option } from 'element-ui';
 import userService from '../../services/User/userService';
 import operationService from '../../services/Operation/operationService';
 import operationPartnerService from '../../services/OperationPartner/operationPartnerService';
 import helperService from '../../services/Helper/helperService';
+import { SuccessModal } from 'src/components';
 import _ from 'lodash';
 export default {
   components: {
-    [Option.name]: Option,
-    [Select.name]: Select
+    SuccessModal
   },
   props: {
     id: String,
@@ -210,6 +210,7 @@ export default {
       isMaster: false,
       isRebens: false,
       isPartnerUser: false,
+      showSuccessModal: false,
       customErrors: new Map(),
       roles: [],
       image: null,
@@ -398,12 +399,8 @@ export default {
       if (vm.viewAction == 'new') {
         userService.create(vm.model).then(
           () => {
-            vm.$notify({
-              type: 'success',
-              message: 'usuário cadastrado com sucesso!'
-            });
-            vm.$router.push('/users');
             vm.submitLoading = false;
+            vm.showSuccessModal = true;
           },
           err => {
             vm.$notify({
@@ -415,13 +412,9 @@ export default {
         );
       } else {
         userService.update(vm.model).then(
-          response => {
-            vm.$notify({
-              type: 'success',
-              message: response.message
-            });
-            vm.$router.push('/users');
+          () => {
             vm.submitLoading = false;
+            vm.showSuccessModal = true;
           },
           err => {
             vm.$notify({

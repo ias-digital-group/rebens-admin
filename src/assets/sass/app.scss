@@ -316,7 +316,7 @@
                     color: $dark-gray;
                     padding:0;
                     &:first-child{
-                        padding-left:24px;
+                        padding-left:16px;
                     }
                     .two-lines{
                         display:inline-flex;
@@ -332,15 +332,25 @@
                             }
                         }
                     }
-                    span{
-                        line-height: 72px;
-                    }
+                    
                     .avatar{
                         margin: 16px 16px 16px 0;
                         width: 40px;
                         height: 40px;
                         border-radius: 20px;
                         background-color: $dark-gray;
+                        text-align: center;
+                        span{
+                            line-height: 40px;
+                        }
+                    }
+                    .img-holder{
+                        height: 40px;
+                        margin: 16px 0;
+                        width:100px;
+                        img{
+                            height: 40px;
+                        }
                     }
                     .actions{
                         margin: 24px 0;

@@ -145,7 +145,7 @@ let operationsPages = {
 
 let bannersPages = {
   path: '/banners',
-  component: DashboardLayout,
+  component: MainLayout,
   meta: {
     requiresAuth: true,
     roles: [

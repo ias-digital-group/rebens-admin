@@ -1,265 +1,163 @@
 <template>
-  <div class="row">
-    <div class="col-md-12">
-      <card :title="$t('pages.banners.title')">
-        <h4 slot="header" class="card-title">
-          {{ $t('pages.banners.title') }}
-        </h4>
-        <el-tabs v-model="activeName">
-          <el-tab-pane name="banner" label="Banner">
-            <form
-              class="form-horizontal"
-              v-loading="formLoading"
-              @submit.prevent
-            >
-              <div class="row">
-                <label class="col-md-3 col-form-label">Nome</label>
-                <div class="col-md-9">
-                  <base-input
-                    required
-                    v-model="model.name"
-                    type="text"
-                    name="name"
-                    placeholder="Nome"
-                    maxlength="200"
-                  ></base-input>
-                  <label
-                    v-show="customErrors.includes('name')"
-                    class="text-danger"
-                    >Este campo é obrigatório!</label
-                  >
-                </div>
-              </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label">Tipo</label>
-                <div class="col-md-9">
-                  <div class="form-group">
-                    <base-radio
-                      v-model="model.idType"
-                      :name="1"
-                      :value="1"
-                      :inline="true"
-                      >Banner Full</base-radio
-                    >
-                    <base-radio
-                      v-model="model.idType"
-                      :name="3"
-                      :value="3"
-                      :inline="true"
-                      >Imperdíveis</base-radio
-                    >
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label">Onde aparece?</label>
-                <div class="col-md-9">
-                  <div class="form-group">
-                    <base-checkbox v-model="model.bannerShowHome" :inline="true"
-                      >Home</base-checkbox
-                    >
-                    <base-checkbox
-                      v-model="model.bannerShowHomeLogged"
-                      :inline="true"
-                      >Home Logada</base-checkbox
-                    >
-                    <base-checkbox
-                      v-show="model.idType == 3"
-                      v-model="model.bannerShowBenefit"
-                      :inline="true"
-                      >Home de benefícios</base-checkbox
-                    >
-                  </div>
-                  <label
-                    v-show="customErrors.includes('whereToShow')"
-                    class="text-danger"
-                    >Este campo é obrigatório!</label
-                  >
-                </div>
-              </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label">Link</label>
-                <div class="col-md-9">
-                  <base-input
-                    required
-                    v-model="model.link"
-                    type="text"
-                    name="link"
-                    placeholder="link"
-                    maxlength="500"
-                  ></base-input>
-                  <label
-                    v-show="customErrors.includes('link')"
-                    class="text-danger"
-                    >Este campo é obrigatório!</label
-                  >
-                </div>
-              </div>
-              <div class="row" v-if="!model.isBenefit">
-                <label class="col-md-3 col-form-label"
-                  >Abrir em nova aba?</label
-                >
-                <div class="col-md-9">
-                  <div class="form-group">
-                    <base-checkbox v-model="model.targetBlank"
-                      >&nbsp;</base-checkbox
-                    >
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label">Data</label>
-                <div class="col-md-9 col-lg-4">
-                  <base-input label="Início">
-                    <el-date-picker
-                      type="date"
-                      required
-                      name="start"
-                      data-vv-name="start"
-                      placeholder="Início"
-                      v-model="model.start"
-                    >
-                    </el-date-picker>
-                  </base-input>
-                  <label
-                    v-show="customErrors.includes('start')"
-                    class="text-danger"
-                    >Este campo é obrigatório!</label
-                  >
-                </div>
-                <div class="col-md-9 offset-md-3 offset-lg-0 col-lg-4">
-                  <base-input label="Fim">
-                    <el-date-picker
-                      type="date"
-                      name="end"
-                      required
-                      data-vv-name="end"
-                      placeholder="Fim"
-                      v-model="model.end"
-                    >
-                    </el-date-picker>
-                  </base-input>
-                  <label
-                    v-show="customErrors.includes('end')"
-                    class="text-danger"
-                    >Este campo é obrigatório!</label
-                  >
-                </div>
-              </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label"
-                  >Imagem <br />
-                  <span v-show="model.idType == 1">(1200x500)</span>
-                  <span v-show="model.idType == 3">(554x277)</span>
-                </label>
-                <div class="col-md-9">
-                  <template v-if="model.image">
-                    <div class="fileinput">
-                      <div class="thumbnail">
-                        <img :src="model.image" class="img-preview" />
-                      </div>
-                      <div>
-                        <base-button
-                          @click="model.image = ''"
-                          class="btn-simple btn-file"
-                          type="danger"
-                        >
-                          <i class="fas fa-times"></i> {{ removeText }}
-                        </base-button>
-                      </div>
-                    </div>
-                  </template>
-                  <template v-else>
-                    <image-upload
-                      @change="onImageChange"
-                      change-text="Alterar"
-                      remove-text="Remover"
-                      select-text="Selecione uma imagem"
-                    /> </template
-                  ><br />
-                  <label
-                    v-show="customErrors.includes('image')"
-                    class="text-danger"
-                    >O campo imagem é obrigatório!</label
-                  >
-                </div>
-              </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label">Ordem</label>
-                <div class="col-md-2">
-                  <base-input
-                    required
-                    v-model="model.order"
-                    type="number"
-                    name="order"
-                    placeholder="Ordem"
-                    maxlength="3"
-                  ></base-input>
-                </div>
-              </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label">Ativo</label>
-                <div class="col-md-9">
-                  <div class="form-group">
-                    <base-checkbox v-model="model.active">&nbsp;</base-checkbox>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <base-link
-                    class="btn mt-3 btn-simple btn-primary"
-                    to="/banners"
-                    >Voltar</base-link
-                  >
-                  <base-button
-                    class="mt-3 pull-right"
-                    native-type="submit"
-                    type="info"
-                    @click.native.prevent="validate"
-                    :loading="submitLoading"
-                  >
-                    Salvar
-                  </base-button>
-                </div>
-              </div>
-            </form>
-          </el-tab-pane>
-          <el-tab-pane
-            name="operations"
-            label="Operações"
-            v-if="isRebens"
-            :disabled="viewAction == 'new' ? true : false"
-          >
-            <operations
-              v-loading="formLoading"
-              parent="banners"
-              :parentId="id"
-              :key="operationKey"
-            ></operations>
-          </el-tab-pane>
-        </el-tabs>
-      </card>
+  <div class="edit-box">
+    <div class="page-header">
+      <h2>
+        <span v-if="viewAction === 'new'">Cadastro Banner</span
+        ><span v-else>Editar Banner</span>
+      </h2>
+      <div class="box-actions">
+        <base-link to="/banners" class="bt bt-square bg-white-2 c-light-blue">
+          <i class="icon-icon-arrow-left"></i>
+        </base-link>
+      </div>
     </div>
+    <div class="ias-card">
+      <form v-loading="formLoading" @submit.prevent>
+        <div class="form-left">
+          <div class="ias-row">
+            <custom-input
+              :required="true"
+              v-model="model.name"
+              type="text"
+              name="name"
+              label="Nome"
+              :error="customErrors.get('name')"
+              maxlength="200"
+            ></custom-input>
+          </div>
+          <div class="ias-row">
+            <ias-radio v-model="model.idType" name="1" :value="1"
+              >Banner Full</ias-radio
+            >
+            <ias-radio v-model="model.idType" name="2" :value="2"
+              >Imperdíveis</ias-radio
+            >
+          </div>
+          <div class="ias-row">
+            <ias-checkbox v-model="model.bannerShowHome">Home</ias-checkbox>
+            <ias-checkbox v-model="model.bannerShowHomeLogged"
+              >Home Logada</ias-checkbox
+            >
+            <ias-checkbox v-model="model.bannerShowBenefit"
+              >Home de benefícios</ias-checkbox
+            >
+            <label v-if="customErrors.get('whereToShow')" class="ias-error">{{
+              customErrors.get('whereToShow')
+            }}</label>
+          </div>
+          <div class="ias-row">
+            <custom-input
+              label="Data Início (DD/MM/AAAA)"
+              :class="{ 'ias-focus': model.start != null && model.start != '' }"
+              :error="customErrors.get('start')"
+            >
+              <el-date-picker
+                type="date"
+                required
+                name="start"
+                data-vv-name="start"
+                v-model="model.start"
+                format="dd/MM/yyyy"
+              >
+              </el-date-picker>
+            </custom-input>
+            <custom-input
+              label="Data Fim (DD/MM/AAAA)"
+              :class="{ 'ias-focus': model.end != null && model.end != '' }"
+              :error="customErrors.get('end')"
+            >
+              <el-date-picker
+                type="date"
+                required
+                name="end"
+                data-vv-name="end"
+                v-model="model.end"
+                format="dd/MM/yyyy"
+              >
+              </el-date-picker>
+            </custom-input>
+          </div>
+          <div class="ias-row">
+            <custom-input
+              :required="true"
+              v-model="model.link"
+              type="text"
+              name="link"
+              label="Link"
+              :error="customErrors.get('link')"
+              maxlength="500"
+            ></custom-input>
+          </div>
+          <div class="ias-row">
+            <ias-checkbox v-model="model.targetBlank"
+              >Abrir em nova aba?</ias-checkbox
+            >
+            <div class="select-holder">
+              <v-select
+                :options="orderOptions"
+                :reduce="op => op.code"
+                :key="model.order"
+                v-model="model.order"
+                placeholder="Ordem"
+              >
+              </v-select>
+            </div>
+          </div>
+          <div class="ias-row">
+            <div class="form-actions">
+              <button
+                class="bt bg-green c-white"
+                type="button"
+                @click.prevent="validate"
+              >
+                <span v-if="viewAction === 'new'">Cadastrar</span>
+                <span v-else>Salvar</span>
+              </button>
+              <ias-checkbox v-model="model.active">Ativo</ias-checkbox>
+            </div>
+            <div class="div-spacer"></div>
+          </div>
+        </div>
+        <div class="form-right">
+          <ias-image-upload
+            @change="onImageChange"
+            :img-size="model.idType == 1 ? '(1200x500)' : '(554x277)'"
+            :src="model.image"
+            :error="customErrors.get('picture')"
+          />
+          <div class="select-holder-right">
+            <v-select
+              :options="operations"
+              :reduce="op => op.code"
+              :key="model.operations"
+              v-model="model.operations"
+              placeholder="Selecione o Clube"
+              multiple
+              :class="{ 'has-error': customErrors.get('operations') }"
+            >
+            </v-select>
+            <label v-if="customErrors.get('operations')" class="ias-error">{{
+              customErrors.get('operations')
+            }}</label>
+          </div>
+        </div>
+      </form>
+    </div>
+    <success-modal :show="showSuccessModal" link="/banners"> </success-modal>
   </div>
 </template>
 <script>
-import { Select, Option, Tabs, TabPane, DatePicker } from 'element-ui';
+import { DatePicker } from 'element-ui';
+import { SuccessModal } from 'src/components';
 import bannerService from '../../services/Banner/bannerService';
 import helperService from '../../services/Helper/helperService';
-import benefitService from '../../services/Benefit/benefitService';
+import operationService from '../../services/Operation/operationService';
 import _ from 'lodash';
-import { ImageUpload } from 'src/components/index';
-import Operations from 'src/components/Operations';
+
 export default {
   components: {
-    [Option.name]: Option,
-    [Select.name]: Select,
     [DatePicker.name]: DatePicker,
-    [Tabs.name]: Tabs,
-    [TabPane.name]: TabPane,
-    ImageUpload,
-    Operations
+    SuccessModal
   },
   props: {
     id: String,
@@ -275,8 +173,21 @@ export default {
       submitLoading: false,
       image: null,
       operationKey: 0,
-      benefitName: '',
-      customErrors: [],
+      customErrors: new Map(),
+      operations: [],
+      showSuccessModal: false,
+      orderOptions: [
+        { code: 1, label: '1' },
+        { code: 2, label: '2' },
+        { code: 3, label: '3' },
+        { code: 4, label: '4' },
+        { code: 5, label: '5' },
+        { code: 6, label: '6' },
+        { code: 7, label: '7' },
+        { code: 8, label: '8' },
+        { code: 9, label: '9' },
+        { code: 10, label: '10' }
+      ],
       isRebens: false,
       model: {
         name: '',
@@ -285,17 +196,14 @@ export default {
         active: false,
         link: '',
         idType: 1,
-        backgroundColor: null,
-        idBenefit: null,
-        isBenefit: false,
         start: null,
         end: null,
         targetBlank: false,
         bannerShowHome: false,
         bannerShowHomeLogged: false,
-        bannerShowBenefit: false
-      },
-      benefits: []
+        bannerShowBenefit: false,
+        operations: []
+      }
     };
   },
   computed: {
@@ -331,25 +239,27 @@ export default {
     },
     validate() {
       const self = this;
-      self.customErrors = [];
+      self.customErrors = new Map();
       if (!self.model.name || self.model.name === '')
-        self.customErrors.push('name');
+        self.customErrors.set('name', 'Campo obrigatório');
       if (!self.model.link || self.model.link === '')
-        self.customErrors.push('link');
-      if (!self.model.start) self.customErrors.push('start');
-      if (!self.model.end) self.customErrors.push('end');
-      if (self.model.isBenefit && !self.model.idBenefit)
-        self.customErrors.push('benefit');
+        self.customErrors.set('link', 'Campo obrigatório');
+      if (!self.model.start)
+        self.customErrors.set('start', 'Campo obrigatório');
+      if (!self.model.end) self.customErrors.set('end', 'Campo obrigatório');
       if (
         !self.model.bannerShowHome &&
         !self.model.bannerShowHomeLogged &&
         !self.model.bannerShowBenefit
       )
-        self.customErrors.push('whereToShow');
+        self.customErrors.set('whereToShow', 'Campo obrigatório');
 
-      if (!self.image && !self.model.image) self.customErrors.push('image');
+      if (!self.image && !self.model.image)
+        self.customErrors.set('picture', 'Campo obrigatório');
+      if (!self.model.operations || self.model.operations.length === 0)
+        self.customErrors.set('operations', 'Campo obrigatório');
 
-      if (self.customErrors.length == 0) {
+      if (self.customErrors.size === 0) {
         self.submitLoading = true;
         if (self.image) {
           helperService.uploadFile(self.image).then(
@@ -388,19 +298,10 @@ export default {
       if (vm.viewAction == 'new') {
         bannerService.create(vm.model).then(
           res => {
-            vm.$notify({
-              type: 'success',
-              message: 'Banner cadastrado com sucesso!',
-              icon: 'tim-icons icon-bell-55'
-            });
-            //vm.$router.push('/banners');
-            vm.$router.push({
-              path: `/banners/${res.id}/edit/`,
-              query: { tab: 'op' }
-            });
             vm.operationKey++;
             vm.id = res.id;
             vm.submitLoading = false;
+            vm.showSuccessModal = true;
           },
           err => {
             vm.$notify({
@@ -413,14 +314,9 @@ export default {
         );
       } else {
         bannerService.update(vm.model).then(
-          response => {
-            vm.$notify({
-              type: 'primary',
-              message: response.message,
-              icon: 'tim-icons icon-bell-55'
-            });
-            vm.$router.push('/banners');
+          () => {
             vm.submitLoading = false;
+            vm.showSuccessModal = true;
           },
           err => {
             vm.$notify({
@@ -441,32 +337,27 @@ export default {
           response => {
             self.model = response.data;
             self.formLoading = false;
-            self.populateBenefit();
           },
           () => {
             self.formLoading = false;
           }
         );
       }
-      this.selectLoading = true;
-      benefitService.findAllActive().then(
+
+      operationService.findAll().then(
         response => {
+          self.operations.push({ code: 0, label: 'selecione' });
           _.each(response.data, function(el) {
-            self.benefits.push({ id: el.id, value: el.name });
+            if (el.id != self.id) {
+              self.operations.push({ code: el.id, label: el.title });
+            }
           });
           self.selectLoading = false;
-          self.populateBenefit();
         },
         () => {
           self.selectLoading = false;
         }
       );
-    },
-    populateBenefit() {
-      if (!this.formLoading && !this.selectLoading && this.model.idBenefit) {
-        var b = this.benefits.filter(o => o.id == this.model.idBenefit);
-        if (b.length == 1) this.benefitName = b[0].value;
-      }
     },
     onImageChange(file) {
       this.image = file;

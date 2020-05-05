@@ -49,6 +49,7 @@ import CustomInput from './ias/CustomInput.vue';
 import CustomRadio from './ias/CustomRadio.vue';
 import CustomCheckbox from './ias/CustomCheckbox.vue';
 import CustomImageUpload from './ias/CustomImageUpload.vue';
+import SuccessModal from './ias/SuccessModal.vue';
 
 export {
   CustomCheckbox,
@@ -56,6 +57,7 @@ export {
   CustomInput,
   CustomRadio,
   Pagination,
+  SuccessModal,
   BaseCheckbox,
   IconCheckbox,
   BaseSwitch,

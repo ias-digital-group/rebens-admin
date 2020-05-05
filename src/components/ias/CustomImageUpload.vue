@@ -43,6 +43,7 @@
       <span>Clique aqui para inserir a imagem</span>
       <strong>{{ imgSize }}</strong>
     </div>
+    <label v-if="error" class="ias-error">{{ error }}</label>
   </div>
 </template>
 <script>
@@ -55,6 +56,10 @@ export default {
       description: 'Initial image to display'
     },
     imgSize: {
+      type: String,
+      default: ''
+    },
+    error: {
       type: String,
       default: ''
     }

@@ -89,6 +89,7 @@ export default {
       showFreeCourses: true,
       showOperationPartner: false,
       showMenu: false,
+      actualPath: '',
       menuItens: [
         {
           name: 'Dashboard',
@@ -345,25 +346,45 @@ export default {
     signout() {
       this.$store.dispatch('removeUser');
       this.$router.push('/login');
+    },
+    clearMenu() {
+      const self = this;
+      self.menuItens.forEach(item => {
+        item.active = false;
+        if (item.subitens) {
+          item.subitens.forEach(sub => {
+            sub.active = false;
+          });
+        }
+      });
+    },
+    selectMenu() {
+      const self = this;
+      self.actualPath = self.$router.currentRoute.path;
+      self.menuItens.forEach(item => {
+        if (item.path === self.actualPath) {
+          item.active = true;
+        } else {
+          if (item.subitens) {
+            item.subitens.forEach(sub => {
+              if (sub.path === self.actualPath) {
+                sub.active = true;
+                item.active = true;
+              }
+            });
+          }
+        }
+      });
     }
   },
   mounted() {
-    const self = this;
-    const actualPath = this.$router.currentRoute.path;
-    self.menuItens.forEach(item => {
-      if (item.path === actualPath) {
-        item.active = true;
-      } else {
-        if (item.subitens) {
-          item.subitens.forEach(sub => {
-            if (sub.path === actualPath) {
-              sub.active = true;
-              item.active = true;
-            }
-          });
-        }
-      }
-    });
+    this.selectMenu();
+  },
+  updated() {
+    if (this.$router.currentRoute.path !== this.actualPath) {
+      this.clearMenu();
+      this.selectMenu();
+    }
   }
 };
 </script>

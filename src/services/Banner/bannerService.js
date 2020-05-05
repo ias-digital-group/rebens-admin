@@ -7,7 +7,7 @@ export default {
         ? request
         : {
             page: 0,
-            pageItems: 30,
+            pageItems: 25,
             searchWord: '',
             sort: 'name ASC',
             active: '',
@@ -67,6 +67,20 @@ export default {
   delete: id => {
     return new Promise((resolve, reject) => {
       HTTP.delete(config.apiEndpoints.bannerUri.concat(id)).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  toggleActive: id => {
+    return new Promise((resolve, reject) => {
+      HTTP.post(
+        config.apiEndpoints.bannerUri.concat(`${id}/ToggleActive`)
+      ).then(
         response => {
           resolve(response.data);
         },
