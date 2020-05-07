@@ -350,6 +350,7 @@
                         width:100px;
                         img{
                             height: 40px;
+                            box-shadow: 0 0 4px #ccc;
                         }
                     }
                     .actions{
@@ -543,6 +544,9 @@
                     margin-left:24px;
                     margin-right: 12px;
                 }
+            }
+            &.ias-has-error{
+                position: relative;
             }
         }
     }

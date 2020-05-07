@@ -62,16 +62,21 @@
             <th>Nome Banner / Clube</th>
             <th>Tipo / Onde</th>
             <th>Ordem</th>
-            <th>Usuário / Data Criação</th>
-            <th>Usuário / Última Atualização</th>
-            <th style="width:192px;">Ações</th>
+            <th>Usuário / Criação</th>
+            <th>Usuário / Atualização</th>
+            <th style="width:144px;">Ações</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="item in tableData" :key="item.id">
             <td>
               <div class="img-holder">
-                <img :src="item.image" :alt="item.name" />
+                <img
+                  :src="item.image"
+                  :alt="item.name"
+                  width="96"
+                  height="40"
+                />
               </div>
             </td>
             <td>
@@ -87,7 +92,7 @@
               </div>
             </td>
             <td>
-              <span>{{ item.Order }}</span>
+              <span>{{ item.order }}</span>
             </td>
             <td>
               <div class="two-lines">

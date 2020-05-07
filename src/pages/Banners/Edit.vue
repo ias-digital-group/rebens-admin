@@ -33,7 +33,10 @@
               >Imperdíveis</ias-radio
             >
           </div>
-          <div class="ias-row">
+          <div
+            class="ias-row"
+            :class="{ 'ias-has-error': customErrors.get('whereToShow') }"
+          >
             <ias-checkbox v-model="model.bannerShowHome">Home</ias-checkbox>
             <ias-checkbox v-model="model.bannerShowHomeLogged"
               >Home Logada</ias-checkbox

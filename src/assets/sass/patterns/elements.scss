@@ -444,6 +444,15 @@
     margin:0;
 }
 
+.ias-has-error{
+    .ias-check{
+        background-color: $red-20 !important;
+    }
+    .ias-radio{
+        background-color: $red-20 !important;
+    }
+}
+
 .modal-mask{
     position: fixed;
     top: 0;
