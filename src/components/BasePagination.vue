@@ -6,7 +6,7 @@
       :class="{ disabled: value === 1 }"
     >
       <a class="page-link" aria-label="Previous" @click="prevPage">
-        <i class="tim-icons icon-double-left" aria-hidden="true"></i>
+        <i class="fas fa-chevron-left" aria-hidden="true"></i>
       </a>
     </li>
     <li
@@ -23,7 +23,7 @@
       :class="{ disabled: value === totalPages }"
     >
       <a class="page-link" aria-label="Next" @click="nextPage">
-        <i class="tim-icons icon-double-right" aria-hidden="true"></i>
+        <i class="fas fa-chevron-right" aria-hidden="true"></i>
       </a>
     </li>
   </ul>

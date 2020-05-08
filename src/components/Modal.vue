@@ -45,7 +45,7 @@
                 data-dismiss="modal"
                 aria-label="Close"
               >
-                <i class="tim-icons icon-simple-remove"></i>
+                <i class="fas fa-times"></i>
               </button>
             </slot>
           </div>

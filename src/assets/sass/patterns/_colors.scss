@@ -1,0 +1,106 @@
+.bg-light-blue{
+    background-color: $light-blue !important;
+    &:hover{
+        background-color: $light-blue !important;
+    }
+}
+.bg-white-2{
+    background-color: $white !important;
+    &:hover{
+        background-color: $white !important;
+    }
+}
+.bg-light-blue-5 {
+    background-color: $light-blue-5 !important;
+    &:hover{
+        background-color: $light-blue-5 !important;
+    }
+}
+.bg-green{
+    background-color: $green !important;
+    &:hover{
+        background-color: $green !important;
+    }
+}
+.bg-orange{
+    background-color: $orange !important;
+    &:hover{
+        background-color: $orange !important;
+    }
+}
+.bg-dark-gray{
+    background-color:$dark-gray !important;
+    &:hover{
+        background-color: $dark-gray !important;
+    }
+}
+.bg-blue{
+    background-color:$blue !important;
+    &:hover{
+        background-color: $blue !important;
+    }
+}
+.bg-light-gray{
+    background-color: $light-gray !important;
+    &:hover{
+        background-color: $light-gray !important;
+    }
+}
+.bg-red{
+    background-color: $red !important;
+    &:hover{
+        background-color: $red !important;
+    }
+}
+.bg-red-20{
+    background-color: $red-20 !important;
+    &:hover{
+        background-color: $red-20 !important;
+    }
+}
+
+.c-light-blue{
+    color: $light-blue !important;
+    &.bt:hover{
+        color: $light-blue-50 !important;
+    }
+}
+.c-white{
+    color: $white !important;
+}
+.c-light-blue-5 {
+    color: $light-blue-5 !important;
+}
+.c-green{
+    color: $green !important;
+    &.bt:hover{
+        color: $green-50 !important;
+    }
+}
+.c-orange{
+    color: $orange !important;
+    &.bt:hover{
+        color: $orange-50 !important;
+    }
+}
+.c-dark-gray{
+    color:$dark-gray !important;
+    &.bt:hover{
+        color: $dark-gray-50 !important;
+    }
+}
+.c-blue{
+    color:$blue !important;
+    &.bt:hover{
+        color: $blue-50 !important;
+    }
+}
+.c-light-gray{
+    color: $light-gray !important;
+}
+.c-red{
+    color: $red !important;
+    &.bt:hover{
+        color: $red-50 !important;
+    }
+}

@@ -21,7 +21,7 @@
       data-notify="dismiss"
       @click="close"
     >
-      <i class="tim-icons icon-simple-remove"></i>
+      <i class="fas fa-times"></i>
     </button>
 
     <span v-if="icon" data-notify="icon" :class="['alert-icon', icon]"></span>

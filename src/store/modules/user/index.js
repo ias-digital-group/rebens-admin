@@ -60,10 +60,14 @@ const actions = {
   setUser({ commit }, signinResponse) {
     const jwtData = JSON.parse(atob(signinResponse.accessToken.split('.')[1]));
     const user = {
-      name: jwtData.Name,
+      name: jwtData.name,
       email: jwtData.unique_name[0],
-      id: jwtData.Id,
+      id: jwtData.id,
       role: jwtData.role,
+      roleName: jwtData.roleName,
+      picture: jwtData.picture,
+      surname: jwtData.surname,
+      initials: jwtData.initials,
       idOperation: jwtData.operationId,
       idOperationPartner: jwtData.operationPartnerId,
       modules: jwtData.modules != '' ? jwtData.modules.split('|') : ''

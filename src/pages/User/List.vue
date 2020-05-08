@@ -1,185 +1,155 @@
 <template>
-  <div class="row">
-    <div class="col-12">
-      <card card-body-classes="table-full-width">
-        <template slot="header">
-          <h4 class="card-title">
-            {{ $t('pages.users.title') }}
-            <base-link
-              to="/users/new"
-              class="btn btn-icon btn-simple btn-twitter btn-sm"
-              ><i class="tim-icons icon-simple-add"></i
-            ></base-link>
-          </h4>
-        </template>
-        <div>
-          <div
-            class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
-          >
-            <el-select
-              class="select-primary mb-3 pagination-select"
-              v-model="pagination.perPage"
-              :placeholder="$t('pages.faqs.perpage-placeholder')"
-              v-if="!loading"
-            >
-              <el-option
-                class="select-primary"
-                v-for="item in pagination.perPageOptions"
-                :key="item"
-                :label="item"
-                :value="item"
-              >
-              </el-option>
-            </el-select>
-            <el-select
-              class="select-primary mb-3 pagination-select"
-              v-model="roleFilter"
-              v-if="!loading"
-              v-show="isRebens"
-            >
-              <el-option
-                class="select-primary"
-                value=""
-                label="Todos"
-              ></el-option>
-              <el-option
-                class="select-primary"
-                v-show="isMaster"
-                value="master"
-                label="Master"
-              ></el-option>
-              <el-option
-                class="select-primary"
-                value="publisher"
-                label="Publicador"
-              ></el-option>
-              <el-option
-                class="select-primary"
-                value="administrator"
-                label="Administrador"
-              ></el-option>
-              <el-option
-                class="select-primary"
-                value="publisherRebens"
-                label="Publicador Rebens"
-              ></el-option>
-              <el-option
-                class="select-primary"
-                value="administratorRebens"
-                label="Administrador Rebens"
-              ></el-option>
-            </el-select>
-            <el-select
-              class="select-primary mb-3 pagination-select"
-              v-model="activeFilter"
-              v-if="!loading"
-            >
-              <el-option
-                class="select-primary"
-                value=""
-                label="Todos"
-              ></el-option>
-              <el-option
-                class="select-primary"
-                value="true"
-                label="Ativos"
-              ></el-option>
-              <el-option
-                class="select-primary"
-                value="false"
-                label="Inativos"
-              ></el-option>
-            </el-select>
-            <base-input>
-              <el-input
-                type="search"
-                class="mb-3 search-input"
-                style="width:200px"
-                clearable
-                prefix-icon="el-icon-search"
-                placeholder="Usuários"
-                aria-controls="datatables"
-                v-model="searchQuery"
-              >
-              </el-input>
-            </base-input>
-          </div>
-          <el-table
-            ref="table"
-            :data="tableData"
-            v-loading="loading"
-            :empty-text="$t('pages.users.emptytext')"
-            @sort-change="onSortChanged"
-            :default-sort="{ prop: sortField, order: sortOrder }"
-          >
-            <el-table-column
-              v-for="column in tableColumns"
-              :key="column.label"
-              :min-width="column.minWidth"
-              :prop="column.prop"
-              :label="column.label"
-              sortable="custom"
-            >
-            </el-table-column>
-            <el-table-column
-              :min-width="135"
-              align="right"
-              :label="$t('pages.users.grid.actions')"
-            >
-              <div slot-scope="props">
-                <base-button
-                  @click.native="handleResendPassword(props.$index, props.row)"
-                  class="edit btn-link"
-                  type="info"
-                  size="sm"
-                  icon
-                  title="Reenviar senha"
-                >
-                  <i class="tim-icons icon-send"></i>
-                </base-button>
-                <base-button
-                  @click.native="handleEdit(props.$index, props.row)"
-                  class="edit btn-link"
-                  type="info"
-                  size="sm"
-                  icon
-                  title="Editar"
-                >
-                  <i class="tim-icons icon-pencil"></i>
-                </base-button>
-                <base-button
-                  @click.native="handleDelete(props.$index, props.row)"
-                  class="remove btn-link"
-                  type="danger"
-                  size="sm"
-                  icon
-                  title="Excluir"
-                >
-                  <i class="tim-icons icon-simple-remove"></i>
-                </base-button>
-              </div>
-            </el-table-column>
-          </el-table>
+  <div class="list-box">
+    <div class="page-header">
+      <h2>{{ $t('pages.users.title') }}</h2>
+      <div class="box-actions">
+        <div class="input-post-icon search">
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Digite aqui o que deseja encontrar"
+          />
+          <i class="icon-icon-search"></i>
         </div>
-        <div
-          slot="footer"
-          class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
+        <div class="filter" :class="{ active: showFilters }">
+          <a
+            class="bt bt-square bg-white-2 c-light-blue"
+            @click="showFilters = !showFilters"
+          >
+            <i class="icon-icon-filter"></i>
+          </a>
+        </div>
+        <base-link to="/users/new" class="bt bt-square bg-white-2 c-light-blue">
+          <i class="icon-icon-plus"></i>
+        </base-link>
+      </div>
+      <div class="filters" v-show="showFilters">
+        <v-select
+          :options="operations"
+          :reduce="op => op.code"
+          v-model="operationFilter"
+          class="no-margin"
+          placeholder="Filtre pelo Clube"
         >
-          <div>
-            <p class="card-category"></p>
-          </div>
-          <base-pagination
-            class="pagination-no-border"
-            v-model="pagination.currentPage"
-            :per-page="pagination.perPage"
-            :total="total"
-            v-on:input="onPageChanged"
-          >
-          </base-pagination>
-        </div>
-      </card>
+          <span slot="no-options">Nenhum clube encontrado</span>
+        </v-select>
+        <v-select
+          :options="operationPartners"
+          :reduce="op => op.code"
+          v-model="operationPartnerFilter"
+          placeholder="Filtre por Empresa"
+        >
+          <span slot="no-options">Nenhuma empresa encontrada</span>
+        </v-select>
+        <v-select
+          :options="roles"
+          :reduce="op => op.code"
+          v-model="roleFilter"
+          v-show="isRebens"
+          placeholder="Filtre pelo Papel"
+        >
+          <span slot="no-options">Nenhum papel encontrado</span>
+        </v-select>
+        <v-select
+          :options="statuses"
+          :reduce="op => op.code"
+          v-model="activeFilter"
+          placeholder="Filtre pelo Status"
+        >
+          <span slot="no-options">Nenhum status encontrado</span>
+        </v-select>
+      </div>
     </div>
-    <!-- Classic Modal -->
+    <div class="list-table">
+      <table v-loading="loading">
+        <thead>
+          <tr>
+            <th>Nome / E-mail</th>
+            <th>Clube / Empresa</th>
+            <th>Papel</th>
+            <th style="width:192px;">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in tableData" :key="item.id">
+            <td class="td-flex">
+              <div class="avatar">
+                <img
+                  v-if="item.picture && item.picture !== ''"
+                  :src="item.picture"
+                  :alt="item.name"
+                />
+                <span v-else>{{ item.initials }}</span>
+              </div>
+              <div class="two-lines">
+                <span>{{ item.name }} {{ item.surname }}</span>
+                <span class="blue">{{ item.email }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.operation }}</span>
+                <span class="blue">{{ item.operationPartner }}</span>
+              </div>
+            </td>
+            <td>
+              <span>{{ item.roleName }}</span>
+            </td>
+            <td>
+              <div class="actions">
+                <button
+                  @click="toggleActive(item)"
+                  type="button"
+                  :title="item.active ? 'Inativar' : 'Ativar'"
+                  class="bt"
+                  :class="{
+                    'c-green': item.active,
+                    'c-light-gray': !item.active
+                  }"
+                >
+                  <i class="icon-icon-check"></i>
+                </button>
+                <button
+                  @click="handleResendPassword(item)"
+                  type="button"
+                  title="Reenviar validação"
+                  class="bt c-orange"
+                >
+                  <i class="icon-icon-send"></i>
+                </button>
+                <button
+                  @click="handleEdit(item)"
+                  type="button"
+                  title="Editar"
+                  class="bt c-light-blue"
+                >
+                  <i class="icon-icon-edit"></i>
+                </button>
+                <button
+                  @click="handleDelete(item)"
+                  type="button"
+                  title="apagar"
+                  class="bt c-red"
+                >
+                  <i class="icon-icon-delete"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <pagination
+        class="box-pagination"
+        v-model="pagination.currentPage"
+        :per-page="pagination.perPage"
+        :total-items="pagination.totalItems"
+        :total-pages="pagination.totalPages"
+        :current-page="pagination.currentPage"
+        v-on:input="onPageChanged"
+        @update-per-page="changePerPage"
+      >
+      </pagination>
+    </div>
     <modal :show.sync="modal.visible" headerClasses="justify-content-center">
       <h4 slot="header" class="title title-up">Remover usuário</h4>
       <form
@@ -213,19 +183,21 @@
   </div>
 </template>
 <script>
-import { Table, TableColumn, Select, Option } from 'element-ui';
-import { BasePagination, Modal } from 'src/components';
+import { Select, Option } from 'element-ui';
+import { Modal, Pagination } from 'src/components';
 import userService from '../../services/User/userService';
-import listPage from '../../mixins/listPage';
+import operationService from '../../services/Operation/operationService';
+import operationPartnerService from '../../services/OperationPartner/operationPartnerService';
+import paging from '../../mixins/paging';
+import _ from 'lodash';
+
 export default {
-  mixins: [listPage],
+  mixins: [paging],
   components: {
     Modal,
-    BasePagination,
+    Pagination,
     [Select.name]: Select,
-    [Option.name]: Option,
-    [Table.name]: Table,
-    [TableColumn.name]: TableColumn
+    [Option.name]: Option
   },
   data() {
     return {
@@ -234,37 +206,38 @@ export default {
       activeFilter: '',
       roleFilter: '',
       operationFilter: '',
+      operationPartnerFilter: '',
       isMaster: false,
       isRebens: false,
-      tableColumns: [
-        {
-          prop: 'id',
-          label: this.$i18n.t('pages.users.grid.id'),
-          minWidth: 0
-        },
-        {
-          prop: 'name',
-          label: this.$i18n.t('pages.users.grid.name'),
-          minWidth: 200
-        },
-        {
-          prop: 'email',
-          label: this.$i18n.t('pages.users.grid.email'),
-          minWidth: 250
-        },
-        {
-          prop: 'activeName',
-          label: this.$i18n.t('pages.users.grid.active'),
-          minWidth: 0
-        }
+      showFilters: false,
+      operations: [],
+      operationPartners: [],
+      roles: [],
+      statuses: [
+        { code: true, label: 'Ativos' },
+        { code: false, label: 'Inativos' }
       ]
     };
   },
   methods: {
-    handleEdit(index, row) {
+    handleEdit(row) {
       this.$router.push(`/users/${row.id}/edit/`);
     },
-    handleResendPassword(index, row) {
+    toggleActive(row) {
+      const self = this;
+      userService.toggleActive(row.id).then(data => {
+        if (data.status === 'ok') {
+          row.active = data.data;
+          self.$notify({
+            type: 'success',
+            message: `Usuário ${
+              row.active ? 'ativado' : 'inativado'
+            } com sucesso`
+          });
+        }
+      });
+    },
+    handleResendPassword(row) {
       if (confirm('Deseja reenviar o e-mail de validação?')) {
         const self = this;
         self.$data.loading = true;
@@ -272,8 +245,7 @@ export default {
           () => {
             self.$notify({
               type: 'success',
-              message: 'E-mail reenviado com sucesso!',
-              icon: 'tim-icons icon-bell-55'
+              message: 'E-mail reenviado com sucesso!'
             });
             self.$data.loading = false;
           },
@@ -286,25 +258,31 @@ export default {
     fetchData() {
       const self = this;
       const request = {
-        page: this.$data.pagination.currentPage - 1,
-        pageItems: this.$data.pagination.perPage,
-        searchWord: this.searchQuery,
-        sort: this.formatSortFieldParam,
-        active: this.activeFilter,
-        role: this.roleFilter,
-        idOperation: this.operationFilter
+        page: self.$data.pagination.currentPage - 1,
+        pageItems: self.$data.pagination.perPage,
+        searchWord: self.searchQuery,
+        sort: self.formatSortFieldParam,
+        active: self.activeFilter !== null ? self.activeFilter : '',
+        role: self.roleFilter ? self.roleFilter : '',
+        idOperation: self.operationFilter ? self.operationFilter : '',
+        idOperationPartner: self.operationPartnerFilter
+          ? self.operationPartnerFilter
+          : ''
       };
       this.$data.loading = true;
       userService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;
-          self.savePageSettings(self, response.totalItems);
+          self.savePageSettings(self, response.totalItems, response.totalPages);
           self.$data.loading = false;
         },
         () => {
           self.$data.loading = false;
         }
       );
+      if (self.roles.length === 0) {
+        self.populateFilters(self);
+      }
     },
     validateModal() {
       const self = this;
@@ -314,9 +292,8 @@ export default {
           userService.delete(self.modal.model.id).then(
             response => {
               self.$notify({
-                type: 'primary',
-                message: response.message,
-                icon: 'tim-icons icon-bell-55'
+                type: 'success',
+                message: response.message
               });
               self.resetModal();
               self.pagination.currentPage = 1;
@@ -324,28 +301,88 @@ export default {
             },
             err => {
               self.$notify({
-                type: 'primary',
-                message: err.message,
-                icon: 'tim-icons icon-bell-55'
+                type: 'danger',
+                message: err.message
               });
               self.modal.formLoading = false;
             }
           );
         }
       });
+    },
+    populateFilters(self) {
+      self.isMaster = self.$store.getters.currentUser.role === 'master';
+      self.isRebens =
+        self.$store.getters.currentUser.role === 'administratorRebens' ||
+        self.$store.getters.currentUser.role === 'master';
+
+      self.roles = [];
+      if (self.isMaster) {
+        self.roles.push({ code: 'master', label: 'Master' });
+      }
+      if (!self.isPartnerUser) {
+        self.roles.push({ code: 'publisher', label: 'Publicador' });
+        self.roles.push({ code: 'administrator', label: 'Administrador' });
+        if (self.isRebens) {
+          self.roles.push({
+            code: 'publisherRebens',
+            label: 'Publicador Rebens'
+          });
+          self.roles.push({
+            code: 'administratorRebens',
+            label: 'Administrador Rebens'
+          });
+        }
+      }
+      self.roles.push({
+        code: 'partnerAdministrator',
+        label: 'Administrador Parceiro'
+      });
+      self.roles.push({ code: 'partnerApprover', label: 'Aprovador Parceiro' });
+      self.roles.push({ code: 'promoter', label: 'Promotor' });
+
+      operationService.findAll().then(response => {
+        _.each(response.data, function(el) {
+          if (el.id != self.id) {
+            self.operations.push({ code: el.id, label: el.title });
+          }
+        });
+      });
+
+      operationPartnerService
+        .findAll({
+          page: 0,
+          pageItems: 1000,
+          searchWord: '',
+          sort: 'name ASC',
+          idOperation: ''
+        })
+        .then(
+          response => {
+            _.each(response.data, function(el) {
+              self.operationPartners.push({
+                code: el.id,
+                label: el.name
+              });
+            });
+          },
+          err => {
+            console.log('partners error', err);
+          }
+        );
     }
-  },
-  created() {
-    this.isMaster = this.$store.getters.currentUser.role == 'master';
-    this.isRebens =
-      this.$store.getters.currentUser.role == 'administratorRebens' ||
-      this.$store.getters.currentUser.role == 'master';
   },
   watch: {
     activeFilter() {
       this.fetchData();
     },
     roleFilter() {
+      this.fetchData();
+    },
+    operationFilter() {
+      this.fetchData();
+    },
+    operationPartnerFilter() {
       this.fetchData();
     }
   }

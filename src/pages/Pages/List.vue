@@ -68,7 +68,7 @@
                   size="sm"
                   icon
                 >
-                  <i class="tim-icons icon-pencil"></i>
+                  <i class="fas fa-edit"></i>
                 </base-button>
               </div>
             </el-table-column>

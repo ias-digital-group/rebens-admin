@@ -1,3 +1,4 @@
+import MainLayout from 'src/pages/Layout/MainLayout.vue';
 import DashboardLayout from 'src/pages/Layout/DashboardLayout.vue';
 import AuthLayout from 'src/pages/Layout/AuthLayout.vue';
 // GeneralViews
@@ -144,7 +145,7 @@ let operationsPages = {
 
 let bannersPages = {
   path: '/banners',
-  component: DashboardLayout,
+  component: MainLayout,
   meta: {
     requiresAuth: true,
     roles: [
@@ -474,7 +475,7 @@ let benefitsPages = {
 
 let usersPages = {
   path: '/users',
-  component: DashboardLayout,
+  component: MainLayout,
   meta: {
     requiresAuth: true,
     roles: [
@@ -527,7 +528,10 @@ let usersPages = {
           'master',
           'administrator',
           'administratorRebens',
-          'partnerAdministrator'
+          'partnerAdministrator',
+          'publisher',
+          'publisherRebens',
+          'promoter'
         ],
         title: i18n.t('pages.users.title')
       }
@@ -660,7 +664,7 @@ let operationPartnerPages = {
 
 let accountPages = {
   path: '/account',
-  component: DashboardLayout,
+  component: MainLayout,
   meta: {
     requiresAuth: true,
     roles: [

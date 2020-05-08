@@ -43,7 +43,21 @@ import AnimatedNumber from './AnimatedNumber';
 import AddressForm from './AddressForm.vue';
 import Contacts from './Contacts.vue';
 import Addresses from './Addresses.vue';
+
+import Pagination from './ias/Pagination.vue';
+import CustomInput from './ias/CustomInput.vue';
+import CustomRadio from './ias/CustomRadio.vue';
+import CustomCheckbox from './ias/CustomCheckbox.vue';
+import CustomImageUpload from './ias/CustomImageUpload.vue';
+import SuccessModal from './ias/SuccessModal.vue';
+
 export {
+  CustomCheckbox,
+  CustomImageUpload,
+  CustomInput,
+  CustomRadio,
+  Pagination,
+  SuccessModal,
   BaseCheckbox,
   IconCheckbox,
   BaseSwitch,
