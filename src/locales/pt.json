@@ -172,6 +172,9 @@
       },
       "promoter":{
         "title":"Clientes"
+      },
+      "scratchcard": {
+        "title": "Raspadinha"
       }
     },
     "navbar":{

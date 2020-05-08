@@ -12,17 +12,33 @@
                 required
                 v-model="model.question"
                 type="text"
-                :error="getError('question')"
                 name="question"
                 placeholder="Pergunta"
                 maxlength="200"
               ></base-input>
+              <label
+                v-show="customErros.includes('question')"
+                class="text-danger"
+                >O campo Pergunta é obrigatório</label
+              >
+              <label
+                v-show="customErros.includes('questionLength')"
+                class="text-danger"
+                >O campo Pergunta aceita no máximo 200 caracteres</label
+              >
             </div>
           </div>
           <div class="row">
             <label class="col-md-3 col-form-label">Resposta</label>
             <div class="col-md-9">
-              <wysiwyg v-model="model.answer" placeholder="Resposta" />
+              <vue-editor
+                :editorToolbar="customToolbar"
+                v-model="model.answer"
+                placeholder="Resposta"
+              />
+              <label v-show="customErros.includes('answer')" class="text-danger"
+                >O campo Resposta é obrigatório</label
+              >
             </div>
           </div>
           <div class="row">
@@ -71,6 +87,8 @@
 <script>
 import { Select, Option } from 'element-ui';
 import faqService from '../../services/Faq/faqService';
+import config from '../../config';
+
 export default {
   components: {
     [Option.name]: Option,
@@ -88,6 +106,8 @@ export default {
       selectLoading: false,
       formLoading: false,
       submitLoading: false,
+      customToolbar: [],
+      customErros: [],
       model: {
         id: 0,
         question: '',
@@ -95,20 +115,6 @@ export default {
         order: 0,
         idOperation: 0,
         active: true
-      },
-      modelValidations: {
-        question: {
-          required: true,
-          max: 200
-        },
-        order: {
-          required: true,
-          max: 4
-        },
-        answer: {
-          required: true,
-          max: 2000
-        }
       }
     };
   },
@@ -123,13 +129,19 @@ export default {
     },
     validateFaq() {
       const self = this;
-      if (
-        self.model.question !== '' &&
-        self.model.question.length <= 1000 &&
-        self.model.answer !== '' &&
-        self.model.answer.length <= 1000 &&
-        self.model.order !== ''
-      ) {
+      self.customErros = [];
+      if (self.model.question === '') {
+        self.customErros.push('question');
+      } else if (self.model.question.length > 200) {
+        self.customErros.push('questionLength');
+      }
+      if (self.model.answer === '') {
+        self.customErros.push('answer');
+      }
+      if (self.model.order === '') {
+        self.customErros.push('order');
+      }
+      if (self.customErros.length === 0) {
         self.submitLoading = true;
         self.saveFaq(self);
       }
@@ -182,8 +194,9 @@ export default {
     },
     fetchData() {
       const self = this;
-      if (this.viewAction == 'edit') {
-        this.formLoading = true;
+      self.customToolbar = config.customToolbar;
+      if (self.viewAction == 'edit') {
+        self.formLoading = true;
         faqService.get(self.id).then(
           response => {
             self.model = response.data;

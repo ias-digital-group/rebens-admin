@@ -226,8 +226,8 @@ export default {
       );
     });
   },
-  saveConfiguration: function(id, data, modules) {
-    const postData = { fields: data.fields, modules: modules };
+  saveConfiguration: function(id, data, modules, wirecard) {
+    const postData = { fields: data.fields, wirecard, modules };
     return new Promise((resolve, reject) => {
       HTTP.post(
         config.apiEndpoints.operationUri.concat(`${id}/Configuration`),
@@ -352,6 +352,20 @@ export default {
   listModules: function(id) {
     return new Promise((resolve, reject) => {
       HTTP.get(config.apiEndpoints.operationUri.concat(`Modules/${id}`)).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  listByModule: function(module) {
+    return new Promise((resolve, reject) => {
+      HTTP.get(
+        config.apiEndpoints.operationUri.concat(`ListByModule/${module}`)
+      ).then(
         response => {
           resolve(response.data);
         },

@@ -12,28 +12,31 @@
               <base-input
                 required
                 v-model="model.name"
-                v-validate="modelValidations.name"
                 type="text"
-                :error="getError('name')"
                 name="name"
                 placeholder="Nome"
                 maxlength="200"
               ></base-input>
+              <label v-show="customErrors.includes('name')" class="text-danger"
+                >Este campo é obrigatório!</label
+              >
             </div>
           </div>
           <div class="row">
             <label class="col-md-3 col-form-label">Categoria pai</label>
-            <div class="col-md-9">
-              <el-autocomplete
-                :fetch-suggestions="querySearch"
-                @select="handleSelect"
-                placeholder=""
-                style="width:100%"
-                v-model="parentName"
-                :trigger-on-focus="false"
+            <div class="col-md-4">
+              <v-select
+                :options="parents"
+                :reduce="op => op.code"
+                :key="model.idParent"
+                v-model="model.idParent"
               >
-              </el-autocomplete>
-              <input type="hidden" v-model="model.idParent" />
+              </v-select>
+              <label
+                v-show="customErrors.includes('idParent')"
+                class="text-danger"
+                >Este campo é obrigatório!</label
+              >
             </div>
           </div>
           <div class="row">
@@ -48,7 +51,7 @@
             <div class="col-md-12">
               <base-link
                 class="btn mt-3 btn-simple btn-primary"
-                to="/categories"
+                to="/freeCourse/categories"
                 >Voltar</base-link
               >
               <base-button
@@ -87,58 +90,43 @@ export default {
       formLoading: false,
       submitLoading: false,
       image: null,
+      customErrors: [],
       model: {
         name: '',
         order: 1,
-        idParent: null,
+        idParent: 0,
         active: false,
-        icon: ''
+        icon: '',
+        type: 2
       },
-      modelValidations: {
-        name: {
-          required: true,
-          max: 200
-        },
-        order: {
-          required: true,
-          max: 4
-        }
-      },
-      categoriesList: [],
-      parentName: ''
+      parents: []
     };
   },
   computed: {
     viewAction() {
-      return this.$route.name == 'edit_category' ? 'edit' : 'new';
+      return this.$route.name == 'edit_categoryFreeCourse' ? 'edit' : 'new';
     }
   },
   methods: {
-    querySearch(query, cb) {
-      var list = this.categoriesList;
-      var results = query ? list.filter(this.createFilter(query)) : list;
-      var top3 = results.slice(0, 3);
-      cb(top3);
-    },
-    createFilter(query) {
-      return category => {
-        return category.value.toLowerCase().includes(query.toLowerCase());
-      };
-    },
-    handleSelect(item) {
-      this.model.idParent = item.id;
-    },
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
     validate() {
       const self = this;
-      this.$validator.validateAll().then(isValid => {
-        if (isValid) {
-          self.submitLoading = true;
-          self.saveCategory(self);
-        }
-      });
+      self.customErrors = [];
+      if (!self.model.name || self.model.name === '')
+        self.customErrors.push('name');
+      if (
+        self.model.idParent == null ||
+        self.model.idParent == undefined ||
+        self.model.idParent < 0
+      )
+        self.customErrors.push('idParent');
+
+      if (self.customErrors.length === 0) {
+        self.submitLoading = true;
+        self.saveCategory(self);
+      }
     },
     saveCategory(vm) {
       vm = vm ? vm : this;
@@ -150,7 +138,7 @@ export default {
               message: 'Categoria cadastrada com sucesso!',
               icon: 'tim-icons icon-bell-55'
             });
-            vm.$router.push('/categories');
+            vm.$router.push('/freeCourse/categories');
             vm.submitLoading = false;
           },
           err => {
@@ -170,7 +158,7 @@ export default {
               message: response.message,
               icon: 'tim-icons icon-bell-55'
             });
-            vm.$router.push('/categories');
+            vm.$router.push('/freeCourse/categories');
             vm.submitLoading = false;
           },
           err => {
@@ -186,8 +174,23 @@ export default {
     },
     fetchData() {
       const self = this;
-      if (this.viewAction == 'edit') {
-        this.formLoading = true;
+      self.selectLoading = true;
+      categoryService.getListTree(2).then(
+        response => {
+          self.parents.push({ code: 0, label: 'Raiz' });
+          _.each(response.data, function(el) {
+            if (el.id != self.id) {
+              self.parents.push({ code: el.id, label: el.name });
+            }
+          });
+          self.selectLoading = false;
+        },
+        () => {
+          self.selectLoading = false;
+        }
+      );
+      if (self.viewAction == 'edit') {
+        self.formLoading = true;
         categoryService.get(self.id).then(
           response => {
             self.model = response.data;
@@ -198,24 +201,6 @@ export default {
           }
         );
       }
-      this.selectLoading = true;
-      categoryService.getListTree(this.type).then(
-        response => {
-          self.categoriesList.push({ id: null, value: 'Raiz' });
-          _.each(response.data, function(el) {
-            if (el.id != self.id) {
-              self.categoriesList.push({ id: el.id, value: el.name });
-              if (self.model.idParent == el.id) {
-                self.parentName = el.name;
-              }
-            }
-          });
-          self.selectLoading = false;
-        },
-        () => {
-          self.selectLoading = false;
-        }
-      );
     }
   },
   created() {

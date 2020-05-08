@@ -10,13 +10,19 @@
               <base-input
                 required
                 v-model="model.name"
-                v-validate="modelValidations.nome"
                 type="text"
-                :error="getError('nome')"
                 name="nome"
                 placeholder="Nome"
                 maxlength="300"
               ></base-input>
+              <label v-show="customErrors.includes('name')" class="text-danger"
+                >Este campo é obrigatório.</label
+              >
+              <label
+                v-show="customErrors.includes('nameLength')"
+                class="text-danger"
+                >Este campo aceita no máximo 300 caracteres.</label
+              >
             </div>
           </div>
 
@@ -79,12 +85,7 @@ export default {
         idOperation: 0,
         active: true
       },
-      modelValidations: {
-        nome: {
-          required: true,
-          max: 300
-        }
-      }
+      customErrors: []
     };
   },
   computed: {
@@ -98,7 +99,14 @@ export default {
     },
     validatePartner() {
       const self = this;
-      if (self.model.name !== '' && self.model.name.length <= 300) {
+      self.customErrors = [];
+      if (!self.model.name || self.model.name === '') {
+        self.customErrors.push('name');
+      } else if (self.model.name.length > 300) {
+        self.customErrors.push('nameLength');
+      }
+
+      if (self.customErrors.length === 0) {
         self.submitLoading = true;
         self.savePartner(self);
       }

@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-md-12">
-      <card title="Faculdade">
+      <card title="Curso">
         <h4 slot="header" class="card-title">Curso</h4>
         <!-- <el-tabs>
           <el-tab-pane label="Cadastro"> -->
@@ -44,23 +44,22 @@
             <label class="col-md-3 col-form-label">Operação</label>
             <div class="col-md-4">
               <div class="form-group">
-                <el-select
-                  class="select-info"
-                  placeholder="Operação"
+                <v-select
+                  v-if="model.id === 0"
+                  :options="operations"
+                  :reduce="op => op.code"
+                  :key="model.idOperation"
                   v-model="model.idOperation"
-                  v-loading.lock="selectLoading"
-                  @change="onOperationChange"
-                  lock
+                  @input="onOperationChange"
                 >
-                  <el-option
-                    class="select-primary"
-                    v-for="type in operations"
-                    :value="type.id"
-                    :label="type.title"
-                    :key="type.id"
-                  >
-                  </el-option>
-                </el-select>
+                </v-select>
+                <base-input
+                  v-model="operation"
+                  type="text"
+                  name="operation"
+                  disabled
+                  v-if="model.id > 0"
+                ></base-input>
                 <label
                   v-show="customErros.includes('idOperation')"
                   class="text-danger"
@@ -73,22 +72,13 @@
             <label class="col-md-3 col-form-label">Faculdade</label>
             <div class="col-md-4">
               <div class="form-group">
-                <el-select
-                  class="select-info"
-                  placeholder="Faculdade"
+                <v-select
+                  :options="colleges"
+                  :reduce="op => op.code"
+                  :key="model.idCollege"
                   v-model="model.idCollege"
-                  v-loading.lock="selectLoading"
-                  lock
                 >
-                  <el-option
-                    class="select-primary"
-                    v-for="type in colleges"
-                    :value="type.id"
-                    :label="type.title"
-                    :key="type.id"
-                  >
-                  </el-option>
-                </el-select>
+                </v-select>
                 <label
                   v-show="customErros.includes('idCollege')"
                   class="text-danger"
@@ -101,22 +91,13 @@
             <label class="col-md-3 col-form-label">Tipo de Graduação</label>
             <div class="col-md-4">
               <div class="form-group">
-                <el-select
-                  class="select-info"
-                  placeholder="Tipo de Graduação"
+                <v-select
+                  :options="graduationTypes"
+                  :reduce="op => op.code"
+                  :key="model.idGraduationType"
                   v-model="model.idGraduationType"
-                  v-loading.lock="selectLoading"
-                  lock
                 >
-                  <el-option
-                    class="select-primary"
-                    v-for="type in graduationTypes"
-                    :value="type.id"
-                    :label="type.title"
-                    :key="type.id"
-                  >
-                  </el-option>
-                </el-select>
+                </v-select>
                 <label
                   v-show="customErros.includes('idGraduationType')"
                   class="text-danger"
@@ -129,22 +110,13 @@
             <label class="col-md-3 col-form-label">Modalidade</label>
             <div class="col-md-4">
               <div class="form-group">
-                <el-select
-                  class="select-info"
-                  placeholder="Modalidade"
+                <v-select
+                  :options="modalities"
+                  :reduce="op => op.code"
+                  :key="model.idModality"
                   v-model="model.idModality"
-                  v-loading.lock="selectLoading"
-                  lock
                 >
-                  <el-option
-                    class="select-primary"
-                    v-for="type in modalities"
-                    :value="type.id"
-                    :label="type.title"
-                    :key="type.id"
-                  >
-                  </el-option>
-                </el-select>
+                </v-select>
                 <label
                   v-show="customErros.includes('idModality')"
                   class="text-danger"
@@ -157,25 +129,14 @@
             <label class="col-md-3 col-form-label">Período</label>
             <div class="col-md-4">
               <div class="form-group">
-                <el-select
-                  class="select-info"
-                  placeholder="Período"
-                  v-loading.lock="selectLoading"
-                  value-key="id"
+                <v-select
+                  :options="periods"
+                  :reduce="op => op.code"
+                  :key="model.periodIds"
                   v-model="model.periodIds"
-                  ref="id"
-                  multiple
-                  lock
+                  :multiple="true"
                 >
-                  <el-option
-                    class="select-primary"
-                    v-for="type in periods"
-                    :value="type.id"
-                    :label="type.title"
-                    :key="type.id"
-                  >
-                  </el-option>
-                </el-select>
+                </v-select>
                 <label
                   v-show="customErros.includes('period')"
                   class="text-danger"
@@ -188,24 +149,13 @@
             <label class="col-md-3 col-form-label">Perguntas Frequentes</label>
             <div class="col-md-4">
               <div class="form-group">
-                <el-select
-                  class="select-info"
-                  placeholder="Perguntas Frequentes"
-                  v-loading.lock="selectLoading"
-                  value-key="value"
+                <v-select
+                  :options="faqs"
+                  :reduce="op => op.code"
+                  :key="model.idFaq"
                   v-model="model.idFaq"
-                  ref="value"
-                  lock
                 >
-                  <el-option
-                    class="select-primary"
-                    v-for="faq in faqs"
-                    :value="faq.value"
-                    :label="faq.display"
-                    :key="faq.value"
-                  >
-                  </el-option>
-                </el-select>
+                </v-select>
               </div>
             </div>
           </div>
@@ -213,24 +163,13 @@
             <label class="col-md-3 col-form-label">Regulamento</label>
             <div class="col-md-4">
               <div class="form-group">
-                <el-select
-                  class="select-info"
-                  placeholder="Regulamento"
-                  v-loading.lock="selectLoading"
-                  value-key="value"
+                <v-select
+                  :options="regulations"
+                  :reduce="op => op.code"
+                  :key="model.idRegulation"
                   v-model="model.idRegulation"
-                  ref="value"
-                  lock
                 >
-                  <el-option
-                    class="select-primary"
-                    v-for="reg in regulations"
-                    :value="reg.value"
-                    :label="reg.display"
-                    :key="reg.value"
-                  >
-                  </el-option>
-                </el-select>
+                </v-select>
               </div>
             </div>
           </div>
@@ -306,45 +245,21 @@
                 placeholder="Início das aulas"
                 maxlength="100"
               ></base-input>
+              <label
+                v-show="customErros.includes('courseBegin')"
+                class="text-danger"
+                >O campo Início das aulas é obrigatório!</label
+              >
             </div>
           </div>
-          <!-- <div class="row">
-            <label class="col-md-3 col-form-label">Data</label>
-            <div class="col-md-9 col-lg-3">
-              <base-input label="Validade">
-                <el-date-picker
-                  type="date"
-                  placeholder="Validade"
-                  v-model="model.dueDate"
-                >
-                </el-date-picker>
-              </base-input>
-            </div>
-            <div class="col-md-9 col-lg-3">
-              <base-input label="Início">
-                <el-date-picker
-                  type="date"
-                  placeholder="Início"
-                  v-model="model.startDate"
-                >
-                </el-date-picker>
-              </base-input>
-            </div>
-            <div class="col-md-9 offset-md-3 offset-lg-0 col-lg-3">
-              <base-input label="Fim">
-                <el-date-picker
-                  type="date"
-                  placeholder="Fim"
-                  v-model="model.endDate"
-                >
-                </el-date-picker>
-              </base-input>
-            </div>
-          </div> -->
           <div class="row" style="padding-bottom:10px;">
             <label class="col-md-3 col-form-label">Descrição</label>
             <div class="col-md-9">
-              <wysiwyg v-model="model.description" placeholder="Descrição" />
+              <vue-editor
+                :editorToolbar="customToolbar"
+                v-model="model.description"
+                placeholder="Descrição"
+              />
               <label
                 v-show="customErros.includes('description')"
                 class="text-danger"
@@ -352,20 +267,6 @@
               >
             </div>
           </div>
-          <!-- <div class="row" style="padding-bottom:10px;">
-            <label class="col-md-3 col-form-label">Texto do voucher</label>
-            <div class="col-md-9">
-              <wysiwyg
-                v-model="model.voucherText"
-                placeholder="Texto do voucher"
-              />
-              <label
-                v-show="customErros.includes('voucherText')"
-                class="text-danger"
-                >O campo Texto do voucher é obrigatório!</label
-              >
-            </div>
-          </div> -->
           <template v-if="model.image">
             <div class="row" style="padding-bottom:10px;">
               <label class="col-md-3 col-form-label">Imagem (1200x500)</label>
@@ -409,7 +310,7 @@
           <template v-if="model.listImage">
             <div class="row" style="padding-bottom:10px;">
               <label class="col-md-3 col-form-label"
-                >Imagem da Listagem (216x174)</label
+                >Imagem da Listagem (278x165)</label
               >
               <div class="col-md-9">
                 <div>
@@ -433,7 +334,7 @@
           <template v-else>
             <div class="row" style="padding-bottom:10px;">
               <label class="col-md-3 col-form-label"
-                >Imagem da Listagem (216x174)</label
+                >Imagem da Listagem (278x165)</label
               >
               <div class="col-md-9">
                 <image-upload
@@ -474,7 +375,8 @@
               >Descrição dos tipos de curso</label
             >
             <div class="col-md-9">
-              <wysiwyg
+              <vue-editor
+                :editorToolbar="customToolbar"
                 v-model="model.courseTypeDescription"
                 placeholder="Descrição dos tipos de curso"
               />
@@ -605,19 +507,6 @@
             </div>
           </div>
         </form>
-        <!--</el-tab-pane>
-           <el-tab-pane
-            label="Endereços"
-            :disabled="viewAction == 'new' ? true : false"
-          >
-            <addresses
-              v-loading="formLoading"
-              parent="courses"
-              :parentId="id"
-              ref="addresses"
-            ></addresses>
-          </el-tab-pane>
-        </el-tabs> -->
       </card>
     </div>
   </div>
@@ -634,6 +523,7 @@ import operationService from '../../services/Operation/operationService';
 import helperService from '../../services/Helper/helperService';
 import { ImageUpload } from 'src/components/index';
 import { Money } from 'v-money';
+import config from '../../config';
 import _ from 'lodash';
 export default {
   components: {
@@ -658,6 +548,7 @@ export default {
       selectLoading: false,
       formLoading: false,
       submitLoading: false,
+      customToolbar: [],
       model: {
         id: 0,
         title: '',
@@ -682,7 +573,7 @@ export default {
         idFaq: 0,
         idRegulation: 0,
         disclaimer:
-          'Consulte este curso no portal do MEC. Todos os cursos ofertados pelo UNICAMPI EDUCAÇÃO são autorizados pelo MEC',
+          'Consulte este curso no portal do MEC. Todos os cursos ofertados pelo CLUBE DE EDUCAÇÃO são autorizados pelo MEC',
         benefitBoxTitle: 'Beneficios',
         benefitBoxDescription:
           'Isenção da Taxa de vestibular<br />Primeira mensalidade isenta',
@@ -690,7 +581,7 @@ export default {
           '<b>PRESENCIAL</b><p>O curso presencial é ideal para os que preferem ter mais contato com outros alunos de forma mais tradicional e também para quem aprecia estar com uma rotina mais fixa durante a semana.</p><b>EAD</b><p>As pessoas têm cada vez mais atividades, e neste sentido, um formato flexível é ideal, em que a pessoa estuda no horário e onde quiser! No parque, no café, na praia, no conforto de casa, não há distância entre você e o conhecimento! Econômico e prático e barato! Você pode estudar de onde e quando quiser, no seu tempo, com a mesma qualidade e profundidade de um curso presencial.</p><b>SEMIPRESENCIAL</b><p>A Graduação EAD é flexível. Você pode optar por Ensino a Distância totalmente on-line, ou uma imersão mais profunda, na modalidade semipresencial, na qual você comparece ao campus duas vezes por semana para interagir mais com os professores, os colegas e as matérias. Seja qual for a escolha, você tem a certeza de fazer o melhor para unir você ao sucesso.</p>',
         helpStudentTitle: 'AJUDE UM ALUNO',
         helpStudentDescription:
-          'Torne o seu sonho realidade com a revenda de produtos UNICAMPI e conquiste sua independência financeira.',
+          'Torne o seu sonho realidade com a revenda de produtos CLUBE DE EDUCAÇÃO e conquiste sua independência financeira.',
         helpStudentLink: '',
         courseBegin: ''
       },
@@ -710,6 +601,7 @@ export default {
         precision: 2,
         masked: false
       },
+      operation: '',
       operations: [],
       colleges: [],
       periods: [],
@@ -764,6 +656,7 @@ export default {
       if (!self.model.originalPrice) self.customErros.push('originalPrice');
       if (!self.model.discount) self.customErros.push('discount');
       if (!self.model.duration) self.customErros.push('duration');
+      if (!self.model.courseBegin) self.customErros.push('courseBegin');
       if (!self.model.description) self.customErros.push('description');
       if (!self.model.periodIds || self.model.periodIds.length == 0)
         self.customErros.push('period');
@@ -884,13 +777,20 @@ export default {
     },
     fetchData() {
       const self = this;
-
+      self.customToolbar = config.customToolbar;
       if (self.viewAction == 'edit') {
         self.formLoading = true;
         courseService.get(self.id).then(
           response => {
             self.model = response.data;
             self.onOperationChange();
+            if (self.operations.length > 0) {
+              _.each(self.operations, el => {
+                if (self.model.idOperation === el.code) {
+                  self.operation = el.label;
+                }
+              });
+            }
             self.formLoading = false;
           },
           () => {
@@ -900,10 +800,13 @@ export default {
       }
 
       self.selectLoading = true;
-      operationService.findAll().then(
+      operationService.listByModule('course').then(
         response => {
-          _.each(response.data, function(el) {
-            self.operations.push({ id: el.id, title: el.title });
+          _.each(response.data, el => {
+            self.operations.push({ code: el.id, label: el.title });
+            if (self.model.idOperation === el.id) {
+              self.operation = el.title;
+            }
           });
           self.selectLoading = false;
         },
@@ -912,10 +815,41 @@ export default {
         }
       );
 
-      courseService.listFaqs().then(
+      setTimeout(() => {
+        self.populateOperation();
+      }, 500);
+    },
+    populateOperation() {
+      const self = this;
+      if (self.model.id > 0 && self.operations) {
+        var op = self.operations.find(item => {
+          return item.id == self.model.idOperation;
+        });
+        if (op) {
+          self.operation = op.title;
+        }
+      }
+    },
+    onImageChange(file) {
+      this.image = file;
+    },
+    onListImageChange(file) {
+      this.listImage = file;
+    },
+    onOperationChange() {
+      const self = this;
+
+      self.colleges = new Array();
+      self.modalities = new Array();
+      self.graduationTypes = new Array();
+      self.periods = new Array();
+      self.regulations = new Array();
+      self.faqs = new Array();
+
+      courseService.listFaqs(self.model.idOperation).then(
         response => {
           _.each(response.data, function(el) {
-            self.faqs.push(el);
+            self.faqs.push({ code: el.value, label: el.display });
             if (
               self.model.idFaq === 0 &&
               el.display === 'Perguntas Frequentes - Padrão'
@@ -930,10 +864,10 @@ export default {
         }
       );
 
-      courseService.listRegulations().then(
+      courseService.listRegulations(self.model.idOperation).then(
         response => {
           _.each(response.data, function(el) {
-            self.regulations.push(el);
+            self.regulations.push({ code: el.value, label: el.display });
             if (
               self.model.idRegulation === 0 &&
               el.display === 'Regulamento - Padrão'
@@ -947,15 +881,6 @@ export default {
           self.selectLoading = false;
         }
       );
-    },
-    onImageChange(file) {
-      this.image = file;
-    },
-    onListImageChange(file) {
-      this.listImage = file;
-    },
-    onOperationChange() {
-      const self = this;
 
       courseCollegeService
         .findAll({
@@ -968,7 +893,7 @@ export default {
         .then(
           response => {
             _.each(response.data, function(el) {
-              self.colleges.push({ id: el.id, title: el.name });
+              self.colleges.push({ code: el.id, label: el.name });
             });
             self.selectLoading = false;
           },
@@ -988,7 +913,7 @@ export default {
         .then(
           response => {
             _.each(response.data, function(el) {
-              self.modalities.push({ id: el.id, title: el.name });
+              self.modalities.push({ code: el.id, label: el.name });
             });
             self.selectLoading = false;
           },
@@ -1008,7 +933,7 @@ export default {
         .then(
           response => {
             _.each(response.data, function(el) {
-              self.graduationTypes.push({ id: el.id, title: el.name });
+              self.graduationTypes.push({ code: el.id, label: el.name });
             });
             self.selectLoading = false;
           },
@@ -1028,7 +953,7 @@ export default {
         .then(
           response => {
             _.each(response.data, function(el) {
-              self.periods.push({ id: el.id, title: el.name });
+              self.periods.push({ code: el.id, label: el.name });
             });
             self.selectLoading = false;
           },

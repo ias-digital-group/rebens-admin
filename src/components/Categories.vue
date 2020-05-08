@@ -36,7 +36,7 @@ import freeCourseService from '../services/FreeCourse/freeCourseService';
 export default {
   props: {
     parentId: [String, Number],
-    type: int
+    type: Number
   },
   components: {
     [Tree.name]: Tree
@@ -71,21 +71,24 @@ export default {
     },
     fetchData() {
       const self = this;
-      this.loading = true;
-      categoryService.getListTree().then(response => {
+      if (!self.parentId || self.parentId < 1) {
+        return false;
+      }
+      self.loading = true;
+      categoryService.getListTree(self.type).then(response => {
         self.categoryList = response.data;
       });
-      if (this.type === 1) {
-        benefitService.getCategories(this.parentId).then(response => {
+      if (self.type === 1) {
+        benefitService.getCategories(self.parentId).then(response => {
           if (response && response.data)
             self.selectedCategories = response.data;
-          this.loading = false;
+          self.loading = false;
         });
-      } else if (this.type === 2) {
-        freeCourseService.getCategories(this.parentId).then(response => {
+      } else if (self.type === 2) {
+        freeCourseService.getCategories(self.parentId).then(response => {
           if (response && response.data)
             self.selectedCategories = response.data;
-          this.loading = false;
+          self.loading = false;
         });
       }
     },

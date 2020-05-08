@@ -13,11 +13,37 @@
                 required
                 v-model="model.name"
                 type="text"
-                :error="getError('name')"
                 name="name"
                 placeholder="Nome"
                 maxlength="200"
               ></base-input>
+              <label v-show="customErros.includes('name')" class="text-danger"
+                >O campo Name é obrigatório</label
+              >
+              <label
+                v-show="customErros.includes('nameLength')"
+                class="text-danger"
+                >O campo Name aceita no máximo 200 caracteres</label
+              >
+            </div>
+          </div>
+          <div class="row">
+            <label class="col-md-3 col-form-label">Operação</label>
+            <div class="col-md-4">
+              <div class="form-group">
+                <v-select
+                  :options="operations"
+                  :reduce="op => op.code"
+                  :key="model.idOperation"
+                  v-model="model.idOperation"
+                >
+                </v-select>
+                <label
+                  v-show="customErros.includes('operation')"
+                  class="text-danger"
+                  >O campo Operação é obrigatório</label
+                >
+              </div>
             </div>
           </div>
           <h4>
@@ -45,20 +71,34 @@
                   placeholder="Pergunta"
                   maxlength="500"
                 ></base-input>
+                <label
+                  v-show="customErros.includes(`question-${index}`)"
+                  class="text-danger"
+                  >O campo Pergunta é obrigatório</label
+                >
               </div>
               <div class="col-md-1">
                 <a
                   href="javascript:void(0)"
                   @click="removeItem(index)"
                   class="btn btn-icon btn-simple btn-sm btn-youtube"
-                  ><i class="tim-icons icon-simple-add"></i
+                  ><i class="tim-icons icon-simple-delete"></i
                 ></a>
               </div>
             </div>
             <div class="row">
               <label class="col-md-3 col-form-label">Resposta</label>
               <div class="col-md-8">
-                <wysiwyg placeholder="Resposta" v-model="item.answer" />
+                <vue-editor
+                  :editorToolbar="customToolbar"
+                  v-model="item.answer"
+                  placeholder="Resposta"
+                />
+                <label
+                  v-show="customErros.includes(`answer-${index}`)"
+                  class="text-danger"
+                  >O campo Resposta é obrigatório</label
+                >
               </div>
             </div>
           </div>
@@ -85,9 +125,17 @@
   </div>
 </template>
 <script>
+import { Select, Option } from 'element-ui';
 import staticTextService from '../../services/StaticText/staticTextService';
+import operationService from '../../services/Operation/operationService';
+import config from '../../config';
+import _ from 'lodash';
 
 export default {
+  components: {
+    [Option.name]: Option,
+    [Select.name]: Select
+  },
   props: {
     id: String,
     removeText: {
@@ -100,6 +148,9 @@ export default {
       selectLoading: false,
       formLoading: false,
       submitLoading: false,
+      operations: [],
+      customErros: [],
+      customToolbar: [],
       model: {
         id: 0,
         page: 'course-faq',
@@ -108,7 +159,7 @@ export default {
           default: false,
           items: []
         },
-        idOperation: 1,
+        idOperation: 0,
         active: true,
         idStaticTextType: 17
       }
@@ -122,8 +173,34 @@ export default {
   methods: {
     validateForm() {
       const self = this;
-      self.submitLoading = true;
-      self.saveStaticText(self);
+      self.customErros = new Array();
+      if (self.model.idOperation == null || self.model.idOperation === 0) {
+        self.customErros.push('operation');
+      }
+      if (self.model.name == null || self.model.name === '') {
+        self.customErros.push('name');
+      } else if (self.model.name.length > 200) {
+        self.customErros.push('nameLength');
+      }
+      for (let i = 0; i < self.model.data.items.length; i++) {
+        if (
+          self.model.data.items[i].question === null ||
+          self.model.data.items[i].question === ''
+        ) {
+          self.customErros.push(`question-${i}`);
+        }
+        if (
+          self.model.data.items[i].answer === null ||
+          self.model.data.items[i].answer === ''
+        ) {
+          self.customErros.push(`answer-${i}`);
+        }
+      }
+
+      if (self.customErros.length <= 0) {
+        self.submitLoading = true;
+        self.saveStaticText(self);
+      }
     },
     saveStaticText(self) {
       self.formLoading = true;
@@ -172,6 +249,7 @@ export default {
     },
     fetchData() {
       const self = this;
+      self.customToolbar = config.customToolbar;
       self.formLoading = true;
       staticTextService.get(self.id).then(
         response => {
@@ -180,6 +258,19 @@ export default {
         },
         () => {
           self.formLoading = false;
+        }
+      );
+
+      self.selectLoading = true;
+      operationService.findAll().then(
+        response => {
+          _.each(response.data, function(el) {
+            self.operations.push({ code: el.id, label: el.title });
+          });
+          self.selectLoading = false;
+        },
+        () => {
+          self.selectLoading = false;
         }
       );
     },

@@ -13,17 +13,52 @@
                 required
                 v-model="model.name"
                 type="text"
-                :error="getError('name')"
                 name="name"
                 placeholder="Nome"
                 maxlength="200"
               ></base-input>
+              <label v-show="customErros.includes('name')" class="text-danger"
+                >O campo Nome é obrigatório</label
+              >
+              <label
+                v-show="customErros.includes('nameLength')"
+                class="text-danger"
+                >O campo Nome aceita no máximo 200 caracteres</label
+              >
+            </div>
+          </div>
+          <div class="row">
+            <label class="col-md-3 col-form-label">Operação</label>
+            <div class="col-md-4">
+              <div class="form-group">
+                <v-select
+                  :options="operations"
+                  :reduce="op => op.code"
+                  :key="model.idOperation"
+                  v-model="model.idOperation"
+                >
+                </v-select>
+                <label
+                  v-show="customErros.includes('operation')"
+                  class="text-danger"
+                  >O campo Operação é obrigatório</label
+                >
+              </div>
             </div>
           </div>
           <div class="row">
             <label class="col-md-3 col-form-label">Regulamento</label>
             <div class="col-md-8">
-              <wysiwyg placeholder="Regulamento" v-model="model.data" />
+              <vue-editor
+                :editorToolbar="customToolbar"
+                v-model="model.data"
+                placeholder="Regulamento"
+              />
+              <label
+                v-show="customErros.includes('regulation')"
+                class="text-danger"
+                >O campo Regulamento é obrigatório</label
+              >
             </div>
           </div>
           <div class="row">
@@ -53,6 +88,9 @@
 import { Select, Option, DatePicker } from 'element-ui';
 import StaticTextForm from '../../components/StaticTextForm.vue';
 import staticTextService from '../../services/StaticText/staticTextService';
+import operationService from '../../services/Operation/operationService';
+import config from '../../config';
+import _ from 'lodash';
 
 export default {
   components: {
@@ -73,12 +111,15 @@ export default {
       selectLoading: false,
       formLoading: false,
       submitLoading: false,
+      operations: [],
+      customErros: [],
+      customToolbar: [],
       model: {
         id: 0,
         page: 'course-regulation',
         name: '',
         data: '',
-        idOperation: 1,
+        idOperation: 0,
         active: true,
         idStaticTextType: 18
       }
@@ -92,8 +133,23 @@ export default {
   methods: {
     validateForm() {
       const self = this;
-      self.submitLoading = true;
-      self.saveStaticText(self);
+      self.customErros = new Array();
+      if (self.model.idOperation == null || self.model.idOperation === 0) {
+        self.customErros.push('operation');
+      }
+      if (self.model.name == null || self.model.name === '') {
+        self.customErros.push('name');
+      } else if (self.model.name.length > 200) {
+        self.customErros.push('nameLength');
+      }
+      if (self.model.data == null || self.model.data === '') {
+        self.customErros.push('regulation');
+      }
+
+      if (self.customErros.length <= 0) {
+        self.submitLoading = true;
+        self.saveStaticText(self);
+      }
     },
     saveStaticText(self) {
       self.formLoading = true;
@@ -141,14 +197,30 @@ export default {
     },
     fetchData() {
       const self = this;
-      self.formLoading = true;
-      staticTextService.get(self.id).then(
+      self.customToolbar = config.customToolbar;
+      if (self.id > 0) {
+        self.formLoading = true;
+        staticTextService.get(self.id).then(
+          response => {
+            self.model = response.data;
+            self.formLoading = false;
+          },
+          () => {
+            self.formLoading = false;
+          }
+        );
+      }
+
+      self.selectLoading = true;
+      operationService.findAll().then(
         response => {
-          self.model = response.data;
-          self.formLoading = false;
+          _.each(response.data, function(el) {
+            self.operations.push({ code: el.id, label: el.title });
+          });
+          self.selectLoading = false;
         },
         () => {
-          self.formLoading = false;
+          self.selectLoading = false;
         }
       );
     }

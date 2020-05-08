@@ -81,6 +81,9 @@ export default {
     },
     fetchData() {
       const self = this;
+      if (!self.parentId || self.parentId < 1) {
+        return false;
+      }
       this.$data.loading = true;
       operationService
         .findAllByAssociation({

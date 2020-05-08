@@ -14,7 +14,7 @@
 
  */
 
- // Core
+ // Core 
 
 @import "dashboard/custom/functions";
 @import "dashboard/bootstrap/functions";
@@ -95,6 +95,8 @@
  @import "dashboard/custom/misc.scss";
  @import "dashboard/custom/timeline.scss";
 
+ @import "~vue-select/src/scss/vue-select.scss";
+
  // Vendor / Plugins
 
 @import "dashboard/custom/vendor/plugin-datetimepicker.scss";
@@ -147,3 +149,52 @@
 @import "dashboard/custom/cards/card-wizard";
 
 @import "~vue-wysiwyg/dist/vueWysiwyg.css";
+
+.editr{margin-bottom:10px;}
+.v-select{ margin-bottom: 10px;}
+.v-select .vs__dropdown-toggle{padding-top: 5px;}
+
+.ql-snow .ql-editor{
+    color:#777;
+    font-size: 14px;
+    font-weight: normal;
+    a{
+        color: #777;
+    }
+    strong{
+        font-weight: bold !important;
+    }
+    ul{
+        padding-left: 30px;
+        list-style:none;
+        li{
+            list-style-type: disc;
+            padding-left: 0 !important;
+            font-size: 14px;
+            
+        }
+        li::before{
+            display: none !important;
+            opacity: 0;
+            visibility: hidden;
+        }
+    }
+    ol{
+        padding-left: 30px;
+        list-style:none;
+        li{
+            list-style-type: decimal;
+            padding-left: 0 !important;
+            font-size: 14px;
+        }
+        li::before{
+            display: none !important;
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+    }
+}
+.quillWrapper{
+    margin-bottom: 10px;
+}

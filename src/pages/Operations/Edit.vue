@@ -9,7 +9,7 @@
             native-type="button"
             type="info"
             @click="publish"
-            v-if="viewAction != 'new'"
+            v-if="viewAction != 'new' && isMaster"
             :disabled="!model.canPublish"
             :loading="publishLoading"
           >
@@ -19,7 +19,7 @@
             class="pull-right"
             native-type="button"
             type="info"
-            v-if="showTempPublishBtn"
+            v-if="showTempPublishBtn && isMaster"
             :disabled="model.temporaryPublishStatus == 'Publicado Temporário'"
             @click="publishTemp"
             :loading="publishTempLoading"
@@ -36,15 +36,7 @@
             >
               <div class="row">
                 <label class="col-md-3 col-form-label">Titulo</label>
-                <div
-                  class="col-md-9"
-                  :class="
-                    customErrors.includes('title') ||
-                    customErrors.includes('titleMax')
-                      ? 'has-danger'
-                      : ''
-                  "
-                >
+                <div class="col-md-9">
                   <base-input
                     required
                     v-model="model.title"
@@ -54,28 +46,21 @@
                     :disabled="!isMaster"
                     maxlength="300"
                   ></base-input>
-                  <label v-show="customErrors.includes('title')" class="error"
-                    >&nbsp;&nbsp;O campo Título é obrigatório.</label
+                  <label
+                    v-show="customErrors.includes('title')"
+                    class="text-danger"
+                    >Este campo é obrigatório.</label
                   >
                   <label
                     v-show="customErrors.includes('titleMax')"
-                    class="error"
-                    >&nbsp;&nbsp;O campo Título aceita no máximo 300
-                    caracteres.</label
+                    class="text-danger"
+                    >Este campo aceita no máximo 300 caracteres.</label
                   >
                 </div>
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Empresa</label>
-                <div
-                  class="col-md-9"
-                  :class="
-                    customErrors.includes('companyName') ||
-                    customErrors.includes('companyNameMax')
-                      ? 'has-danger'
-                      : ''
-                  "
-                >
+                <div class="col-md-9">
                   <base-input
                     required
                     v-model="model.companyName"
@@ -87,25 +72,19 @@
                   ></base-input>
                   <label
                     v-show="customErrors.includes('companyName')"
-                    class="error"
-                    >&nbsp;&nbsp;O campo Empresa é obrigatório.</label
+                    class="text-danger"
+                    >Este campo é obrigatório.</label
                   >
                   <label
                     v-show="customErrors.includes('companyNameMax')"
-                    class="error"
-                    >&nbsp;&nbsp;O campo Empresa aceita no máximo 300
-                    caracteres.</label
+                    class="text-danger"
+                    >Este campo aceita no máximo 300 caracteres.</label
                   >
                 </div>
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Documento</label>
-                <div
-                  class="col-md-9"
-                  :class="
-                    customErrors.includes('companyDoc') ? 'has-danger' : ''
-                  "
-                >
+                <div class="col-md-9">
                   <base-input
                     required
                     v-model="model.companyDoc"
@@ -118,19 +97,14 @@
                   ></base-input>
                   <label
                     v-show="customErrors.includes('companyDoc')"
-                    class="error"
-                    >&nbsp;&nbsp;O campo Documento é obrigatório.</label
+                    class="text-danger"
+                    >Este campo é obrigatório.</label
                   >
                 </div>
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Domínio</label>
-                <div
-                  class="col-md-9"
-                  :class="
-                    customErrors.includes('domainMax') ? 'has-danger' : ''
-                  "
-                >
+                <div class="col-md-9">
                   <base-input
                     v-model="model.domain"
                     type="text"
@@ -141,9 +115,8 @@
                   ></base-input>
                   <label
                     v-show="customErrors.includes('domainMax')"
-                    class="error"
-                    >&nbsp;&nbsp;O campo Domínio aceita no máximo 200
-                    caracteres.</label
+                    class="text-danger"
+                    >Este campo aceita no máximo 200 caracteres.</label
                   >
                 </div>
               </div>
@@ -151,14 +124,7 @@
                 <label class="col-md-3 col-form-label"
                   >Subdomínio temporário</label
                 >
-                <div
-                  class="col-md-5"
-                  :class="
-                    customErrors.includes('temporarySubdomain')
-                      ? 'has-danger'
-                      : ''
-                  "
-                >
+                <div class="col-md-5">
                   <base-input
                     v-model="model.temporarySubdomain"
                     type="text"
@@ -181,15 +147,13 @@
                 >
                 <label
                   v-show="customErrors.includes('temporarySubdomain')"
-                  class="error"
-                  >&nbsp;&nbsp;O campo Subdomínio temporário é
-                  obrigatório.</label
+                  class="text-danger"
+                  >Este campo é obrigatório.</label
                 >
                 <label
                   v-show="customErrors.includes('temporarySubdomainMax')"
-                  class="error"
-                  >&nbsp;&nbsp;O campo Subdomínio aceita no máximo 50
-                  caracteres.</label
+                  class="text-danger"
+                  >Este campo aceita no máximo 50 caracteres.</label
                 >
               </div>
               <div class="row">
@@ -209,38 +173,36 @@
               </div>
               <div class="row mb-2">
                 <label class="col-md-3 col-form-label">Tipo</label>
-                <div
-                  class="col-md-9"
-                  :class="
-                    customErrors.includes('idOperationType') ? 'has-danger' : ''
-                  "
-                >
-                  <el-select
-                    class="select-info"
-                    required
-                    placeholder="Tipo de operação"
+                <div class="col-md-3">
+                  <v-select
+                    :options="operationTypeList"
+                    :reduce="op => op.code"
+                    :key="model.idOperationType"
                     v-model="model.idOperationType"
-                    v-loading.lock="selectLoading"
-                    :disabled="!isMaster"
-                    lock
+                    v-if="isMaster"
                   >
-                    <el-option
-                      v-for="t in operationTypeList"
-                      class="select-primary"
-                      :value="t.id"
-                      :label="t.name"
-                      :key="t.id"
-                    >
-                    </el-option>
-                  </el-select>
+                  </v-select>
+                  <base-input
+                    v-if="!isMaster"
+                    v-model="selectedOperationType"
+                    type="text"
+                    name="selectedOperationType"
+                    disabled
+                  >
+                  </base-input>
+                  <label
+                    v-show="customErrors.includes('idOperationType')"
+                    class="text-danger"
+                    >Este campo é obrigatório.</label
+                  >
                 </div>
               </div>
-              <template v-if="model.logo">
-                <div class="row mb-3">
-                  <label class="col-md-3 col-form-label"
-                    >Logo (160px X 68px)</label
-                  >
-                  <div class="col-md-9">
+              <div class="row mb-3">
+                <label class="col-md-3 col-form-label"
+                  >Logo (160px X 68px)</label
+                >
+                <div class="col-md-9">
+                  <template v-if="model.logo">
                     <div>
                       <img
                         style="max-width:160px;"
@@ -256,15 +218,8 @@
                         <i class="fas fa-times"></i>
                       </base-button>
                     </div>
-                  </div>
-                </div>
-              </template>
-              <template v-else>
-                <div class="row mb-3">
-                  <label class="col-md-3 col-form-label"
-                    >Logo (160px X 68px)</label
-                  >
-                  <div class="col-md-9">
+                  </template>
+                  <template v-else>
                     <image-upload
                       @change="onImageChange"
                       style="max-width:160px;"
@@ -272,13 +227,16 @@
                       :disabled="!isMaster"
                       remove-text="Remover"
                       select-text="Selecione uma imagem"
-                    /><br />
-                    <label v-show="customErrors.includes('logo')" class="error"
-                      >&nbsp;&nbsp;O campo Logo é obrigatório.</label
-                    >
-                  </div>
+                    />
+                  </template>
+                  <br />
+                  <label
+                    v-show="customErrors.includes('logo')"
+                    class="text-danger"
+                    >Este campo é obrigatório.</label
+                  >
                 </div>
-              </template>
+              </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Ativo</label>
                 <div class="col-md-9">
@@ -316,7 +274,7 @@
           </el-tab-pane>
           <el-tab-pane
             label="Configurações"
-            :disabled="viewAction == 'new' || !isMaster ? true : false"
+            :disabled="viewAction == 'new' ? true : isMaster ? false : true"
           >
             <operation-config
               v-loading="formLoading"
@@ -436,6 +394,7 @@ export default {
       isMaster: false,
       configKey: 0,
       customErrors: [],
+      selectedOperationType: '',
       model: {
         title: '',
         companyName: '',
@@ -515,38 +474,36 @@ export default {
         self.customErrors.push('logo');
       }
 
-      this.$validator.validateAll().then(isValid => {
-        if (isValid && self.customErrors.length == 0) {
-          self.submitLoading = true;
-          if (self.image) {
-            helperService.uploadFile(self.image).then(
-              response => {
-                if (response.status != 200) {
-                  self.$notify({
-                    type: 'primary',
-                    message: response.message,
-                    icon: 'tim-icons icon-bell-55'
-                  });
-                  self.submitLoading = false;
-                  return;
-                }
-                self.model.logo = response.data.url;
-                self.saveOperation(self);
-              },
-              err => {
+      if (self.customErrors.length == 0) {
+        self.submitLoading = true;
+        if (self.image) {
+          helperService.uploadFile(self.image).then(
+            response => {
+              if (response.status != 200) {
                 self.$notify({
                   type: 'primary',
-                  message: err.message,
+                  message: response.message,
                   icon: 'tim-icons icon-bell-55'
                 });
                 self.submitLoading = false;
+                return;
               }
-            );
-          } else {
-            self.saveOperation(self);
-          }
+              self.model.logo = response.data.url;
+              self.saveOperation(self);
+            },
+            err => {
+              self.$notify({
+                type: 'primary',
+                message: err.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+              self.submitLoading = false;
+            }
+          );
+        } else {
+          self.saveOperation(self);
         }
-      });
+      }
     },
     saveOperation(vw) {
       if (vw.viewAction == 'new') {
@@ -663,9 +620,9 @@ export default {
       helperService.findAllOperationTypes().then(
         response => {
           _.each(response.data, function(el) {
-            if (el.id != self.id) {
-              self.operationTypeList.push({ id: el.id, name: el.name });
-            }
+            self.operationTypeList.push({ code: el.id, label: el.name });
+            if (el.id === self.model.idOperationType)
+              self.selectedOperationType = el.name;
           });
           self.selectLoading = false;
         },
@@ -679,7 +636,6 @@ export default {
     },
     onRegisterType(type) {
       this.registerType = type;
-      console.log('registertype', type);
     }
   },
   created() {

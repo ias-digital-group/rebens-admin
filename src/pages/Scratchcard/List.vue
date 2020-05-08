@@ -4,9 +4,9 @@
       <card card-body-classes="table-full-width">
         <template slot="header">
           <h4 class="card-title">
-            {{ $t('pages.categories.title') }}
+            Campanha de Raspadinhas
             <base-link
-              to="/categories/new"
+              to="/scratchcard/new"
               class="btn btn-icon btn-simple btn-twitter btn-sm"
               ><i class="tim-icons icon-simple-add"></i
             ></base-link>
@@ -19,7 +19,7 @@
             <el-select
               class="select-primary mb-3 pagination-select"
               v-model="pagination.perPage"
-              :placeholder="$t('pages.categories.perpage-placeholder')"
+              :placeholder="$t('pages.banners.perpage-placeholder')"
               v-if="!loading"
             >
               <el-option
@@ -30,27 +30,6 @@
                 :value="item"
               >
               </el-option>
-            </el-select>
-            <el-select
-              class="select-primary mb-3 pagination-select"
-              v-model="activeFilter"
-              v-if="!loading"
-            >
-              <el-option
-                class="select-primary"
-                value=""
-                label="Todas"
-              ></el-option>
-              <el-option
-                class="select-primary"
-                value="true"
-                label="Ativas"
-              ></el-option>
-              <el-option
-                class="select-primary"
-                value="false"
-                label="Inativas"
-              ></el-option>
             </el-select>
             <base-input>
               <el-input
@@ -70,7 +49,7 @@
             ref="table"
             :data="tableData"
             v-loading="loading"
-            :empty-text="$t('pages.categories.emptytext')"
+            :empty-text="$t('pages.banners.emptytext')"
             @sort-change="onSortChanged"
             :default-sort="{ prop: sortField, order: sortOrder }"
           >
@@ -86,7 +65,7 @@
             <el-table-column
               :min-width="135"
               align="right"
-              :label="$t('pages.categories.grid.actions')"
+              :label="$t('pages.faqs.grid.actions')"
             >
               <div slot-scope="props">
                 <base-button
@@ -131,7 +110,7 @@
     </div>
     <!-- Classic Modal -->
     <modal :show.sync="modal.visible" headerClasses="justify-content-center">
-      <h4 slot="header" class="title title-up">Remover categoria</h4>
+      <h4 slot="header" class="title title-up">Remover Campanha</h4>
       <form
         class="modal-form"
         ref="modalForm"
@@ -165,7 +144,7 @@
 <script>
 import { Table, TableColumn, Select, Option } from 'element-ui';
 import { BasePagination, Modal } from 'src/components';
-import categoryService from '../../services/Category/categoryService';
+import scratchcardService from '../../services/Scratchcard/scratchcardService';
 import listPage from '../../mixins/listPage';
 export default {
   mixins: [listPage],
@@ -179,37 +158,50 @@ export default {
   },
   data() {
     return {
-      internalName: 'pages.categories.list',
+      internalName: 'pages.faqs.list',
       sortField: 'name',
-      activeFilter: '',
-      parentFilter: '',
       tableColumns: [
         {
           prop: 'id',
-          label: this.$i18n.t('pages.categories.grid.id'),
+          label: 'Id',
           minWidth: 0
         },
         {
           prop: 'name',
-          label: this.$i18n.t('pages.categories.grid.name'),
-          minWidth: 200
+          label: 'Nome',
+          minWidth: 100
         },
         {
-          prop: 'statusName',
-          label: this.$i18n.t('pages.categories.grid.status'),
-          minWidth: 200
+          prop: 'start',
+          label: 'Início',
+          minWidth: 50
         },
         {
-          prop: 'order',
-          label: this.$i18n.t('pages.categories.grid.order'),
+          prop: 'end',
+          label: 'Fim',
+          minWidth: 50
+        },
+        {
+          prop: 'quantity',
+          label: 'QTD',
           minWidth: 0
+        },
+        {
+          prop: 'operation',
+          label: 'Operação',
+          minWidth: 100
+        },
+        {
+          prop: 'status',
+          label: 'StatusName',
+          minWidth: 100
         }
       ]
     };
   },
   methods: {
     handleEdit(index, row) {
-      this.$router.push(`/categories/${row.id}/edit/`);
+      this.$router.push(`/scratchcard/${row.id}/edit/`);
     },
     fetchData() {
       const self = this;
@@ -218,11 +210,10 @@ export default {
         pageItems: this.$data.pagination.perPage,
         searchWord: this.searchQuery,
         sort: this.formatSortFieldParam,
-        active: this.activeFilter,
-        idParent: this.parentFilter
+        idOperation: 0
       };
       this.$data.loading = true;
-      categoryService.findAll(request).then(
+      scratchcardService.list(request).then(
         response => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems);
@@ -238,7 +229,7 @@ export default {
       this.$validator.validateAll().then(isValid => {
         if (isValid) {
           self.modal.formLoading = true;
-          categoryService.delete(self.modal.model.id).then(
+          scratchcardService.delete(self.modal.model.id).then(
             response => {
               self.$notify({
                 type: 'primary',
@@ -252,10 +243,7 @@ export default {
             err => {
               self.$notify({
                 type: 'primary',
-                message:
-                  err.response && err.response.data
-                    ? err.response.data.message
-                    : err.message,
+                message: err.message,
                 icon: 'tim-icons icon-bell-55'
               });
               self.modal.formLoading = false;
@@ -263,11 +251,6 @@ export default {
           );
         }
       });
-    }
-  },
-  watch: {
-    activeFilter() {
-      this.fetchData();
     }
   }
 };

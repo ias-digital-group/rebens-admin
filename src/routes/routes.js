@@ -15,9 +15,6 @@ const Login = () => import('src/pages/Login/Login.vue');
 const PasswordRecovery = () => import('src/pages/Login/PasswordRecovery.vue');
 const Validate = () => import('src/pages/Validate/Validate.vue');
 
-const CategoriesList = () => import('src/pages/Categories/List.vue');
-const CategoriesEdit = () => import('src/pages/Categories/Edit.vue');
-
 const FaqsList = () => import('src/pages/Faqs/List.vue');
 const FaqsEdit = () => import('src/pages/Faqs/Edit.vue');
 
@@ -27,14 +24,17 @@ const CustomerEdit = () => import('src/pages/Customers/Edit.vue');
 const PagesList = () => import('src/pages/Pages/List.vue');
 const PagesEdit = () => import('src/pages/Pages/Edit.vue');
 
-const PartnersList = () => import('src/pages/Partners/List.vue');
-const PartnersEdit = () => import('src/pages/Partners/Edit.vue');
-
 const OperationsList = () => import('src/pages/Operations/List.vue');
 const OperationsEdit = () => import('src/pages/Operations/Edit.vue');
 
 const BenefitsList = () => import('src/pages/Benefits/List.vue');
 const BenefitsEdit = () => import('src/pages/Benefits/Edit.vue');
+const BenefitCategoriesList = () =>
+  import('src/pages/Benefits/CategoryList.vue');
+const BenefitCategoriesEdit = () =>
+  import('src/pages/Benefits/CategoryEdit.vue');
+const BenefitPartnersList = () => import('src/pages/Benefits/PartnerList.vue');
+const BenefitPartnersEdit = () => import('src/pages/Benefits/PartnerEdit.vue');
 
 const BannersList = () => import('src/pages/Banners/List.vue');
 const BannersEdit = () => import('src/pages/Banners/Edit.vue');
@@ -59,6 +59,14 @@ const CourseEdit = () => import('src/pages/Course/Edit.vue');
 
 const FreeCourseList = () => import('src/pages/FreeCourse/List.vue');
 const FreeCourseEdit = () => import('src/pages/FreeCourse/Edit.vue');
+const FreeCourseCategoriesList = () =>
+  import('src/pages/FreeCourse/CategoryList.vue');
+const FreeCourseCategoriesEdit = () =>
+  import('src/pages/FreeCourse/CategoryEdit.vue');
+const FreeCoursePartnersList = () =>
+  import('src/pages/FreeCourse/PartnerList.vue');
+const FreeCoursePartnersEdit = () =>
+  import('src/pages/FreeCourse/PartnerEdit.vue');
 
 const CourseCollegeList = () => import('src/pages/CourseCollege/List.vue');
 const CourseCollegeEdit = () => import('src/pages/CourseCollege/Edit.vue');
@@ -88,113 +96,8 @@ const PromoterList = () => import('src/pages/Promoter/List.vue');
 const PromoterEdit = () => import('src/pages/Promoter/Edit.vue');
 const PromoterReport = () => import('src/pages/Promoter/Report.vue');
 
-let categoriesPages = {
-  path: '/categories',
-  component: DashboardLayout,
-  meta: {
-    requiresAuth: true,
-    roles: [
-      'master',
-      'publisher',
-      'administrator',
-      'publisherRebens',
-      'administratorRebens'
-    ],
-    title: i18n.t('pages.categories.title')
-  },
-  children: [
-    {
-      path: '',
-      name: 'category',
-      component: CategoriesList,
-      meta: {
-        requiresAuth: true,
-        roles: [
-          'master',
-          'publisher',
-          'administrator',
-          'publisherRebens',
-          'administratorRebens'
-        ],
-        title: i18n.t('pages.categories.title')
-      }
-    },
-    {
-      path: 'new',
-      name: `new_category`,
-      component: CategoriesEdit,
-      meta: {
-        requiresAuth: true,
-        roles: [
-          'master',
-          'administrator',
-          'publisherRebens',
-          'administratorRebens'
-        ],
-        title: i18n.t('pages.categories.title')
-      }
-    },
-    {
-      path: ':id/edit',
-      name: 'edit_category',
-      props: true,
-      component: CategoriesEdit,
-      meta: {
-        requiresAuth: true,
-        roles: [
-          'master',
-          'administrator',
-          'publisherRebens',
-          'administratorRebens'
-        ],
-        title: i18n.t('pages.categories.title')
-      }
-    }
-  ]
-};
-
-let partnersPages = {
-  path: '/partners',
-  component: DashboardLayout,
-  meta: {
-    requiresAuth: true,
-    roles: ['master', 'publisherRebens', 'administratorRebens'],
-    title: i18n.t('pages.partners.title')
-  },
-  children: [
-    {
-      path: '',
-      name: 'partner',
-      component: PartnersList,
-      meta: {
-        requiresAuth: true,
-        roles: ['master', 'publisherRebens', 'administratorRebens'],
-        title: i18n.t('pages.partners.title')
-      }
-    },
-    {
-      path: 'new',
-      name: `new_partner`,
-      component: PartnersEdit,
-      meta: {
-        requiresAuth: true,
-        roles: ['master', 'publisherRebens', 'administratorRebens'],
-        title: i18n.t('pages.partners.title')
-      }
-    },
-    {
-      path: ':id/edit',
-      name: 'edit_partner',
-      props: true,
-      component: PartnersEdit,
-      meta: {
-        requiresAuth: true,
-        roles: ['master', 'publisherRebens', 'administratorRebens'],
-        title: i18n.t('pages.partners.title')
-      }
-    }
-  ]
-};
+const ScratchcardList = () => import('src/pages/Scratchcard/List.vue');
+const ScratchcardEdit = () => import('src/pages/Scratchcard/Edit.vue');
 
 let operationsPages = {
   path: '/operations',
@@ -487,6 +390,84 @@ let benefitsPages = {
         ],
         title: i18n.t('pages.benefits.title')
       }
+    },
+    {
+      path: 'categories/',
+      name: 'categoryBenefit',
+      component: BenefitCategoriesList,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'publisher',
+          'administrator',
+          'publisherRebens',
+          'administratorRebens'
+        ],
+        title: i18n.t('pages.categories.title')
+      }
+    },
+    {
+      path: 'categories/new/',
+      name: `new_categoryBenefit`,
+      component: BenefitCategoriesEdit,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'administrator',
+          'publisherRebens',
+          'administratorRebens'
+        ],
+        title: i18n.t('pages.categories.title')
+      }
+    },
+    {
+      path: 'categories/:id/edit/',
+      name: 'edit_categoryBenefit',
+      props: true,
+      component: BenefitCategoriesEdit,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'administrator',
+          'publisherRebens',
+          'administratorRebens'
+        ],
+        title: i18n.t('pages.categories.title')
+      }
+    },
+    {
+      path: 'partner/',
+      name: 'partnerBenefit',
+      component: BenefitPartnersList,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        title: i18n.t('pages.partners.title')
+      }
+    },
+    {
+      path: 'partner/new',
+      name: `new_partnerBenefit`,
+      component: BenefitPartnersEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        title: i18n.t('pages.partners.title')
+      }
+    },
+    {
+      path: 'partner/:id/edit',
+      name: 'edit_partnerBenefit',
+      props: true,
+      component: BenefitPartnersEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        title: i18n.t('pages.partners.title')
+      }
     }
   ]
 };
@@ -565,7 +546,7 @@ let reportPages = {
   children: [
     {
       path: 'customer',
-      name: `customer`,
+      name: `customerReport`,
       component: CustomerReport,
       meta: {
         requiresAuth: true,
@@ -705,7 +686,9 @@ let accountPages = {
           'publisher',
           'publisherRebens',
           'administratorRebens',
-          'promoter'
+          'promoter',
+          'partnerApprover',
+          'partnerAdministrator'
         ],
         title: i18n.t('pages.change-password.title')
       }
@@ -1111,6 +1094,84 @@ let freeCoursePages = {
         ],
         title: 'Curso Livre'
       }
+    },
+    {
+      path: 'categories/',
+      name: 'categoryFreeCourse',
+      component: FreeCourseCategoriesList,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'publisher',
+          'administrator',
+          'publisherRebens',
+          'administratorRebens'
+        ],
+        title: i18n.t('pages.categories.title')
+      }
+    },
+    {
+      path: 'categories/new/',
+      name: `new_categoryFreeCourse`,
+      component: FreeCourseCategoriesEdit,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'administrator',
+          'publisherRebens',
+          'administratorRebens'
+        ],
+        title: i18n.t('pages.categories.title')
+      }
+    },
+    {
+      path: 'categories/:id/edit/',
+      name: 'edit_categoryFreeCourse',
+      props: true,
+      component: FreeCourseCategoriesEdit,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'administrator',
+          'publisherRebens',
+          'administratorRebens'
+        ],
+        title: i18n.t('pages.categories.title')
+      }
+    },
+    {
+      path: 'partner/',
+      name: 'partnerFreeCourse',
+      component: FreeCoursePartnersList,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        title: i18n.t('pages.partners.title')
+      }
+    },
+    {
+      path: 'partner/new',
+      name: `new_partnerFreeCourse`,
+      component: FreeCoursePartnersEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        title: i18n.t('pages.partners.title')
+      }
+    },
+    {
+      path: 'partner/:id/edit',
+      name: 'edit_partnerFreeCourse',
+      props: true,
+      component: FreeCoursePartnersEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        title: i18n.t('pages.partners.title')
+      }
     }
   ]
 };
@@ -1309,6 +1370,49 @@ let promoterPages = {
   ]
 };
 
+let scratchcardPages = {
+  path: '/scratchcard',
+  component: DashboardLayout,
+  meta: {
+    requiresAuth: true,
+    roles: ['publisherRebens', 'administratorRebens', 'master'],
+    title: i18n.t('pages.scratchcard.title')
+  },
+  children: [
+    {
+      path: '',
+      name: 'scratchcard',
+      component: ScratchcardList,
+      meta: {
+        requiresAuth: true,
+        roles: ['publisherRebens', 'administratorRebens', 'master'],
+        title: i18n.t('pages.scratchcard.title')
+      }
+    },
+    {
+      path: 'new',
+      name: `new_scratchcard`,
+      component: ScratchcardEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['publisherRebens', 'administratorRebens', 'master'],
+        title: i18n.t('pages.scratchcard.title')
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_scratchcard',
+      props: true,
+      component: ScratchcardEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['publisherRebens', 'administratorRebens', 'master'],
+        title: i18n.t('pages.scratchcard.title')
+      }
+    }
+  ]
+};
+
 const routes = [
   {
     path: '/',
@@ -1369,7 +1473,7 @@ const routes = [
   {
     path: '/',
     component: AuthLayout,
-    name: 'Authentication',
+    name: 'Validation',
     meta: {
       requiresAuth: false,
       title: 'Validação'
@@ -1404,9 +1508,7 @@ const routes = [
     }
   },
   accountPages,
-  categoriesPages,
   bannersPages,
-  partnersPages,
   operationsPages,
   benefitsPages,
   usersPages,
@@ -1423,7 +1525,8 @@ const routes = [
   courseFaqPages,
   courseRegulationPages,
   freeCoursePages,
-  promoterPages
+  promoterPages,
+  scratchcardPages
 ];
 
 export default routes;

@@ -74,9 +74,11 @@ export default {
       );
     });
   },
-  listFaqs: function() {
+  listFaqs: function(idOperation) {
     return new Promise((resolve, reject) => {
-      HTTP.get(config.apiEndpoints.courseUri.concat('items/17')).then(
+      HTTP.get(
+        config.apiEndpoints.courseUri.concat(`items/17/${idOperation}`)
+      ).then(
         response => {
           resolve(response.data);
         },
@@ -86,9 +88,11 @@ export default {
       );
     });
   },
-  listRegulations: function() {
+  listRegulations: function(idOperation) {
     return new Promise((resolve, reject) => {
-      HTTP.get(config.apiEndpoints.courseUri.concat('items/18')).then(
+      HTTP.get(
+        config.apiEndpoints.courseUri.concat(`items/18/${idOperation}`)
+      ).then(
         response => {
           resolve(response.data);
         },

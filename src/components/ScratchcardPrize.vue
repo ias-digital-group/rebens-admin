@@ -19,6 +19,7 @@
         >
         </el-table-column>
         <el-table-column
+          v-if="canEdit"
           :min-width="135"
           align="right"
           :label="$t('pages.faqs.grid.actions')"
@@ -47,88 +48,135 @@
       </el-table>
     </div>
     <div
+      v-if="canEdit"
       class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
     >
       <base-button
         class="mt-3 pull-right"
         native-type="button"
         type="info"
-        @click.native.prevent="newFaq"
+        @click.native.prevent="newPrize"
         v-show="!showForm"
       >
         Novo
       </base-button>
-      <base-pagination
-        v-show="showTable"
-        class="pagination-no-border"
-        v-model="pagination.currentPage"
-        :per-page="pagination.perPage"
-        :total="total"
-        v-on:input="onPageChanged"
-      >
-      </base-pagination>
     </div>
     <div class="col-12" v-if="showForm">
       <hr />
       <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
         <div class="row">
-          <label class="col-md-3 col-form-label">Pergunta</label>
+          <label class="col-md-3 col-form-label">Nome</label>
           <div class="col-md-9">
             <base-input
               required
-              v-model="model.question"
+              v-model="model.name"
               type="text"
-              :error="getError('question')"
-              name="question"
-              placeholder="Pergunta"
+              :error="getError('name')"
+              name="name"
+              placeholder="Nome"
               maxlength="200"
             ></base-input>
-            <label
-              v-show="customErrors.includes('question')"
-              class="text-danger"
-              >&nbsp;&nbsp;O campo Pergunta é obrigatório.</label
+            <label v-show="customErrors.includes('name')" class="text-danger"
+              >O campo Nome é obrigatório.</label
             >
-            <label
-              v-show="customErrors.includes('questionMax')"
-              class="text-danger"
-              >&nbsp;&nbsp;O campo Pergunta aceita no máximo 200
-              caracteres.</label
+            <label v-show="customErrors.includes('nameMax')" class="text-danger"
+              >O campo Nome aceita no máximo 200 caracteres.</label
             >
           </div>
         </div>
         <div class="row">
-          <label class="col-md-3 col-form-label">Resposta</label>
+          <label class="col-md-3 col-form-label">Título</label>
+          <div class="col-md-9">
+            <base-input
+              required
+              v-model="model.title"
+              type="text"
+              :error="getError('title')"
+              name="title"
+              placeholder="Título"
+              maxlength="200"
+            ></base-input>
+            <label v-show="customErrors.includes('title')" class="text-danger"
+              >O campo Título é obrigatório.</label
+            >
+            <label
+              v-show="customErrors.includes('titleMax')"
+              class="text-danger"
+              >O campo Título aceita no máximo 200 caracteres.</label
+            >
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-md-3 col-form-label">Descrição</label>
           <div class="col-md-9">
             <vue-editor
               :editorToolbar="customToolbar"
-              v-model="model.answer"
-              placeholder="Resposta"
+              v-model="model.description"
+              placeholder="Descrição"
             />
-            <label v-show="customErrors.includes('answer')" class="text-danger"
-              >&nbsp;&nbsp;O campo Resposta é obrigatório.</label
+
+            <label v-show="customErrors.includes('desc')" class="text-danger"
+              >O campo Descrição é obrigatório.</label
+            >
+            <label v-show="customErrors.includes('descMax')" class="text-danger"
+              >O campo Descrição aceita no máximo 2000 caracteres.</label
             >
           </div>
         </div>
         <div class="row">
-          <label class="col-md-3 col-form-label">Ordem</label>
+          <label class="col-md-3 col-form-label">Quantidade</label>
           <div class="col-md-2">
             <base-input
-              required
-              v-model="model.order"
+              v-model="model.quantity"
               type="number"
-              :error="getError('order')"
-              name="order"
-              placeholder="Ordem"
-              maxlength="3"
+              name="quantity"
+              placeholder="Quantidade"
+              maxlength="10"
             ></base-input>
+            <label v-show="customErrors.includes('qty')" class="text-danger"
+              >O campo Quantidade é obrigatório.</label
+            >
           </div>
         </div>
         <div class="row">
-          <label class="col-md-3 col-form-label">Ativo</label>
+          <label class="col-md-3 col-form-label"
+            >Imagem do prêmio <br />
+            <span>(200x200)</span>
+          </label>
           <div class="col-md-9">
-            <div class="form-group">
-              <base-checkbox v-model="model.active">&nbsp;</base-checkbox>
-            </div>
+            <template v-if="model.image">
+              <div class="fileinput">
+                <div class="thumbnail">
+                  <img :src="model.image" class="img-preview" />
+                </div>
+                <div>
+                  <base-button
+                    @click="model.image = ''"
+                    class="btn-simple btn-file"
+                    type="danger"
+                  >
+                    <i class="fas fa-times"></i> {{ removeText }}
+                  </base-button>
+                </div>
+              </div>
+            </template>
+            <template v-else>
+              <image-upload
+                @change="onImageChange"
+                change-text="Alterar"
+                remove-text="Remover"
+                select-text="Selecione uma imagem"
+              />
+            </template>
+            <br />
+            <label v-show="customErrors.includes('image')" class="text-danger"
+              >O campo Imagem é obrigatório.</label
+            >
+            <label
+              v-show="customErrors.includes('imageMax')"
+              class="text-danger"
+              >O campo Imagem aceita até 500 caracteres.</label
+            >
           </div>
         </div>
         <div class="row">
@@ -140,7 +188,7 @@
               class="mt-3 pull-right"
               native-type="submit"
               type="info"
-              @click.native.prevent="validateFaq"
+              @click.native.prevent="validatePrize"
             >
               Salvar
             </base-button>
@@ -149,7 +197,7 @@
       </form>
     </div>
     <modal :show.sync="modal.visible" headerClasses="justify-content-center">
-      <h4 slot="header" class="title title-up">Remover pergunta</h4>
+      <h4 slot="header" class="title title-up">Remover prêmio</h4>
       <form
         class="modal-form"
         ref="modalForm"
@@ -183,7 +231,9 @@
 <script>
 import { Table, TableColumn, Select, Option } from 'element-ui';
 import { BasePagination, Modal } from 'src/components';
-import faqService from '../services/Faq/faqService';
+import scratchcardPrizeService from '../services/Scratchcard/scratchcardPrizeService';
+import scratchcardService from '../services/Scratchcard/scratchcardService';
+import { ImageUpload } from 'src/components/index';
 import listPage from '../mixins/listPage';
 import config from '../config';
 import _ from 'lodash';
@@ -196,45 +246,53 @@ export default {
     [Select.name]: Select,
     [Option.name]: Option,
     [Table.name]: Table,
+    ImageUpload,
     [TableColumn.name]: TableColumn
   },
   props: {
-    parent: String,
+    canEdit: Boolean,
     parentId: [String, Number]
   },
   data() {
     return {
-      internalName: 'components.faqs.list',
+      internalName: 'components.scratchcardPrizes.list',
       sortField: 'name',
       formLoading: false,
       showForm: false,
       showTable: false,
+      image: null,
       customErrors: [],
       customToolbar: [],
       tableColumns: [
         {
           prop: 'id',
-          label: this.$i18n.t('pages.faqs.grid.id'),
+          label: 'ID',
           minWidth: 0
         },
         {
-          prop: 'question',
-          label: this.$i18n.t('pages.faqs.grid.name'),
-          minWidth: 200
+          prop: 'name',
+          label: 'Nome',
+          minWidth: 100
         },
         {
-          prop: 'order',
-          label: this.$i18n.t('pages.faqs.grid.order'),
-          minWidth: 0
+          prop: 'title',
+          label: 'Título',
+          minWidth: 100
+        },
+        {
+          prop: 'quantity',
+          label: 'QTD',
+          minWidth: 30
         }
       ],
       model: {
         id: 0,
-        question: '',
-        answer: '',
-        order: 0,
-        idOperation: 0,
-        active: true
+        name: '',
+        title: '',
+        image: '',
+        idScratchcard: 0,
+        quantity: 0,
+        description: ''
       }
     };
   },
@@ -242,37 +300,77 @@ export default {
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
-    newFaq() {
+    newPrize() {
       this.clearModel();
       this.showForm = true;
     },
-    validateFaq() {
+    validatePrize() {
       const self = this;
       self.customErrors = [];
-      if (self.model.question === '') {
-        self.customErrors.push('question');
-      } else if (self.model.question.length > 200) {
-        self.customErrors.push('questionMax');
+      if (self.model.name == '') {
+        self.customErrors.push('name');
+      } else if (self.model.name.length > 200) {
+        self.customErrors.push('nameMax');
+      }
+      if (self.model.image == '' && self.image == null) {
+        self.customErrors.push('image');
+      } else if (self.model.image.length > 500) {
+        self.customErrors.push('imageMax');
+      }
+      if (self.model.title == '') {
+        self.customErrors.push('title');
+      } else if (self.model.title.length > 200) {
+        self.customErrors.push('titleMax');
+      }
+      if (self.model.quantity <= 0) {
+        self.customErrors.push('qty');
+      }
+      if (self.model.description == '') {
+        self.customErrors.push('desc');
+      } else if (self.model.description.length > 2000) {
+        self.customErrors.push('descMax');
       }
 
-      if (self.model.answer === '') {
-        self.customErrors.push('answer');
+      if (self.customErrors.length == 0) {
+        self.submitLoading = true;
+        if (self.image) {
+          scratchcardService.uploadImage(self.image).then(
+            response => {
+              if (response.status != 200) {
+                self.$notify({
+                  type: 'primary',
+                  message: response.message,
+                  icon: 'tim-icons icon-bell-55'
+                });
+                self.submitLoading = false;
+                return;
+              }
+              self.model.image = response.data.fileName;
+              self.savePrize(self);
+            },
+            err => {
+              self.$notify({
+                type: 'warning',
+                message: err.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+              self.submitLoading = false;
+            }
+          );
+        }
+      } else if (self.model.image !== '') {
+        self.savePrize(self);
       }
-      if (self.customErrors.length > 0) {
-        return false;
-      }
-      self.submitLoading = true;
-      self.saveFaq(self);
     },
-    saveFaq(vm) {
+    savePrize(vm) {
       vm = vm ? vm : this;
       vm.model.idOperation = vm.parentId;
       if (vm.model.id === 0) {
-        faqService.create(vm.model).then(
+        scratchcardPrizeService.create(vm.model).then(
           () => {
             vm.$notify({
               type: 'success',
-              message: 'Pergunta cadastrada com sucesso!',
+              message: 'Prêmio cadastrado com sucesso!',
               icon: 'tim-icons icon-bell-55'
             });
             vm.clearModel();
@@ -289,7 +387,7 @@ export default {
           }
         );
       } else {
-        faqService.update(vm.model).then(
+        scratchcardPrizeService.update(vm.model).then(
           response => {
             vm.$notify({
               type: 'primary',
@@ -316,31 +414,24 @@ export default {
       this.clearModel();
       this.showForm = true;
       let obj = _.cloneDeep(row);
-      this.model.active = obj.active;
-      this.model.question = obj.question;
-      this.model.answer = obj.answer;
-      this.model.idOperation = obj.idOperation;
+      this.model.name = obj.name;
+      this.model.title = obj.title;
+      this.model.description = obj.description;
+      this.model.idScratchcard = obj.idScratchcard;
       this.model.id = obj.id;
-      this.model.order = obj.order;
+      this.model.quantity = obj.quantity;
+      this.model.image = obj.image;
       this.formLoading = false;
     },
     fetchData() {
       const self = this;
       self.customToolbar = config.customToolbar;
-      const request = {
-        page: this.$data.pagination.currentPage - 1,
-        pageItems: this.$data.pagination.perPage,
-        searchWord: this.searchQuery,
-        sort: this.formatSortFieldParam,
-        idOperation: this.parentId
-      };
-      this.$data.loading = true;
-      faqService.findAll(request).then(
+      self.$data.loading = true;
+      scratchcardPrizeService.list(self.parentId).then(
         response => {
           self.$data.tableData = response.data;
-          self.savePageSettings(self, response.totalItems);
           self.$data.loading = false;
-          self.showTable = response.totalItems > 0;
+          self.showTable = response.data.length > 0;
         },
         () => {
           self.$data.loading = false;
@@ -352,7 +443,7 @@ export default {
       this.$validator.validateAll().then(isValid => {
         if (isValid) {
           self.modal.formLoading = true;
-          faqService.delete(self.modal.model.id).then(
+          scratchcardPrizeService.delete(self.modal.model.id).then(
             response => {
               self.$notify({
                 type: 'primary',
@@ -375,15 +466,23 @@ export default {
         }
       });
     },
+    onImageChange(file) {
+      this.image = file;
+    },
     clearModel() {
       this.model.id = 0;
-      (this.model.idOperation = 0), (this.model.active = false);
-      this.model.question = '';
-      this.model.answer = '';
-      this.model.order = 0;
+      this.model.idScratchcard = this.parentId;
+      this.model.name = '';
+      this.model.title = '';
+      this.model.description = '';
+      this.model.image = '';
+      this.model.quantity = 0;
       this.$validator.reset();
       this.showForm = false;
     }
+  },
+  created() {
+    this.fetchData();
   }
 };
 </script>

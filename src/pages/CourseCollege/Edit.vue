@@ -36,11 +36,15 @@
                     required
                     v-model="model.name"
                     type="text"
-                    :error="getError('name')"
                     name="name"
                     placeholder="Nome"
                     maxlength="200"
                   ></base-input>
+                  <label
+                    v-show="customErros.includes('name')"
+                    class="text-danger"
+                    >O campo Nome é obrigatório</label
+                  >
                 </div>
               </div>
               <div class="row">
@@ -54,7 +58,7 @@
                     name="doc"
                     placeholder="CNPJ"
                     maxlength="50"
-                    masked="true"
+                    :masked="true"
                     :inputMask="['##.###.###/####-##']"
                   ></base-input>
                   <label
@@ -68,22 +72,13 @@
                 <label class="col-md-3 col-form-label">Operação</label>
                 <div class="col-md-4">
                   <div class="form-group">
-                    <el-select
-                      class="select-info"
-                      placeholder="Operação"
+                    <v-select
+                      :options="operations"
+                      :reduce="op => op.code"
+                      :key="model.idOperation"
                       v-model="model.idOperation"
-                      v-loading.lock="selectLoading"
-                      lock
                     >
-                      <el-option
-                        class="select-primary"
-                        v-for="type in operations"
-                        :value="type.id"
-                        :label="type.title"
-                        :key="type.id"
-                      >
-                      </el-option>
-                    </el-select>
+                    </v-select>
                     <label
                       v-show="customErros.includes('operation')"
                       class="text-danger"
@@ -92,10 +87,10 @@
                   </div>
                 </div>
               </div>
-              <template v-if="model.logo">
-                <div class="row">
-                  <label class="col-md-3 col-form-label">Logo (184x36)</label>
-                  <div class="col-md-9">
+              <div class="row">
+                <label class="col-md-3 col-form-label">Logo (184x36)</label>
+                <div class="col-md-9">
+                  <template v-if="model.logo">
                     <div>
                       <img :src="model.logo" class="img-preview" />
                       <base-button
@@ -106,22 +101,23 @@
                         <i class="fas fa-times"></i>
                       </base-button>
                     </div>
-                  </div>
-                </div>
-              </template>
-              <template v-else>
-                <div class="row">
-                  <label class="col-md-3 col-form-label">Logo (184x36)</label>
-                  <div class="col-md-9">
+                  </template>
+                  <template v-else>
                     <image-upload
                       @change="onImageChange"
                       change-text="Alterar"
                       remove-text="Remover"
                       select-text="Selecione uma imagem"
                     />
-                  </div>
+                  </template>
+                  <br />
+                  <label
+                    v-show="customErros.includes('image')"
+                    class="text-danger"
+                    >O Logo é obrigatório</label
+                  >
                 </div>
-              </template>
+              </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Ativo</label>
                 <div class="col-md-9">
@@ -206,24 +202,7 @@ export default {
       },
       operations: [],
       customErros: [],
-      image: null,
-      modelValidations: {
-        name: {
-          required: true,
-          max: 200
-        },
-        legalName: {
-          required: true,
-          max: 500
-        },
-        doc: {
-          required: true,
-          max: 50
-        },
-        idOperation: {
-          required: true
-        }
-      }
+      image: null
     };
   },
   computed: {
@@ -243,13 +222,12 @@ export default {
         self.customErros.push('operation');
       if (self.model.legalName == null || self.model.legalName.length < 3)
         self.customErros.push('legalName');
+      if (self.model.name == null || self.model.name === '')
+        self.customErros.push('name');
       if (self.model.doc == null || self.model.doc.length !== 18)
         self.customErros.push('doc');
-      if (
-        self.model.name !== '' &&
-        self.model.name.length <= 200 &&
-        self.customErros.length === 0
-      ) {
+      if (!self.image && !self.model.logo) self.customErros.push('image');
+      if (self.customErros.length === 0) {
         self.submitLoading = true;
         if (self.image) {
           helperService.uploadFile(self.image).then(
@@ -277,13 +255,6 @@ export default {
           );
         } else if (self.model.logo) {
           self.saveCollege(self);
-        } else {
-          self.$notify({
-            type: 'danger',
-            message: 'O Logo é obrigatório',
-            icon: 'tim-icons icon-bell-55'
-          });
-          self.submitLoading = false;
         }
       }
     },
@@ -352,9 +323,8 @@ export default {
       self.selectLoading = true;
       operationService.findAll().then(
         response => {
-          self.operations.push({ id: null, title: 'selecione' });
           _.each(response.data, function(el) {
-            self.operations.push({ id: el.id, title: el.title });
+            self.operations.push({ code: el.id, label: el.title });
           });
           self.selectLoading = false;
         },

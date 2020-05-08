@@ -1,9 +1,10 @@
 <template>
   <div class="row">
     <div class="col-md-12">
-      <card title="Modalidade">
-        <h4 slot="header" class="card-title">Modalidade</h4>
-
+      <card :title="$t('pages.categories.title')">
+        <h4 slot="header" class="card-title">
+          {{ $t('pages.categories.title') }}
+        </h4>
         <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
           <div class="row">
             <label class="col-md-3 col-form-label">Nome</label>
@@ -16,33 +17,26 @@
                 placeholder="Nome"
                 maxlength="200"
               ></base-input>
-              <label v-show="customErros.includes('name')" class="text-danger"
-                >O campo Nome é obrigatório</label
-              >
-              <label
-                v-show="customErros.includes('nameLength')"
-                class="text-danger"
-                >O campo Nome aceita no máximo 200 caracteres</label
+              <label v-show="customErrors.includes('name')" class="text-danger"
+                >Este campo é obrigatório!</label
               >
             </div>
           </div>
           <div class="row">
-            <label class="col-md-3 col-form-label">Operação</label>
+            <label class="col-md-3 col-form-label">Categoria pai</label>
             <div class="col-md-4">
-              <div class="form-group">
-                <v-select
-                  :options="operations"
-                  :reduce="op => op.code"
-                  :key="model.idOperation"
-                  v-model="model.idOperation"
-                >
-                </v-select>
-                <label
-                  v-show="customErros.includes('operation')"
-                  class="text-danger"
-                  >O campo Operação é obrigatório</label
-                >
-              </div>
+              <v-select
+                :options="parents"
+                :reduce="op => op.code"
+                :key="model.idParent"
+                v-model="model.idParent"
+              >
+              </v-select>
+              <label
+                v-show="customErrors.includes('idParent')"
+                class="text-danger"
+                >Este campo é obrigatório!</label
+              >
             </div>
           </div>
           <div class="row">
@@ -57,14 +51,14 @@
             <div class="col-md-12">
               <base-link
                 class="btn mt-3 btn-simple btn-primary"
-                to="/courseModality"
+                to="/benefits/categories"
                 >Voltar</base-link
               >
               <base-button
                 class="mt-3 pull-right"
                 native-type="submit"
                 type="info"
-                @click.native.prevent="validateModality"
+                @click.native.prevent="validate"
                 :loading="submitLoading"
               >
                 Salvar
@@ -78,77 +72,75 @@
 </template>
 <script>
 import { Select, Option } from 'element-ui';
-import courseModalityService from '../../services/CourseModality/courseModalityService';
-import operationService from '../../services/Operation/operationService';
+import categoryService from '../../services/Category/categoryService';
 import _ from 'lodash';
+import { ImageUpload } from 'src/components/index';
 export default {
   components: {
     [Option.name]: Option,
-    [Select.name]: Select
+    [Select.name]: Select,
+    ImageUpload
   },
   props: {
-    id: String,
-    removeText: {
-      type: String,
-      default: 'Remove'
-    }
+    id: String
   },
   data() {
     return {
       selectLoading: false,
       formLoading: false,
       submitLoading: false,
+      customErrors: [],
+      image: null,
       model: {
         id: 0,
         name: '',
-        idOperation: 0,
-        active: true
+        order: 1,
+        idParent: 0,
+        active: false,
+        icon: '',
+        type: 1
       },
-      operations: [],
-      customErros: []
+      parents: []
     };
   },
   computed: {
     viewAction() {
-      return this.$route.name == 'edit_modality' ? 'edit' : 'new';
+      return this.$route.name == 'edit_categoryBenefit' ? 'edit' : 'new';
     }
   },
   methods: {
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
-    validateModality() {
+    validate() {
       const self = this;
-      self.customErros = [];
+      self.customErrors = [];
+      if (!self.model.name || self.model.name === '')
+        self.customErrors.push('name');
+      if (
+        self.model.idParent == null ||
+        self.model.idParent == undefined ||
+        self.model.idParent < 0
+      )
+        self.customErrors.push('idParent');
 
-      if (self.model.idOperation == null || self.model.idOperation === 0) {
-        self.customErros.push('operation');
-      }
-      if (self.model.name == null || self.model.name === '') {
-        self.customErros.push('name');
-      }
-      if (self.model.name.length > 200) {
-        self.customErros.push('nameLength');
-      }
-      if (self.customErros.length === 0) {
+      if (self.customErrors.length === 0) {
         self.submitLoading = true;
-        self.saveModality(self);
+        self.saveCategory(self);
       }
     },
-    saveModality(vm) {
+    saveCategory(vm) {
       vm = vm ? vm : this;
-      if (!vm.model.idOperation)
-        vm.model.idOperation = this.$store.getters.currentUser.idOperation;
-      if (vm.model.id === 0) {
-        courseModalityService.create(vm.model).then(
+      if (vm.viewAction == 'new') {
+        categoryService.create(vm.model).then(
           () => {
             vm.$notify({
-              type: 'success',
-              message: 'Modalidade cadastrada com sucesso!',
+              type: 'primary',
+              message: 'Categoria cadastrada com sucesso!',
               icon: 'tim-icons icon-bell-55'
             });
+            vm.$router.push('/benefits/categories');
             vm.submitLoading = false;
-            vm.$router.push('/courseModality');
           },
           err => {
             vm.$notify({
@@ -160,14 +152,14 @@ export default {
           }
         );
       } else {
-        courseModalityService.update(vm.model).then(
+        categoryService.update(vm.model).then(
           response => {
             vm.$notify({
               type: 'primary',
               message: response.message,
               icon: 'tim-icons icon-bell-55'
             });
-            vm.$router.push('/courseModality');
+            vm.$router.push('/benefits/categories');
             vm.submitLoading = false;
           },
           err => {
@@ -183,25 +175,14 @@ export default {
     },
     fetchData() {
       const self = this;
-
-      if (self.viewAction == 'edit') {
-        self.formLoading = true;
-        courseModalityService.get(self.id).then(
-          response => {
-            self.model = response.data;
-            self.formLoading = false;
-          },
-          () => {
-            self.formLoading = false;
-          }
-        );
-      }
-
       self.selectLoading = true;
-      operationService.findAll().then(
+      categoryService.getListTree(1).then(
         response => {
+          self.parents.push({ code: 0, label: 'Raiz' });
           _.each(response.data, function(el) {
-            self.operations.push({ code: el.id, label: el.title });
+            if (el.id != self.model.id) {
+              self.parents.push({ code: el.id, label: el.name });
+            }
           });
           self.selectLoading = false;
         },
@@ -209,6 +190,22 @@ export default {
           self.selectLoading = false;
         }
       );
+
+      if (self.viewAction == 'edit') {
+        self.formLoading = true;
+        categoryService.get(self.id).then(
+          response => {
+            self.model = response.data;
+            if (!self.model.idParent) self.model.idParent = 0;
+            self.formLoading = false;
+          },
+          () => {
+            self.formLoading = false;
+          }
+        );
+      } else {
+        self.model.idParent = 0;
+      }
     }
   },
   created() {

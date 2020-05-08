@@ -51,51 +51,35 @@
               <div class="row">
                 <label class="col-md-3 col-form-label">Operação</label>
                 <div class="col-md-4">
-                  <div class="form-group">
-                    <el-select
-                      class="select-info"
-                      placeholder="Operação"
-                      v-model="model.idOperation"
-                      v-loading.lock="operationLoading"
-                      lock
-                    >
-                      <el-option
-                        class="select-primary"
-                        v-for="type in operations"
-                        :value="type.id"
-                        :label="type.title"
-                        :key="type.id"
-                      >
-                      </el-option>
-                    </el-select>
-                    <label
-                      v-show="customErros.includes('idOperation')"
-                      class="text-danger"
-                      >O campo Operação é obrigatório</label
-                    >
-                  </div>
+                  <v-select
+                    :options="operations"
+                    :reduce="op => op.code"
+                    :key="model.idOperation"
+                    v-model="model.idOperation"
+                  >
+                  </v-select>
+                  <label
+                    v-show="customErros.includes('idOperation')"
+                    class="text-danger"
+                    >O campo Operação é obrigatório</label
+                  >
                 </div>
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Parceiro</label>
                 <div class="col-md-4">
-                  <div class="form-group">
-                    <el-autocomplete
-                      :fetch-suggestions="querySearch"
-                      @select="handleSelect"
-                      placeholder=""
-                      style="width:100%"
-                      v-model="partnerName"
-                      :trigger-on-focus="false"
-                    >
-                    </el-autocomplete>
-                    <input type="hidden" v-model="model.idPartner" />
-                    <label
-                      v-show="customErros.includes('idPartner')"
-                      class="text-danger"
-                      >O campo Parceiro é obrigatório</label
-                    >
-                  </div>
+                  <v-select
+                    :options="partners"
+                    :reduce="op => op.code"
+                    :key="model.idPartner"
+                    v-model="model.idPartner"
+                  >
+                  </v-select>
+                  <label
+                    v-show="customErros.includes('idPartner')"
+                    class="text-danger"
+                    >O campo Parceiro é obrigatório</label
+                  >
                 </div>
               </div>
               <div class="row">
@@ -128,12 +112,18 @@
                     placeholder="Título"
                     maxlength="500"
                   ></base-input>
+                  <label
+                    v-show="customErros.includes('summary')"
+                    class="text-danger"
+                    >O campo Descrição Listagem é obrigatório!</label
+                  >
                 </div>
               </div>
               <div class="row" style="padding-bottom:10px;">
                 <label class="col-md-3 col-form-label">Descrição</label>
                 <div class="col-md-9">
-                  <wysiwyg
+                  <vue-editor
+                    :editorToolbar="customToolbar"
                     v-model="model.description"
                     placeholder="Descrição"
                   />
@@ -147,7 +137,8 @@
               <div class="row">
                 <label class="col-md-3 col-form-label">Como Funciona</label>
                 <div class="col-md-9">
-                  <wysiwyg
+                  <vue-editor
+                    :editorToolbar="customToolbar"
                     v-model="model.howToUse"
                     placeholder="Como Funciona"
                   />
@@ -300,7 +291,9 @@ import partnerService from '../../services/Partner/partnerService';
 import Categories from 'src/components/Categories';
 import { ImageUpload } from 'src/components/index';
 import { Money } from 'v-money';
+import config from '../../config';
 import _ from 'lodash';
+
 export default {
   components: {
     [Option.name]: Option,
@@ -321,10 +314,9 @@ export default {
   data() {
     return {
       partnerName: '',
-      operationLoading: false,
-      partnerLoading: false,
       formLoading: false,
       submitLoading: false,
+      customToolbar: [],
       model: {
         id: 0,
         name: '',
@@ -352,14 +344,7 @@ export default {
       customErros: [],
       image: null,
       listImage: null,
-      operationKey: 0,
-      modelValidations: {
-        name: { required: true, max: 200 },
-        title: { required: true, max: 300 },
-        idOperation: { required: true },
-        idPartner: { required: true },
-        price: { required: true }
-      }
+      operationKey: 0
     };
   },
   computed: {
@@ -376,20 +361,6 @@ export default {
     }
   },
   methods: {
-    querySearch(query, cb) {
-      var list = this.partners;
-      var results = query ? list.filter(this.createFilter(query)) : list;
-      var top3 = results.slice(0, 3);
-      cb(top3);
-    },
-    createFilter(query) {
-      return partner => {
-        return partner.value.toLowerCase().includes(query.toLowerCase());
-      };
-    },
-    handleSelect(item) {
-      this.model.idPartner = item.id;
-    },
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
@@ -405,6 +376,8 @@ export default {
       if (!self.model.listImage && !self.listImage)
         self.customErros.push('listImage');
       if (!self.model.image && !self.image) self.customErros.push('image');
+      if (!self.model.summary && self.model.summary === '')
+        self.customErros.push('summary');
       if (!self.model.description && self.model.description === '')
         self.customErros.push('description');
       if (!self.model.howToUse && self.model.howToUse === '')
@@ -520,6 +493,7 @@ export default {
     },
     fetchData() {
       const self = this;
+      self.customToolbar = config.customToolbar;
 
       if (self.viewAction == 'edit') {
         self.formLoading = true;
@@ -534,31 +508,17 @@ export default {
         );
       }
 
-      self.operationLoading = true;
-      operationService.findAll().then(
-        response => {
-          _.each(response.data, function(el) {
-            self.operations.push({ id: el.id, title: el.title });
-          });
-          self.operationLoading = false;
-        },
-        () => {
-          self.operationLoading = false;
-        }
-      );
+      operationService.findAll().then(response => {
+        _.each(response.data, function(el) {
+          self.operations.push({ code: el.id, label: el.title });
+        });
+      });
 
-      self.partnerLoading = true;
-      partnerService.findAllActive().then(
-        response => {
-          _.each(response.data, function(el) {
-            self.partners.push({ id: el.id, value: el.name });
-          });
-          self.partnerLoading = false;
-        },
-        () => {
-          self.partnerLoading = false;
-        }
-      );
+      partnerService.listActive(2).then(response => {
+        _.each(response.data, function(el) {
+          self.partners.push({ code: el.id, label: el.name });
+        });
+      });
     },
     onImageChange(file) {
       this.image = file;

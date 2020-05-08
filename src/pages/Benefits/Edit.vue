@@ -24,7 +24,7 @@
                     maxlength="300"
                   ></base-input>
                   <label
-                    v-show="customErros.includes('name')"
+                    v-show="customErrors.includes('name')"
                     class="text-danger"
                     >O campo Nome é obrigatório!</label
                   >
@@ -42,7 +42,7 @@
                     maxlength="400"
                   ></base-input>
                   <label
-                    v-show="customErros.includes('title')"
+                    v-show="customErrors.includes('title')"
                     class="text-danger"
                     >O campo Título é obrigatório!</label
                   >
@@ -62,7 +62,7 @@
                     maxlength="500"
                   ></base-input>
                   <label
-                    v-show="customErros.includes('benefitCall')"
+                    v-show="customErrors.includes('benefitCall')"
                     class="text-danger"
                     >O campo Chamada do Benefício é obrigatório!</label
                   >
@@ -71,9 +71,13 @@
               <div class="row">
                 <label class="col-md-3 col-form-label">Detalhes *</label>
                 <div class="col-md-9">
-                  <wysiwyg v-model="model.detail" placeholder="Detalhes" />
+                  <vue-editor
+                    :editorToolbar="customToolbar"
+                    v-model="model.detail"
+                    placeholder="Detalhes"
+                  />
                   <label
-                    v-show="customErros.includes('detail')"
+                    v-show="customErrors.includes('detail')"
                     class="text-danger"
                     >O campo Detalhes é obrigatório!</label
                   >
@@ -82,9 +86,13 @@
               <div class="row m-b-20">
                 <label class="col-md-3 col-form-label">Como usar *</label>
                 <div class="col-md-9">
-                  <wysiwyg v-model="model.howToUse" placeholder="Como usar" />
+                  <vue-editor
+                    :editorToolbar="customToolbar"
+                    v-model="model.howToUse"
+                    placeholder="Como usar"
+                  />
                   <label
-                    v-show="customErros.includes('howToUse')"
+                    v-show="customErrors.includes('howToUse')"
                     class="text-danger"
                     >O campo Como Usar é obrigatório</label
                   >
@@ -92,23 +100,18 @@
               </div>
               <div class="row">
                 <label class="col-md-3 col-form-label">Parceiro *</label>
-                <div class="col-md-9 col-lg-4">
-                  <div class="form-group">
-                    <el-autocomplete
-                      :fetch-suggestions="querySearch"
-                      @select="handleSelect"
-                      placeholder=""
-                      style="width:100%"
-                      v-model="partnerName"
-                      :trigger-on-focus="false"
-                    >
-                    </el-autocomplete>
-                    <input type="hidden" v-model="model.idPartner" />
-                  </div>
+                <div class="col-md-4">
+                  <v-select
+                    :options="partnerList"
+                    :reduce="op => op.code"
+                    :key="model.idPartner"
+                    v-model="model.idPartner"
+                  >
+                  </v-select>
                 </div>
                 <div class="col-md-3">
                   <label
-                    v-show="customErros.includes('partner')"
+                    v-show="customErrors.includes('partner')"
                     class="text-danger"
                     >O campo Parceiro é obrigatório!</label
                   >
@@ -140,7 +143,7 @@
                       >Cashback</base-radio
                     >
                     <label
-                      v-show="customErros.includes('benefitType')"
+                      v-show="customErrors.includes('benefitType')"
                       class="text-danger"
                       >O campo Tipo é obrigatório</label
                     >
@@ -158,7 +161,7 @@
                     ></money>
                   </base-input>
                   <label
-                    v-show="customErros.includes('minDiscount')"
+                    v-show="customErrors.includes('minDiscount')"
                     class="text-danger"
                     >O campo Desconto Mínimo é obrigatório!</label
                   >
@@ -172,7 +175,7 @@
                     ></money>
                   </base-input>
                   <label
-                    v-show="customErros.includes('maxDiscount')"
+                    v-show="customErrors.includes('maxDiscount')"
                     class="text-danger"
                     >O campo Desconto Máximo é obrigatório!</label
                   >
@@ -189,7 +192,7 @@
                     ></money>
                   </base-input>
                   <label
-                    v-show="customErros.includes('cpv')"
+                    v-show="customErrors.includes('cpv')"
                     class="text-danger"
                     >O campo CPV é obrigatório</label
                   >
@@ -204,7 +207,7 @@
                     maxlength="500"
                   ></base-input>
                   <label
-                    v-show="customErros.includes('link')"
+                    v-show="customErrors.includes('link')"
                     class="text-danger"
                     >O campo Link é obrigatório!</label
                   >
@@ -223,7 +226,7 @@
                     ></money>
                   </base-input>
                   <label
-                    v-show="customErros.includes('cashbackAmount')"
+                    v-show="customErrors.includes('cashbackAmount')"
                     class="text-danger"
                     >O campo Valor do cashback é obrigatório!</label
                   >
@@ -239,7 +242,7 @@
                     placeholder="Texto do voucher"
                   />
                   <label
-                    v-show="customErros.includes('voucherText')"
+                    v-show="customErrors.includes('voucherText')"
                     class="text-danger"
                     >O campo Texto do voucher é obrigatório!</label
                   >
@@ -264,19 +267,19 @@
                       >Zanox</base-radio
                     >
                     <label
-                      v-show="customErros.includes('integrationType')"
+                      v-show="customErrors.includes('integrationType')"
                       class="text-danger"
                       >O campo Integração é obrigatório!</label
                     >
                   </div>
                 </div>
               </div>
-              <template v-if="model.image">
-                <div class="row">
-                  <label class="col-md-3 col-form-label"
-                    >Imagem * <br />(1200x500)</label
-                  >
-                  <div class="col-md-9">
+              <div class="row">
+                <label class="col-md-3 col-form-label"
+                  >Imagem * <br />(1200x500)</label
+                >
+                <div class="col-md-9">
+                  <template v-if="model.image">
                     <div class="fileinput">
                       <div class="thumbnail">
                         <img :src="model.image" class="img-preview" />
@@ -291,109 +294,37 @@
                         <i class="fas fa-times"></i>
                       </base-button>
                     </div>
-                    <label v-show="customErros.includes('image')" class="error"
-                      >O campo Imagem é obrigatório!</label
-                    >
-                  </div>
-                </div>
-              </template>
-              <template v-else>
-                <div class="row">
-                  <label class="col-md-3 col-form-label"
-                    >Imagem * (1200x500)</label
-                  >
-                  <div class="col-md-9">
+                  </template>
+                  <template v-else>
                     <image-upload
                       @change="onImageChange"
                       change-text="Alterar"
                       remove-text="Remover"
                       select-text="Selecione uma imagem"
                     />
-                    <label
-                      v-show="customErros.includes('image')"
-                      class="text-danger"
-                      >O campo Imagem é obrigatório!</label
-                    >
-                  </div>
+                  </template>
+                  <br />
+                  <label v-show="customErrors.includes('image')" class="error"
+                    >O campo Imagem é obrigatório!</label
+                  >
                 </div>
-              </template>
+              </div>
               <div class="row m-b-10">
                 <label class="col-md-3 col-form-label">Destaque Home?</label>
                 <div class="col-md-3">
                   <div class="form-group">
-                    <el-select
-                      class="select-info"
-                      placeholder="selecione"
+                    <v-select
+                      :options="highlights.filter(item => item.code < 9)"
+                      :reduce="item => item.code"
+                      :key="model.homeHighlight"
                       v-model="model.homeHighlight"
-                      v-loading.lock="selectLoading"
-                      lock
                     >
-                      <el-option
-                        class="select-primary"
-                        :value="-1"
-                        :key="-1"
-                        label="Sem Destaque"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="0"
-                        :key="0"
-                        label="Randomico"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="1"
-                        :key="1"
-                        label="Posição 1"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="2"
-                        :key="2"
-                        label="Posição 2"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="3"
-                        :key="3"
-                        label="Posição 3"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="4"
-                        :key="4"
-                        label="Posição 4"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="5"
-                        :key="5"
-                        label="Posição 5"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="6"
-                        :key="6"
-                        label="Posição 6"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="7"
-                        :key="7"
-                        label="Posição 7"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="8"
-                        :key="8"
-                        label="Posição 8"
-                      ></el-option>
-                    </el-select>
+                    </v-select>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <label
-                    v-show="customErros.includes('homeHighlight')"
+                    v-show="customErrors.includes('homeHighlight')"
                     class="text-danger"
                     >O campo Destaque Home? é obrigatório!</label
                   >
@@ -405,103 +336,18 @@
                 >
                 <div class="col-md-3">
                   <div class="form-group">
-                    <el-select
-                      class="select-info"
-                      placeholder="selecione"
+                    <v-select
+                      :options="highlights"
+                      :reduce="item => item.code"
+                      :key="model.homeBenefitHighlight"
                       v-model="model.homeBenefitHighlight"
-                      v-loading.lock="selectLoading"
-                      lock
                     >
-                      <el-option
-                        class="select-primary"
-                        :value="-1"
-                        :key="-1"
-                        label="Sem Destaque"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="0"
-                        :key="0"
-                        label="Randomico"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="1"
-                        :key="1"
-                        label="Posição 1"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="2"
-                        :key="2"
-                        label="Posição 2"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="3"
-                        :key="3"
-                        label="Posição 3"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="4"
-                        :key="4"
-                        label="Posição 4"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="5"
-                        :key="5"
-                        label="Posição 5"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="6"
-                        :key="6"
-                        label="Posição 6"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="7"
-                        :key="7"
-                        label="Posição 7"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="8"
-                        :key="8"
-                        label="Posição 8"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="9"
-                        :key="9"
-                        label="Posição 9"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="10"
-                        :key="10"
-                        label="Posição 10"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="11"
-                        :key="11"
-                        label="Posição 11"
-                      ></el-option>
-                      <el-option
-                        class="select-primary"
-                        :value="12"
-                        :key="12"
-                        label="Posição 12"
-                      ></el-option>
-                    </el-select>
+                    </v-select>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <label
-                    v-show="customErros.includes('homeBenefitHighlight')"
+                    v-show="customErrors.includes('homeBenefitHighlight')"
                     class="text-danger"
                     >O campo Destaque Home Benefício? é obrigatório!</label
                   >
@@ -521,7 +367,7 @@
                 </div>
                 <div class="col-md-7">
                   <label
-                    v-show="customErros.includes('dueDate')"
+                    v-show="customErrors.includes('dueDate')"
                     class="text-danger"
                     >O campo Validade é obrigatório!</label
                   >
@@ -539,7 +385,7 @@
                     </el-date-picker>
                   </base-input>
                   <label
-                    v-show="customErros.includes('start')"
+                    v-show="customErrors.includes('start')"
                     class="text-danger"
                     >O campo Início é obrigatório!</label
                   >
@@ -554,7 +400,7 @@
                     </el-date-picker>
                   </base-input>
                   <label
-                    v-show="customErros.includes('end')"
+                    v-show="customErrors.includes('end')"
                     class="text-danger"
                     >O campo Fim é obrigatório!</label
                   >
@@ -572,23 +418,18 @@
               </div>
               <div class="row" v-show="model.exclusive && isRebens">
                 <label class="col-md-3 col-form-label">Operação</label>
-                <div class="col-md-9 col-lg-4">
-                  <div class="form-group">
-                    <el-autocomplete
-                      :fetch-suggestions="querySearchOp"
-                      @select="handleSelectOp"
-                      placeholder=""
-                      v-model="operationName"
-                      :trigger-on-focus="false"
-                      style="width:100%"
-                    >
-                    </el-autocomplete>
-                    <input type="hidden" v-model="model.idOperation" />
-                  </div>
+                <div class="col-md-4">
+                  <v-select
+                    :options="operationList"
+                    :reduce="op => op.code"
+                    :key="model.idOperation"
+                    v-model="model.idOperation"
+                  >
+                  </v-select>
                 </div>
                 <div class="col-md-3">
                   <label
-                    v-show="customErros.includes('operation')"
+                    v-show="customErrors.includes('operation')"
                     class="text-danger"
                     >O campo Operação é obrigatório!</label
                   >
@@ -677,6 +518,8 @@ import partnerService from '../../services/Partner/partnerService';
 import _ from 'lodash';
 import { ImageUpload } from 'src/components/index';
 import { Money } from 'v-money';
+import config from '../../config';
+
 export default {
   components: {
     [Option.name]: Option,
@@ -695,21 +538,34 @@ export default {
   },
   data() {
     return {
+      customToolbar: [],
       formLoading: false,
       submitLoading: false,
       benefitTypeLoading: false,
       integrationTypeLoading: false,
-      partnerLoading: false,
-      operationLoading: false,
       image: null,
       partnerList: [],
-      customErros: [],
       operationList: [],
+      customErrors: [],
       operationKey: 0,
-      partnerName: '',
-      operationName: '',
       isRebens: false,
       selectLoading: false,
+      highlights: [
+        { code: -1, label: 'Sem Destaque' },
+        { code: 0, label: 'Randomico' },
+        { code: 1, label: 'Posição 1' },
+        { code: 2, label: 'Posição 2' },
+        { code: 3, label: 'Posição 3' },
+        { code: 4, label: 'Posição 4' },
+        { code: 5, label: 'Posição 5' },
+        { code: 6, label: 'Posição 6' },
+        { code: 7, label: 'Posição 7' },
+        { code: 8, label: 'Posição 8' },
+        { code: 9, label: 'Posição 9' },
+        { code: 10, label: 'Posição 10' },
+        { code: 11, label: 'Posição 11' },
+        { code: 12, label: 'Posição 12' }
+      ],
       money: {
         decimal: ',',
         thousands: '.',
@@ -742,8 +598,7 @@ export default {
         active: false,
         homeHighlight: null,
         homeBenefitHighlight: null
-      },
-      modelValidations: {}
+      }
     };
   },
   computed: {
@@ -764,105 +619,80 @@ export default {
     }
   },
   methods: {
-    querySearch(query, cb) {
-      var list = this.partnerList;
-      var results = query ? list.filter(this.createFilter(query)) : list;
-      var top3 = results.slice(0, 3);
-      cb(top3);
-    },
-    querySearchOp(query, cb) {
-      var list = this.operationList;
-      var results = query ? list.filter(this.createFilter(query)) : list;
-      var top3 = results.slice(0, 3);
-      cb(top3);
-    },
-    createFilter(query) {
-      return partner => {
-        return partner.value.toLowerCase().includes(query.toLowerCase());
-      };
-    },
-    handleSelect(item) {
-      this.model.idPartner = item.id;
-    },
-    handleSelectOp(item) {
-      this.model.idOperation = item.id;
-    },
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
     validate() {
       const self = this;
-      self.customErros = [];
+      self.customErrors = [];
 
-      if (!self.model.name) self.customErros.push('name');
-      if (!self.model.title) self.customErros.push('title');
-      if (!self.model.benefitCall) self.customErros.push('benefitCall');
-      if (!self.model.detail) self.customErros.push('detail');
-      if (!self.model.howToUse) self.customErros.push('howToUse');
-      if (!self.model.idPartner) self.customErros.push('partner');
-      if (!self.model.idBenefitType) self.customErros.push('benefitType');
+      if (!self.model.name) self.customErrors.push('name');
+      if (!self.model.title) self.customErrors.push('title');
+      if (!self.model.benefitCall) self.customErrors.push('benefitCall');
+      if (!self.model.detail) self.customErrors.push('detail');
+      if (!self.model.howToUse) self.customErrors.push('howToUse');
+      if (!self.model.idPartner) self.customErrors.push('partner');
+      if (!self.model.idBenefitType) self.customErrors.push('benefitType');
       if (self.model.idBenefitType == 2) {
-        if (!self.model.voucherText) self.customErros.push('voucherText');
+        if (!self.model.voucherText) self.customErrors.push('voucherText');
       } else {
         if (!self.model.link || self.model.link == '')
-          self.customErros.push('link');
+          self.customErrors.push('link');
       }
 
       if (self.isRebens && self.model.idBenefitType != 3) {
         if (!self.model.maxDiscountPercentage)
-          self.customErros.push('maxDiscount');
+          self.customErrors.push('maxDiscount');
         if (!self.model.minDiscountPercentage)
-          self.customErros.push('minDiscount');
+          self.customErrors.push('minDiscount');
       } else {
         if (self.isRebens && !self.model.cashbackAmount)
-          self.customErros.push('cashbackAmount');
+          self.customErrors.push('cashbackAmount');
       }
       if (self.isRebens && !self.model.idIntegrationType)
-        self.customErros.push('integrationType');
-      if (!self.model.image && !self.image) self.customErros.push('image');
-      if (!self.model.dueDate) self.customErros.push('dueDate');
+        self.customErrors.push('integrationType');
+      if (!self.model.image && !self.image) self.customErrors.push('image');
+      if (!self.model.dueDate) self.customErrors.push('dueDate');
       if (self.model.exclusive && !self.model.idOperation)
-        self.customErros.push('operation');
+        self.customErrors.push('operation');
       if (!self.model.homeHighlight && self.model.homeHighlight != 0)
-        self.customErros.push('homeHighlight');
+        self.customErrors.push('homeHighlight');
       if (
         !self.model.homeBenefitHighlight &&
         self.model.homeBenefitHighlight != 0
       )
-        self.customErros.push('homeBenefitHighlight');
+        self.customErrors.push('homeBenefitHighlight');
 
-      this.$validator.validateAll().then(isValid => {
-        if (isValid && self.customErros.length == 0) {
-          self.submitLoading = true;
-          if (self.image) {
-            helperService.uploadFile(self.image).then(
-              response => {
-                if (response.status != 200) {
-                  self.$notify({
-                    type: 'primary',
-                    message: response.message,
-                    icon: 'tim-icons icon-bell-55'
-                  });
-                  self.submitLoading = false;
-                  return;
-                }
-                self.model.image = response.data.url;
-                self.saveBenefit(self);
-              },
-              err => {
+      if (self.customErrors.length == 0) {
+        self.submitLoading = true;
+        if (self.image) {
+          helperService.uploadFile(self.image).then(
+            response => {
+              if (response.status != 200) {
                 self.$notify({
                   type: 'primary',
-                  message: err.message,
+                  message: response.message,
                   icon: 'tim-icons icon-bell-55'
                 });
                 self.submitLoading = false;
+                return;
               }
-            );
-          } else {
-            self.saveBenefit(self);
-          }
+              self.model.image = response.data.url;
+              self.saveBenefit(self);
+            },
+            err => {
+              self.$notify({
+                type: 'primary',
+                message: err.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+              self.submitLoading = false;
+            }
+          );
+        } else {
+          self.saveBenefit(self);
         }
-      });
+      }
     },
     saveBenefit(vw) {
       vw = vw ? vw : this;
@@ -919,62 +749,29 @@ export default {
     },
     fetchData() {
       const self = this;
+      self.customToolbar = config.customToolbar;
       if (this.viewAction == 'edit') {
         this.formLoading = true;
         benefitService.get(self.id).then(
           response => {
             self.model = response.data;
             self.formLoading = false;
-            this.populatePartner();
-            this.populateOperation();
           },
           () => {
             self.formLoading = false;
           }
         );
       }
-      this.partnerLoading = true;
-      partnerService.findAllActive(null).then(
-        response => {
-          _.each(response.data, function(el) {
-            self.partnerList.push({ value: el.name, id: el.id });
-          });
-          self.partnerLoading = false;
-          this.populatePartner();
-        },
-        () => {
-          self.partnerLoading = false;
-        }
-      );
-      this.operationLoading = true;
-      operationService.findAll(null).then(
-        response => {
-          _.each(response.data, function(el) {
-            self.operationList.push({ value: el.title, id: el.id });
-          });
-          self.operationLoading = false;
-          this.populateOperation();
-        },
-        () => {
-          self.operationLoading = false;
-        }
-      );
-    },
-    populatePartner() {
-      if (!this.formLoading && !this.partnerLoading) {
-        var part = this.partnerList.filter(o => o.id == this.model.idPartner);
-        if (part.length == 1) this.partnerName = part[0].value;
-      }
-    },
-    populateOperation() {
-      if (
-        !this.formLoading &&
-        !this.operationLoading &&
-        this.model.idOperation
-      ) {
-        var op = this.operationList.filter(o => o.id == this.model.idOperation);
-        if (op.length == 1) this.operationName = op[0].value;
-      }
+      partnerService.listActive(1).then(response => {
+        _.each(response.data, function(el) {
+          self.partnerList.push({ label: el.name, code: el.id });
+        });
+      });
+      operationService.findAll(null).then(response => {
+        _.each(response.data, function(el) {
+          self.operationList.push({ label: el.title, code: el.id });
+        });
+      });
     },
     onImageChange(file) {
       this.image = file;

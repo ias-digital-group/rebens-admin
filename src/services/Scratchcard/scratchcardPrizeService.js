@@ -2,22 +2,9 @@ import { HTTP } from '../../http';
 import config from '../../config';
 
 export default {
-  list: request => {
+  list: id => {
     return new Promise((resolve, reject) => {
-      request = request
-        ? request
-        : {
-            page: 0,
-            pageItems: 30,
-            searchWord: '',
-            sort: 'name ASC',
-            status: ''
-          };
-      HTTP.get(
-        config.apiEndpoints.promoterUri.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}&status=${request.status}`
-        )
-      ).then(
+      HTTP.get(config.apiEndpoints.scratchcardPrizeUri.concat(id)).then(
         response => {
           resolve(response.data);
         },
@@ -33,7 +20,9 @@ export default {
   },
   get: id => {
     return new Promise((resolve, reject) => {
-      HTTP.get(config.apiEndpoints.promoterUri.concat(id)).then(
+      HTTP.get(
+        config.apiEndpoints.scratchcardPrizeUri.concat(`read/${id}`)
+      ).then(
         response => {
           resolve(response.data);
         },
@@ -49,7 +38,7 @@ export default {
   },
   create: model => {
     return new Promise((resolve, reject) => {
-      HTTP.post(config.apiEndpoints.promoterUri, model).then(
+      HTTP.post(config.apiEndpoints.scratchcardPrizeUri, model).then(
         response => {
           resolve(response.data);
         },
@@ -63,25 +52,9 @@ export default {
       );
     });
   },
-  report: request => {
+  update: model => {
     return new Promise((resolve, reject) => {
-      request = request
-        ? request
-        : {
-            page: 0,
-            pageItems: 30,
-            searchWord: '',
-            sort: 'name ASC',
-            idOperation: ''
-          };
-      HTTP.get(
-        config.apiEndpoints.promoterUri.concat(
-          `report/?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}` +
-            (request.idOperation && request.idOperation !== ''
-              ? `&idOperation=${request.idOperation}`
-              : '')
-        )
-      ).then(
+      HTTP.put(config.apiEndpoints.scratchcardPrizeUri, model).then(
         response => {
           resolve(response.data);
         },
@@ -95,11 +68,9 @@ export default {
       );
     });
   },
-  resendValidation: id => {
+  delete: id => {
     return new Promise((resolve, reject) => {
-      HTTP.post(
-        config.apiEndpoints.promoterUri.concat(`ResendValidation/${id}`)
-      ).then(
+      HTTP.delete(config.apiEndpoints.scratchcardPrizeUri.concat(id)).then(
         response => {
           resolve(response.data);
         },

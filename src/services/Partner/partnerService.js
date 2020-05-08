@@ -11,11 +11,13 @@ export default {
             pageItems: 30,
             searchWord: '',
             sort: 'name ASC',
-            active: ''
+            active: '',
+            type: 1
           };
       HTTP.get(
         config.apiEndpoints.partnerUri.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}&active=${request.active}`
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}` +
+            `&sort=${request.sort}&active=${request.active}&type=${request.type}`
         )
       ).then(
         response => {
@@ -31,11 +33,31 @@ export default {
     return new Promise((resolve, reject) => {
       request = request
         ? request
-        : { page: 0, pageItems: 1000, searchWord: '', sort: 'name ASC' };
+        : {
+            type: 1,
+            page: 0,
+            pageItems: 1000,
+            searchWord: '',
+            sort: 'name ASC'
+          };
       HTTP.get(
         config.apiEndpoints.partnerUri.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}`
+          `?type=${request.type}&page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}`
         )
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  listActive: type => {
+    return new Promise((resolve, reject) => {
+      HTTP.get(
+        config.apiEndpoints.partnerUri.concat(`?type=${type}&pageItems=1000`)
       ).then(
         response => {
           resolve(response.data);

@@ -7,6 +7,8 @@ import router from './routes/router';
 import i18n from './i18n';
 import axios from 'axios';
 import wysiwyg from 'vue-wysiwyg';
+import vSelect from 'vue-select';
+import VueEditor from 'vue2-editor';
 
 const token = localStorage.getItem('token');
 if (token) {
@@ -26,6 +28,9 @@ Vue.use(wysiwyg, {
   },
   forcePlainTextOnPaste: true
 });
+Vue.use(VueEditor);
+
+Vue.component('v-select', vSelect);
 
 /* eslint-disable no-new */
 new Vue({

@@ -4,9 +4,9 @@
       <card card-body-classes="table-full-width">
         <template slot="header">
           <h4 class="card-title">
-            Clientes
+            {{ $t('pages.categories.title') }}
             <base-link
-              to="/promoter/new"
+              to="/benefits/categories/new"
               class="btn btn-icon btn-simple btn-twitter btn-sm"
               ><i class="tim-icons icon-simple-add"></i
             ></base-link>
@@ -19,7 +19,7 @@
             <el-select
               class="select-primary mb-3 pagination-select"
               v-model="pagination.perPage"
-              :placeholder="$t('pages.banners.perpage-placeholder')"
+              :placeholder="$t('pages.categories.perpage-placeholder')"
               v-if="!loading"
             >
               <el-option
@@ -33,31 +33,23 @@
             </el-select>
             <el-select
               class="select-primary mb-3 pagination-select"
-              v-model="customerStatus"
+              v-model="activeFilter"
               v-if="!loading"
             >
               <el-option
                 class="select-primary"
                 value=""
-                label="Todos status"
+                label="Todas"
               ></el-option>
               <el-option
                 class="select-primary"
-                key="1"
-                value="1"
-                label="Completo"
+                value="true"
+                label="Ativas"
               ></el-option>
               <el-option
                 class="select-primary"
-                key="3"
-                value="3"
-                label="Validação"
-              ></el-option>
-              <el-option
-                class="select-primary"
-                key="5"
-                value="5"
-                label="Incompleto"
+                value="false"
+                label="Inativas"
               ></el-option>
             </el-select>
             <base-input>
@@ -67,7 +59,7 @@
                 style="width:300px"
                 clearable
                 prefix-icon="el-icon-search"
-                placeholder="Procurar cliente"
+                placeholder="Procurar categorias"
                 aria-controls="datatables"
                 v-model="searchQuery"
               >
@@ -78,7 +70,7 @@
             ref="table"
             :data="tableData"
             v-loading="loading"
-            :empty-text="$t('pages.banners.emptytext')"
+            :empty-text="$t('pages.categories.emptytext')"
             @sort-change="onSortChanged"
             :default-sort="{ prop: sortField, order: sortOrder }"
           >
@@ -88,24 +80,32 @@
               :min-width="column.minWidth"
               :prop="column.prop"
               :label="column.label"
-              :sortable="column.sortable"
+              sortable="custom"
             >
             </el-table-column>
             <el-table-column
               :min-width="135"
               align="right"
-              :label="$t('pages.users.grid.actions')"
+              :label="$t('pages.categories.grid.actions')"
             >
               <div slot-scope="props">
                 <base-button
-                  @click.native="resendValidation(props.row.id)"
+                  @click.native="handleEdit(props.$index, props.row)"
                   class="edit btn-link"
                   type="info"
                   size="sm"
                   icon
-                  title="Reenviar senha"
                 >
-                  <i class="tim-icons icon-send"></i>
+                  <i class="tim-icons icon-pencil"></i>
+                </base-button>
+                <base-button
+                  @click.native="handleDelete(props.$index, props.row)"
+                  class="remove btn-link"
+                  type="danger"
+                  size="sm"
+                  icon
+                >
+                  <i class="tim-icons icon-simple-remove"></i>
                 </base-button>
               </div>
             </el-table-column>
@@ -115,8 +115,11 @@
           slot="footer"
           class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
         >
+          <div>
+            <p class="card-category"></p>
+          </div>
           <base-pagination
-            class="pagination-no-border mt-3"
+            class="pagination-no-border"
             v-model="pagination.currentPage"
             :per-page="pagination.perPage"
             :total="total"
@@ -126,16 +129,48 @@
         </div>
       </card>
     </div>
+    <!-- Classic Modal -->
+    <modal :show.sync="modal.visible" headerClasses="justify-content-center">
+      <h4 slot="header" class="title title-up">Remover categoria</h4>
+      <form
+        class="modal-form"
+        ref="modalForm"
+        @submit.prevent
+        v-loading="modal.formLoading"
+      >
+        <input type="hidden" name="nome" value="DELETE" ref="nome" />
+        <base-input
+          required
+          v-model="modal.nameConfirmation"
+          label="Digite DELETE para confirmar"
+          placeholder="Digite DELETE para confirmar"
+          :error="getError('confirmação')"
+          type="text"
+          v-validate="modal.modelValidations.name_confirm"
+          name="confirmação"
+        >
+        </base-input>
+      </form>
+      <template slot="footer">
+        <base-button @click.native.prevent="validateModal" type="danger"
+          >Remover</base-button
+        >
+        <base-button type="info" @click.native="modal.visible = false"
+          >Fechar</base-button
+        >
+      </template>
+    </modal>
   </div>
 </template>
 <script>
 import { Table, TableColumn, Select, Option } from 'element-ui';
-import { BasePagination } from 'src/components';
-import promoterService from '../../services/Promoter/promoterService';
+import { BasePagination, Modal } from 'src/components';
+import categoryService from '../../services/Category/categoryService';
 import listPage from '../../mixins/listPage';
 export default {
   mixins: [listPage],
   components: {
+    Modal,
     BasePagination,
     [Select.name]: Select,
     [Option.name]: Option,
@@ -144,60 +179,54 @@ export default {
   },
   data() {
     return {
-      internalName: 'Clientes',
+      internalName: 'pages.categories.list',
       sortField: 'name',
-      formLoading: false,
-      customerStatus: '',
+      activeFilter: '',
+      parentFilter: '',
+      typeName: '',
       tableColumns: [
         {
+          prop: 'id',
+          label: this.$i18n.t('pages.categories.grid.id'),
+          minWidth: 0
+        },
+        {
           prop: 'name',
-          label: 'Nome',
-          sortable: 'custom'
-        },
-        {
-          prop: 'cpf',
-          label: 'CPF',
-          sortable: false
-        },
-        {
-          prop: 'email',
-          label: 'E-mail',
-          sortable: false
-        },
-        {
-          prop: 'created',
-          label: 'Data',
-          sortable: true
+          label: this.$i18n.t('pages.categories.grid.name'),
+          minWidth: 200
         },
         {
           prop: 'statusName',
-          label: 'Status',
-          sortable: false
+          label: this.$i18n.t('pages.categories.grid.status'),
+          minWidth: 200
+        },
+        {
+          prop: 'order',
+          label: this.$i18n.t('pages.categories.grid.order'),
+          minWidth: 0
         }
       ]
     };
   },
   methods: {
+    handleEdit(index, row) {
+      this.$router.push(`/benefits/categories/${row.id}/edit/`);
+    },
     fetchData() {
       const self = this;
       const request = {
-        page: this.$data.pagination.currentPage - 1,
-        pageItems: this.$data.pagination.perPage,
-        searchWord: this.searchQuery,
-        sort: this.formatSortFieldParam,
-        status: this.customerStatus
+        page: self.$data.pagination.currentPage - 1,
+        pageItems: self.$data.pagination.perPage,
+        searchWord: self.searchQuery,
+        sort: self.formatSortFieldParam,
+        active: self.activeFilter,
+        idParent: self.parentFilter,
+        type: 1
       };
-      this.$data.loading = true;
-      promoterService.list(request).then(
+      self.$data.loading = true;
+      categoryService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;
-          if (response.data) {
-            self.showForm = false;
-            self.showTable = response.data.length > 0;
-          } else {
-            self.showForm = false;
-            self.showTable = false;
-          }
           self.savePageSettings(self, response.totalItems);
           self.$data.loading = false;
         },
@@ -206,30 +235,40 @@ export default {
         }
       );
     },
-    resendValidation(id) {
-      if (confirm('Deseja reenviar o e-mail de validação?')) {
-        const self = this;
-        self.$data.loading = true;
-        promoterService.resendValidation(id).then(
-          response => {
-            if (response.status === 'ok') {
+    validateModal() {
+      const self = this;
+      this.$validator.validateAll().then(isValid => {
+        if (isValid) {
+          self.modal.formLoading = true;
+          categoryService.delete(self.modal.model.id).then(
+            response => {
               self.$notify({
-                type: 'success',
-                message: 'E-mail reenviado com sucesso!',
+                type: 'primary',
+                message: response.message,
                 icon: 'tim-icons icon-bell-55'
               });
-              self.$data.loading = false;
+              self.resetModal();
+              self.pagination.currentPage = 1;
+              self.fetchData();
+            },
+            err => {
+              self.$notify({
+                type: 'primary',
+                message:
+                  err.response && err.response.data
+                    ? err.response.data.message
+                    : err.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+              self.modal.formLoading = false;
             }
-          },
-          () => {
-            self.$data.loading = false;
-          }
-        );
-      }
+          );
+        }
+      });
     }
   },
   watch: {
-    customerStatus() {
+    activeFilter() {
       this.fetchData();
     }
   }

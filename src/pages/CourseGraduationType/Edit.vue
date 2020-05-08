@@ -12,33 +12,50 @@
                 required
                 v-model="model.name"
                 type="text"
-                :error="getError('name')"
                 name="name"
                 placeholder="Nome"
                 maxlength="200"
               ></base-input>
+              <label v-show="customErros.includes('name')" class="text-danger"
+                >O campo Nome é obrigatório</label
+              >
+              <label
+                v-show="customErros.includes('nameLength')"
+                class="text-danger"
+                >O campo Nome aceita no máximo 200 caracteres</label
+              >
+            </div>
+          </div>
+          <div class="row">
+            <label class="col-md-3 col-form-label">Tipo</label>
+            <div class="col-md-4">
+              <div class="form-group">
+                <v-select
+                  :options="parentTypes"
+                  :reduce="op => op.code"
+                  :key="model.parentId"
+                  v-model="model.parentId"
+                >
+                </v-select>
+                <label
+                  v-show="customErros.includes('parent')"
+                  class="text-danger"
+                  >O campo Tipo é obrigatório</label
+                >
+              </div>
             </div>
           </div>
           <div class="row">
             <label class="col-md-3 col-form-label">Operação</label>
             <div class="col-md-4">
               <div class="form-group">
-                <el-select
-                  class="select-info"
-                  placeholder="Operação"
+                <v-select
+                  :options="operations"
+                  :reduce="op => op.code"
+                  :key="model.idOperation"
                   v-model="model.idOperation"
-                  v-loading.lock="selectLoading"
-                  lock
                 >
-                  <el-option
-                    class="select-primary"
-                    v-for="type in operations"
-                    :value="type.id"
-                    :label="type.title"
-                    :key="type.id"
-                  >
-                  </el-option>
-                </el-select>
+                </v-select>
                 <label
                   v-show="customErros.includes('operation')"
                   class="text-danger"
@@ -104,19 +121,15 @@ export default {
         id: 0,
         name: '',
         idOperation: 0,
+        parentId: 0,
         active: true
       },
       operations: [],
       customErros: [],
-      modelValidations: {
-        name: {
-          required: true,
-          max: 200
-        },
-        idOperation: {
-          required: true
-        }
-      }
+      parentTypes: [
+        { code: 1, label: 'Graduação' },
+        { code: 2, label: 'Pós Graduação' }
+      ]
     };
   },
   computed: {
@@ -132,13 +145,19 @@ export default {
       const self = this;
       self.customErros = [];
 
-      if (self.model.idOperation == null || self.model.idOperation === 0)
+      if (self.model.parentId == null || self.model.parentId === 0) {
+        self.customErros.push('parent');
+      }
+      if (self.model.idOperation == null || self.model.idOperation === 0) {
         self.customErros.push('operation');
-      if (
-        self.model.name !== '' &&
-        self.model.name.length <= 200 &&
-        self.customErros.length === 0
-      ) {
+      }
+      if (self.model.name == null || self.model.name === '') {
+        self.customErros.push('name');
+      }
+      if (self.model.name.length > 200) {
+        self.customErros.push('nameLength');
+      }
+      if (self.customErros.length === 0) {
         self.submitLoading = true;
         self.saveGraduationType(self);
       }
@@ -208,9 +227,8 @@ export default {
       self.selectLoading = true;
       operationService.findAll().then(
         response => {
-          self.operations.push({ id: null, title: 'selecione' });
           _.each(response.data, function(el) {
-            self.operations.push({ id: el.id, title: el.title });
+            self.operations.push({ code: el.id, label: el.title });
           });
           self.selectLoading = false;
         },
