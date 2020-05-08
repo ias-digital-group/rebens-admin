@@ -14,6 +14,9 @@ export default {
             type: '',
             idOperation: ''
           };
+      if (request.active === null) request.active = '';
+      if (request.type === null) request.type = '';
+      if (request.idOperation === null) request.idOperation = '';
       HTTP.get(
         config.apiEndpoints.bannerUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}&active=${request.active}&type=${request.type}&idOperation=${request.idOperation}`

@@ -232,7 +232,7 @@ export default {
           row.active = data.data;
           self.$notify({
             type: 'success',
-            message: `Usuário ${
+            message: `Banner ${
               row.active ? 'ativado' : 'inativado'
             } com sucesso`
           });
@@ -304,6 +304,9 @@ export default {
       this.fetchData();
     },
     typeFilter() {
+      this.fetchData();
+    },
+    operationFilter() {
       this.fetchData();
     }
   }

@@ -195,8 +195,11 @@
             color: $light-blue;
             .el-input__icon{
                 position: absolute;
-                right: 10px;
+                padding-right: 10px;
+                right:0;
                 line-height: 15px;
+                width: 100%;
+                text-align: right;
             }
         }
     }
