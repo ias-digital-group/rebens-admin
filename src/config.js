@@ -26,6 +26,7 @@ export default {
     bannerUri: process.env.VUE_APP_API_URI.concat('banner/'),
     staticTextUri: process.env.VUE_APP_API_URI.concat('statictext/'),
     faqUri: process.env.VUE_APP_API_URI.concat('faq/'),
+    customerUri: process.env.VUE_APP_API_URI.concat('customer/'),
     userUri: process.env.VUE_APP_API_URI.concat('adminuser/'),
     reportUri: process.env.VUE_APP_API_URI.concat('report/'),
     operationPartnerUri: process.env.VUE_APP_API_URI.concat(

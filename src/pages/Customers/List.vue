@@ -151,6 +151,7 @@
 import { Table, TableColumn, Select, Option } from 'element-ui';
 import { BasePagination, Modal } from 'src/components';
 import operationService from '../../services/Operation/operationService';
+import operationService from '../../services/Operation/operationService';
 import listPage from '../../mixins/listPage';
 export default {
   mixins: [listPage],
@@ -164,7 +165,7 @@ export default {
   },
   data() {
     return {
-      internalName: 'Pré-cadastro',
+      internalName: 'Clientes',
       sortField: 'name',
       formLoading: false,
       tableColumns: [

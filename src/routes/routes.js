@@ -255,11 +255,11 @@ let faqsPages = {
 
 let customersPages = {
   path: '/customers',
-  component: DashboardLayout,
+  component: MainLayout,
   meta: {
     requiresAuth: true,
-    roles: ['publisher', 'administrator', 'master'],
-    title: 'Pré-cadastro'
+    roles: ['publisherRebens', 'administradorRebens', 'publisher', 'administrator', 'master'],
+    title: 'Clientes'
   },
   children: [
     {
@@ -268,8 +268,8 @@ let customersPages = {
       component: CustomerList,
       meta: {
         requiresAuth: true,
-        roles: ['publisher', 'administrator', 'master'],
-        title: 'Pré-cadastro'
+        roles: ['publisherRebens', 'administradorRebens', 'publisher', 'administrator', 'master'],
+        title: 'Clientes'
       }
     },
     {
@@ -278,8 +278,8 @@ let customersPages = {
       component: CustomerEdit,
       meta: {
         requiresAuth: true,
-        roles: ['publisher', 'administrator', 'master'],
-        title: 'Pré-cadastro'
+        roles: ['publisherRebens', 'administradorRebens', 'publisher', 'administrator', 'master'],
+        title: 'Clientes'
       }
     }
   ]

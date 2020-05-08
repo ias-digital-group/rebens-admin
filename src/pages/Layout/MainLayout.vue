@@ -144,9 +144,9 @@ export default {
         },
         {
           name: 'Clientes',
-          path: '/report/customer',
+          path: '/customers',
           active: false,
-          roles: 'master,administratorRebens,publisherRebens',
+          roles: 'master,administrator,administratorRebens,publisher,publisherRebens',
           needModule: '',
           subitens: []
         },
@@ -231,14 +231,6 @@ export default {
               roles: ''
             }
           ]
-        },
-        {
-          name: 'Clientes',
-          path: '/customers',
-          active: false,
-          roles: 'publisher',
-          needModule: '',
-          subitens: []
         },
         {
           name: 'Perguntas frequentes',
