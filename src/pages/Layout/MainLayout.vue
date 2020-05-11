@@ -146,7 +146,8 @@ export default {
           name: 'Clientes',
           path: '/customers',
           active: false,
-          roles: 'master,administrator,administratorRebens,publisher,publisherRebens',
+          roles:
+            'master,administrator,administratorRebens,publisher,publisherRebens',
           needModule: '',
           subitens: []
         },

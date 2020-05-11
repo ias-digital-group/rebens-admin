@@ -258,7 +258,13 @@ let customersPages = {
   component: MainLayout,
   meta: {
     requiresAuth: true,
-    roles: ['publisherRebens', 'administradorRebens', 'publisher', 'administrator', 'master'],
+    roles: [
+      'publisherRebens',
+      'administradorRebens',
+      'publisher',
+      'administrator',
+      'master'
+    ],
     title: 'Clientes'
   },
   children: [
@@ -268,7 +274,13 @@ let customersPages = {
       component: CustomerList,
       meta: {
         requiresAuth: true,
-        roles: ['publisherRebens', 'administradorRebens', 'publisher', 'administrator', 'master'],
+        roles: [
+          'publisherRebens',
+          'administradorRebens',
+          'publisher',
+          'administrator',
+          'master'
+        ],
         title: 'Clientes'
       }
     },
@@ -278,7 +290,13 @@ let customersPages = {
       component: CustomerEdit,
       meta: {
         requiresAuth: true,
-        roles: ['publisherRebens', 'administradorRebens', 'publisher', 'administrator', 'master'],
+        roles: [
+          'publisherRebens',
+          'administradorRebens',
+          'publisher',
+          'administrator',
+          'master'
+        ],
         title: 'Clientes'
       }
     }

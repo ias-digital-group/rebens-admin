@@ -70,7 +70,7 @@
           v-show="!isPublisher && !isPartnerAdmin"
           :link="{
             name: $t('sidebar.customer'),
-            path: '/report/customer',
+            path: '/customers',
             icon: 'fas fa-users'
           }"
         ></sidebar-item>

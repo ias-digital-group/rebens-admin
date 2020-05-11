@@ -1,7 +1,6 @@
 import { HTTP } from '../../http';
 import _ from 'lodash';
 import config from '../../config';
-import axios from 'axios';
 
 export default {
   findAll: request => {
@@ -242,104 +241,9 @@ export default {
       );
     });
   },
-  findAllCustomers: request => {
-    return new Promise((resolve, reject) => {
-      request = request
-        ? request
-        : {
-            page: 0,
-            pageItems: 30,
-            searchWord: '',
-            sort: 'name ASC',
-            active: ''
-          };
-      HTTP.get(
-        config.apiEndpoints.operationUri.concat(
-          `${request.parentId}/Customers?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}`
-        )
-      ).then(
-        response => {
-          _.each(response.data.data, function(el) {
-            el.activeName = el.active ? 'Sim' : 'Não';
-          });
-          resolve(response.data);
-        },
-        error => {
-          reject(error);
-        }
-      );
-    });
-  },
-  createCustomer: function(id, model) {
-    return new Promise((resolve, reject) => {
-      HTTP.post(
-        config.apiEndpoints.operationUri.concat(`${id}/customers`),
-        model
-      ).then(
-        response => {
-          resolve(response.data);
-        },
-        error => {
-          reject(error);
-        }
-      );
-    });
-  },
-  deleteCustomer: function(id, idCustomer) {
-    return new Promise((resolve, reject) => {
-      HTTP.delete(
-        config.apiEndpoints.operationUri.concat(`${id}/customers/${idCustomer}`)
-      ).then(
-        response => {
-          resolve(response.data);
-        },
-        error => {
-          reject(error);
-        }
-      );
-    });
-  },
-  uploadCustomerList: function(id, file) {
-    return new Promise((resolve, reject) => {
-      var formData = new FormData();
-      formData.append('file', file);
-      axios
-        .post(
-          config.apiEndpoints.operationUri.concat(`${id}/UploadCustomersList`),
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          }
-        )
-        .then(
-          response => {
-            resolve(response.data);
-          },
-          error => {
-            reject(error);
-          }
-        );
-    });
-  },
   publish: function(id) {
     return new Promise((resolve, reject) => {
       HTTP.post(config.apiEndpoints.operationUri.concat(`${id}/Publish`)).then(
-        response => {
-          resolve(response.data);
-        },
-        error => {
-          reject(error);
-        }
-      );
-    });
-  },
-  checkFileProcessing: function(id) {
-    return new Promise((resolve, reject) => {
-      HTTP.get(
-        config.apiEndpoints.operationUri.concat(`${id}/HasFileProcessing`)
-      ).then(
         response => {
           resolve(response.data);
         },

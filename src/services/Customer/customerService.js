@@ -5,15 +5,16 @@ export default {
     return new Promise((resolve, reject) => {
       request = request
         ? request
-        : { 
-            page: 0, 
-            pageItems: 30, 
-            searchWord: '', 
+        : {
+            page: 0,
+            pageItems: 30,
+            searchWord: '',
             sort: 'name ASC',
             status: '',
             idOperation: '',
-            idOperationPartner: ''
-        };
+            idOperationPartner: '',
+            active: ''
+          };
       HTTP.get(
         config.apiEndpoints.customerUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
@@ -21,9 +22,11 @@ export default {
           }&sort=${request.sort}${
             request.idOperation ? '&idOperation=' + request.idOperation : ''
           }${
-            request.idOperationPartner ? '&idOperationPartner=' + request.idOperationPartner : ''
-          }${
-            request.status ? '&status=' + request.status : ''
+            request.idOperationPartner
+              ? '&idOperationPartner=' + request.idOperationPartner
+              : ''
+          }${request.status ? '&status=' + request.status : ''}${
+            request.active ? '&active=' + request.active : ''
           }`
         )
       ).then(
@@ -100,7 +103,9 @@ export default {
   },
   toggleActive: id => {
     return new Promise((resolve, reject) => {
-      HTTP.post(config.apiEndpoints.customerUri.concat(`${id}/ToggleActive`)).then(
+      HTTP.post(
+        config.apiEndpoints.customerUri.concat(`${id}/ToggleActive`)
+      ).then(
         response => {
           resolve(response.data);
         },
