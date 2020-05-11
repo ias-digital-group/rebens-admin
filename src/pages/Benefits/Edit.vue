@@ -237,7 +237,8 @@
                   >Texto do voucher *</label
                 >
                 <div class="col-md-9">
-                  <wysiwyg
+                  <vue-editor
+                    :editorToolbar="customToolbar"
                     v-model="model.voucherText"
                     placeholder="Texto do voucher"
                   />
