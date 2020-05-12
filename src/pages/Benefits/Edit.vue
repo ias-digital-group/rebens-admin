@@ -780,9 +780,9 @@ export default {
   },
   watch: {
     'model.idBenefitType': function() {
-      if (this.viewAction == 'new') {
+      if (this.viewAction == 'new' && this.model.idBenefitType === 3) {
         this.model.howToUse =
-          '<div><p>Realize suas compras, seu CASH BACK será ativado automaticamente.</p><br /><p><b>Regras Cash Back (Dinheiro Volta)</b></p><br /><ul><li>Em até 5 dias úteis o parceiro nos avisa da compra, seu Cash Back aparecerá no seu saldo como pendente;</li><li>Em até 120 dias este saldo será confirmado, caso não haja troca ou devolução.</li></ul><br /><p><b>Seu Cash Back pode ser invalidado nas seguintes situações:</b></p><br /><ul><li>Não concluiu o pagamento da compra Utilizou um código ou cupom indevido;&nbsp;</li><li>Uso de vale-presente, vale-compra;</li><li>Utilizar outros programas de fidelidade;</li><li>Comprar de listas de casamento;</li><li>Ser direcionado para a loja através de algum e-mail promocional enviado pela loja ou por outro site;</li><li>Alterar o pedido (devolver/trocar algum produto), alterar a forma de pagamento ou cancelar o pedido/compra;</li><li>Não cumulativo com Programas de Fidelidade</li></ul></div>';
+          '<p>Realize suas compras, seu CASH BACK será ativado automaticamente.</p><br /><p><b>Regras Cash Back (Dinheiro Volta)</b></p><br /><ul><li>Em até 5 dias úteis o parceiro nos avisa da compra, seu Cash Back aparecerá no seu saldo como pendente;</li><li>Em até 120 dias este saldo será confirmado, caso não haja troca ou devolução.</li></ul><br /><p><b>Seu Cash Back pode ser invalidado nas seguintes situações:</b></p><br /><ul><li>Não concluiu o pagamento da compra Utilizou um código ou cupom indevido;&nbsp;</li><li>Uso de vale-presente, vale-compra;</li><li>Utilizar outros programas de fidelidade;</li><li>Comprar de listas de casamento;</li><li>Ser direcionado para a loja através de algum e-mail promocional enviado pela loja ou por outro site;</li><li>Alterar o pedido (devolver/trocar algum produto), alterar a forma de pagamento ou cancelar o pedido/compra;</li><li>Não cumulativo com Programas de Fidelidade</li></ul>';
       }
     }
   },
