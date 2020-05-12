@@ -37,9 +37,9 @@
           <span slot="no-options">Nenhum clube encontrado</span>
         </v-select>
         <v-select
-          :options="companies"
+          :options="operationPartners"
           :reduce="op => op.code"
-          v-model="typeFilter"
+          v-model="operationPartnerFilter"
           placeholder="Filtre por empresa"
         >
           <span slot="no-options">Nenhuma empresa encontrada</span>
@@ -77,7 +77,7 @@
           <tr v-for="item in tableData" :key="item.id">
             <td>
               <div class="two-lines">
-                <span>{{ item.name }}</span>
+                <span>{{ item.fullname }}</span>
                 <span class="blue">{{ item.email }}</span>
               </div>
             </td>
@@ -86,14 +86,14 @@
             </td>
             <td>
               <div class="two-lines">
-                <span>{{ item.operationName }}</span>
-                <span class="blue">{{ item.partnerName }}</span>
+                <span>{{ item.operation }}</span>
+                <span class="blue">{{ item.operationPartner }}</span>
               </div>
             </td>
             <td>
               <div class="two-lines">
                 <span>{{ item.phone }}</span>
-                <span class="blue">{{ item.mobilePhone }}</span>
+                <span class="blue">{{ item.cellphone }}</span>
               </div>
             </td>
             <td>
@@ -207,6 +207,7 @@ export default {
       sortField: 'name',
       operationFilter: '',
       operationPartnerFilter: '',
+      showFilters: false,
       activeFilter: '',
       statusFilter: '',
       operations: [],
@@ -279,7 +280,7 @@ export default {
       customerService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;
-          self.savePageSettings(self, response.totalItems);
+          self.savePageSettings(self, response.totalItems, response.totalPages);
           self.$data.loading = false;
         },
         () => {

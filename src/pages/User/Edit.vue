@@ -58,6 +58,7 @@
               v-model="emailConfirm"
               type="text"
               name="emailConfirm"
+              @paste.prevent
               :error="customErrors.get('email-confirm')"
               label="Confirmação E-mail"
               maxlength="500"
@@ -294,9 +295,6 @@ export default {
             }
           );
       }
-    },
-    getError(fieldName) {
-      return this.errors.first(fieldName);
     },
     validate() {
       const self = this;

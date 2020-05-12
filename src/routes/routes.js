@@ -20,6 +20,7 @@ const FaqsList = () => import('src/pages/Faqs/List.vue');
 const FaqsEdit = () => import('src/pages/Faqs/Edit.vue');
 
 const CustomerList = () => import('src/pages/Customers/List.vue');
+const CustomerCreate = () => import('src/pages/Customers/Create.vue');
 const CustomerEdit = () => import('src/pages/Customers/Edit.vue');
 
 const PagesList = () => import('src/pages/Pages/List.vue');
@@ -287,7 +288,7 @@ let customersPages = {
     {
       path: 'new',
       name: `new_customer`,
-      component: CustomerEdit,
+      component: CustomerCreate,
       meta: {
         requiresAuth: true,
         roles: [
@@ -298,6 +299,23 @@ let customersPages = {
           'master'
         ],
         title: 'Clientes'
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_customer',
+      props: true,
+      component: CustomerEdit,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'administrator',
+          'administratorRebens',
+          'publisher',
+          'publisherRebens'
+        ],
+        title: i18n.t('pages.users.title')
       }
     }
   ]

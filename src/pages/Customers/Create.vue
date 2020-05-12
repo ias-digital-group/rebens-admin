@@ -2,8 +2,7 @@
   <div class="edit-box">
     <div class="page-header">
       <h2>
-        <span v-if="viewAction === 'new'">Cadastro Cliente</span
-        ><span v-else>Editar Cliente</span>
+        <span>Cadastro Cliente</span>
       </h2>
       <div class="box-actions">
         <base-link to="/customers" class="bt bt-square bg-white-2 c-light-blue">
@@ -74,10 +73,11 @@
               maxlength="500"
             ></custom-input>
           </div>
-          <div class="ias-row" v-if="viewAction === 'new'">
+          <div class="ias-row">
             <custom-input
               :required="true"
               v-model="emailConfirm"
+              @paste.prevent
               type="text"
               name="emailConfirm"
               :error="customErrors.get('email-confirm')"
@@ -96,39 +96,6 @@
               :inputMask="['###.###.###-##']"
               maxlength="50"
             ></custom-input>
-            <custom-input
-              :required="true"
-              v-model="model.rg"
-              type="text"
-              name="rg"
-              label="RG"
-              maxlength="50"
-            ></custom-input>
-          </div>
-          <div class="ias-row">
-            <custom-input
-              label="Data Nascimento (DD/MM/AAAA)"
-              :class="{ 'ias-focus': model.birthday != null && model.birthday != '' }"
-              :error="customErrors.get('end')"
-            >
-              <el-date-picker
-                type="date"
-                required
-                name="birthday"
-                data-vv-name="birthday"
-                v-model="model.birthday"
-                format="dd/MM/yyyy"
-              >
-              </el-date-picker>
-            </custom-input>
-            <div>
-              <ias-radio v-model="model.gender" name="M" value="M"
-                >Masculino</ias-radio
-              >
-              <ias-radio v-model="model.gender" name="F" value="F"
-                >Feminino</ias-radio
-              >
-            </div>
           </div>
           <div class="ias-row">
             <custom-input
@@ -149,24 +116,13 @@
             ></custom-input>
           </div>
           <div class="ias-row">
-            <custom-input
-              v-model="model.phone"
-              type="text"
-              name="phone"
-              label="Telefone"
-              maxlength="50"
-              :inputMask="['(##) ####-####', '(##) #####-####']"
-            ></custom-input>
-          </div>
-          <div class="ias-row">
             <div class="form-actions">
               <button
                 class="bt bg-green c-white"
                 type="button"
                 @click.prevent="validate"
               >
-                <span v-if="viewAction === 'new'">Cadastrar</span>
-                <span v-else>Salvar</span>
+                <span>Cadastrar</span>
               </button>
 
               <ias-checkbox v-model="model.active">Ativo</ias-checkbox>
@@ -182,7 +138,6 @@
   </div>
 </template>
 <script>
-import { DatePicker } from 'element-ui';
 import customerService from '../../services/Customer/customerService';
 import operationService from '../../services/Operation/operationService';
 import operationPartnerService from '../../services/OperationPartner/operationPartnerService';
@@ -190,11 +145,9 @@ import { SuccessModal } from 'src/components';
 import _ from 'lodash';
 export default {
   components: {
-    SuccessModal,
-    DatePicker
+    SuccessModal
   },
   props: {
-    id: String,
     removeText: {
       type: String,
       default: 'Remove'
@@ -233,36 +186,30 @@ export default {
       operationPartners: []
     };
   },
-  computed: {
-    viewAction() {
-      return this.$route.name == 'edit_customer' ? 'edit' : 'new';
-    }
-  },
   methods: {
-    validateCustomer() {
+    validate() {
       const self = this;
       self.customErrors = new Map();
 
       if (!self.model.cpf) self.customErrors.set('cpf', 'Campo obrigatório');
+      else if (!self.validateCpf(self.model.cpf)) self.customErrors.set('cpf', 'CPF inválido!');
       if (!self.model.email)
         self.customErrors.set('email', 'Campo obrigatório');
       else if (!self.reg.test(self.model.email))
         self.customErrors.set('email', 'E-mail inválido');
       else if (!self.model.email.length > 300)
         self.customErrors.set('email', 'Máximo 300 caracteres');
-      if (self.viewAction === 'new') {
-        if (!self.emailConfirm)
-          self.customErrors.set('email-confirm', 'Campo obrigatório');
-        else if (!self.reg.test(self.emailConfirm))
-          self.customErrors.set('email-confirm', 'E-mail inválido');
-        else if (!self.emailConfirm.length > 300)
-          self.customErrors.set('email-confirm', 'Máximo 300 caracteres');
-        else if (self.emailConfirm !== self.model.email)
-          self.customErrors.set(
-            'email-confirm',
-            'Este campo deve ser igual ao E-mail'
-          );
-      }
+      if (!self.emailConfirm)
+        self.customErrors.set('email-confirm', 'Campo obrigatório');
+      else if (!self.reg.test(self.emailConfirm))
+        self.customErrors.set('email-confirm', 'E-mail inválido');
+      else if (!self.emailConfirm.length > 300)
+        self.customErrors.set('email-confirm', 'Máximo 300 caracteres');
+      else if (self.emailConfirm !== self.model.email)
+        self.customErrors.set(
+          'email-confirm',
+          'Este campo deve ser igual ao E-mail'
+        );
       if(self.model.idOperation == null) self.customErrors.set('operation', 'Campo obrigatório');
 
       if (self.customErrors.size === 0) {
@@ -272,50 +219,22 @@ export default {
     },
     saveCustomer() {
       const self = this;
-      if (self.viewAction == 'new') {
-        customerService.create(self.model).then(
-          () => {
-              self.submitLoading = false;
-              self.showSuccessModal = true;
-          },
-          err => {
-            self.$notify({
-              type: 'danger',
-              message: err.message
-            });
-            self.submitLoading = false;
-          }
-        );
-      } else {
-        customerService.update(self.model).then(
-          () => {
+      customerService.create(self.model).then(
+        () => {
             self.submitLoading = false;
             self.showSuccessModal = true;
-          },
-          err => {
-            self.$notify({
-              type: 'danger',
-              message: err.message
-            });
-            self.submitLoading = false;
-          }
-        );
-      }
+        },
+        err => {
+          self.$notify({
+            type: 'danger',
+            message: err.message
+          });
+          self.submitLoading = false;
+        }
+      );
     },
     fetchData() {
       const self = this;
-      if (self.viewAction == 'edit') {
-        self.formLoading = true;
-        customerService.get(self.id).then(
-          response => {
-            self.model = response.data;
-            self.loadOperationPartner(self);
-          },
-          () => {
-            self.formLoading = false;
-          }
-        );
-      }
 
       self.operations = [];
       operationService.findAll().then(
@@ -365,6 +284,42 @@ export default {
             self.formLoading = false;
           }
         );
+    },
+    validateCpf(c) {
+			if((c = c.replace(/[^\d]/g,"")).length != 11)
+        return false
+      if (c == "00000000000" ||
+        c == "11111111111" ||
+        c == "22222222222" ||
+        c == "33333333333" ||
+        c == "44444444444" ||
+        c == "55555555555" ||
+        c == "66666666666" ||
+        c == "77777777777" ||
+        c == "88888888888" ||
+        c == "99999999999")
+      return false;
+      
+      let r;
+      let s = 0;
+      for (let i=1; i<=9; i++)
+        s = s + parseInt(c[i-1]) * (11 - i);
+      r = (s * 10) % 11;
+
+      if ((r == 10) || (r == 11))
+        r = 0;
+      if (r != parseInt(c[9]))
+        return false;
+      s = 0;
+
+      for (let i = 1; i <= 10; i++)
+        s = s + parseInt(c[i-1]) * (12 - i);
+      r = (s * 10) % 11;
+      if ((r == 10) || (r == 11))
+        r = 0;
+      if (r != parseInt(c[10]))
+        return false;
+      return true;
     }
   },
   created() {
