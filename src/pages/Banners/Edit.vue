@@ -146,7 +146,12 @@
         </div>
       </form>
     </div>
-    <success-modal :show="showSuccessModal" link="/banners"> </success-modal>
+    <success-modal
+      :isEdit="viewAction !== 'new'"
+      :show="showSuccessModal"
+      link="/banners"
+    >
+    </success-modal>
   </div>
 </template>
 <script>

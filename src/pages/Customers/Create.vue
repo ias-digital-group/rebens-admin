@@ -130,11 +130,11 @@
             <div class="div-spacer"></div>
           </div>
         </div>
-        <div class="form-right">
-        </div>
+        <div class="form-right"></div>
       </form>
     </div>
-    <success-modal :show="showSuccessModal" link="/customers"> </success-modal>
+    <success-modal :isEdit="false" :show="showSuccessModal" link="/customers">
+    </success-modal>
   </div>
 </template>
 <script>
@@ -168,7 +168,7 @@ export default {
         surname: '',
         idOperation: null,
         gender: null,
-        birthday: null, 
+        birthday: null,
         email: '',
         idAddress: '',
         cpf: '',
@@ -192,7 +192,8 @@ export default {
       self.customErrors = new Map();
 
       if (!self.model.cpf) self.customErrors.set('cpf', 'Campo obrigatório');
-      else if (!self.validateCpf(self.model.cpf)) self.customErrors.set('cpf', 'CPF inválido!');
+      else if (!self.validateCpf(self.model.cpf))
+        self.customErrors.set('cpf', 'CPF inválido!');
       if (!self.model.email)
         self.customErrors.set('email', 'Campo obrigatório');
       else if (!self.reg.test(self.model.email))
@@ -210,7 +211,8 @@ export default {
           'email-confirm',
           'Este campo deve ser igual ao E-mail'
         );
-      if(self.model.idOperation == null) self.customErrors.set('operation', 'Campo obrigatório');
+      if (self.model.idOperation == null)
+        self.customErrors.set('operation', 'Campo obrigatório');
 
       if (self.customErrors.size === 0) {
         self.submitLoading = true;
@@ -221,8 +223,8 @@ export default {
       const self = this;
       customerService.create(self.model).then(
         () => {
-            self.submitLoading = false;
-            self.showSuccessModal = true;
+          self.submitLoading = false;
+          self.showSuccessModal = true;
         },
         err => {
           self.$notify({
@@ -252,7 +254,7 @@ export default {
         }
       );
     },
-    onOperationChange () {
+    onOperationChange() {
       const self = this;
       self.loadOperationPartner(self);
     },
@@ -286,39 +288,34 @@ export default {
         );
     },
     validateCpf(c) {
-			if((c = c.replace(/[^\d]/g,"")).length != 11)
-        return false
-      if (c == "00000000000" ||
-        c == "11111111111" ||
-        c == "22222222222" ||
-        c == "33333333333" ||
-        c == "44444444444" ||
-        c == "55555555555" ||
-        c == "66666666666" ||
-        c == "77777777777" ||
-        c == "88888888888" ||
-        c == "99999999999")
-      return false;
-      
+      if ((c = c.replace(/[^\d]/g, '')).length != 11) return false;
+      if (
+        c == '00000000000' ||
+        c == '11111111111' ||
+        c == '22222222222' ||
+        c == '33333333333' ||
+        c == '44444444444' ||
+        c == '55555555555' ||
+        c == '66666666666' ||
+        c == '77777777777' ||
+        c == '88888888888' ||
+        c == '99999999999'
+      )
+        return false;
+
       let r;
       let s = 0;
-      for (let i=1; i<=9; i++)
-        s = s + parseInt(c[i-1]) * (11 - i);
+      for (let i = 1; i <= 9; i++) s = s + parseInt(c[i - 1]) * (11 - i);
       r = (s * 10) % 11;
 
-      if ((r == 10) || (r == 11))
-        r = 0;
-      if (r != parseInt(c[9]))
-        return false;
+      if (r == 10 || r == 11) r = 0;
+      if (r != parseInt(c[9])) return false;
       s = 0;
 
-      for (let i = 1; i <= 10; i++)
-        s = s + parseInt(c[i-1]) * (12 - i);
+      for (let i = 1; i <= 10; i++) s = s + parseInt(c[i - 1]) * (12 - i);
       r = (s * 10) % 11;
-      if ((r == 10) || (r == 11))
-        r = 0;
-      if (r != parseInt(c[10]))
-        return false;
+      if (r == 10 || r == 11) r = 0;
+      if (r != parseInt(c[10])) return false;
       return true;
     }
   },

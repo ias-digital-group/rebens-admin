@@ -181,7 +181,12 @@
         </div>
       </form>
     </div>
-    <success-modal :show="showSuccessModal" link="/users"> </success-modal>
+    <success-modal
+      :isEdit="viewAction !== 'new'"
+      :show="showSuccessModal"
+      link="/users"
+    >
+    </success-modal>
   </div>
 </template>
 <script>

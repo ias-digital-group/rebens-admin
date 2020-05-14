@@ -1,10 +1,7 @@
 <template>
   <div class="edit-box">
     <div class="page-header">
-      <h2>
-        <span v-if="viewAction === 'new'">Cadastro Cliente</span
-        ><span v-else>Editar Cliente</span>
-      </h2>
+      <h2>Editar Cliente</h2>
       <div class="box-actions">
         <base-link to="/customers" class="bt bt-square bg-white-2 c-light-blue">
           <i class="icon-icon-arrow-left"></i>
@@ -74,17 +71,6 @@
               maxlength="500"
             ></custom-input>
           </div>
-          <div class="ias-row" v-if="viewAction === 'new'">
-            <custom-input
-              :required="true"
-              v-model="emailConfirm"
-              type="text"
-              name="emailConfirm"
-              :error="customErrors.get('email-confirm')"
-              label="Confirmação E-mail"
-              maxlength="500"
-            ></custom-input>
-          </div>
           <div class="ias-row">
             <custom-input
               :required="true"
@@ -108,7 +94,9 @@
           <div class="ias-row">
             <custom-input
               label="Data Nascimento (DD/MM/AAAA)"
-              :class="{ 'ias-focus': model.birthday != null && model.birthday != '' }"
+              :class="{
+                'ias-focus': model.birthday != null && model.birthday != ''
+              }"
               :error="customErrors.get('end')"
             >
               <el-date-picker
@@ -121,7 +109,7 @@
               >
               </el-date-picker>
             </custom-input>
-            <div>
+            <div class="opts-holder">
               <ias-radio v-model="model.gender" name="M" value="M"
                 >Masculino</ias-radio
               >
@@ -150,13 +138,65 @@
           </div>
           <div class="ias-row">
             <custom-input
-              v-model="model.phone"
+              v-model="model.address.zipcode"
               type="text"
-              name="phone"
-              label="Telefone"
-              maxlength="50"
-              :inputMask="['(##) ####-####', '(##) #####-####']"
+              name="zipcode"
+              label="CEP"
+              maxlength="9"
+              :inputMask="['#####-###']"
             ></custom-input>
+          </div>
+          <div class="ias-row">
+            <custom-input
+              v-model="model.address.street"
+              type="text"
+              name="street"
+              label="Endereço"
+              maxlength="500"
+            ></custom-input>
+          </div>
+          <div class="ias-row">
+            <custom-input
+              v-model="model.address.number"
+              type="text"
+              name="number"
+              label="Número"
+              maxlength="100"
+            ></custom-input>
+            <custom-input
+              v-model="model.address.complement"
+              type="text"
+              name="complement"
+              label="Complemento"
+              maxlength="100"
+            ></custom-input>
+          </div>
+          <div class="ias-row">
+            <custom-input
+              v-model="model.address.neighborhood"
+              type="text"
+              name="neighborhood"
+              label="Bairro"
+              maxlength="400"
+            ></custom-input>
+            <custom-input
+              v-model="model.address.city"
+              type="text"
+              name="city"
+              label="Cidade"
+              maxlength="400"
+            ></custom-input>
+          </div>
+          <div class="ias-row">
+            <v-select
+              :options="stateList"
+              :reduce="op => op.code"
+              :key="model.address.state"
+              v-model="model.address.state"
+              placeholder="Estado"
+            >
+              <span slot="no-options">Nenhum Estado encontrado</span>
+            </v-select>
           </div>
           <div class="ias-row">
             <div class="form-actions">
@@ -165,8 +205,7 @@
                 type="button"
                 @click.prevent="validate"
               >
-                <span v-if="viewAction === 'new'">Cadastrar</span>
-                <span v-else>Salvar</span>
+                Salvar
               </button>
 
               <ias-checkbox v-model="model.active">Ativo</ias-checkbox>
@@ -174,24 +213,26 @@
             <div class="div-spacer"></div>
           </div>
         </div>
-        <div class="form-right">
-        </div>
+        <div class="form-right"></div>
       </form>
     </div>
-    <success-modal :show="showSuccessModal" link="/customers"> </success-modal>
+    <success-modal :isEdit="true" :show="showSuccessModal" link="/customers">
+    </success-modal>
   </div>
 </template>
 <script>
 import { DatePicker } from 'element-ui';
+import helperService from '../../services/Helper/helperService';
 import customerService from '../../services/Customer/customerService';
 import operationService from '../../services/Operation/operationService';
 import operationPartnerService from '../../services/OperationPartner/operationPartnerService';
 import { SuccessModal } from 'src/components';
 import _ from 'lodash';
+
 export default {
   components: {
     SuccessModal,
-    DatePicker
+    [DatePicker.name]: DatePicker
   },
   props: {
     id: String,
@@ -207,7 +248,6 @@ export default {
       submitLoading: false,
       showSuccessModal: false,
       customErrors: new Map(),
-      emailConfirm: '',
       reg: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
       model: {
         id: 0,
@@ -215,7 +255,7 @@ export default {
         surname: '',
         idOperation: null,
         gender: null,
-        birthday: null, 
+        birthday: null,
         email: '',
         idAddress: '',
         cpf: '',
@@ -226,20 +266,64 @@ export default {
         customerType: 0,
         status: 0,
         active: false,
-        address: null,
+        address: {
+          id: 0,
+          name: '',
+          street: '',
+          number: '',
+          complement: '',
+          neighborhood: '',
+          city: '',
+          state: '',
+          country: 'Brasil',
+          zipcode: '',
+          latitude: null,
+          longitude: null
+        },
         idOperationPartner: null
       },
       operations: [],
-      operationPartners: []
+      operationPartners: [],
+      stateList: [
+        { code: 'AC', label: 'Acre' },
+        { code: 'AL', label: 'Alagoas' },
+        { code: 'AP', label: 'Amapá' },
+        { code: 'AM', label: 'Amazonas' },
+        { code: 'BA', label: 'Bahia' },
+        { code: 'CE', label: 'Ceará' },
+        { code: 'DF', label: 'Distrito Federal' },
+        { code: 'ES', label: 'Espírito Santo' },
+        { code: 'GO', label: 'Goiás' },
+        { code: 'MA', label: 'Maranhão' },
+        { code: 'MT', label: 'Mato Grosso' },
+        { code: 'MS', label: 'Mato Grosso do Sul' },
+        { code: 'MG', label: 'Minas Gerais' },
+        { code: 'PA', label: 'Pará' },
+        { code: 'PB', label: 'Paraíba' },
+        { code: 'PR', label: 'Paraná' },
+        { code: 'PE', label: 'Pernambuco' },
+        { code: 'PI', label: 'Piauí' },
+        { code: 'RJ', label: 'Rio de Janeiro' },
+        { code: 'RN', label: 'Rio Grande do Norte' },
+        { code: 'RO', label: 'Rondônia' },
+        { code: 'RR', label: 'Roraima' },
+        { code: 'RS', label: 'Rio Grande do Sul' },
+        { code: 'SC', label: 'Santa Catarina' },
+        { code: 'SP', label: 'São Paulo' },
+        { code: 'SE', label: 'Sergipe' },
+        { code: 'TO', label: 'Tocantins' }
+      ]
     };
   },
-  computed: {
-    viewAction() {
-      return this.$route.name == 'edit_customer' ? 'edit' : 'new';
+  watch: {
+    'model.address.zipcode': function(value) {
+      if (value && value.length == 8) {
+        this.getAddressData(value);
+      }
     }
   },
   methods: {
-    validateCustomer() {
+    validate() {
       const self = this;
       self.customErrors = new Map();
 
@@ -250,20 +334,8 @@ export default {
         self.customErrors.set('email', 'E-mail inválido');
       else if (!self.model.email.length > 300)
         self.customErrors.set('email', 'Máximo 300 caracteres');
-      if (self.viewAction === 'new') {
-        if (!self.emailConfirm)
-          self.customErrors.set('email-confirm', 'Campo obrigatório');
-        else if (!self.reg.test(self.emailConfirm))
-          self.customErrors.set('email-confirm', 'E-mail inválido');
-        else if (!self.emailConfirm.length > 300)
-          self.customErrors.set('email-confirm', 'Máximo 300 caracteres');
-        else if (self.emailConfirm !== self.model.email)
-          self.customErrors.set(
-            'email-confirm',
-            'Este campo deve ser igual ao E-mail'
-          );
-      }
-      if(self.model.idOperation == null) self.customErrors.set('operation', 'Campo obrigatório');
+      if (self.model.idOperation == null)
+        self.customErrors.set('operation', 'Campo obrigatório');
 
       if (self.customErrors.size === 0) {
         self.submitLoading = true;
@@ -272,50 +344,32 @@ export default {
     },
     saveCustomer() {
       const self = this;
-      if (self.viewAction == 'new') {
-        customerService.create(self.model).then(
-          () => {
-              self.submitLoading = false;
-              self.showSuccessModal = true;
-          },
-          err => {
-            self.$notify({
-              type: 'danger',
-              message: err.message
-            });
-            self.submitLoading = false;
-          }
-        );
-      } else {
-        customerService.update(self.model).then(
-          () => {
-            self.submitLoading = false;
-            self.showSuccessModal = true;
-          },
-          err => {
-            self.$notify({
-              type: 'danger',
-              message: err.message
-            });
-            self.submitLoading = false;
-          }
-        );
-      }
+      customerService.update(self.model).then(
+        () => {
+          self.submitLoading = false;
+          self.showSuccessModal = true;
+        },
+        err => {
+          self.$notify({
+            type: 'danger',
+            message: err.message
+          });
+          self.submitLoading = false;
+        }
+      );
     },
     fetchData() {
       const self = this;
-      if (self.viewAction == 'edit') {
-        self.formLoading = true;
-        customerService.get(self.id).then(
-          response => {
-            self.model = response.data;
-            self.loadOperationPartner(self);
-          },
-          () => {
-            self.formLoading = false;
-          }
-        );
-      }
+      self.formLoading = true;
+      customerService.get(self.id).then(
+        response => {
+          self.model = response.data;
+          self.loadOperationPartner(self);
+        },
+        () => {
+          self.formLoading = false;
+        }
+      );
 
       self.operations = [];
       operationService.findAll().then(
@@ -333,7 +387,7 @@ export default {
         }
       );
     },
-    onOperationChange () {
+    onOperationChange() {
       const self = this;
       self.loadOperationPartner(self);
     },
@@ -365,6 +419,16 @@ export default {
             self.formLoading = false;
           }
         );
+    },
+    getAddressData(zipCode) {
+      const self = this;
+      helperService.getAddressFromZipCode(zipCode).then(response => {
+        self.model.address.street = response.logradouro;
+        self.model.address.complement = response.complemento;
+        self.model.address.neighborhood = response.bairro;
+        self.model.address.city = response.localidade;
+        self.model.address.state = response.uf;
+      });
     }
   },
   created() {
