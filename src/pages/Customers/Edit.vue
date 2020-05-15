@@ -424,7 +424,6 @@ export default {
       const self = this;
       helperService.getAddressFromZipCode(zipCode).then(response => {
         self.model.address.street = response.logradouro;
-        self.model.address.complement = response.complemento;
         self.model.address.neighborhood = response.bairro;
         self.model.address.city = response.localidade;
         self.model.address.state = response.uf;
