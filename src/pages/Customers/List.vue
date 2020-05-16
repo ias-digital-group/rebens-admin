@@ -9,7 +9,12 @@
             v-model="searchQuery"
             placeholder="Digite aqui o que deseja encontrar"
           />
-          <i class="icon-icon-search"></i>
+          <i v-if="searchQuery === ''" class="icon-icon-search"></i>
+          <i
+            v-else
+            class="bt-clear-search icon-icon-times c-red"
+            @click="searchQuery = ''"
+          ></i>
         </div>
         <div class="filter" :class="{ active: showFilters }">
           <a
@@ -148,8 +153,7 @@
         :current-page="pagination.currentPage"
         v-on:input="onPageChanged"
         @update-per-page="changePerPage"
-      >
-      </pagination>
+      ></pagination>
     </div>
     <!-- Classic Modal -->
     <modal :show.sync="modal.visible" headerClasses="justify-content-center">
@@ -170,8 +174,7 @@
           type="text"
           v-validate="modal.modelValidations.name_confirm"
           name="confirmação"
-        >
-        </base-input>
+        ></base-input>
       </form>
       <template slot="footer">
         <base-button @click.native.prevent="validateModal" type="danger"

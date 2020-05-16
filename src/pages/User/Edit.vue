@@ -2,8 +2,8 @@
   <div class="edit-box">
     <div class="page-header">
       <h2>
-        <span v-if="viewAction === 'new'">Cadastro Usuário</span
-        ><span v-else>Editar Usuário</span>
+        <span v-if="viewAction === 'new'">Cadastro Usuário</span>
+        <span v-else>Editar Usuário</span>
       </h2>
       <div class="box-actions">
         <button
@@ -86,9 +86,9 @@
               >
                 <span slot="no-options">Nenhum papel encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('roles')" class="ias-error">{{
-                customErrors.get('roles')
-              }}</label>
+              <label v-if="customErrors.get('roles')" class="ias-error">
+                {{ customErrors.get('roles') }}
+              </label>
             </div>
           </div>
           <div class="ias-row">
@@ -99,13 +99,14 @@
                 :key="model.idOperation"
                 v-model="model.idOperation"
                 :class="{ 'has-error': customErrors.get('operation') }"
-                placeholder="Clube"
+                :placeholder="blockOperations ? 'Todos' : 'Clube'"
+                :disabled="blockOperations"
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">{{
-                customErrors.get('operation')
-              }}</label>
+              <label v-if="customErrors.get('operation')" class="ias-error">
+                {{ customErrors.get('operation') }}
+              </label>
             </div>
           </div>
           <div class="ias-row">
@@ -115,7 +116,8 @@
                 :reduce="op => op.code"
                 :key="model.idOperationPartner"
                 v-model="model.idOperationPartner"
-                placeholder="Empresa"
+                :placeholder="blockOperationPartners ? 'Todas' : 'Empresa'"
+                :disabled="blockOperationPartners"
               >
                 <span slot="no-options">Nenhuma empresa encontrada</span>
               </v-select>
@@ -185,8 +187,7 @@
       :isEdit="viewAction !== 'new'"
       :show="showSuccessModal"
       link="/users"
-    >
-    </success-modal>
+    ></success-modal>
   </div>
 </template>
 <script>
@@ -264,6 +265,23 @@ export default {
         !this.isPartnerUser &&
         this.operationPartners.length > 1
       );
+    },
+    blockOperations() {
+      return (
+        this.model.roles == 'publisherRebens' ||
+        this.model.roles == 'administratorRebens' ||
+        this.model.roles == 'master'
+      );
+    },
+    blockOperationPartners() {
+      return (
+        this.model.roles == 'publisher' ||
+        this.model.roles == 'publisherRebens' ||
+        this.model.roles == 'administrator' ||
+        this.model.roles == 'administratorRebens' ||
+        this.model.roles == 'promoter' ||
+        this.model.roles == 'master'
+      );
     }
   },
   methods: {
@@ -306,6 +324,8 @@ export default {
       self.customErrors = new Map();
 
       if (!self.model.doc) self.customErrors.set('doc', 'Campo obrigatório');
+      else if (!self.validateCpf(self.model.doc))
+        self.customErrors.set('doc', 'CPF inválido!');
       if (!self.model.name) self.customErrors.set('name', 'Campo obrigatório');
       else if (!self.model.name.length > 200)
         self.customErrors.set('name', 'Máximo 200 caracteres');
@@ -534,6 +554,37 @@ export default {
       } else {
         self.formLoading = false;
       }
+    },
+    validateCpf(c) {
+      if ((c = c.replace(/[^\d]/g, '')).length != 11) return false;
+      if (
+        c == '00000000000' ||
+        c == '11111111111' ||
+        c == '22222222222' ||
+        c == '33333333333' ||
+        c == '44444444444' ||
+        c == '55555555555' ||
+        c == '66666666666' ||
+        c == '77777777777' ||
+        c == '88888888888' ||
+        c == '99999999999'
+      )
+        return false;
+
+      let r;
+      let s = 0;
+      for (let i = 1; i <= 9; i++) s = s + parseInt(c[i - 1]) * (11 - i);
+      r = (s * 10) % 11;
+
+      if (r == 10 || r == 11) r = 0;
+      if (r != parseInt(c[9])) return false;
+      s = 0;
+
+      for (let i = 1; i <= 10; i++) s = s + parseInt(c[i - 1]) * (12 - i);
+      r = (s * 10) % 11;
+      if (r == 10 || r == 11) r = 0;
+      if (r != parseInt(c[10])) return false;
+      return true;
     }
   },
   created() {

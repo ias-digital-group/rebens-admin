@@ -2,8 +2,8 @@
   <div class="edit-box">
     <div class="page-header">
       <h2>
-        <span v-if="viewAction === 'new'">Cadastro Banner</span
-        ><span v-else>Editar Banner</span>
+        <span v-if="viewAction === 'new'">Cadastro Banner</span>
+        <span v-else>Editar Banner</span>
       </h2>
       <div class="box-actions">
         <base-link to="/banners" class="bt bt-square bg-white-2 c-light-blue">
@@ -29,7 +29,7 @@
             <ias-radio v-model="model.idType" name="1" :value="1"
               >Banner Full</ias-radio
             >
-            <ias-radio v-model="model.idType" name="2" :value="2"
+            <ias-radio v-model="model.idType" name="3" :value="3"
               >Imperdíveis</ias-radio
             >
           </div>
@@ -61,8 +61,7 @@
                 data-vv-name="start"
                 v-model="model.start"
                 format="dd/MM/yyyy"
-              >
-              </el-date-picker>
+              ></el-date-picker>
             </custom-input>
             <custom-input
               label="Data Fim (DD/MM/AAAA)"
@@ -76,8 +75,7 @@
                 data-vv-name="end"
                 v-model="model.end"
                 format="dd/MM/yyyy"
-              >
-              </el-date-picker>
+              ></el-date-picker>
             </custom-input>
           </div>
           <div class="ias-row">
@@ -102,8 +100,7 @@
                 :key="model.order"
                 v-model="model.order"
                 placeholder="Ordem"
-              >
-              </v-select>
+              ></v-select>
             </div>
           </div>
           <div class="ias-row">
@@ -137,8 +134,7 @@
               placeholder="Selecione o Clube"
               multiple
               :class="{ 'has-error': customErrors.get('operations') }"
-            >
-            </v-select>
+            ></v-select>
             <label v-if="customErrors.get('operations')" class="ias-error">{{
               customErrors.get('operations')
             }}</label>
@@ -150,8 +146,7 @@
       :isEdit="viewAction !== 'new'"
       :show="showSuccessModal"
       link="/banners"
-    >
-    </success-modal>
+    ></success-modal>
   </div>
 </template>
 <script>

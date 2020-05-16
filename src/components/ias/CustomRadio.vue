@@ -26,7 +26,7 @@ export default {
       description: 'Whether radio is disabled'
     },
     value: {
-      type: [Number, Boolean],
+      type: [Number, Boolean, String],
       description: 'Radio value'
     }
   },

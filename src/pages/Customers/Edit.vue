@@ -24,9 +24,9 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">{{
-                customErrors.get('operation')
-              }}</label>
+              <label v-if="customErrors.get('operation')" class="ias-error">
+                {{ customErrors.get('operation') }}
+              </label>
             </div>
             <div class="select-holder">
               <v-select
@@ -97,17 +97,15 @@
               :class="{
                 'ias-focus': model.birthday != null && model.birthday != ''
               }"
-              :error="customErrors.get('end')"
+              :error="customErrors.get('birthday')"
             >
               <el-date-picker
                 type="date"
-                required
                 name="birthday"
                 data-vv-name="birthday"
                 v-model="model.birthday"
                 format="dd/MM/yyyy"
-              >
-              </el-date-picker>
+              ></el-date-picker>
             </custom-input>
             <div class="opts-holder">
               <ias-radio v-model="model.gender" name="M" value="M"
@@ -216,8 +214,11 @@
         <div class="form-right"></div>
       </form>
     </div>
-    <success-modal :isEdit="true" :show="showSuccessModal" link="/customers">
-    </success-modal>
+    <success-modal
+      :isEdit="true"
+      :show="showSuccessModal"
+      link="/customers"
+    ></success-modal>
   </div>
 </template>
 <script>

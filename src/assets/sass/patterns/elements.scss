@@ -17,7 +17,7 @@
     color: $dark-gray-60;
     font-size: $font-size-large;
     font-weight: $font-weight-medium;
-    input[type='radio'] {
+    input[type="radio"] {
       box-sizing: border-box;
       padding: 0;
       position: absolute;
@@ -29,7 +29,7 @@
     span {
       cursor: pointer;
       &::before {
-        content: ' ';
+        content: " ";
         position: absolute;
         top: 0;
         left: 0;
@@ -40,7 +40,7 @@
         border: 1px solid $light-gray;
       }
       &::after {
-        content: ' ';
+        content: " ";
         position: absolute;
         top: 8px;
         left: 8px;
@@ -62,7 +62,7 @@
     }
   }
 }
-.ias-radio label input[type='radio']:checked + span::after {
+.ias-radio label input[type="radio"]:checked + span::after {
   opacity: 1;
 }
 .ias-check {
@@ -86,7 +86,7 @@
     font-size: $font-size-large;
     font-weight: $font-weight-medium;
 
-    input[type='checkbox'] {
+    input[type="checkbox"] {
       box-sizing: border-box;
       padding: 0;
       position: absolute;
@@ -98,7 +98,7 @@
     span {
       cursor: pointer;
       &::before {
-        content: ' ';
+        content: " ";
         position: absolute;
         top: 0;
         left: 0;
@@ -109,7 +109,7 @@
         border: 1px solid $light-gray;
       }
       &::after {
-        content: ' ';
+        content: " ";
         position: absolute;
         top: 0;
         left: 0;
@@ -131,7 +131,7 @@
     }
   }
 }
-.ias-check label input[type='checkbox']:checked + span::after {
+.ias-check label input[type="checkbox"]:checked + span::after {
   opacity: 1;
 }
 .ias-input-group {
@@ -255,9 +255,14 @@
         line-height: 56px;
         padding: 0 7px 0 24px;
         border: none;
+        font-family: $font-family-base;
         font-size: $font-size-large;
         font-weight: $font-weight-medium;
         color: $dark-gray;
+        &::placeholder {
+          color: $placeholder-color;
+          font-size: $font-size-medium;
+        }
       }
       .vs__selected {
         margin: 0;
@@ -369,7 +374,7 @@
       text-align: center;
       color: $light-blue;
     }
-    input[type='file'] {
+    input[type="file"] {
       position: absolute;
       top: 0;
       left: 0;
@@ -377,9 +382,10 @@
       bottom: 0;
       outline: none;
       opacity: 0;
+      cursor: pointer;
     }
     &::after {
-      content: ' ';
+      content: " ";
       padding-bottom: 100%;
       display: block;
     }
