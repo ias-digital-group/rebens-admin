@@ -12,7 +12,7 @@ export default {
             sort: 'name ASC',
             active: '',
             idParent: '',
-            type: 1
+            type: ''
           };
       HTTP.get(
         config.apiEndpoints.categoryUri.concat(
@@ -82,6 +82,20 @@ export default {
   delete: id => {
     return new Promise((resolve, reject) => {
       HTTP.delete(config.apiEndpoints.categoryUri.concat(id)).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  toggleActive: id => {
+    return new Promise((resolve, reject) => {
+      HTTP.post(
+        config.apiEndpoints.categoryUri.concat(`${id}/ToggleActive`)
+      ).then(
         response => {
           resolve(response.data);
         },

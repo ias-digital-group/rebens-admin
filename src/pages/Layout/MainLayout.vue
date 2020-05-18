@@ -3,9 +3,9 @@
     <notifications></notifications>
     <header>
       <div class="logo">
-        <base-link class="simple-text logo-mini" to="/dashboard"
-          ><img src="/img/logo-rebens.png" alt="Rebens"
-        /></base-link>
+        <base-link class="simple-text logo-mini" to="/dashboard">
+          <img src="/img/logo-rebens.png" alt="Rebens" />
+        </base-link>
       </div>
       <div
         class="user-box"
@@ -33,7 +33,9 @@
                 >Alterar Senha</router-link
               >
             </li>
-            <li><a href="javascript:void(0)" @click="signout">Sair</a></li>
+            <li>
+              <a href="javascript:void(0)" @click="signout">Sair</a>
+            </li>
           </ul>
         </div>
       </div>
@@ -113,12 +115,6 @@ export default {
               roles: 'master,administratorRebens,publisherRebens,publisher'
             },
             {
-              name: 'Categorias',
-              path: '/benefits/categories',
-              active: false,
-              roles: 'master,administratorRebens,publisherRebens'
-            },
-            {
               name: 'Parceiros',
               path: '/benefits/partner',
               active: false,
@@ -130,7 +126,16 @@ export default {
           name: 'Banners',
           path: '/banners',
           active: false,
-          roles: 'master,administratorRebens,publisherRebens,publisher',
+          roles:
+            'master,administrator,administratorRebens,publisherRebens,publisher',
+          needModule: '',
+          subitens: []
+        },
+        {
+          name: 'Categorias',
+          path: '/category',
+          active: false,
+          roles: 'master,administratorRebens,publisherRebens',
           needModule: '',
           subitens: []
         },
@@ -216,12 +221,6 @@ export default {
             {
               name: 'Cursos Livres',
               path: '/freeCourse',
-              active: false,
-              roles: ''
-            },
-            {
-              name: 'Categorias',
-              path: '/freeCourse/categories',
               active: false,
               roles: ''
             },

@@ -41,6 +41,9 @@ const BenefitPartnersEdit = () => import('src/pages/Benefits/PartnerEdit.vue');
 const BannersList = () => import('src/pages/Banners/List.vue');
 const BannersEdit = () => import('src/pages/Banners/Edit.vue');
 
+const CategoriesList = () => import('src/pages/Category/List.vue');
+const CategoriesEdit = () => import('src/pages/Category/Edit.vue');
+
 const UsersList = () => import('src/pages/User/List.vue');
 const UsersEdit = () => import('src/pages/User/Edit.vue');
 
@@ -206,6 +209,49 @@ let bannersPages = {
           'administratorRebens'
         ],
         title: i18n.t('pages.banners.title')
+      }
+    }
+  ]
+};
+
+let categoryPages = {
+  path: '/category',
+  component: MainLayout,
+  meta: {
+    requiresAuth: true,
+    roles: ['master', 'publisherRebens', 'administratorRebens'],
+    title: 'Categoria'
+  },
+  children: [
+    {
+      path: '',
+      name: 'category',
+      component: CategoriesList,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        title: 'Categoria'
+      }
+    },
+    {
+      path: 'new',
+      name: `new_category`,
+      component: CategoriesEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        title: 'Categoria'
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_category',
+      props: true,
+      component: CategoriesEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        title: 'Categoria'
       }
     }
   ]
@@ -1549,6 +1595,7 @@ const routes = [
   },
   accountPages,
   bannersPages,
+  categoryPages,
   operationsPages,
   benefitsPages,
   usersPages,
