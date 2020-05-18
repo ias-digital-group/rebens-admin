@@ -7,7 +7,7 @@ export default {
         ? request
         : {
             page: 0,
-            pageItems: 30,
+            pageItems: 10,
             searchWord: '',
             sort: 'name ASC',
             status: '',
@@ -25,8 +25,8 @@ export default {
             request.idOperationPartner
               ? '&idOperationPartner=' + request.idOperationPartner
               : ''
-          }${request.status ? '&status=' + request.status : ''}${
-            request.active ? '&active=' + request.active : ''
+          }${request.status ? '&status=' + request.status : ''}&active=${
+            request.active
           }`
         )
       ).then(
@@ -65,6 +65,7 @@ export default {
   },
   update: model => {
     return new Promise((resolve, reject) => {
+      if (model.gender === '') model.gender = null;
       HTTP.put(config.apiEndpoints.customerUri, model).then(
         response => {
           resolve(response.data);

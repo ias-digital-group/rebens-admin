@@ -7,7 +7,7 @@ export default {
         ? request
         : {
             page: 0,
-            pageItems: 25,
+            pageItems: 10,
             searchWord: '',
             sort: 'name ASC',
             active: '',

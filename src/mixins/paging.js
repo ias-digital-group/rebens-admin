@@ -7,7 +7,7 @@ export default {
       sortField: '',
       sortOrder: 'ascending',
       pagination: {
-        perPage: 25,
+        perPage: 10,
         currentPage: 1,
         totalPages: 0,
         totalItems: 0

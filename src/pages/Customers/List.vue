@@ -52,7 +52,7 @@
         <v-select
           :options="statuses"
           :reduce="op => op.code"
-          v-model="activeFilter"
+          v-model="statusFilter"
           placeholder="Filtre pelo Status de cadastro"
         >
           <span slot="no-options">Nenhum status de cadastro encontrado</span>
@@ -75,6 +75,7 @@
             <th>CPF</th>
             <th>Clube / Empresa</th>
             <th>Telefone / Celular</th>
+            <th>Status</th>
             <th style="width:192px;">Ações</th>
           </tr>
         </thead>
@@ -100,6 +101,9 @@
                 <span>{{ item.phone }}</span>
                 <span class="blue">{{ item.cellphone }}</span>
               </div>
+            </td>
+            <td>
+              <span>{{ item.statusName }}</span>
             </td>
             <td>
               <div class="actions">
@@ -218,7 +222,6 @@ export default {
       statuses: [
         { code: 1, label: 'Completo' },
         { code: 3, label: 'Validação' },
-        { code: 4, label: 'Validação' },
         { code: 5, label: 'Incompleto' },
         { code: 6, label: 'Pré-cadastro' }
       ],
@@ -359,6 +362,9 @@ export default {
   },
   watch: {
     activeFilter() {
+      this.fetchData();
+    },
+    statusFilter() {
       this.fetchData();
     },
     operationFilter() {

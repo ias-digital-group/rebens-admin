@@ -636,3 +636,19 @@
     }
   }
 }
+
+.ias-row {
+  .ias-input-group {
+    .el-date-editor {
+      .el-icon-circle-close {
+        line-height: 56px;
+        margin-top: -20px;
+        font-family: 'icomoon' !important;
+        color: $red;
+        &::before {
+          content: '\e913' !important;
+        }
+      }
+    }
+  }
+}

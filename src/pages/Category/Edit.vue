@@ -37,9 +37,9 @@
               >
                 <span slot="no-options">Nenhum Tipo encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('type')" class="ias-error">
-                {{ customErrors.get('type') }}
-              </label>
+              <label v-if="customErrors.get('type')" class="ias-error">{{
+                customErrors.get('type')
+              }}</label>
             </div>
             <div class="opts-holder">
               <ias-radio v-model="level" name="root" value="root"
@@ -51,20 +51,22 @@
             </div>
           </div>
           <div class="ias-row">
-            <v-select
-              :options="parentList"
-              :reduce="op => op.code"
-              :key="model.idParent"
-              v-model="model.idParent"
-              :disabled="level === 'root'"
-              placeholder="Categoria Pai"
-              :class="{ 'has-error': customErrors.get('idParent') }"
-            >
-              <span slot="no-options">Nenhuma Categoria encontrada</span>
-            </v-select>
-            <label v-if="customErrors.get('idParent')" class="ias-error">
-              {{ customErrors.get('idParent') }}
-            </label>
+            <div class="select-holder">
+              <v-select
+                :options="parentList"
+                :reduce="op => op.code"
+                :key="model.idParent"
+                v-model="model.idParent"
+                :disabled="level === 'root'"
+                placeholder="Categoria Pai"
+                :class="{ 'has-error': customErrors.get('idParent') }"
+              >
+                <span slot="no-options">Nenhuma Categoria encontrada</span>
+              </v-select>
+              <label v-if="customErrors.get('idParent')" class="ias-error">{{
+                customErrors.get('idParent')
+              }}</label>
+            </div>
           </div>
 
           <div class="ias-row">
@@ -142,7 +144,7 @@ export default {
       this.loadParents();
     },
     level: function() {
-      this.model.idParent = '';
+      if (this.level === 'root') this.model.idParent = null;
     }
   },
   methods: {
@@ -202,6 +204,8 @@ export default {
         this.formLoading = true;
         categoryService.get(self.id).then(
           response => {
+            self.level = response.data.idParent ? 'sub' : 'root';
+            if (self.level === 'root') self.loadParents();
             self.model = response.data;
             self.formLoading = false;
           },

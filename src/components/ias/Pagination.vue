@@ -2,15 +2,6 @@
   <div>
     <div class="box-qty">
       <a
-        @click="perPageChange(5)"
-        class="bt bt-square"
-        :class="{
-          'bg-light-blue c-white': perPage === 5,
-          'bg-light-gray c-light-blue': perPage !== 5
-        }"
-        >05</a
-      >
-      <a
         @click="perPageChange(10)"
         class="bt bt-square"
         :class="{
@@ -20,13 +11,31 @@
         >10</a
       >
       <a
-        @click="perPageChange(25)"
+        @click="perPageChange(20)"
         class="bt bt-square"
         :class="{
-          'bg-light-blue c-white': perPage === 25,
-          'bg-light-gray c-light-blue': perPage !== 25
+          'bg-light-blue c-white': perPage === 20,
+          'bg-light-gray c-light-blue': perPage !== 20
         }"
-        >25</a
+        >20</a
+      >
+      <a
+        @click="perPageChange(30)"
+        class="bt bt-square"
+        :class="{
+          'bg-light-blue c-white': perPage === 30,
+          'bg-light-gray c-light-blue': perPage !== 30
+        }"
+        >30</a
+      >
+      <a
+        @click="perPageChange(40)"
+        class="bt bt-square"
+        :class="{
+          'bg-light-blue c-white': perPage === 40,
+          'bg-light-gray c-light-blue': perPage !== 40
+        }"
+        >40</a
       >
       <a
         @click="perPageChange(50)"
@@ -100,7 +109,7 @@ export default {
     },
     perPage: {
       type: Number,
-      default: 25
+      default: 10
     },
     showArrows: {
       type: Boolean,

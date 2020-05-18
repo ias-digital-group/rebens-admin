@@ -24,9 +24,9 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">
-                {{ customErrors.get('operation') }}
-              </label>
+              <label v-if="customErrors.get('operation')" class="ias-error">{{
+                customErrors.get('operation')
+              }}</label>
             </div>
             <div class="select-holder">
               <v-select
@@ -186,15 +186,17 @@
             ></custom-input>
           </div>
           <div class="ias-row">
-            <v-select
-              :options="stateList"
-              :reduce="op => op.code"
-              :key="model.address.state"
-              v-model="model.address.state"
-              placeholder="Estado"
-            >
-              <span slot="no-options">Nenhum Estado encontrado</span>
-            </v-select>
+            <div class="select-holder">
+              <v-select
+                :options="stateList"
+                :reduce="op => op.code"
+                :key="model.address.state"
+                v-model="model.address.state"
+                placeholder="Estado"
+              >
+                <span slot="no-options">Nenhum Estado encontrado</span>
+              </v-select>
+            </div>
           </div>
           <div class="ias-row">
             <div class="form-actions">
