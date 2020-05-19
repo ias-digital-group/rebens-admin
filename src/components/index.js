@@ -44,14 +44,16 @@ import AddressForm from './AddressForm.vue';
 import Contacts from './Contacts.vue';
 import Addresses from './Addresses.vue';
 
-import Pagination from './ias/Pagination.vue';
-import CustomInput from './ias/CustomInput.vue';
-import CustomRadio from './ias/CustomRadio.vue';
+import Address from './ias/Address.vue';
 import CustomCheckbox from './ias/CustomCheckbox.vue';
 import CustomImageUpload from './ias/CustomImageUpload.vue';
+import CustomInput from './ias/CustomInput.vue';
+import CustomRadio from './ias/CustomRadio.vue';
+import Pagination from './ias/Pagination.vue';
 import SuccessModal from './ias/SuccessModal.vue';
 
 export {
+  Address,
   CustomCheckbox,
   CustomImageUpload,
   CustomInput,

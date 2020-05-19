@@ -12,7 +12,7 @@ export default {
             searchWord: '',
             sort: 'name ASC',
             active: '',
-            type: 1
+            type: ''
           };
       HTTP.get(
         config.apiEndpoints.partnerUri.concat(
@@ -107,6 +107,20 @@ export default {
   delete: id => {
     return new Promise((resolve, reject) => {
       HTTP.delete(config.apiEndpoints.partnerUri.concat(id)).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  toggleActive: id => {
+    return new Promise((resolve, reject) => {
+      HTTP.post(
+        config.apiEndpoints.partnerUri.concat(`${id}/ToggleActive`)
+      ).then(
         response => {
           resolve(response.data);
         },

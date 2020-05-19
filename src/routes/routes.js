@@ -12,16 +12,28 @@ const Dashboard = () => import('src/pages/Dashboard/Dashboard.vue');
 // const Content = () =>
 //   import('src/pages/Layout/Content.vue');
 
+const CustomerList = () => import('src/pages/Customers/List.vue');
+const CustomerCreate = () => import('src/pages/Customers/Create.vue');
+const CustomerEdit = () => import('src/pages/Customers/Edit.vue');
+
+const BannersList = () => import('src/pages/Banners/List.vue');
+const BannersEdit = () => import('src/pages/Banners/Edit.vue');
+
+const CategoriesList = () => import('src/pages/Category/List.vue');
+const CategoriesEdit = () => import('src/pages/Category/Edit.vue');
+
+const UsersList = () => import('src/pages/User/List.vue');
+const UsersEdit = () => import('src/pages/User/Edit.vue');
+
+const PartnersList = () => import('src/pages/Partner/List.vue');
+const PartnersEdit = () => import('src/pages/Partner/Edit.vue');
+
 const Login = () => import('src/pages/Login/Login.vue');
 const PasswordRecovery = () => import('src/pages/Login/PasswordRecovery.vue');
 const Validate = () => import('src/pages/Validate/Validate.vue');
 
 const FaqsList = () => import('src/pages/Faqs/List.vue');
 const FaqsEdit = () => import('src/pages/Faqs/Edit.vue');
-
-const CustomerList = () => import('src/pages/Customers/List.vue');
-const CustomerCreate = () => import('src/pages/Customers/Create.vue');
-const CustomerEdit = () => import('src/pages/Customers/Edit.vue');
 
 const PagesList = () => import('src/pages/Pages/List.vue');
 const PagesEdit = () => import('src/pages/Pages/Edit.vue');
@@ -37,15 +49,6 @@ const BenefitCategoriesEdit = () =>
   import('src/pages/Benefits/CategoryEdit.vue');
 const BenefitPartnersList = () => import('src/pages/Benefits/PartnerList.vue');
 const BenefitPartnersEdit = () => import('src/pages/Benefits/PartnerEdit.vue');
-
-const BannersList = () => import('src/pages/Banners/List.vue');
-const BannersEdit = () => import('src/pages/Banners/Edit.vue');
-
-const CategoriesList = () => import('src/pages/Category/List.vue');
-const CategoriesEdit = () => import('src/pages/Category/Edit.vue');
-
-const UsersList = () => import('src/pages/User/List.vue');
-const UsersEdit = () => import('src/pages/User/Edit.vue');
 
 const CustomerReport = () => import('src/pages/Report/Customer.vue');
 const BenefitUseReport = () => import('src/pages/Report/BenefitUse.vue');
@@ -103,49 +106,6 @@ const PromoterReport = () => import('src/pages/Promoter/Report.vue');
 
 const ScratchcardList = () => import('src/pages/Scratchcard/List.vue');
 const ScratchcardEdit = () => import('src/pages/Scratchcard/Edit.vue');
-
-let operationsPages = {
-  path: '/operations',
-  component: DashboardLayout,
-  meta: {
-    requiresAuth: true,
-    roles: ['master', 'administratorRebens', 'publisherRebens'],
-    title: i18n.t('pages.operations.title')
-  },
-  children: [
-    {
-      path: '',
-      name: 'operation',
-      component: OperationsList,
-      meta: {
-        requiresAuth: true,
-        roles: ['master', 'administratorRebens', 'publisherRebens'],
-        title: i18n.t('pages.operations.title')
-      }
-    },
-    {
-      path: 'new',
-      name: `new_operation`,
-      component: OperationsEdit,
-      meta: {
-        requiresAuth: true,
-        roles: ['master', 'administratorRebens', 'publisherRebens'],
-        title: i18n.t('pages.operations.title')
-      }
-    },
-    {
-      path: ':id/edit',
-      name: 'edit_operation',
-      props: true,
-      component: OperationsEdit,
-      meta: {
-        requiresAuth: true,
-        roles: ['master', 'administratorRebens', 'publisherRebens'],
-        title: i18n.t('pages.operations.title')
-      }
-    }
-  ]
-};
 
 let bannersPages = {
   path: '/banners',
@@ -252,6 +212,158 @@ let categoryPages = {
         requiresAuth: true,
         roles: ['master', 'publisherRebens', 'administratorRebens'],
         title: 'Categoria'
+      }
+    }
+  ]
+};
+
+let partnerPages = {
+  path: '/partner',
+  component: MainLayout,
+  meta: {
+    requiresAuth: true,
+    roles: ['master', 'publisherRebens', 'administratorRebens'],
+    title: 'Parceiro'
+  },
+  children: [
+    {
+      path: '',
+      name: 'partner',
+      component: PartnersList,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        title: 'Parceiro'
+      }
+    },
+    {
+      path: 'new',
+      name: `new_partner`,
+      component: PartnersEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        title: 'Parceiro'
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_partner',
+      props: true,
+      component: PartnersEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        title: 'Parceiro'
+      }
+    }
+  ]
+};
+
+let usersPages = {
+  path: '/users',
+  component: MainLayout,
+  meta: {
+    requiresAuth: true,
+    roles: [
+      'master',
+      'administrator',
+      'administratorRebens',
+      'partnerAdministrator'
+    ],
+    title: i18n.t('pages.users.title')
+  },
+  children: [
+    {
+      path: '',
+      name: 'user',
+      component: UsersList,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'administrator',
+          'administratorRebens',
+          'partnerAdministrator'
+        ],
+        title: i18n.t('pages.users.title')
+      }
+    },
+    {
+      path: 'new',
+      name: `new_user`,
+      component: UsersEdit,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'administrator',
+          'administratorRebens',
+          'partnerAdministrator'
+        ],
+        title: i18n.t('pages.users.title')
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_user',
+      props: true,
+      component: UsersEdit,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'administrator',
+          'administratorRebens',
+          'partnerAdministrator',
+          'publisher',
+          'publisherRebens',
+          'promoter'
+        ],
+        title: i18n.t('pages.users.title')
+      }
+    }
+  ]
+};
+
+let operationsPages = {
+  path: '/operations',
+  component: DashboardLayout,
+  meta: {
+    requiresAuth: true,
+    roles: ['master', 'administratorRebens', 'publisherRebens'],
+    title: i18n.t('pages.operations.title')
+  },
+  children: [
+    {
+      path: '',
+      name: 'operation',
+      component: OperationsList,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'administratorRebens', 'publisherRebens'],
+        title: i18n.t('pages.operations.title')
+      }
+    },
+    {
+      path: 'new',
+      name: `new_operation`,
+      component: OperationsEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'administratorRebens', 'publisherRebens'],
+        title: i18n.t('pages.operations.title')
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_operation',
+      props: true,
+      component: OperationsEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'administratorRebens', 'publisherRebens'],
+        title: i18n.t('pages.operations.title')
       }
     }
   ]
@@ -550,72 +662,6 @@ let benefitsPages = {
         requiresAuth: true,
         roles: ['master', 'publisherRebens', 'administratorRebens'],
         title: i18n.t('pages.partners.title')
-      }
-    }
-  ]
-};
-
-let usersPages = {
-  path: '/users',
-  component: MainLayout,
-  meta: {
-    requiresAuth: true,
-    roles: [
-      'master',
-      'administrator',
-      'administratorRebens',
-      'partnerAdministrator'
-    ],
-    title: i18n.t('pages.users.title')
-  },
-  children: [
-    {
-      path: '',
-      name: 'user',
-      component: UsersList,
-      meta: {
-        requiresAuth: true,
-        roles: [
-          'master',
-          'administrator',
-          'administratorRebens',
-          'partnerAdministrator'
-        ],
-        title: i18n.t('pages.users.title')
-      }
-    },
-    {
-      path: 'new',
-      name: `new_user`,
-      component: UsersEdit,
-      meta: {
-        requiresAuth: true,
-        roles: [
-          'master',
-          'administrator',
-          'administratorRebens',
-          'partnerAdministrator'
-        ],
-        title: i18n.t('pages.users.title')
-      }
-    },
-    {
-      path: ':id/edit',
-      name: 'edit_user',
-      props: true,
-      component: UsersEdit,
-      meta: {
-        requiresAuth: true,
-        roles: [
-          'master',
-          'administrator',
-          'administratorRebens',
-          'partnerAdministrator',
-          'publisher',
-          'publisherRebens',
-          'promoter'
-        ],
-        title: i18n.t('pages.users.title')
       }
     }
   ]
@@ -1593,16 +1639,17 @@ const routes = [
       title: i18n.t('pages.access-denied.title')
     }
   },
-  accountPages,
   bannersPages,
   categoryPages,
+  customersPages,
+  partnerPages,
+  usersPages,
+  accountPages,
   operationsPages,
   benefitsPages,
-  usersPages,
   reportPages,
   pagesPages,
   faqsPages,
-  customersPages,
   operationPartnerPages,
   courseCollegePages,
   courseGraduationTypePages,

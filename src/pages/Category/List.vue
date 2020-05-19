@@ -243,9 +243,8 @@ export default {
           categoryService.delete(self.modal.model.id).then(
             response => {
               self.$notify({
-                type: 'primary',
-                message: response.message,
-                icon: 'tim-icons icon-bell-55'
+                type: 'success',
+                message: response.message
               });
               self.resetModal();
               self.pagination.currentPage = 1;
@@ -253,9 +252,8 @@ export default {
             },
             err => {
               self.$notify({
-                type: 'primary',
-                message: err.message,
-                icon: 'tim-icons icon-bell-55'
+                type: 'danger',
+                message: err.message
               });
               self.modal.formLoading = false;
             }

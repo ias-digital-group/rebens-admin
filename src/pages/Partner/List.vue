@@ -1,7 +1,7 @@
 <template>
   <div class="list-box">
     <div class="page-header">
-      <h2>Banners</h2>
+      <h2>Parceiros</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
           <input
@@ -25,22 +25,13 @@
           </a>
         </div>
         <base-link
-          to="/banners/new"
+          to="/category/new"
           class="bt bt-square bg-white-2 c-light-blue"
         >
           <i class="icon-icon-plus"></i>
         </base-link>
       </div>
       <div class="filters" v-show="showFilters">
-        <v-select
-          :options="operations"
-          :reduce="op => op.code"
-          v-model="operationFilter"
-          class="no-margin"
-          placeholder="Filtre pelo Clube"
-        >
-          <span slot="no-options">Nenhum clube encontrado</span>
-        </v-select>
         <v-select
           :options="types"
           :reduce="op => op.code"
@@ -63,10 +54,8 @@
       <table v-loading="loading">
         <thead>
           <tr>
-            <th>Banner</th>
-            <th>Nome Banner / Clube</th>
-            <th>Tipo / Onde</th>
-            <th>Ordem</th>
+            <th>Nome Parceiro</th>
+            <th>Tipo Parceiro</th>
             <th>Usuário / Criação</th>
             <th>Usuário / Atualização</th>
             <th style="width:144px;">Ações</th>
@@ -74,30 +63,19 @@
         </thead>
         <tbody>
           <tr v-for="item in tableData" :key="item.id">
-            <td>
-              <div class="img-holder">
+            <td class="td-flex">
+              <div class="avatar">
                 <img
-                  :src="item.image"
+                  v-if="item.logo && item.logo !== ''"
+                  :src="item.logo"
                   :alt="item.name"
-                  width="96"
-                  height="40"
                 />
+                <span v-else>{{ item.name[0] }}</span>
               </div>
+              <span>{{ item.name }}</span>
             </td>
             <td>
-              <div class="two-lines">
-                <span>{{ item.name }}</span>
-                <span class="blue">{{ item.operationName }}</span>
-              </div>
-            </td>
-            <td>
-              <div class="two-lines">
-                <span>{{ item.type }}</span>
-                <span class="blue">{{ item.bannerShow }}</span>
-              </div>
-            </td>
-            <td>
-              <span>{{ item.order }}</span>
+              <span>{{ item.type }}</span>
             </td>
             <td>
               <div class="two-lines">
@@ -159,7 +137,7 @@
     </div>
     <!-- Classic Modal -->
     <modal :show.sync="modal.visible" headerClasses="justify-content-center">
-      <h4 slot="header" class="title title-up">Remover banner</h4>
+      <h4 slot="header" class="title title-up">Remover Categoria</h4>
       <form
         class="modal-form"
         ref="modalForm"
@@ -192,10 +170,8 @@
 <script>
 import { Select, Option } from 'element-ui';
 import { Pagination, Modal } from 'src/components';
-import operationService from '../../services/Operation/operationService';
-import bannerService from '../../services/Banner/bannerService';
+import partnerService from '../../services/Partner/partnerService';
 import paging from '../../mixins/paging';
-import _ from 'lodash';
 
 export default {
   mixins: [paging],
@@ -207,35 +183,33 @@ export default {
   },
   data() {
     return {
-      internalName: 'pages.banners.list',
+      internalName: 'Parceiro',
       sortField: 'name',
       activeFilter: '',
       typeFilter: '',
-      operationFilter: '',
-      operations: [],
       showFilters: false,
       statuses: [
         { code: true, label: 'Ativos' },
         { code: false, label: 'Inativos' }
       ],
       types: [
-        { code: 1, label: 'Banner Full' },
-        { code: 3, label: 'Imperdíveis' }
+        { code: 1, label: 'Benefícios' },
+        { code: 2, label: 'Cursos Livres' }
       ]
     };
   },
   methods: {
     handleEdit(row) {
-      this.$router.push(`/banners/${row.id}/edit/`);
+      this.$router.push(`/partner/${row.id}/edit/`);
     },
     toggleActive(row) {
       const self = this;
-      bannerService.toggleActive(row.id).then(data => {
+      partnerService.toggleActive(row.id).then(data => {
         if (data.status === 'ok') {
           row.active = data.data;
           self.$notify({
             type: 'success',
-            message: `Banner ${
+            message: `Parceiro ${
               row.active ? 'ativado' : 'inativado'
             } com sucesso`
           });
@@ -251,10 +225,10 @@ export default {
         sort: this.formatSortFieldParam,
         active: this.activeFilter,
         type: this.typeFilter,
-        idOperation: this.operationFilter
+        idParent: ''
       };
       this.$data.loading = true;
-      bannerService.findAll(request).then(
+      partnerService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
@@ -264,21 +238,13 @@ export default {
           self.$data.loading = false;
         }
       );
-
-      operationService.findAll().then(response => {
-        _.each(response.data, function(el) {
-          if (el.id != self.id) {
-            self.operations.push({ code: el.id, label: el.title });
-          }
-        });
-      });
     },
     validateModal() {
       const self = this;
       this.$validator.validateAll().then(isValid => {
         if (isValid) {
           self.modal.formLoading = true;
-          bannerService.delete(self.modal.model.id).then(
+          partnerService.delete(self.modal.model.id).then(
             response => {
               self.$notify({
                 type: 'success',
@@ -305,9 +271,6 @@ export default {
       this.fetchData();
     },
     typeFilter() {
-      this.fetchData();
-    },
-    operationFilter() {
       this.fetchData();
     }
   }
