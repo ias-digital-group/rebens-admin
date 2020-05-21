@@ -13,8 +13,7 @@
           :min-width="column.minWidth"
           :prop="column.prop"
           :label="column.label"
-        >
-        </el-table-column>
+        ></el-table-column>
         <el-table-column :min-width="135" align="right" label="Ações">
           <div slot-scope="props">
             <base-button
@@ -40,8 +39,7 @@
         :per-page="pagination.perPage"
         :total="total"
         v-on:input="onPageChanged"
-      >
-      </base-pagination>
+      ></base-pagination>
     </div>
     <div class="col-12" v-if="showForm">
       <hr />
@@ -61,9 +59,8 @@
               native-type="submit"
               type="info"
               @click.native.prevent="validateForm"
+              >Salvar</base-button
             >
-              Salvar
-            </base-button>
           </div>
         </div>
       </form>
@@ -170,7 +167,7 @@ export default {
       if (self.model.images && self.model.images.length > 0) {
         let promises = new Array(self.model.images.length);
         for (var i = 0; i <= self.model.images.length - 1; i++) {
-          promises[i] = helperService.uploadFile(self.model.images[i].img);
+          promises[i] = helperService.uploadImage(self.model.images[i].img);
         }
         Promise.all(promises)
           .then(values => {

@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="ias-card">
-      <form v-loading="formLoading" @submit.prevent>
+      <form v-loading="submitLoading" @submit.prevent>
         <div class="form-left">
           <div class="ias-row">
             <custom-input
@@ -58,10 +58,9 @@
               >
                 <span slot="no-options">Nenhum Tipo encontrado</span>
               </v-select>
-              <label
-                v-if="customErrors.get('type')"
-                class="ias-error"
-              >{{ customErrors.get('type') }}</label>
+              <label v-if="customErrors.get('type')" class="ias-error">
+                {{ customErrors.get('type') }}
+              </label>
             </div>
           </div>
           <ias-address
@@ -69,13 +68,18 @@
             :customErrors="customErrors"
             :address.sync="model.mainAddress"
           ></ias-address>
-          <div class="ias-row-editor">
+          <div
+            class="ias-row-editor"
+            :class="{ 'has-error': customErrors.get('description') }"
+          >
             <vue-editor
               :editorToolbar="customToolbar"
               v-model="model.description"
               placeholder="Descrição"
             />
-            <label v-show="customErrors.get('description')" class="text-danger">Campo obrigatório!</label>
+            <label v-show="customErrors.get('description')" class="ias-error">
+              {{ customErrors.get('description') }}
+            </label>
           </div>
           <div class="ias-row">
             <custom-input
@@ -156,7 +160,11 @@
           </div>
           <div class="ias-row">
             <div class="form-actions">
-              <button class="bt bg-green c-white" type="button" @click.prevent="validate">
+              <button
+                class="bt bg-green c-white"
+                type="button"
+                @click.prevent="validate"
+              >
                 <span v-if="viewAction === 'new'">Cadastrar</span>
                 <span v-else>Salvar</span>
               </button>
@@ -166,23 +174,84 @@
           </div>
         </div>
         <div class="form-right">
-          <ias-image-upload @change="onImageChange" img-size="(360x360)" :src="model.picture" />
+          <ias-image-upload
+            @change="onImageChange"
+            img-size="(360x360)"
+            :src="model.logo"
+            :error="customErrors.get('logo')"
+          />
+          <div class="ias-file-uploader">
+            <div class="event-holder" @click="openFileUploader()">
+              Clique aqui para inserir o contrato
+            </div>
+            <div class="files-holder">
+              <div class="item" v-for="item in files" :key="item.fileName">
+                <i class="icon-icon-times" @click="removeFile(item)"></i>
+                <a target="_blank" :href="item.fileURL">{{ item.name }}</a>
+              </div>
+            </div>
+          </div>
         </div>
       </form>
     </div>
-    <success-modal :isEdit="viewAction !== 'new'" :show="showSuccessModal" link="/partner"></success-modal>
+    <success-modal
+      :isEdit="viewAction !== 'new'"
+      :show="showSuccessModal"
+      link="/partner"
+    ></success-modal>
+    <modal :show.sync="modal.visible" headerClasses="justify-content-center">
+      <h4 slot="header" class="title title-up">Adicionar Arquivo</h4>
+      <form
+        class="modal-form"
+        ref="modalForm"
+        @submit.prevent
+        v-loading="modal.submitLoading"
+      >
+        <base-input
+          required
+          v-model="modal.name"
+          label="Digite o nome do arquivo"
+          placeholder="Digite o nome do arquivo"
+          type="text"
+          v-validate="modal.modelValidations.name"
+          name="name"
+        ></base-input>
+        <div class="ias-file-selector">
+          <input
+            accept="*"
+            @change="handleFileSelect"
+            type="file"
+            class="valid"
+            :multiple="false"
+            aria-invalid="false"
+            ref="file"
+          />
+        </div>
+      </form>
+      <template slot="footer">
+        <base-button type="info" @click.native="modal.visible = false"
+          >Fechar</base-button
+        >
+        <base-button @click.native.prevent="validateModal" type="primary"
+          >Salvar</base-button
+        >
+      </template>
+    </modal>
   </div>
 </template>
 <script>
-import { SuccessModal, Address } from 'src/components';
+import { SuccessModal, Address, Modal } from 'src/components';
 import partnerService from '../../services/Partner/partnerService';
-// import helperService from '../../services/Helper/helperService';
+import helperService from '../../services/Helper/helperService';
+import fileService from '../../services/File/fileService';
 import config from '../../config';
+import validate from '../../validate';
 
 export default {
   components: {
     SuccessModal,
-    [Address.name]: Address
+    [Address.name]: Address,
+    Modal
   },
   props: {
     id: String,
@@ -194,16 +263,29 @@ export default {
   data() {
     return {
       selectLoading: false,
-      formLoading: false,
       submitLoading: false,
       customErrors: new Map(),
-      parentList: [],
+      customToolbar: [],
       showSuccessModal: false,
+      files: [],
       level: 'root',
+      modal: {
+        visible: false,
+        submitLoading: false,
+        name: '',
+        modelValidations: {
+          name: {
+            required: true,
+            confirmed: 'nome',
+            max: 200
+          }
+        }
+      },
       types: [
         { code: 1, label: 'Benefícios' },
         { code: 2, label: 'Cursos Livres' }
       ],
+      file: Object,
       model: {
         id: 0,
         name: '',
@@ -212,12 +294,9 @@ export default {
         active: true,
         logo: '',
         description: '',
-        type: 1,
+        type: 0,
         idMainAddress: null,
         idMainContact: null,
-        customErrors: new Map(),
-        customToolbar: [],
-        stateList: [],
         mainContact: {
           id: 0,
           name: '',
@@ -263,9 +342,12 @@ export default {
         self.customErrors.set('companyName', 'Campo obrigatório');
       if (!self.model.cnpj || self.model.cnpj === '')
         self.customErrors.set('cnpj', 'Campo obrigatório');
+      else if (!validate.validateCnpj(self.model.cnpj))
+        self.customErrors.set('cnpj', 'CNPJ inválido');
       if (!self.model.description || self.model.description === '')
         self.customErrors.set('description', 'Campo obrigatório');
-
+      if (!self.image && !self.model.logo)
+        self.customErrors.set('logo', 'Campo obrigatório');
       if (
         !self.model.mainAddress.zipcode ||
         self.model.mainAddress.zipcode === ''
@@ -300,18 +382,53 @@ export default {
         self.customErrors.set('contactSurname', 'Campo obrigatório');
       if (!self.model.mainContact.email || self.model.mainContact.email === '')
         self.customErrors.set('contactEmail', 'Campo obrigatório');
+      else if (!validate.validateEmail(self.model.mainContact.email))
+        self.customErrors.set('contactEmail', 'E-mail inválido');
 
       if (self.customErrors.size === 0) {
         self.submitLoading = true;
-        self.savePartner(self);
+        if (self.image) {
+          self.uploadImage(self);
+        } else if (self.model.logo) {
+          self.savePartner(self);
+        }
       }
     },
-    savePartner(vm) {
+    uploadImage(self) {
+      helperService.uploadImage(self.image).then(
+        response => {
+          if (response.status != 200) {
+            self.$notify({
+              type: 'warning',
+              message: response.message
+            });
+            self.submitLoading = false;
+            return;
+          }
+          self.model.logo = response.data.url;
+          self.savePartner(self);
+        },
+        err => {
+          self.$notify({
+            type: 'danger',
+            message: err.message
+          });
+          self.submitLoading = false;
+        }
+      );
+    },
+    async savePartner(vm) {
       vm = vm ? vm : this;
       if (vm.viewAction == 'new') {
         partnerService.create(vm.model).then(
-          res => {
+          async res => {
             vm.id = res.id;
+            if (vm.files.length > 0) {
+              for (let i = 0; i < vm.files.length; i++) {
+                vm.files[i].idItem = vm.id;
+                await fileService.create(vm.files[i]);
+              }
+            }
             vm.submitLoading = false;
             vm.showSuccessModal = true;
           },
@@ -325,7 +442,13 @@ export default {
         );
       } else {
         partnerService.update(vm.model).then(
-          () => {
+          async () => {
+            let newFiles = vm.files.filter(f => f.id === 0);
+            if (newFiles.length > 0) {
+              for (let i = 0; i < newFiles.length; i++) {
+                await fileService.create(newFiles[i]);
+              }
+            }
             vm.submitLoading = false;
             vm.showSuccessModal = true;
           },
@@ -343,10 +466,11 @@ export default {
       const self = this;
       self.customToolbar = config.customToolbar;
       if (this.viewAction == 'edit') {
-        this.formLoading = true;
+        this.submitLoading = true;
         partnerService.get(self.id).then(
           response => {
             self.model = response.data;
+            self.loadFiles();
             if (!self.model.mainContact) {
               self.model.mainContact = {
                 id: 0,
@@ -376,56 +500,105 @@ export default {
                 longitude: null
               };
             }
-            self.formLoading = false;
+            self.submitLoading = false;
           },
           () => {
-            self.formLoading = false;
+            self.submitLoading = false;
           }
         );
       }
     },
-    validateCnpj(cnpj) {
-      cnpj = cnpj.replace(/[^\d]+/g, '');
-      if (cnpj == '') return false;
-      if (cnpj.length != 14) return false;
-
-      if (
-        cnpj == '00000000000000' ||
-        cnpj == '11111111111111' ||
-        cnpj == '22222222222222' ||
-        cnpj == '33333333333333' ||
-        cnpj == '44444444444444' ||
-        cnpj == '55555555555555' ||
-        cnpj == '66666666666666' ||
-        cnpj == '77777777777777' ||
-        cnpj == '88888888888888' ||
-        cnpj == '99999999999999'
-      )
-        return false;
-
-      let size = cnpj.length - 2;
-      let numbers = cnpj.substring(0, size);
-      let digits = cnpj.substring(size);
-      let sum = 0;
-      let pos = size - 7;
-      for (let i = size; i >= 1; i--) {
-        sum += numbers.charAt(size - i) * pos--;
-        if (pos < 2) pos = 9;
+    handleFileSelect(event) {
+      if (event.target.files.length == 0) {
+        return;
       }
-      let result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
-      if (result != digits.charAt(0)) return false;
-      size = size + 1;
-      numbers = cnpj.substring(0, size);
-      sum = 0;
-      pos = size - 7;
-      for (let i = size; i >= 1; i--) {
-        sum += numbers.charAt(size - i) * pos--;
-        if (pos < 2) pos = 9;
+      this.file = event.target.files[0];
+    },
+    onImageChange(file) {
+      this.image = file;
+    },
+    removeFile(item) {
+      const self = this;
+      if (item.id === 0) {
+        for (let i = 0; i < self.files.length; i++) {
+          if (self.files[i].filename === item.filename) self.files.splice(i, 1);
+        }
+      } else {
+        self.submitLoading = true;
+        fileService.delete(item.id).then(
+          () => {
+            for (let i = 0; i < self.files.length; i++) {
+              if (self.files[i].id === item.id) self.files.splice(i, 1);
+            }
+            self.submitLoading = false;
+          },
+          err => {
+            self.$notify({
+              type: 'danger',
+              message: err.message
+            });
+            self.submitLoading = false;
+          }
+        );
       }
-      result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
-      if (result != digits.charAt(1)) return false;
-
-      return true;
+    },
+    openFileUploader() {
+      const self = this;
+      self.modal.name = '';
+      self.file = Object;
+      self.modal.visible = true;
+    },
+    loadFiles() {
+      const self = this;
+      self.submitLoading = true;
+      fileService.findAll(self.model.id, 23).then(
+        response => {
+          if (response && response.data) {
+            self.files = response.data;
+          }
+          self.submitLoading = false;
+        },
+        err => {
+          self.$notify({
+            type: 'danger',
+            message: err.message
+          });
+          self.submitLoading = false;
+        }
+      );
+    },
+    validateModal() {
+      const self = this;
+      self.submitLoading = true;
+      helperService.uploadFile(self.file, 'partnerFile').then(
+        response => {
+          if (response.status != 200) {
+            self.$notify({
+              type: 'warning',
+              message: response.message
+            });
+            self.submitLoading = false;
+            return;
+          }
+          self.files.push({
+            id: 0,
+            name: self.modal.name,
+            fileUrl: response.data.url,
+            fileName: response.data.fileName,
+            idItem: self.model.id,
+            itemType: 23
+          });
+          self.modal.visible = false;
+          self.submitLoading = false;
+        },
+        err => {
+          self.$notify({
+            type: 'danger',
+            message: err.message
+          });
+          self.submitLoading = false;
+        }
+      );
     }
   },
   created() {

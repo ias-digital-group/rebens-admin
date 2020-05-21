@@ -196,7 +196,9 @@ import operationService from '../../services/Operation/operationService';
 import operationPartnerService from '../../services/OperationPartner/operationPartnerService';
 import helperService from '../../services/Helper/helperService';
 import { SuccessModal } from 'src/components';
+import validate from '../../validate';
 import _ from 'lodash';
+
 export default {
   components: {
     SuccessModal
@@ -222,7 +224,6 @@ export default {
       roles: [],
       image: null,
       emailConfirm: '',
-      reg: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
       model: {
         id: 0,
         name: '',
@@ -324,7 +325,7 @@ export default {
       self.customErrors = new Map();
 
       if (!self.model.doc) self.customErrors.set('doc', 'Campo obrigatório');
-      else if (!self.validateCpf(self.model.doc))
+      else if (!validate.validateCpf(self.model.doc))
         self.customErrors.set('doc', 'CPF inválido!');
       if (!self.model.name) self.customErrors.set('name', 'Campo obrigatório');
       else if (!self.model.name.length > 200)
@@ -335,14 +336,14 @@ export default {
         self.customErrors.set('surname', 'Máximo 200 caracteres');
       if (!self.model.email)
         self.customErrors.set('email', 'Campo obrigatório');
-      else if (!self.reg.test(self.model.email))
+      else if (!validate.validateEmail(self.model.email))
         self.customErrors.set('email', 'E-mail inválido');
       else if (!self.model.email.length > 300)
         self.customErrors.set('email', 'Máximo 300 caracteres');
       if (self.viewAction === 'new') {
         if (!self.emailConfirm)
           self.customErrors.set('email-confirm', 'Campo obrigatório');
-        else if (!self.reg.test(self.emailConfirm))
+        else if (!validate.validateEmail(self.emailConfirm))
           self.customErrors.set('email-confirm', 'E-mail inválido');
         else if (!self.emailConfirm.length > 300)
           self.customErrors.set('email-confirm', 'Máximo 300 caracteres');
@@ -368,7 +369,7 @@ export default {
       if (self.customErrors.size === 0) {
         self.submitLoading = true;
         if (self.image) {
-          helperService.uploadFile(self.image).then(
+          helperService.uploadImage(self.image).then(
             response => {
               if (response.status != 200) {
                 self.$notify({
@@ -554,37 +555,6 @@ export default {
       } else {
         self.formLoading = false;
       }
-    },
-    validateCpf(c) {
-      if ((c = c.replace(/[^\d]/g, '')).length != 11) return false;
-      if (
-        c == '00000000000' ||
-        c == '11111111111' ||
-        c == '22222222222' ||
-        c == '33333333333' ||
-        c == '44444444444' ||
-        c == '55555555555' ||
-        c == '66666666666' ||
-        c == '77777777777' ||
-        c == '88888888888' ||
-        c == '99999999999'
-      )
-        return false;
-
-      let r;
-      let s = 0;
-      for (let i = 1; i <= 9; i++) s = s + parseInt(c[i - 1]) * (11 - i);
-      r = (s * 10) % 11;
-
-      if (r == 10 || r == 11) r = 0;
-      if (r != parseInt(c[9])) return false;
-      s = 0;
-
-      for (let i = 1; i <= 10; i++) s = s + parseInt(c[i - 1]) * (12 - i);
-      r = (s * 10) % 11;
-      if (r == 10 || r == 11) r = 0;
-      if (r != parseInt(c[10])) return false;
-      return true;
     }
   },
   created() {

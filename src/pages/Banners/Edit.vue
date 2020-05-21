@@ -265,13 +265,12 @@ export default {
       if (self.customErrors.size === 0) {
         self.submitLoading = true;
         if (self.image) {
-          helperService.uploadFile(self.image).then(
+          helperService.uploadImage(self.image).then(
             response => {
               if (response.status != 200) {
                 self.$notify({
-                  type: 'primary',
-                  message: response.message,
-                  icon: 'tim-icons icon-bell-55'
+                  type: 'warning',
+                  message: response.message
                 });
                 self.submitLoading = false;
                 return;
@@ -281,9 +280,8 @@ export default {
             },
             err => {
               self.$notify({
-                type: 'warning',
-                message: err.message,
-                icon: 'tim-icons icon-bell-55'
+                type: 'danger',
+                message: err.message
               });
               self.submitLoading = false;
             }

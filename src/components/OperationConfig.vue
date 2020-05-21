@@ -35,7 +35,9 @@
         </div>
         <hr />
         <div class="row">
-          <div class="col-md-12"><h4>Módulos</h4></div>
+          <div class="col-md-12">
+            <h4>Módulos</h4>
+          </div>
         </div>
         <div
           v-for="(mod, idx) in modules"
@@ -66,8 +68,7 @@
                   :placeholder="field.label"
                   :requored="field.isRequired"
                   v-model="field.data"
-                >
-                </base-input>
+                ></base-input>
               </div>
             </div>
           </div>
@@ -80,9 +81,8 @@
               native-type="submit"
               type="info"
               @click.native.prevent="validateForm"
+              >Salvar</base-button
             >
-              Salvar
-            </base-button>
           </div>
         </div>
       </form>
@@ -185,7 +185,9 @@ export default {
       if (self.model.images && self.model.images.length > 0) {
         let promises = new Array(self.model.images.length);
         for (var i = 0; i <= self.model.images.length - 1; i++) {
-          promises[i] = helperService.uploadFile(self.model.images[i].img);
+          promises[i] = helperService.UploadImage.uploadImage(
+            self.model.images[i].img
+          );
         }
         Promise.all(promises)
           .then(values => {

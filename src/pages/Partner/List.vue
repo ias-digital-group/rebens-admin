@@ -25,7 +25,7 @@
           </a>
         </div>
         <base-link
-          to="/category/new"
+          to="/partner/new"
           class="bt bt-square bg-white-2 c-light-blue"
         >
           <i class="icon-icon-plus"></i>
@@ -137,7 +137,7 @@
     </div>
     <!-- Classic Modal -->
     <modal :show.sync="modal.visible" headerClasses="justify-content-center">
-      <h4 slot="header" class="title title-up">Remover Categoria</h4>
+      <h4 slot="header" class="title title-up">Remover Parceiro</h4>
       <form
         class="modal-form"
         ref="modalForm"

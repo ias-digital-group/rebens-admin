@@ -96,9 +96,8 @@
                 type="info"
                 @click.native.prevent="validate"
                 :loading="submitLoading"
+                >Salvar</base-button
               >
-                Salvar
-              </base-button>
             </div>
           </div>
         </form>
@@ -165,7 +164,7 @@ export default {
         self.submitLoading = true;
         if (self.image) {
           self.imgError = false;
-          helperService.uploadFile(self.image).then(
+          helperService.uploadImage(self.image).then(
             response => {
               if (response.status != 200) {
                 self.$notify({

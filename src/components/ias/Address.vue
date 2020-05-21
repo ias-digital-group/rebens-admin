@@ -95,11 +95,12 @@
   </div>
 </template>
 <script>
+import helperService from '../../services/Helper/helperService';
 export default {
   name: 'ias-address',
   props: {
     address: Object,
-    customErrors: Object
+    customErrors: Map
   },
   data() {
     return {

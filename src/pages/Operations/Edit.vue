@@ -12,8 +12,7 @@
             v-if="viewAction != 'new' && isMaster"
             :disabled="!model.canPublish"
             :loading="publishLoading"
-          >
-            {{ model.publishStatus }}</base-button
+            >{{ model.publishStatus }}</base-button
           >
           <base-button
             class="pull-right"
@@ -130,7 +129,7 @@
                     type="text"
                     name="temporarySubdomain"
                     :disabled="!isMaster"
-                    placeholder=""
+                    placeholder
                     maxlength="50"
                     required
                   ></base-input>
@@ -167,8 +166,7 @@
                     maxlength="4"
                     :disabled="!isMaster"
                     :inputMask="['####']"
-                  >
-                  </base-input>
+                  ></base-input>
                 </div>
               </div>
               <div class="row mb-2">
@@ -180,16 +178,14 @@
                     :key="model.idOperationType"
                     v-model="model.idOperationType"
                     v-if="isMaster"
-                  >
-                  </v-select>
+                  ></v-select>
                   <base-input
                     v-if="!isMaster"
                     v-model="selectedOperationType"
                     type="text"
                     name="selectedOperationType"
                     disabled
-                  >
-                  </base-input>
+                  ></base-input>
                   <label
                     v-show="customErrors.includes('idOperationType')"
                     class="text-danger"
@@ -265,9 +261,8 @@
                     "
                     @click.native.prevent="validate"
                     :loading="submitLoading"
+                    >Salvar</base-button
                   >
-                    Salvar
-                  </base-button>
                 </div>
               </div>
             </form>
@@ -477,7 +472,7 @@ export default {
       if (self.customErrors.length == 0) {
         self.submitLoading = true;
         if (self.image) {
-          helperService.uploadFile(self.image).then(
+          helperService.uploadImage(self.image).then(
             response => {
               if (response.status != 200) {
                 self.$notify({

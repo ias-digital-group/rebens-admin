@@ -106,8 +106,7 @@
                     :reduce="op => op.code"
                     :key="model.idPartner"
                     v-model="model.idPartner"
-                  >
-                  </v-select>
+                  ></v-select>
                 </div>
                 <div class="col-md-3">
                   <label
@@ -275,9 +274,10 @@
                 </div>
               </div>
               <div class="row">
-                <label class="col-md-3 col-form-label"
-                  >Imagem * <br />(1200x500)</label
-                >
+                <label class="col-md-3 col-form-label">
+                  Imagem *
+                  <br />(1200x500)
+                </label>
                 <div class="col-md-9">
                   <template v-if="model.image">
                     <div class="fileinput">
@@ -318,8 +318,7 @@
                       :reduce="item => item.code"
                       :key="model.homeHighlight"
                       v-model="model.homeHighlight"
-                    >
-                    </v-select>
+                    ></v-select>
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -341,8 +340,7 @@
                       :reduce="item => item.code"
                       :key="model.homeBenefitHighlight"
                       v-model="model.homeBenefitHighlight"
-                    >
-                    </v-select>
+                    ></v-select>
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -361,8 +359,7 @@
                       type="date"
                       placeholder="Validade"
                       v-model="model.dueDate"
-                    >
-                    </el-date-picker>
+                    ></el-date-picker>
                   </base-input>
                 </div>
                 <div class="col-md-7">
@@ -381,8 +378,7 @@
                       type="date"
                       placeholder="Início"
                       v-model="model.start"
-                    >
-                    </el-date-picker>
+                    ></el-date-picker>
                   </base-input>
                   <label
                     v-show="customErrors.includes('start')"
@@ -396,8 +392,7 @@
                       type="date"
                       placeholder="Fim"
                       v-model="model.end"
-                    >
-                    </el-date-picker>
+                    ></el-date-picker>
                   </base-input>
                   <label
                     v-show="customErrors.includes('end')"
@@ -424,8 +419,7 @@
                     :reduce="op => op.code"
                     :key="model.idOperation"
                     v-model="model.idOperation"
-                  >
-                  </v-select>
+                  ></v-select>
                 </div>
                 <div class="col-md-3">
                   <label
@@ -456,9 +450,8 @@
                     type="info"
                     @click.native.prevent="validate"
                     :loading="submitLoading"
+                    >Salvar</base-button
                   >
-                    Salvar
-                  </base-button>
                 </div>
               </div>
             </form>
@@ -666,7 +659,7 @@ export default {
       if (self.customErrors.length == 0) {
         self.submitLoading = true;
         if (self.image) {
-          helperService.uploadFile(self.image).then(
+          helperService.uploadImage(self.image).then(
             response => {
               if (response.status != 200) {
                 self.$notify({
