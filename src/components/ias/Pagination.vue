@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="box-qty">
+    <div hidden class="box-qty">
       <a
         @click="perPageChange(10)"
         class="bt bt-square"
@@ -8,8 +8,7 @@
           'bg-light-blue c-white': perPage === 10,
           'bg-light-gray c-light-blue': perPage !== 10
         }"
-        >10</a
-      >
+      >10</a>
       <a
         @click="perPageChange(20)"
         class="bt bt-square"
@@ -17,8 +16,7 @@
           'bg-light-blue c-white': perPage === 20,
           'bg-light-gray c-light-blue': perPage !== 20
         }"
-        >20</a
-      >
+      >20</a>
       <a
         @click="perPageChange(30)"
         class="bt bt-square"
@@ -26,8 +24,7 @@
           'bg-light-blue c-white': perPage === 30,
           'bg-light-gray c-light-blue': perPage !== 30
         }"
-        >30</a
-      >
+      >30</a>
       <a
         @click="perPageChange(40)"
         class="bt bt-square"
@@ -35,8 +32,7 @@
           'bg-light-blue c-white': perPage === 40,
           'bg-light-gray c-light-blue': perPage !== 40
         }"
-        >40</a
-      >
+      >40</a>
       <a
         @click="perPageChange(50)"
         class="bt bt-square"
@@ -44,25 +40,19 @@
           'bg-light-blue c-white': perPage === 50,
           'bg-light-gray c-light-blue': perPage !== 50
         }"
-        >50</a
-      >
+      >50</a>
+    </div>
+    <div class="box-total">
+      <p>Total de itens: {{totalItems}}</p>
     </div>
     <div class="box-right">
       <ul class="box-pag">
-        <li
-          class="bt-arrow"
-          v-if="showArrows"
-          :class="{ disabled: value === 1 }"
-        >
+        <li class="bt-arrow" v-if="showArrows" :class="{ disabled: value === 1 }">
           <a @click="prevPage" class="c-light-blue">
             <i class="icon-icon-arrow-left"></i>
           </a>
         </li>
-        <li
-          v-for="item in range(minPage, maxPage)"
-          :key="item"
-          :class="{ active: value === item }"
-        >
+        <li v-for="item in range(minPage, maxPage)" :key="item" :class="{ active: value === item }">
           <a
             class="bt bt-square"
             :class="{
@@ -70,25 +60,16 @@
               'bg-light-gray c-light-blue': value !== item
             }"
             @click="changePage(item)"
-            >{{ item }}</a
-          >
+          >{{ item }}</a>
         </li>
-        <li
-          class="bt-arrow"
-          v-if="showArrows"
-          :class="{ disabled: value === totalPages }"
-        >
+        <li class="bt-arrow" v-if="showArrows" :class="{ disabled: value === totalPages }">
           <a @click="nextPage" class="c-light-blue">
             <i class="icon-icon-arrow-right"></i>
           </a>
         </li>
       </ul>
       <div class="change-page">
-        <input
-          type="text"
-          v-model="currentPage"
-          :class="{ disabled: totalPages === 1 }"
-        />
+        <input type="text" v-model="currentPage" :class="{ disabled: totalPages === 1 }" />
         <span>/ {{ totalPages }}</span>
         <i
           @click="goToPage"

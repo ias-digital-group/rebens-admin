@@ -4,30 +4,16 @@
       <h2>Banners</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Digite aqui o que deseja encontrar"
-          />
+          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i
-            v-else
-            class="bt-clear-search icon-icon-times c-red"
-            @click="searchQuery = ''"
-          ></i>
+          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
         </div>
         <div class="filter" :class="{ active: showFilters }">
-          <a
-            class="bt bt-square bg-white-2 c-light-blue"
-            @click="showFilters = !showFilters"
-          >
+          <a class="bt bt-square bg-white-2 c-light-blue" @click="showFilters = !showFilters">
             <i class="icon-icon-filter"></i>
           </a>
         </div>
-        <base-link
-          to="/banners/new"
-          class="bt bt-square bg-white-2 c-light-blue"
-        >
+        <base-link to="/banners/new" class="bt bt-square bg-white-2 c-light-blue">
           <i class="icon-icon-plus"></i>
         </base-link>
       </div>
@@ -76,12 +62,7 @@
           <tr v-for="item in tableData" :key="item.id">
             <td>
               <div class="img-holder">
-                <img
-                  :src="item.image"
-                  :alt="item.name"
-                  width="96"
-                  height="40"
-                />
+                <img :src="item.image" :alt="item.name" width="96" height="40" />
               </div>
             </td>
             <td>
@@ -133,12 +114,7 @@
                 >
                   <i class="icon-icon-edit"></i>
                 </button>
-                <button
-                  @click="handleDelete(item)"
-                  type="button"
-                  title="apagar"
-                  class="bt c-red"
-                >
+                <button @click="handleDelete(item)" type="button" title="apagar" class="bt c-red">
                   <i class="icon-icon-delete"></i>
                 </button>
               </div>
@@ -160,12 +136,7 @@
     <!-- Classic Modal -->
     <modal :show.sync="modal.visible" headerClasses="justify-content-center">
       <h4 slot="header" class="title title-up">Remover banner</h4>
-      <form
-        class="modal-form"
-        ref="modalForm"
-        @submit.prevent
-        v-loading="modal.formLoading"
-      >
+      <form class="modal-form" ref="modalForm" @submit.prevent v-loading="modal.formLoading">
         <input type="hidden" name="nome" value="DELETE" ref="nome" />
         <base-input
           required
@@ -179,12 +150,8 @@
         ></base-input>
       </form>
       <template slot="footer">
-        <base-button @click.native.prevent="validateModal" type="danger"
-          >Remover</base-button
-        >
-        <base-button type="info" @click.native="modal.visible = false"
-          >Fechar</base-button
-        >
+        <base-button @click.native.prevent="validateModal" type="danger">Remover</base-button>
+        <base-button type="info" @click.native="modal.visible = false">Fechar</base-button>
       </template>
     </modal>
   </div>
@@ -265,13 +232,20 @@ export default {
         }
       );
 
-      operationService.findAll().then(response => {
-        _.each(response.data, function(el) {
-          if (el.id != self.id) {
-            self.operations.push({ code: el.id, label: el.title });
-          }
+      self.loadOperations();
+    },
+    loadOperations() {
+      const self = this;
+      if (!self.operations || self.operations.length === 0) {
+        self.operations = [];
+        operationService.findAll().then(response => {
+          _.each(response.data, function(el) {
+            if (el.id != self.id) {
+              self.operations.push({ code: el.id, label: el.title });
+            }
+          });
         });
-      });
+      }
     },
     validateModal() {
       const self = this;

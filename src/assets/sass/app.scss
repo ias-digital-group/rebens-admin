@@ -403,6 +403,7 @@
     padding: 16px;
     display: flex;
     justify-content: space-between;
+    border-top: 1px solid $light-gray;
     .box-qty {
       a {
         margin-right: 8px;
@@ -411,6 +412,12 @@
           cursor: default;
           pointer-events: none;
         }
+      }
+    }
+    .box-total {
+      p {
+        margin: 0;
+        line-height: 47px;
       }
     }
     .box-right {
