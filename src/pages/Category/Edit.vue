@@ -33,13 +33,14 @@
                 :key="model.type"
                 v-model="model.type"
                 placeholder="Tipo"
+                :disabled="viewAction === 'edit'"
                 :class="{ 'has-error': customErrors.get('type') }"
               >
                 <span slot="no-options">Nenhum Tipo encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('type')" class="ias-error">{{
-                customErrors.get('type')
-              }}</label>
+              <label v-if="customErrors.get('type')" class="ias-error">
+                {{ customErrors.get('type') }}
+              </label>
             </div>
             <div class="opts-holder">
               <ias-radio v-model="level" name="root" value="root"
@@ -63,9 +64,9 @@
               >
                 <span slot="no-options">Nenhuma Categoria encontrada</span>
               </v-select>
-              <label v-if="customErrors.get('idParent')" class="ias-error">{{
-                customErrors.get('idParent')
-              }}</label>
+              <label v-if="customErrors.get('idParent')" class="ias-error">
+                {{ customErrors.get('idParent') }}
+              </label>
             </div>
           </div>
 

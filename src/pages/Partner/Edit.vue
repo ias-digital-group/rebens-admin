@@ -58,9 +58,9 @@
               >
                 <span slot="no-options">Nenhum Tipo encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('type')" class="ias-error">
-                {{ customErrors.get('type') }}
-              </label>
+              <label v-if="customErrors.get('type')" class="ias-error">{{
+                customErrors.get('type')
+              }}</label>
             </div>
           </div>
           <ias-address
@@ -77,9 +77,9 @@
               v-model="model.description"
               placeholder="Descrição"
             />
-            <label v-show="customErrors.get('description')" class="ias-error">
-              {{ customErrors.get('description') }}
-            </label>
+            <label v-show="customErrors.get('description')" class="ias-error">{{
+              customErrors.get('description')
+            }}</label>
           </div>
           <div class="ias-row">
             <custom-input
@@ -384,6 +384,8 @@ export default {
         self.customErrors.set('contactEmail', 'Campo obrigatório');
       else if (!validate.validateEmail(self.model.mainContact.email))
         self.customErrors.set('contactEmail', 'E-mail inválido');
+      if (!self.model.jobTitle || self.model.jobTitle === '')
+        self.customErrors.set('contactJobTitle', 'Campo obrigatório');
 
       if (self.customErrors.size === 0) {
         self.submitLoading = true;

@@ -12,12 +12,14 @@ export default {
             sort: 'name ASC',
             active: '',
             idParent: '',
-            type: ''
+            type: '',
+            level: ''
           };
       HTTP.get(
         config.apiEndpoints.categoryUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}` +
-            `&sort=${request.sort}&active=${request.active}&idParent=${request.idParent}&type=${request.type}`
+            `&sort=${request.sort}&active=${request.active}&idParent=${request.idParent}&type=${request.type}` +
+            `&level=${request.level}`
         )
       ).then(
         response => {

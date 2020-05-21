@@ -285,6 +285,9 @@
       }
     }
   }
+  .vs--disabled .vs__search {
+    background-color: transparent;
+  }
   .vs__dropdown-menu {
     border: 1px solid $light-gray;
     border-top: none;

@@ -331,29 +331,24 @@ export default {
       this.$validator.validateAll('modalScope').then(isValid => {
         if (isValid) {
           self.modal.formLoading = true;
-          operationService
-            .deleteCustomer(
-              self.$store.getters.currentUser.idOperation,
-              self.modal.model.id
-            )
-            .then(
-              response => {
-                self.$notify({
-                  type: 'success',
-                  message: response.message
-                });
-                self.resetModal();
-                self.pagination.currentPage = 1;
-                self.fetchData();
-              },
-              err => {
-                self.$notify({
-                  type: 'danger',
-                  message: err.message
-                });
-                self.modal.formLoading = false;
-              }
-            );
+          customerService.delete(self.modal.model.id).then(
+            response => {
+              self.$notify({
+                type: 'success',
+                message: response.message
+              });
+              self.resetModal();
+              self.pagination.currentPage = 1;
+              self.fetchData();
+            },
+            err => {
+              self.$notify({
+                type: 'danger',
+                message: err.message
+              });
+              self.modal.formLoading = false;
+            }
+          );
         }
       });
     }

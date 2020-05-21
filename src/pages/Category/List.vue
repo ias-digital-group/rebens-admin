@@ -48,6 +48,14 @@
         >
           <span slot="no-options">Nenhum status encontrado</span>
         </v-select>
+        <v-select
+          :options="levels"
+          :reduce="op => op.code"
+          v-model="levelFilter"
+          placeholder="Filtre por nível"
+        >
+          <span slot="no-options">Nenhum nível encontrado</span>
+        </v-select>
       </div>
     </div>
     <div class="list-table">
@@ -183,10 +191,15 @@ export default {
       sortField: 'name',
       activeFilter: '',
       typeFilter: '',
+      levelFilter: '',
       showFilters: false,
       statuses: [
         { code: true, label: 'Ativos' },
         { code: false, label: 'Inativos' }
+      ],
+      levels: [
+        { code: 0, label: 'Primária' },
+        { code: 1, label: 'Secundária' }
       ],
       types: [
         { code: 1, label: 'Benefícios' },
@@ -219,9 +232,10 @@ export default {
         pageItems: this.$data.pagination.perPage,
         searchWord: this.searchQuery,
         sort: this.formatSortFieldParam,
-        active: this.activeFilter,
-        type: this.typeFilter,
-        idParent: ''
+        active: this.activeFilter === null ? '' : this.activeFilter,
+        type: this.typeFilter === null ? '' : this.typeFilter,
+        idParent: '',
+        level: this.levelFilter === null ? '' : this.levelFilter
       };
       this.$data.loading = true;
       categoryService.findAll(request).then(
@@ -264,9 +278,15 @@ export default {
   },
   watch: {
     activeFilter() {
+      this.pagination.currentPage = 1;
       this.fetchData();
     },
     typeFilter() {
+      this.pagination.currentPage = 1;
+      this.fetchData();
+    },
+    levelFilter() {
+      this.pagination.currentPage = 1;
       this.fetchData();
     }
   }
