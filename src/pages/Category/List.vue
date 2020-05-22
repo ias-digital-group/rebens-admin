@@ -36,6 +36,7 @@
           :options="types"
           :reduce="op => op.code"
           v-model="typeFilter"
+          class="no-margin"
           placeholder="Filtre por tipo"
         >
           <span slot="no-options">Nenhum tipo encontrado</span>

@@ -36,6 +36,7 @@
           :options="types"
           :reduce="op => op.code"
           v-model="typeFilter"
+          class="no-margin"
           placeholder="Filtre por tipo"
         >
           <span slot="no-options">Nenhum tipo encontrado</span>
@@ -64,7 +65,7 @@
         <tbody>
           <tr v-for="item in tableData" :key="item.id">
             <td class="td-flex">
-              <div class="avatar">
+              <div class="img-holder-square">
                 <img
                   v-if="item.logo && item.logo !== ''"
                   :src="item.logo"
@@ -268,9 +269,11 @@ export default {
   },
   watch: {
     activeFilter() {
+      this.pagination.currentPage = 1;
       this.fetchData();
     },
     typeFilter() {
+      this.pagination.currentPage = 1;
       this.fetchData();
     }
   }

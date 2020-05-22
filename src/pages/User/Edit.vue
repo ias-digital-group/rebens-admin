@@ -86,9 +86,9 @@
               >
                 <span slot="no-options">Nenhum papel encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('roles')" class="ias-error">{{
-                customErrors.get('roles')
-              }}</label>
+              <label v-if="customErrors.get('roles')" class="ias-error">
+                {{ customErrors.get('roles') }}
+              </label>
             </div>
           </div>
           <div class="ias-row">
@@ -104,9 +104,9 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">{{
-                customErrors.get('operation')
-              }}</label>
+              <label v-if="customErrors.get('operation')" class="ias-error">
+                {{ customErrors.get('operation') }}
+              </label>
             </div>
           </div>
           <div class="ias-row">
@@ -439,10 +439,17 @@ export default {
             vm.showSuccessModal = true;
           },
           err => {
-            vm.$notify({
-              type: 'danger',
-              message: err.message
-            });
+            if (err.response.status === 400 && err.response.data.message) {
+              vm.$notify({
+                type: 'warning',
+                message: err.response.data.message
+              });
+            } else {
+              vm.$notify({
+                type: 'danger',
+                message: err.message
+              });
+            }
             vm.submitLoading = false;
           }
         );

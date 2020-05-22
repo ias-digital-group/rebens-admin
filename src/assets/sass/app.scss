@@ -341,6 +341,7 @@
             border-radius: 20px;
             background-color: $white;
             text-align: center;
+            box-shadow: 0 0 4px #ccc;
             span {
               background-color: $dark-gray;
               line-height: 40px;
@@ -355,6 +356,16 @@
             width: 100px;
             img {
               height: 40px;
+              box-shadow: 0 0 4px #ccc;
+            }
+          }
+          .img-holder-square {
+            height: 40px;
+            margin: 16px 16px 16px 0;
+            width: 40px;
+            img {
+              height: 40px;
+              width: 40px;
               box-shadow: 0 0 4px #ccc;
             }
           }
@@ -563,7 +574,7 @@
       }
     }
     .ias-row-editor {
-      height: 250px;
+      min-height: 250px;
       margin-bottom: 40px;
       padding-right: 24px;
       position: relative;
@@ -582,6 +593,7 @@
             font-family: $font-family-base;
             font-size: $font-size-medium;
             font-weight: $font-weight-medium;
+            max-height: 500px;
           }
         }
       }

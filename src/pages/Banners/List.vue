@@ -309,12 +309,15 @@ export default {
   },
   watch: {
     activeFilter() {
+      this.pagination.currentPage = 1;
       this.fetchData();
     },
     typeFilter() {
+      this.pagination.currentPage = 1;
       this.fetchData();
     },
     operationFilter() {
+      this.pagination.currentPage = 1;
       this.fetchData();
     }
   }
