@@ -17,14 +17,7 @@ export default {
         visible: false,
         formLoading: false,
         model: {},
-        nameConfirmation: '',
-        modelValidations: {
-          name_confirm: {
-            required: true,
-            confirmed: 'nome',
-            max: 200
-          }
-        }
+        itemName: ''
       }
     };
   },
@@ -85,20 +78,15 @@ export default {
       this.sortOrder = row.order;
       this.fetchData();
     },
-    handleDelete(row) {
-      this.modal.model = row;
-      this.modal.visible = true;
-    },
     resetModal() {
       this.modal.visible = false;
       this.modal.model = {};
       this.modal.formLoading = false;
-      this.modal.nameConfirmation = '';
+      this.modal.itemName = '';
     },
     getError(fieldName) {
       return this.errors.first(fieldName);
     },
-    validateModal() {},
     fetchData() {},
     savePageSettings(vm, totalItems, totalPages) {
       vm.$store.commit('setPageSetting', {

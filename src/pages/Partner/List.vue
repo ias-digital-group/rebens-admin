@@ -4,30 +4,16 @@
       <h2>Parceiros</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Digite aqui o que deseja encontrar"
-          />
+          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i
-            v-else
-            class="bt-clear-search icon-icon-times c-red"
-            @click="searchQuery = ''"
-          ></i>
+          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
         </div>
         <div class="filter" :class="{ active: showFilters }">
-          <a
-            class="bt bt-square bg-white-2 c-light-blue"
-            @click="showFilters = !showFilters"
-          >
+          <a class="bt bt-square bg-white-2 c-light-blue" @click="showFilters = !showFilters">
             <i class="icon-icon-filter"></i>
           </a>
         </div>
-        <base-link
-          to="/partner/new"
-          class="bt bt-square bg-white-2 c-light-blue"
-        >
+        <base-link to="/partner/new" class="bt bt-square bg-white-2 c-light-blue">
           <i class="icon-icon-plus"></i>
         </base-link>
       </div>
@@ -66,11 +52,7 @@
           <tr v-for="item in tableData" :key="item.id">
             <td class="td-flex">
               <div class="img-holder-square">
-                <img
-                  v-if="item.logo && item.logo !== ''"
-                  :src="item.logo"
-                  :alt="item.name"
-                />
+                <img v-if="item.logo && item.logo !== ''" :src="item.logo" :alt="item.name" />
                 <span v-else>{{ item.name[0] }}</span>
               </div>
               <span>{{ item.name }}</span>
@@ -112,12 +94,7 @@
                 >
                   <i class="icon-icon-edit"></i>
                 </button>
-                <button
-                  @click="handleDelete(item)"
-                  type="button"
-                  title="apagar"
-                  class="bt c-red"
-                >
+                <button @click="handleDelete(item)" type="button" title="apagar" class="bt c-red">
                   <i class="icon-icon-delete"></i>
                 </button>
               </div>
@@ -136,48 +113,19 @@
         @update-per-page="changePerPage"
       ></pagination>
     </div>
-    <!-- Classic Modal -->
-    <modal :show.sync="modal.visible" headerClasses="justify-content-center">
-      <h4 slot="header" class="title title-up">Remover Parceiro</h4>
-      <form
-        class="modal-form"
-        ref="modalForm"
-        @submit.prevent
-        v-loading="modal.formLoading"
-      >
-        <input type="hidden" name="nome" value="DELETE" ref="nome" />
-        <base-input
-          required
-          v-model="modal.nameConfirmation"
-          label="Digite DELETE para confirmar"
-          placeholder="Digite DELETE para confirmar"
-          :error="getError('confirmação')"
-          type="text"
-          v-validate="modal.modelValidations.name_confirm"
-          name="confirmação"
-        ></base-input>
-      </form>
-      <template slot="footer">
-        <base-button @click.native.prevent="validateModal" type="danger"
-          >Remover</base-button
-        >
-        <base-button type="info" @click.native="modal.visible = false"
-          >Fechar</base-button
-        >
-      </template>
-    </modal>
+    <delete-modal @confirmDelete="confirmDelete" :itemName="modal.itemName" :show="modal.visible"></delete-modal>
   </div>
 </template>
 <script>
 import { Select, Option } from 'element-ui';
-import { Pagination, Modal } from 'src/components';
+import { Pagination, DeleteModal } from 'src/components';
 import partnerService from '../../services/Partner/partnerService';
 import paging from '../../mixins/paging';
 
 export default {
   mixins: [paging],
   components: {
-    Modal,
+    DeleteModal,
     Pagination,
     [Select.name]: Select,
     [Option.name]: Option
@@ -240,31 +188,47 @@ export default {
         }
       );
     },
-    validateModal() {
+    handleDelete(item) {
+      this.modal.model = item;
+      this.modal.itemName = item.name;
+      this.modal.visible = true;
+    },
+    confirmDelete(val) {
       const self = this;
-      this.$validator.validateAll().then(isValid => {
-        if (isValid) {
-          self.modal.formLoading = true;
-          partnerService.delete(self.modal.model.id).then(
-            response => {
-              self.$notify({
-                type: 'success',
-                message: response.message
-              });
-              self.resetModal();
-              self.pagination.currentPage = 1;
-              self.fetchData();
-            },
-            err => {
-              self.$notify({
-                type: 'danger',
-                message: err.message
-              });
-              self.modal.formLoading = false;
-            }
-          );
-        }
-      });
+      if (val) {
+        this.$validator.validateAll().then(isValid => {
+          if (isValid) {
+            self.modal.formLoading = true;
+            partnerService.delete(self.modal.model.id).then(
+              response => {
+                self.$notify({
+                  type: 'success',
+                  message: response.message
+                });
+                self.resetModal();
+                self.pagination.currentPage = 1;
+                self.fetchData();
+              },
+              err => {
+                if (err.response.status === 400 && err.response.data.message) {
+                  self.$notify({
+                    type: 'warning',
+                    message: err.response.data.message
+                  });
+                } else {
+                  self.$notify({
+                    type: 'danger',
+                    message: err.message
+                  });
+                }
+                self.modal.formLoading = false;
+              }
+            );
+          }
+        });
+      } else {
+        this.resetModal();
+      }
     }
   },
   watch: {

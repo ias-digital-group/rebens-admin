@@ -6,11 +6,7 @@
         <span v-else>Editar Usuário</span>
       </h2>
       <div class="box-actions">
-        <button
-          @click="resendValidation"
-          type="button"
-          class="bt bt-square bg-white-2 c-orange"
-        >
+        <button @click="resendValidation" type="button" class="bt bt-square bg-white-2 c-orange">
           <i class="icon-icon-send"></i>
         </button>
         <base-link to="/users" class="bt bt-square bg-white-2 c-light-blue">
@@ -50,6 +46,7 @@
               :error="customErrors.get('email')"
               label="E-mail"
               maxlength="500"
+              :disabled="viewAction !== 'new'"
             ></custom-input>
           </div>
           <div class="ias-row" v-if="viewAction === 'new'">
@@ -74,6 +71,7 @@
               :error="customErrors.get('doc')"
               :inputMask="['###.###.###-##']"
               maxlength="50"
+              :disabled="viewAction !== 'new'"
             ></custom-input>
             <div class="select-holder">
               <v-select
@@ -86,9 +84,10 @@
               >
                 <span slot="no-options">Nenhum papel encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('roles')" class="ias-error">
-                {{ customErrors.get('roles') }}
-              </label>
+              <label
+                v-if="customErrors.get('roles')"
+                class="ias-error"
+              >{{ customErrors.get('roles') }}</label>
             </div>
           </div>
           <div class="ias-row">
@@ -104,9 +103,10 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">
-                {{ customErrors.get('operation') }}
-              </label>
+              <label
+                v-if="customErrors.get('operation')"
+                class="ias-error"
+              >{{ customErrors.get('operation') }}</label>
             </div>
           </div>
           <div class="ias-row">
@@ -160,11 +160,7 @@
           </div>
           <div class="ias-row">
             <div class="form-actions">
-              <button
-                class="bt bg-green c-white"
-                type="button"
-                @click.prevent="validate"
-              >
+              <button class="bt bg-green c-white" type="button" @click.prevent="validate">
                 <span v-if="viewAction === 'new'">Cadastrar</span>
                 <span v-else>Salvar</span>
               </button>
@@ -175,19 +171,11 @@
           </div>
         </div>
         <div class="form-right">
-          <ias-image-upload
-            @change="onImageChange"
-            img-size="(360x360)"
-            :src="model.picture"
-          />
+          <ias-image-upload @change="onImageChange" img-size="(360x360)" :src="model.picture" />
         </div>
       </form>
     </div>
-    <success-modal
-      :isEdit="viewAction !== 'new'"
-      :show="showSuccessModal"
-      link="/users"
-    ></success-modal>
+    <success-modal :isEdit="viewAction !== 'new'" :show="showSuccessModal" link="/users"></success-modal>
   </div>
 </template>
 <script>
@@ -440,10 +428,16 @@ export default {
           },
           err => {
             if (err.response.status === 400 && err.response.data.message) {
-              vm.$notify({
-                type: 'warning',
-                message: err.response.data.message
-              });
+              if (err.response.data.status === 'errorCPF') {
+                self.customErrors.set('doc', err.response.data.message);
+              } else if (err.response.data.status === 'errorCPF') {
+                self.customErrors.set('email', err.response.data.message);
+              } else {
+                vm.$notify({
+                  type: 'warning',
+                  message: err.response.data.message
+                });
+              }
             } else {
               vm.$notify({
                 type: 'danger',

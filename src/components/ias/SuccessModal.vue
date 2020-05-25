@@ -1,7 +1,7 @@
 <template>
   <transition name="modal">
     <div class="modal-mask" v-show="show">
-      <div class="modal-container" @click.stop="close">
+      <div class="modal-container">
         <img src="/img/icon-success.png" alt="Sucesso" />
         <p v-if="isEdit">
           CADASTRO SALVO
@@ -11,7 +11,7 @@
           CADASTRO REALIZADO
           <br />COM SUCESSO!
         </p>
-        <button @click="backToList">IR PARA LISTAGEM</button>
+        <button class="bg-green" @click="backToList">IR PARA LISTAGEM</button>
       </div>
     </div>
   </transition>

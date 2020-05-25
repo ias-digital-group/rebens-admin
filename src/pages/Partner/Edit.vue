@@ -58,9 +58,10 @@
               >
                 <span slot="no-options">Nenhum Tipo encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('type')" class="ias-error">
-                {{ customErrors.get('type') }}
-              </label>
+              <label
+                v-if="customErrors.get('type')"
+                class="ias-error"
+              >{{ customErrors.get('type') }}</label>
             </div>
           </div>
           <ias-address
@@ -68,18 +69,16 @@
             :customErrors="customErrors"
             :address.sync="model.mainAddress"
           ></ias-address>
-          <div
-            class="ias-row-editor"
-            :class="{ 'has-error': customErrors.get('description') }"
-          >
+          <div class="ias-row-editor" :class="{ 'has-error': customErrors.get('description') }">
             <vue-editor
               :editorToolbar="customToolbar"
               v-model="model.description"
               placeholder="Descrição"
             />
-            <label v-show="customErrors.get('description')" class="ias-error">
-              {{ customErrors.get('description') }}
-            </label>
+            <label
+              v-show="customErrors.get('description')"
+              class="ias-error"
+            >{{ customErrors.get('description') }}</label>
           </div>
           <div class="ias-row">
             <custom-input
@@ -160,11 +159,7 @@
           </div>
           <div class="ias-row">
             <div class="form-actions">
-              <button
-                class="bt bg-green c-white"
-                type="button"
-                @click.prevent="validate"
-              >
+              <button class="bt bg-green c-white" type="button" @click.prevent="validate">
                 <span v-if="viewAction === 'new'">Cadastrar</span>
                 <span v-else>Salvar</span>
               </button>
@@ -181,11 +176,21 @@
             :error="customErrors.get('logo')"
           />
           <div class="ias-file-uploader">
-            <div class="event-holder" @click="openFileUploader()">
+            <div class="event-holder">
               Clique aqui para inserir o contrato
+              <input
+                accept="*"
+                @change="handleFileSelect"
+                type="file"
+                class="valid"
+                :multiple="false"
+                aria-invalid="false"
+                ref="file"
+                id="fileInput"
+              />
             </div>
             <div class="files-holder">
-              <div class="item" v-for="item in files" :key="item.fileName">
+              <div class="item" v-for="item in files" :key="item.idx">
                 <i class="icon-icon-times" @click="removeFile(item)"></i>
                 <a target="_blank" :href="item.fileURL">{{ item.name }}</a>
               </div>
@@ -194,49 +199,7 @@
         </div>
       </form>
     </div>
-    <success-modal
-      :isEdit="viewAction !== 'new'"
-      :show="showSuccessModal"
-      link="/partner"
-    ></success-modal>
-    <modal :show.sync="modal.visible" headerClasses="justify-content-center">
-      <h4 slot="header" class="title title-up">Adicionar Arquivo</h4>
-      <form
-        class="modal-form"
-        ref="modalForm"
-        @submit.prevent
-        v-loading="modal.submitLoading"
-      >
-        <base-input
-          required
-          v-model="modal.name"
-          label="Digite o nome do arquivo"
-          placeholder="Digite o nome do arquivo"
-          type="text"
-          v-validate="modal.modelValidations.name"
-          name="name"
-        ></base-input>
-        <div class="ias-file-selector">
-          <input
-            accept="*"
-            @change="handleFileSelect"
-            type="file"
-            class="valid"
-            :multiple="false"
-            aria-invalid="false"
-            ref="file"
-          />
-        </div>
-      </form>
-      <template slot="footer">
-        <base-button type="info" @click.native="modal.visible = false"
-          >Fechar</base-button
-        >
-        <base-button @click.native.prevent="validateModal" type="primary"
-          >Salvar</base-button
-        >
-      </template>
-    </modal>
+    <success-modal :isEdit="viewAction !== 'new'" :show="showSuccessModal" link="/partner"></success-modal>
   </div>
 </template>
 <script>
@@ -268,6 +231,7 @@ export default {
       customToolbar: [],
       showSuccessModal: false,
       files: [],
+      fileCounter: 0,
       level: 'root',
       modal: {
         visible: false,
@@ -348,6 +312,8 @@ export default {
         self.customErrors.set('description', 'Campo obrigatório');
       if (!self.image && !self.model.logo)
         self.customErrors.set('logo', 'Campo obrigatório');
+      if (!self.model.mainAddress.name || self.model.mainAddress.name === '')
+        self.customErrors.set('addrName', 'Campo obrigatório');
       if (
         !self.model.mainAddress.zipcode ||
         self.model.mainAddress.zipcode === ''
@@ -517,7 +483,46 @@ export default {
       if (event.target.files.length == 0) {
         return;
       }
-      this.file = event.target.files[0];
+      const self = this;
+      self.submitLoading = true;
+      helperService.uploadFile(event.target.files[0], 'partnerFile').then(
+        response => {
+          if (response.status != 200) {
+            self.$notify({
+              type: 'warning',
+              message: response.message
+            });
+            self.submitLoading = false;
+            return;
+          }
+          self.fileCounter++;
+          let idx = 0;
+          if (self.files.length > 0) {
+            self.files.map(obj => {
+              if (obj.idx > idx) idx = obj.idx;
+            });
+            idx++;
+          }
+          self.files.push({
+            id: 0,
+            name: `Contrato ${self.fileCounter}`,
+            fileUrl: response.data.url,
+            fileName: response.data.fileName,
+            idItem: self.model.id,
+            itemType: 23,
+            idx: idx
+          });
+          document.getElementById('fileInput').value = '';
+          self.submitLoading = false;
+        },
+        err => {
+          self.$notify({
+            type: 'danger',
+            message: err.message
+          });
+          self.submitLoading = false;
+        }
+      );
     },
     onImageChange(file) {
       this.image = file;
@@ -526,7 +531,7 @@ export default {
       const self = this;
       if (item.id === 0) {
         for (let i = 0; i < self.files.length; i++) {
-          if (self.files[i].filename === item.filename) self.files.splice(i, 1);
+          if (self.files[i].idx === item.idx) self.files.splice(i, 1);
         }
       } else {
         self.submitLoading = true;
@@ -547,12 +552,6 @@ export default {
         );
       }
     },
-    openFileUploader() {
-      const self = this;
-      self.modal.name = '';
-      self.file = Object;
-      self.modal.visible = true;
-    },
     loadFiles() {
       const self = this;
       self.submitLoading = true;
@@ -560,40 +559,10 @@ export default {
         response => {
           if (response && response.data) {
             self.files = response.data;
+            for (let i = 0; i < self.files.length; i++) {
+              self.files[0].idx = i + 1;
+            }
           }
-          self.submitLoading = false;
-        },
-        err => {
-          self.$notify({
-            type: 'danger',
-            message: err.message
-          });
-          self.submitLoading = false;
-        }
-      );
-    },
-    validateModal() {
-      const self = this;
-      self.submitLoading = true;
-      helperService.uploadFile(self.file, 'partnerFile').then(
-        response => {
-          if (response.status != 200) {
-            self.$notify({
-              type: 'warning',
-              message: response.message
-            });
-            self.submitLoading = false;
-            return;
-          }
-          self.files.push({
-            id: 0,
-            name: self.modal.name,
-            fileUrl: response.data.url,
-            fileName: response.data.fileName,
-            idItem: self.model.id,
-            itemType: 23
-          });
-          self.modal.visible = false;
           self.submitLoading = false;
         },
         err => {

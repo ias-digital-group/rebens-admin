@@ -4,10 +4,11 @@
     :class="{
       'ias-has-icon': hasIcon,
       'ias-focus': floatLabel,
-      'bg-red-20': error
+      'bg-red-20': error,
+      'ias-disabled': disabled
     }"
   >
-    <label class="ias-label"> {{ label }} </label>
+    <label class="ias-label">{{ label }}</label>
     <slot>
       <template v-if="inputMask && inputMask.length > 0">
         <the-mask
@@ -20,12 +21,7 @@
         />
       </template>
       <template v-else>
-        <input
-          :value="value"
-          v-bind="$attrs"
-          v-on="listeners"
-          class="ias-input"
-        />
+        <input :value="value" v-bind="$attrs" v-on="listeners" class="ias-input" />
       </template>
     </slot>
     <div v-if="hasIcon" class="ias-icon-holder">
@@ -68,6 +64,10 @@ export default {
     hasFocus: {
       type: Boolean,
       description: 'Input focus'
+    },
+    disabled: {
+      type: Boolean,
+      description: 'Input disabled'
     }
   },
   model: {

@@ -353,6 +353,7 @@
       text-align: right;
       padding-top: 7px;
       padding-right: 7px;
+      border-top-right-radius: 5px;
       cursor: pointer;
     }
   }
@@ -501,7 +502,6 @@
       color: $green;
     }
     button {
-      background-color: $green;
       width: 200px;
       height: 56px;
       line-height: 56px;
@@ -511,7 +511,33 @@
       border-radius: 5px;
       margin: 62px 46px 0;
       border: none;
+      font-family: $font-family-base;
       cursor: pointer;
+    }
+    .bt-remove {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: $red;
+      border-bottom-left-radius: 48px;
+      float: left;
+      width: 48px;
+      height: 48px;
+      text-align: right;
+      padding-top: 7px;
+      padding-right: 7px;
+      border-top-right-radius: 5px;
+      cursor: pointer;
+    }
+    h4 {
+      font-size: $font-size-medium;
+      font-weight: $font-weight-black;
+      color: $dark-gray;
+      text-transform: uppercase;
+      text-align: center;
+    }
+    .ias-input-group {
+      margin: 40px 0;
     }
   }
 }
@@ -537,7 +563,16 @@
     color: $dark-gray;
     text-align: center;
     margin-bottom: 20px;
+    position: relative;
     cursor: pointer;
+    input[type='file'] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0;
+    }
   }
   .files-holder {
     width: 100%;
@@ -564,5 +599,14 @@
         color: $dark-gray;
       }
     }
+  }
+}
+.ias-disabled {
+  cursor: not-allowed;
+  label {
+    cursor: not-allowed;
+  }
+  input {
+    cursor: not-allowed;
   }
 }
