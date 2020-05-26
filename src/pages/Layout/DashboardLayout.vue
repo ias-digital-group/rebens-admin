@@ -195,12 +195,12 @@
           v-show="!isPublisher && !isPartnerAdmin"
           :link="{ name: $t('sidebar.report'), icon: 'fas fa-chart-bar' }"
         >
-          <sidebar-item
+          <!-- <sidebar-item
             :link="{
               name: $t('sidebar.benefitUse'),
               path: '/report/benefit-use'
             }"
-          ></sidebar-item>
+          ></sidebar-item>-->
           <sidebar-item
             :link="{
               name: $t('sidebar.promoterReport'),

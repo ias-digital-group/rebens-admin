@@ -58,10 +58,9 @@
               >
                 <span slot="no-options">Nenhum Tipo encontrado</span>
               </v-select>
-              <label
-                v-if="customErrors.get('type')"
-                class="ias-error"
-              >{{ customErrors.get('type') }}</label>
+              <label v-if="customErrors.get('type')" class="ias-error">{{
+                customErrors.get('type')
+              }}</label>
             </div>
           </div>
           <ias-address
@@ -69,16 +68,18 @@
             :customErrors="customErrors"
             :address.sync="model.mainAddress"
           ></ias-address>
-          <div class="ias-row-editor" :class="{ 'has-error': customErrors.get('description') }">
+          <div
+            class="ias-row-editor"
+            :class="{ 'has-error': customErrors.get('description') }"
+          >
             <vue-editor
               :editorToolbar="customToolbar"
               v-model="model.description"
               placeholder="Descrição"
             />
-            <label
-              v-show="customErrors.get('description')"
-              class="ias-error"
-            >{{ customErrors.get('description') }}</label>
+            <label v-show="customErrors.get('description')" class="ias-error">{{
+              customErrors.get('description')
+            }}</label>
           </div>
           <div class="ias-row">
             <custom-input
@@ -159,7 +160,11 @@
           </div>
           <div class="ias-row">
             <div class="form-actions">
-              <button class="bt bg-green c-white" type="button" @click.prevent="validate">
+              <button
+                class="bt bg-green c-white"
+                type="button"
+                @click.prevent="validate"
+              >
                 <span v-if="viewAction === 'new'">Cadastrar</span>
                 <span v-else>Salvar</span>
               </button>
@@ -199,7 +204,11 @@
         </div>
       </form>
     </div>
-    <success-modal :isEdit="viewAction !== 'new'" :show="showSuccessModal" link="/partner"></success-modal>
+    <success-modal
+      :isEdit="viewAction !== 'new'"
+      :show="showSuccessModal"
+      link="/partner"
+    ></success-modal>
   </div>
 </template>
 <script>

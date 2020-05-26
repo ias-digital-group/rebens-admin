@@ -43,10 +43,18 @@
               </label>
             </div>
             <div class="opts-holder">
-              <ias-radio v-model="level" name="root" value="root"
+              <ias-radio
+                v-model="level"
+                name="root"
+                value="root"
+                :disabled="model.hasChild"
                 >Raiz</ias-radio
               >
-              <ias-radio v-model="level" name="sub" value="sub"
+              <ias-radio
+                v-model="level"
+                name="sub"
+                value="sub"
+                :disabled="model.hasChild"
                 >Subcategoria</ias-radio
               >
             </div>

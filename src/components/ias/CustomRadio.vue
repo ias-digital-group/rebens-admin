@@ -1,5 +1,5 @@
 <template>
-  <div class="ias-radio">
+  <div class="ias-radio" :class="{ 'ias-disabled': disabled }">
     <label :for="cbId">
       <input
         :id="cbId"

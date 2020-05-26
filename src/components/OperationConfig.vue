@@ -185,9 +185,7 @@ export default {
       if (self.model.images && self.model.images.length > 0) {
         let promises = new Array(self.model.images.length);
         for (var i = 0; i <= self.model.images.length - 1; i++) {
-          promises[i] = helperService.UploadImage.uploadImage(
-            self.model.images[i].img
-          );
+          promises[i] = helperService.uploadImage(self.model.images[i].img);
         }
         Promise.all(promises)
           .then(values => {

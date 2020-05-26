@@ -42,7 +42,9 @@
           label="Digite DELETE para confirmar"
           maxlength="200"
         ></custom-input>
-        <button class="bg-red" :disabled="disabled" @click="deleteItem">EXCLUIR</button>
+        <button class="bg-red" :disabled="disabled" @click="deleteItem">
+          EXCLUIR
+        </button>
       </div>
     </div>
   </transition>
