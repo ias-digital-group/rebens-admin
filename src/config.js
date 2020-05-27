@@ -18,6 +18,7 @@ export default {
     accountUri: process.env.VUE_APP_API_URI.concat('account/'),
     addressUri: process.env.VUE_APP_API_URI.concat('address/'),
     categoryUri: process.env.VUE_APP_API_URI.concat('category/'),
+    companyUri: process.env.VUE_APP_API_URI.concat('company/'),
     contactUri: process.env.VUE_APP_API_URI.concat('contact/'),
     helperUri: process.env.VUE_APP_API_URI.concat('helper/'),
     operationUri: process.env.VUE_APP_API_URI.concat('operation/'),
