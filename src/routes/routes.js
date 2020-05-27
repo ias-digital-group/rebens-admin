@@ -28,6 +28,9 @@ const UsersEdit = () => import('src/pages/User/Edit.vue');
 const PartnersList = () => import('src/pages/Partner/List.vue');
 const PartnersEdit = () => import('src/pages/Partner/Edit.vue');
 
+const CompanyList = () => import('src/pages/Company/List.vue');
+const CompanyEdit = () => import('src/pages/Company/Edit.vue');
+
 const Login = () => import('src/pages/Login/Login.vue');
 const PasswordRecovery = () => import('src/pages/Login/PasswordRecovery.vue');
 const Validate = () => import('src/pages/Validate/Validate.vue');
@@ -255,6 +258,49 @@ let partnerPages = {
         requiresAuth: true,
         roles: ['master', 'publisherRebens', 'administratorRebens'],
         title: 'Parceiro'
+      }
+    }
+  ]
+};
+
+let companyPages = {
+  path: '/company',
+  component: MainLayout,
+  meta: {
+    requiresAuth: true,
+    roles: ['master', 'publisherRebens', 'administratorRebens'],
+    title: 'Empresa'
+  },
+  children: [
+    {
+      path: '',
+      name: 'company',
+      component: CompanyList,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        title: 'Empresa'
+      }
+    },
+    {
+      path: 'new',
+      name: `new_company`,
+      component: CompanyEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        title: 'Empresa'
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_company',
+      props: true,
+      component: CompanyEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        title: 'Empresa'
       }
     }
   ]
@@ -1644,6 +1690,7 @@ const routes = [
   customersPages,
   partnerPages,
   usersPages,
+  companyPages,
   accountPages,
   operationsPages,
   benefitsPages,
