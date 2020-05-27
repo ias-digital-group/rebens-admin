@@ -1,33 +1,19 @@
 <template>
   <div class="list-box">
     <div class="page-header">
-      <h2>Parceiros</h2>
+      <h2>Empresas</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Digite aqui o que deseja encontrar"
-          />
+          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i
-            v-else
-            class="bt-clear-search icon-icon-times c-red"
-            @click="searchQuery = ''"
-          ></i>
+          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
         </div>
         <div class="filter" :class="{ active: showFilters }">
-          <a
-            class="bt bt-square bg-white-2 c-light-blue"
-            @click="showFilters = !showFilters"
-          >
+          <a class="bt bt-square bg-white-2 c-light-blue" @click="showFilters = !showFilters">
             <i class="icon-icon-filter"></i>
           </a>
         </div>
-        <base-link
-          to="/partner/new"
-          class="bt bt-square bg-white-2 c-light-blue"
-        >
+        <base-link to="/company/new" class="bt bt-square bg-white-2 c-light-blue">
           <i class="icon-icon-plus"></i>
         </base-link>
       </div>
@@ -55,39 +41,37 @@
       <table v-loading="loading">
         <thead>
           <tr>
-            <th>Nome Parceiro</th>
-            <th>Tipo Parceiro</th>
-            <th>Usuário / Criação</th>
-            <th>Usuário / Atualização</th>
+            <th>Nome / Nome Empresa</th>
+            <th>Responsável / E-mail</th>
+            <th>Cargo / Telefone</th>
+            <th>Tel. Comercial / Celular</th>
             <th style="width:144px;">Ações</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="item in tableData" :key="item.id">
-            <td class="td-flex">
-              <div class="img-holder-square">
-                <img
-                  v-if="item.logo && item.logo !== ''"
-                  :src="item.logo"
-                  :alt="item.name"
-                />
-                <span v-else>{{ item.name[0] }}</span>
-              </div>
-              <span>{{ item.name }}</span>
-            </td>
-            <td>
-              <span>{{ item.type }}</span>
-            </td>
             <td>
               <div class="two-lines">
-                <span>{{ item.createdUserName }}</span>
-                <span class="blue">{{ item.created }}</span>
+                <span>{{ item.type == 1 ? item.operation.title : item.partner.name }}</span>
+                <span class="blue">{{ item.name }}</span>
               </div>
             </td>
             <td>
               <div class="two-lines">
-                <span>{{ item.modifiedUserName }}</span>
-                <span class="blue">{{ item.modified }}</span>
+                <span>{{ item.contact.name }}</span>
+                <span class="blue">{{ item.contact.email }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.contacta.jobTitle }}</span>
+                <span class="blue">{{ item.contact.phone }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.contact.comercialPhone }}</span>
+                <span class="blue">{{ item.contact.cellPhone }}</span>
               </div>
             </td>
             <td>
@@ -112,12 +96,7 @@
                 >
                   <i class="icon-icon-edit"></i>
                 </button>
-                <button
-                  @click="handleDelete(item)"
-                  type="button"
-                  title="apagar"
-                  class="bt c-red"
-                >
+                <button @click="handleDelete(item)" type="button" title="apagar" class="bt c-red">
                   <i class="icon-icon-delete"></i>
                 </button>
               </div>
@@ -136,17 +115,13 @@
         @update-per-page="changePerPage"
       ></pagination>
     </div>
-    <delete-modal
-      @confirmDelete="confirmDelete"
-      :itemName="modal.itemName"
-      :show="modal.visible"
-    ></delete-modal>
+    <delete-modal @confirmDelete="confirmDelete" :itemName="modal.itemName" :show="modal.visible"></delete-modal>
   </div>
 </template>
 <script>
 import { Select, Option } from 'element-ui';
 import { Pagination, DeleteModal } from 'src/components';
-import partnerService from '../../services/Partner/partnerService';
+import companyService from '../../services/Company/companyService';
 import paging from '../../mixins/paging';
 
 export default {
@@ -159,7 +134,7 @@ export default {
   },
   data() {
     return {
-      internalName: 'Parceiro',
+      internalName: 'Empresa',
       sortField: 'name',
       activeFilter: '',
       typeFilter: '',
@@ -169,24 +144,24 @@ export default {
         { code: false, label: 'Inativos' }
       ],
       types: [
-        { code: 1, label: 'Benefícios' },
-        { code: 2, label: 'Cursos Livres' }
+        { code: 1, label: 'Operação' },
+        { code: 2, label: 'Parceiro' }
       ]
     };
   },
   methods: {
     handleEdit(row) {
-      this.$router.push(`/partner/${row.id}/edit/`);
+      this.$router.push(`/company/${row.id}/edit/`);
     },
     toggleActive(row) {
       const self = this;
-      partnerService.toggleActive(row.id).then(data => {
+      companyService.toggleActive(row.id).then(data => {
         if (data.status === 'ok') {
           row.active = data.data;
           self.$notify({
             type: 'success',
-            message: `Parceiro ${
-              row.active ? 'ativado' : 'inativado'
+            message: `Empresa ${
+              row.active ? 'ativada' : 'inativada'
             } com sucesso`
           });
         }
@@ -201,10 +176,11 @@ export default {
         sort: this.formatSortFieldParam,
         active: this.activeFilter,
         type: this.typeFilter,
-        idParent: ''
+        idOperation: '',
+        idPartner: ''
       };
       this.$data.loading = true;
-      partnerService.findAll(request).then(
+      companyService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
@@ -226,7 +202,7 @@ export default {
         this.$validator.validateAll().then(isValid => {
           if (isValid) {
             self.modal.formLoading = true;
-            partnerService.delete(self.modal.model.id).then(
+            companyService.delete(self.modal.model.id).then(
               response => {
                 self.$notify({
                   type: 'success',
