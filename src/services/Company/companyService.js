@@ -19,8 +19,12 @@ export default {
       HTTP.get(
         config.apiEndpoints.companyUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}` +
-            `&sort=${request.sort}&active=${request.active}&idOperation=${request.idOperation}&type=${request.type}` +
-            `&idPartner=${request.idPartner}`
+            `&sort=${request.sort}&active=${
+              request.active === null ? '' : request.active
+            }&idOperation=${
+              request.idOperation === null ? '' : request.idOperation
+            }&type=${request.type === null ? '' : request.type}` +
+            `&idPartner=${request.idPartner === null ? '' : request.idPartner}`
         )
       ).then(
         response => {

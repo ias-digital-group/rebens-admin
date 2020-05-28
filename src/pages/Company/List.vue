@@ -55,7 +55,7 @@
       <table v-loading="loading">
         <thead>
           <tr>
-            <th>Nome / Nome Empresa</th>
+            <th>Nome</th>
             <th>Responsável / E-mail</th>
             <th>Cargo / Telefone</th>
             <th>Tel. Comercial / Celular</th>
@@ -65,12 +65,7 @@
         <tbody>
           <tr v-for="item in tableData" :key="item.id">
             <td>
-              <div class="two-lines">
-                <span>{{
-                  item.type == 22 ? item.operation.title : item.partner.name
-                }}</span>
-                <span class="blue">{{ item.name }}</span>
-              </div>
+              <span>{{ item.name }}</span>
             </td>
             <td>
               <div class="two-lines">
