@@ -4,16 +4,30 @@
       <h2>Empresas</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Digite aqui o que deseja encontrar"
+          />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
+          <i
+            v-else
+            class="bt-clear-search icon-icon-times c-red"
+            @click="searchQuery = ''"
+          ></i>
         </div>
         <div class="filter" :class="{ active: showFilters }">
-          <a class="bt bt-square bg-white-2 c-light-blue" @click="showFilters = !showFilters">
+          <a
+            class="bt bt-square bg-white-2 c-light-blue"
+            @click="showFilters = !showFilters"
+          >
             <i class="icon-icon-filter"></i>
           </a>
         </div>
-        <base-link to="/company/new" class="bt bt-square bg-white-2 c-light-blue">
+        <base-link
+          to="/company/new"
+          class="bt bt-square bg-white-2 c-light-blue"
+        >
           <i class="icon-icon-plus"></i>
         </base-link>
       </div>
@@ -52,7 +66,9 @@
           <tr v-for="item in tableData" :key="item.id">
             <td>
               <div class="two-lines">
-                <span>{{ item.type == 1 ? item.operation.title : item.partner.name }}</span>
+                <span>{{
+                  item.type == 22 ? item.operation.title : item.partner.name
+                }}</span>
                 <span class="blue">{{ item.name }}</span>
               </div>
             </td>
@@ -64,7 +80,7 @@
             </td>
             <td>
               <div class="two-lines">
-                <span>{{ item.contacta.jobTitle }}</span>
+                <span>{{ item.contact.jobTitle }}</span>
                 <span class="blue">{{ item.contact.phone }}</span>
               </div>
             </td>
@@ -96,7 +112,12 @@
                 >
                   <i class="icon-icon-edit"></i>
                 </button>
-                <button @click="handleDelete(item)" type="button" title="apagar" class="bt c-red">
+                <button
+                  @click="handleDelete(item)"
+                  type="button"
+                  title="apagar"
+                  class="bt c-red"
+                >
                   <i class="icon-icon-delete"></i>
                 </button>
               </div>
@@ -115,7 +136,11 @@
         @update-per-page="changePerPage"
       ></pagination>
     </div>
-    <delete-modal @confirmDelete="confirmDelete" :itemName="modal.itemName" :show="modal.visible"></delete-modal>
+    <delete-modal
+      @confirmDelete="confirmDelete"
+      :itemName="modal.itemName"
+      :show="modal.visible"
+    ></delete-modal>
   </div>
 </template>
 <script>

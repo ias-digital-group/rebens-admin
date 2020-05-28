@@ -2,11 +2,11 @@
   <div class="edit-box">
     <div class="page-header">
       <h2>
-        <span v-if="viewAction === 'new'">Cadastro Parceiro</span>
-        <span v-else>Editar Parceiro</span>
+        <span v-if="viewAction === 'new'">Cadastro Empresa</span>
+        <span v-else>Editar Empresa</span>
       </h2>
       <div class="box-actions">
-        <base-link to="/partner" class="bt bt-square bg-white-2 c-light-blue">
+        <base-link to="/company" class="bt bt-square bg-white-2 c-light-blue">
           <i class="icon-icon-arrow-left"></i>
         </base-link>
       </div>
@@ -14,27 +14,56 @@
     <div class="ias-card">
       <form v-loading="submitLoading" @submit.prevent>
         <div class="form-left">
-          <div class="ias-row">
-            <custom-input
-              :required="true"
-              v-model="model.name"
-              type="text"
-              name="name"
-              label="Nome"
-              :error="customErrors.get('name')"
-              maxlength="200"
-            ></custom-input>
+          <div class="ias-row" v-if="viewAction === 'new'">
+            <div class="select-holder">
+              <v-select
+                :options="types"
+                :reduce="op => op.code"
+                :key="model.type"
+                v-model="model.type"
+                placeholder="Tipo de Empresa"
+                :class="{ 'has-error': customErrors.get('type') }"
+              >
+                <span slot="no-options">Nenhum Tipo encontrado</span>
+              </v-select>
+              <label v-if="customErrors.get('type')" class="ias-error">{{
+                customErrors.get('type')
+              }}</label>
+            </div>
           </div>
-          <div class="ias-row">
-            <custom-input
-              :required="true"
-              v-model="model.companyName"
-              type="text"
-              name="companyName"
-              label="Razão Social"
-              :error="customErrors.get('companyName')"
-              maxlength="300"
-            ></custom-input>
+          <div class="ias-row" v-if="model.type === 22 && viewAction === 'new'">
+            <div class="select-holder">
+              <v-select
+                :options="operations"
+                :reduce="op => op.code"
+                :key="model.idItem"
+                v-model="model.idItem"
+                placeholder="Clube"
+                :class="{ 'has-error': customErrors.get('idItem') }"
+              >
+                <span slot="no-options">Nenhum Clube encontrado</span>
+              </v-select>
+              <label v-if="customErrors.get('idItem')" class="ias-error">{{
+                customErrors.get('idItem')
+              }}</label>
+            </div>
+          </div>
+          <div class="ias-row" v-if="model.type === 23 && viewAction === 'new'">
+            <div class="select-holder">
+              <v-select
+                :options="partners"
+                :reduce="op => op.code"
+                :key="model.idItem"
+                v-model="model.idItem"
+                placeholder="Parceiro"
+                :class="{ 'has-error': customErrors.get('idItem') }"
+              >
+                <span slot="no-options">Nenhum Parceiro encontrado</span>
+              </v-select>
+              <label v-if="customErrors.get('idItem')" class="ias-error">{{
+                customErrors.get('idItem')
+              }}</label>
+            </div>
           </div>
           <div class="ias-row">
             <custom-input
@@ -47,44 +76,27 @@
               :error="customErrors.get('cnpj')"
               maxlength="50"
             ></custom-input>
-            <div class="select-holder">
-              <v-select
-                :options="types"
-                :reduce="op => op.code"
-                :key="model.type"
-                v-model="model.type"
-                placeholder="Tipo"
-                :class="{ 'has-error': customErrors.get('type') }"
-              >
-                <span slot="no-options">Nenhum Tipo encontrado</span>
-              </v-select>
-              <label v-if="customErrors.get('type')" class="ias-error">{{
-                customErrors.get('type')
-              }}</label>
-            </div>
-          </div>
-          <ias-address
-            ref="ias-address"
-            :customErrors="customErrors"
-            :address.sync="model.mainAddress"
-          ></ias-address>
-          <div
-            class="ias-row-editor"
-            :class="{ 'has-error': customErrors.get('description') }"
-          >
-            <vue-editor
-              :editorToolbar="customToolbar"
-              v-model="model.description"
-              placeholder="Descrição"
-            />
-            <label v-show="customErrors.get('description')" class="ias-error">{{
-              customErrors.get('description')
-            }}</label>
           </div>
           <div class="ias-row">
             <custom-input
               :required="true"
-              v-model="model.mainContact.name"
+              v-model="model.name"
+              type="text"
+              name="name"
+              label="Razão Social"
+              :error="customErrors.get('name')"
+              maxlength="200"
+            ></custom-input>
+          </div>
+          <ias-address
+            ref="ias-address"
+            :customErrors="customErrors"
+            :address.sync="model.address"
+          ></ias-address>
+          <div class="ias-row">
+            <custom-input
+              :required="true"
+              v-model="model.contact.name"
               type="text"
               name="contactName"
               label="Nome Responsável"
@@ -92,7 +104,7 @@
               maxlength="200"
             ></custom-input>
             <custom-input
-              v-model="model.mainContact.surname"
+              v-model="model.contact.surname"
               type="text"
               name="contactSurname"
               label="Sobrenome Responsável"
@@ -102,7 +114,7 @@
           </div>
           <div class="ias-row">
             <custom-input
-              v-model="model.mainContact.email"
+              v-model="model.contact.email"
               type="email"
               name="contactEmail"
               label="E-mail"
@@ -113,7 +125,7 @@
           <div class="ias-row">
             <custom-input
               :required="true"
-              v-model="model.mainContact.jobTitle"
+              v-model="model.contact.jobTitle"
               type="text"
               name="contactJobTitle"
               label="Cargo"
@@ -121,7 +133,7 @@
               maxlength="400"
             ></custom-input>
             <custom-input
-              v-model="model.mainContact.phone"
+              v-model="model.contact.phone"
               type="text"
               name="contactPhone"
               label="Telefone"
@@ -132,7 +144,7 @@
           </div>
           <div class="ias-row">
             <custom-input
-              v-model="model.mainContact.cellPhone"
+              v-model="model.contact.cellPhone"
               type="text"
               name="contactMobile"
               label="Celular Comercial"
@@ -142,7 +154,7 @@
             ></custom-input>
             <div class="phone-branch">
               <custom-input
-                v-model="model.mainContact.comercialPhone"
+                v-model="model.contact.comercialPhone"
                 type="text"
                 name="contactComercialPhone"
                 label="Telefone Comercial"
@@ -150,7 +162,7 @@
                 :inputMask="['(##) ####-####']"
               ></custom-input>
               <custom-input
-                v-model="model.mainContact.comercialPhoneBranch"
+                v-model="model.contact.comercialPhoneBranch"
                 type="text"
                 name="contactComercialPhoneBranch"
                 label="Ramal"
@@ -174,12 +186,9 @@
           </div>
         </div>
         <div class="form-right">
-          <ias-image-upload
-            @change="onImageChange"
-            img-size="(360x360)"
-            :src="model.logo"
-            :error="customErrors.get('logo')"
-          />
+          <div class="right-img-holder">
+            <img :src="imageRight" :alt="altImageRight" />
+          </div>
           <div class="ias-file-uploader">
             <div class="event-holder">
               Clique aqui para inserir o contrato
@@ -207,17 +216,20 @@
     <success-modal
       :isEdit="viewAction !== 'new'"
       :show="showSuccessModal"
-      link="/partner"
+      link="/company"
     ></success-modal>
   </div>
 </template>
 <script>
 import { SuccessModal, Address, Modal } from 'src/components';
+import companyService from '../../services/Company/companyService';
+import operationService from '../../services/Operation/operationService';
 import partnerService from '../../services/Partner/partnerService';
 import helperService from '../../services/Helper/helperService';
 import fileService from '../../services/File/fileService';
 import config from '../../config';
 import validate from '../../validate';
+import _ from 'lodash';
 
 export default {
   components: {
@@ -232,45 +244,54 @@ export default {
       default: 'Remove'
     }
   },
+  watch: {
+    'model.idItem': function(value) {
+      if (value > 0) {
+        if (this.model.type === 22) {
+          const op = this.operations.filter(o => o.code === value);
+          if (op && op.length > 0) {
+            this.imageRight = op[0].img;
+            this.altImageRight = op[0].label;
+          }
+        } else {
+          const part = this.partners.filter(o => o.code === value);
+          if (part && part.length > 0) {
+            this.imageRight = part[0].img;
+            this.altImageRight = part[0].label;
+          }
+        }
+      }
+    },
+    'model.type': function() {
+      if (this.viewAction === 'new') this.model.idItem = 0;
+    }
+  },
   data() {
     return {
       selectLoading: false,
       submitLoading: false,
       customErrors: new Map(),
-      customToolbar: [],
       showSuccessModal: false,
+      operations: [],
+      partners: [],
       files: [],
-      fileCounter: 0,
-      level: 'root',
-      modal: {
-        visible: false,
-        submitLoading: false,
-        name: '',
-        modelValidations: {
-          name: {
-            required: true,
-            confirmed: 'nome',
-            max: 200
-          }
-        }
-      },
       types: [
-        { code: 1, label: 'Benefícios' },
-        { code: 2, label: 'Cursos Livres' }
+        { code: 22, label: 'Clube' },
+        { code: 23, label: 'Parceiro' }
       ],
-      file: Object,
+      fileCounter: 0,
+      imageRight: '/img/img-holder.png',
+      altImageRight: '',
       model: {
         id: 0,
         name: '',
-        companyName: '',
         cnpj: null,
         active: true,
-        logo: '',
-        description: '',
         type: 0,
-        idMainAddress: null,
-        idMainContact: null,
-        mainContact: {
+        idItem: 0,
+        idAddress: 0,
+        idContact: 0,
+        contact: {
           id: 0,
           name: '',
           surname: '',
@@ -281,7 +302,7 @@ export default {
           comercialPhone: null,
           comercialPhoneBranch: null
         },
-        mainAddress: {
+        address: {
           id: 0,
           name: '',
           street: '',
@@ -300,7 +321,7 @@ export default {
   },
   computed: {
     viewAction() {
-      return this.$route.name == 'edit_partner' ? 'edit' : 'new';
+      return this.$route.name == 'edit_company' ? 'edit' : 'new';
     }
   },
   methods: {
@@ -309,98 +330,56 @@ export default {
       self.customErrors = new Map();
       if (!self.model.name || self.model.name === '')
         self.customErrors.set('name', 'Campo obrigatório');
-      if (!self.model.type || self.model.type === '')
+      if (!self.model.type || self.model.type === '' || self.model.type === 0)
         self.customErrors.set('type', 'Campo obrigatório');
-      if (!self.model.companyName || self.model.companyName === '')
-        self.customErrors.set('companyName', 'Campo obrigatório');
+      if (
+        !self.model.idItem ||
+        self.model.idItem === '' ||
+        self.model.idItem === 0
+      )
+        self.customErrors.set('idItem', 'Campo obrigatório');
       if (!self.model.cnpj || self.model.cnpj === '')
         self.customErrors.set('cnpj', 'Campo obrigatório');
       else if (!validate.validateCnpj(self.model.cnpj))
         self.customErrors.set('cnpj', 'CNPJ inválido');
-      if (!self.model.description || self.model.description === '')
-        self.customErrors.set('description', 'Campo obrigatório');
-      if (!self.image && !self.model.logo)
-        self.customErrors.set('logo', 'Campo obrigatório');
-      if (!self.model.mainAddress.name || self.model.mainAddress.name === '')
+      if (!self.model.address.name || self.model.address.name === '')
         self.customErrors.set('addrName', 'Campo obrigatório');
-      if (
-        !self.model.mainAddress.zipcode ||
-        self.model.mainAddress.zipcode === ''
-      )
+      if (!self.model.address.zipcode || self.model.address.zipcode === '')
         self.customErrors.set('zipcode', 'Campo obrigatório');
-      if (
-        !self.model.mainAddress.street ||
-        self.model.mainAddress.street === ''
-      )
+      if (!self.model.address.street || self.model.address.street === '')
         self.customErrors.set('street', 'Campo obrigatório');
-      if (
-        !self.model.mainAddress.number ||
-        self.model.mainAddress.number === ''
-      )
+      if (!self.model.address.number || self.model.address.number === '')
         self.customErrors.set('number', 'Campo obrigatório');
       if (
-        !self.model.mainAddress.neighborhood ||
-        self.model.mainAddress.neighborhood === ''
+        !self.model.address.neighborhood ||
+        self.model.address.neighborhood === ''
       )
         self.customErrors.set('neighborhood', 'Campo obrigatório');
-      if (!self.model.mainAddress.city || self.model.mainAddress.city === '')
+      if (!self.model.address.city || self.model.address.city === '')
         self.customErrors.set('city', 'Campo obrigatório');
-      if (!self.model.mainAddress.state || self.model.mainAddress.state === '')
+      if (!self.model.address.state || self.model.address.state === '')
         self.customErrors.set('state', 'Campo obrigatório');
 
-      if (!self.model.mainContact.name || self.model.mainContact.name === '')
+      if (!self.model.contact.name || self.model.contact.name === '')
         self.customErrors.set('contactName', 'Campo obrigatório');
-      if (
-        !self.model.mainContact.surname ||
-        self.model.mainContact.surname === ''
-      )
+      if (!self.model.contact.surname || self.model.contact.surname === '')
         self.customErrors.set('contactSurname', 'Campo obrigatório');
-      if (!self.model.mainContact.email || self.model.mainContact.email === '')
+      if (!self.model.contact.email || self.model.contact.email === '')
         self.customErrors.set('contactEmail', 'Campo obrigatório');
-      else if (!validate.validateEmail(self.model.mainContact.email))
+      else if (!validate.validateEmail(self.model.contact.email))
         self.customErrors.set('contactEmail', 'E-mail inválido');
-      if (
-        !self.model.mainContact.jobTitle ||
-        self.model.mainContact.jobTitle === ''
-      )
+      if (!self.model.contact.jobTitle || self.model.contact.jobTitle === '')
         self.customErrors.set('contactJobTitle', 'Campo obrigatório');
 
       if (self.customErrors.size === 0) {
         self.submitLoading = true;
-        if (self.image) {
-          self.uploadImage(self);
-        } else if (self.model.logo) {
-          self.savePartner(self);
-        }
+        self.saveCompany(self);
       }
     },
-    uploadImage(self) {
-      helperService.uploadImage(self.image).then(
-        response => {
-          if (response.status != 200) {
-            self.$notify({
-              type: 'warning',
-              message: response.message
-            });
-            self.submitLoading = false;
-            return;
-          }
-          self.model.logo = response.data.url;
-          self.savePartner(self);
-        },
-        err => {
-          self.$notify({
-            type: 'danger',
-            message: err.message
-          });
-          self.submitLoading = false;
-        }
-      );
-    },
-    async savePartner(vm) {
+    async saveCompany(vm) {
       vm = vm ? vm : this;
       if (vm.viewAction == 'new') {
-        partnerService.create(vm.model).then(
+        companyService.create(vm.model).then(
           async res => {
             vm.id = res.id;
             if (vm.files.length > 0) {
@@ -413,15 +392,29 @@ export default {
             vm.showSuccessModal = true;
           },
           err => {
-            vm.$notify({
-              type: 'danger',
-              message: err.message
-            });
+            if (err.response.status === 400 && err.response.data) {
+              if (err.response.data.title) {
+                vm.$notify({
+                  type: 'danger',
+                  message: err.response.data.title
+                });
+              } else {
+                vm.$notify({
+                  type: 'danger',
+                  message: err.response.data.message
+                });
+              }
+            } else {
+              vm.$notify({
+                type: 'danger',
+                message: err.message
+              });
+            }
             vm.submitLoading = false;
           }
         );
       } else {
-        partnerService.update(vm.model).then(
+        companyService.update(vm.model).then(
           async () => {
             let newFiles = vm.files.filter(f => f.id === 0);
             if (newFiles.length > 0) {
@@ -445,14 +438,15 @@ export default {
     fetchData() {
       const self = this;
       self.customToolbar = config.customToolbar;
+      self.loadItems();
       if (this.viewAction == 'edit') {
         this.submitLoading = true;
-        partnerService.get(self.id).then(
+        companyService.get(self.id).then(
           response => {
             self.model = response.data;
             self.loadFiles();
-            if (!self.model.mainContact) {
-              self.model.mainContact = {
+            if (!self.model.contact) {
+              self.model.contact = {
                 id: 0,
                 name: '',
                 surname: '',
@@ -464,8 +458,8 @@ export default {
                 comercialPhoneBranch: null
               };
             }
-            if (!self.model.mainAddress) {
-              self.model.mainAddress = {
+            if (!self.model.address) {
+              self.model.address = {
                 id: 0,
                 name: '',
                 street: '',
@@ -494,7 +488,7 @@ export default {
       }
       const self = this;
       self.submitLoading = true;
-      helperService.uploadFile(event.target.files[0], 'partnerFile').then(
+      helperService.uploadFile(event.target.files[0], 'companyFile').then(
         response => {
           if (response.status != 200) {
             self.$notify({
@@ -518,7 +512,7 @@ export default {
             fileUrl: response.data.url,
             fileName: response.data.fileName,
             idItem: self.model.id,
-            itemType: 23,
+            itemType: 31,
             idx: idx
           });
           document.getElementById('fileInput').value = '';
@@ -532,9 +526,6 @@ export default {
           self.submitLoading = false;
         }
       );
-    },
-    onImageChange(file) {
-      this.image = file;
     },
     removeFile(item) {
       const self = this;
@@ -564,7 +555,7 @@ export default {
     loadFiles() {
       const self = this;
       self.submitLoading = true;
-      fileService.findAll(self.model.id, 23).then(
+      fileService.findAll(self.model.id, 31).then(
         response => {
           if (response && response.data) {
             self.files = response.data;
@@ -582,6 +573,76 @@ export default {
           self.submitLoading = false;
         }
       );
+    },
+    loadItems() {
+      const self = this;
+
+      operationService
+        .findAll({
+          page: 0,
+          pageItems: 100,
+          searchWord: '',
+          sort: 'name ASC',
+          active: true
+        })
+        .then(
+          response => {
+            self.operations.push({ code: 0, label: 'selecione' });
+            _.each(response.data, function(el) {
+              self.operations.push({
+                code: el.id,
+                label: el.title,
+                img: el.logo
+              });
+
+              if (
+                self.viewAction === 'edit' &&
+                self.model.type === 22 &&
+                el.id === self.model.idItem
+              ) {
+                self.imageRight = el.logo;
+                self.altImageRight = el.title;
+              }
+            });
+            self.selectLoading = false;
+          },
+          () => {
+            self.selectLoading = false;
+          }
+        );
+
+      partnerService
+        .findAll({
+          page: 0,
+          pageItems: 100,
+          searchWord: '',
+          sort: 'name ASC',
+          active: true,
+          type: ''
+        })
+        .then(
+          response => {
+            self.partners.push({ code: 0, label: 'selecione' });
+            _.each(response.data, function(el) {
+              self.partners.push({
+                code: el.id,
+                label: el.name,
+                img: el.logo
+              });
+              if (
+                self.viewAction === 'edit' &&
+                self.model.type === 23 &&
+                el.id === self.model.idItem
+              ) {
+                self.imageRight = el.logo;
+                self.altImageRight = el.name;
+              }
+            });
+          },
+          () => {
+            self.$data.loading = false;
+          }
+        );
     }
   },
   created() {
