@@ -1,7 +1,7 @@
 <template>
   <div class="list-box">
     <div class="page-header">
-      <h2>Empresas</h2>
+      <h2>Contatos</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
           <input
@@ -25,7 +25,7 @@
           </a>
         </div>
         <base-link
-          to="/company/new"
+          to="/contact/new"
           class="bt bt-square bg-white-2 c-light-blue"
         >
           <i class="icon-icon-plus"></i>
@@ -55,8 +55,8 @@
       <table v-loading="loading">
         <thead>
           <tr>
-            <th>Nome</th>
             <th>Responsável / E-mail</th>
+            <th>Endereço</th>
             <th>Cargo / Telefone</th>
             <th>Tel. Comercial / Celular</th>
             <th style="width:144px;">Ações</th>
@@ -65,24 +65,24 @@
         <tbody>
           <tr v-for="item in tableData" :key="item.id">
             <td>
-              <span>{{ item.name }}</span>
+              <div class="two-lines">
+                <span>{{ item.name }}</span>
+                <span class="blue">{{ item.email }}</span>
+              </div>
+            </td>
+            <td>
+              <span>{{ item.address ? item.address.name : ' - ' }}</span>
             </td>
             <td>
               <div class="two-lines">
-                <span>{{ item.contact.name }}</span>
-                <span class="blue">{{ item.contact.email }}</span>
+                <span>{{ item.jobTitle }}</span>
+                <span class="blue">{{ item.phone }}</span>
               </div>
             </td>
             <td>
               <div class="two-lines">
-                <span>{{ item.contact.jobTitle }}</span>
-                <span class="blue">{{ item.contact.phone }}</span>
-              </div>
-            </td>
-            <td>
-              <div class="two-lines">
-                <span>{{ item.contact.comercialPhone }}</span>
-                <span class="blue">{{ item.contact.cellPhone }}</span>
+                <span>{{ item.comercialPhone }}</span>
+                <span class="blue">{{ item.cellPhone }}</span>
               </div>
             </td>
             <td>
@@ -141,7 +141,7 @@
 <script>
 import { Select, Option } from 'element-ui';
 import { Pagination, DeleteModal } from 'src/components';
-import companyService from '../../services/Company/companyService';
+import contactService from '../../services/Contact/contactService';
 import paging from '../../mixins/paging';
 
 export default {
@@ -154,7 +154,7 @@ export default {
   },
   data() {
     return {
-      internalName: 'Empresa',
+      internalName: 'Contato',
       sortField: 'name',
       activeFilter: '',
       typeFilter: '',
@@ -165,23 +165,24 @@ export default {
       ],
       types: [
         { code: 22, label: 'Operação' },
-        { code: 23, label: 'Parceiro' }
+        { code: 23, label: 'Parceiro' },
+        { code: 31, label: 'Empresa' }
       ]
     };
   },
   methods: {
     handleEdit(row) {
-      this.$router.push(`/company/${row.id}/edit/`);
+      this.$router.push(`/contact/${row.id}/edit/`);
     },
     toggleActive(row) {
       const self = this;
-      companyService.toggleActive(row.id).then(data => {
+      contactService.toggleActive(row.id).then(data => {
         if (data.status === 'ok') {
           row.active = data.data;
           self.$notify({
             type: 'success',
-            message: `Empresa ${
-              row.active ? 'ativada' : 'inativada'
+            message: `Contato ${
+              row.active ? 'ativado' : 'inativado'
             } com sucesso`
           });
         }
@@ -196,11 +197,10 @@ export default {
         sort: this.formatSortFieldParam,
         active: this.activeFilter,
         type: this.typeFilter,
-        idOperation: '',
-        idPartner: ''
+        idItem: ''
       };
       this.$data.loading = true;
-      companyService.findAll(request).then(
+      contactService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
@@ -233,7 +233,7 @@ export default {
         this.$validator.validateAll().then(isValid => {
           if (isValid) {
             self.modal.formLoading = true;
-            companyService.delete(self.modal.model.id).then(
+            contactService.delete(self.modal.model.id).then(
               response => {
                 self.$notify({
                   type: 'success',

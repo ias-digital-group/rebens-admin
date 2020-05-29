@@ -156,6 +156,14 @@ export default {
           subitens: []
         },
         {
+          name: 'Contatos',
+          path: '/contact',
+          active: false,
+          roles: 'master,administratorRebens,publisherRebens',
+          needModule: '',
+          subitens: []
+        },
+        {
           name: 'Operações',
           path: '/operations',
           active: false,

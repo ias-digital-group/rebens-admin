@@ -31,6 +31,9 @@ const PartnersEdit = () => import('src/pages/Partner/Edit.vue');
 const CompanyList = () => import('src/pages/Company/List.vue');
 const CompanyEdit = () => import('src/pages/Company/Edit.vue');
 
+const ContactList = () => import('src/pages/Contact/List.vue');
+const ContactEdit = () => import('src/pages/Contact/Edit.vue');
+
 const Login = () => import('src/pages/Login/Login.vue');
 const PasswordRecovery = () => import('src/pages/Login/PasswordRecovery.vue');
 const Validate = () => import('src/pages/Validate/Validate.vue');
@@ -367,6 +370,49 @@ let usersPages = {
           'promoter'
         ],
         title: i18n.t('pages.users.title')
+      }
+    }
+  ]
+};
+
+let contactPages = {
+  path: '/contact',
+  component: MainLayout,
+  meta: {
+    requiresAuth: true,
+    roles: ['master', 'publisherRebens', 'administratorRebens'],
+    title: 'Contato'
+  },
+  children: [
+    {
+      path: '',
+      name: 'contact',
+      component: ContactList,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        title: 'Contato'
+      }
+    },
+    {
+      path: 'new',
+      name: `new_contact`,
+      component: ContactEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        title: 'Contato'
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_contact',
+      props: true,
+      component: ContactEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        title: 'Contato'
       }
     }
   ]
@@ -1691,6 +1737,7 @@ const routes = [
   partnerPages,
   usersPages,
   companyPages,
+  contactPages,
   accountPages,
   operationsPages,
   benefitsPages,
