@@ -182,11 +182,24 @@ export default {
             vm.showSuccessModal = true;
           },
           err => {
-            vm.$notify({
-              type: 'primary',
-              message: err.message,
-              icon: 'tim-icons icon-bell-55'
-            });
+            if (err.response.status === 400 && err.response.data) {
+              if (err.response.data.title) {
+                vm.$notify({
+                  type: 'danger',
+                  message: err.response.data.title
+                });
+              } else {
+                vm.$notify({
+                  type: 'danger',
+                  message: err.response.data.message
+                });
+              }
+            } else {
+              vm.$notify({
+                type: 'danger',
+                message: err.message
+              });
+            }
             vm.submitLoading = false;
           }
         );

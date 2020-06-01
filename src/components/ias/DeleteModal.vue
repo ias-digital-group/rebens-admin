@@ -75,6 +75,7 @@ export default {
   methods: {
     deleteItem() {
       this.$emit('confirmDelete', true);
+      this.confirm = '';
     },
     closeModal() {
       this.$emit('confirmDelete', false);

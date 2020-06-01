@@ -2,11 +2,11 @@
   <div class="edit-box">
     <div class="page-header">
       <h2>
-        <span v-if="viewAction === 'new'">Cadastro Empresa</span>
-        <span v-else>Editar Empresa</span>
+        <span v-if="viewAction === 'new'">Cadastro Contato</span>
+        <span v-else>Editar Contato</span>
       </h2>
       <div class="box-actions">
-        <base-link to="/company" class="bt bt-square bg-white-2 c-light-blue">
+        <base-link to="/contact" class="bt bt-square bg-white-2 c-light-blue">
           <i class="icon-icon-arrow-left"></i>
         </base-link>
       </div>
@@ -21,14 +21,14 @@
                 :reduce="op => op.code"
                 :key="model.type"
                 v-model="model.type"
-                placeholder="Tipo de Empresa"
+                placeholder="Tipo de Contato"
                 :class="{ 'has-error': customErrors.get('type') }"
               >
                 <span slot="no-options">Nenhum Tipo encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('type')" class="ias-error">{{
-                customErrors.get('type')
-              }}</label>
+              <label v-if="customErrors.get('type')" class="ias-error">
+                {{ customErrors.get('type') }}
+              </label>
             </div>
           </div>
           <div class="ias-row" v-if="model.type === 22 && viewAction === 'new'">
@@ -43,9 +43,9 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('idItem')" class="ias-error">{{
-                customErrors.get('idItem')
-              }}</label>
+              <label v-if="customErrors.get('idItem')" class="ias-error">
+                {{ customErrors.get('idItem') }}
+              </label>
             </div>
           </div>
           <div class="ias-row" v-if="model.type === 23 && viewAction === 'new'">
@@ -60,61 +60,50 @@
               >
                 <span slot="no-options">Nenhum Parceiro encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('idItem')" class="ias-error">{{
-                customErrors.get('idItem')
-              }}</label>
+              <label v-if="customErrors.get('idItem')" class="ias-error">
+                {{ customErrors.get('idItem') }}
+              </label>
             </div>
           </div>
-          <div class="ias-row">
-            <custom-input
-              :required="true"
-              v-model="model.cnpj"
-              type="text"
-              name="cnpj"
-              label="CNPJ"
-              :inputMask="['##.###.###/####-##']"
-              :error="customErrors.get('cnpj')"
-              maxlength="50"
-            ></custom-input>
+          <div class="ias-row" v-if="model.type === 31 && viewAction === 'new'">
+            <div class="select-holder">
+              <v-select
+                :options="companies"
+                :reduce="op => op.code"
+                :key="model.idItem"
+                v-model="model.idItem"
+                placeholder="Empresa"
+                :class="{ 'has-error': customErrors.get('idItem') }"
+              >
+                <span slot="no-options">Nenhuma Empresa encontrada</span>
+              </v-select>
+              <label v-if="customErrors.get('idItem')" class="ias-error">
+                {{ customErrors.get('idItem') }}
+              </label>
+            </div>
           </div>
           <div class="ias-row">
             <custom-input
               :required="true"
               v-model="model.name"
               type="text"
-              name="name"
-              label="Razão Social"
-              :error="customErrors.get('name')"
-              maxlength="200"
-            ></custom-input>
-          </div>
-          <ias-address
-            ref="ias-address"
-            :customErrors="customErrors"
-            :address.sync="model.address"
-          ></ias-address>
-          <div class="ias-row">
-            <custom-input
-              :required="true"
-              v-model="model.contact.name"
-              type="text"
               name="contactName"
-              label="Nome Responsável"
+              label="Nome"
               :error="customErrors.get('contactName')"
               maxlength="200"
             ></custom-input>
             <custom-input
-              v-model="model.contact.surname"
+              v-model="model.surname"
               type="text"
               name="contactSurname"
-              label="Sobrenome Responsável"
+              label="Sobrenome"
               :error="customErrors.get('contactSurname')"
               maxlength="200"
             ></custom-input>
           </div>
           <div class="ias-row">
             <custom-input
-              v-model="model.contact.email"
+              v-model="model.email"
               type="email"
               name="contactEmail"
               label="E-mail"
@@ -125,7 +114,7 @@
           <div class="ias-row">
             <custom-input
               :required="true"
-              v-model="model.contact.jobTitle"
+              v-model="model.jobTitle"
               type="text"
               name="contactJobTitle"
               label="Cargo"
@@ -133,7 +122,7 @@
               maxlength="400"
             ></custom-input>
             <custom-input
-              v-model="model.contact.phone"
+              v-model="model.phone"
               type="text"
               name="contactPhone"
               label="Telefone"
@@ -144,7 +133,7 @@
           </div>
           <div class="ias-row">
             <custom-input
-              v-model="model.contact.cellPhone"
+              v-model="model.cellPhone"
               type="text"
               name="contactMobile"
               label="Celular Comercial"
@@ -154,7 +143,7 @@
             ></custom-input>
             <div class="phone-branch">
               <custom-input
-                v-model="model.contact.comercialPhone"
+                v-model="model.comercialPhone"
                 type="text"
                 name="contactComercialPhone"
                 label="Telefone Comercial"
@@ -162,7 +151,7 @@
                 :inputMask="['(##) ####-####']"
               ></custom-input>
               <custom-input
-                v-model="model.contact.comercialPhoneBranch"
+                v-model="model.comercialPhoneBranch"
                 type="text"
                 name="contactComercialPhoneBranch"
                 label="Ramal"
@@ -185,48 +174,22 @@
             <div class="div-spacer"></div>
           </div>
         </div>
-        <div class="form-right">
-          <div class="right-img-holder">
-            <img :src="imageRight" :alt="altImageRight" />
-          </div>
-          <div class="ias-file-uploader">
-            <div class="event-holder">
-              Clique aqui para inserir o contrato
-              <input
-                accept="*"
-                @change="handleFileSelect"
-                type="file"
-                class="valid"
-                :multiple="false"
-                aria-invalid="false"
-                ref="file"
-                id="fileInput"
-              />
-            </div>
-            <div class="files-holder">
-              <div class="item" v-for="item in files" :key="item.idx">
-                <i class="icon-icon-times" @click="removeFile(item)"></i>
-                <a target="_blank" :href="item.fileURL">{{ item.name }}</a>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div class="form-right"></div>
       </form>
     </div>
     <success-modal
       :isEdit="viewAction !== 'new'"
       :show="showSuccessModal"
-      link="/company"
+      link="/contact"
     ></success-modal>
   </div>
 </template>
 <script>
-import { SuccessModal, Address, Modal } from 'src/components';
+import { SuccessModal, Modal } from 'src/components';
 import companyService from '../../services/Company/companyService';
 import operationService from '../../services/Operation/operationService';
 import partnerService from '../../services/Partner/partnerService';
-import helperService from '../../services/Helper/helperService';
-import fileService from '../../services/File/fileService';
+import contactService from '../../services/Contact/contactService';
 import config from '../../config';
 import validate from '../../validate';
 import _ from 'lodash';
@@ -234,7 +197,6 @@ import _ from 'lodash';
 export default {
   components: {
     SuccessModal,
-    [Address.name]: Address,
     Modal
   },
   props: {
@@ -253,8 +215,14 @@ export default {
             this.imageRight = op[0].img;
             this.altImageRight = op[0].label;
           }
-        } else {
+        } else if (this.model.type === 23) {
           const part = this.partners.filter(o => o.code === value);
+          if (part && part.length > 0) {
+            this.imageRight = part[0].img;
+            this.altImageRight = part[0].label;
+          }
+        } else {
+          const part = this.companies.filter(o => o.code === value);
           if (part && part.length > 0) {
             this.imageRight = part[0].img;
             this.altImageRight = part[0].label;
@@ -274,62 +242,37 @@ export default {
       showSuccessModal: false,
       operations: [],
       partners: [],
-      files: [],
+      companies: [],
       types: [
         { code: 22, label: 'Clube' },
-        { code: 23, label: 'Parceiro' }
+        { code: 23, label: 'Parceiro' },
+        { code: 31, label: 'Empresa' }
       ],
-      fileCounter: 0,
-      imageRight: '/img/img-holder.png',
-      altImageRight: '',
       model: {
         id: 0,
         name: '',
-        cnpj: null,
+        surname: '',
+        email: '',
+        jobTitle: '',
+        phone: null,
+        cellPhone: null,
+        comercialPhone: null,
+        comercialPhoneBranch: null,
         active: true,
         type: 0,
-        idItem: 0,
-        idAddress: 0,
-        idContact: 0,
-        contact: {
-          id: 0,
-          name: '',
-          surname: '',
-          email: '',
-          jobTitle: '',
-          phone: null,
-          cellPhone: null,
-          comercialPhone: null,
-          comercialPhoneBranch: null
-        },
-        address: {
-          id: 0,
-          name: '',
-          street: '',
-          number: '',
-          complement: null,
-          neighborhood: '',
-          city: '',
-          state: '',
-          country: 'Brasil',
-          zipcode: '',
-          latitude: null,
-          longitude: null
-        }
+        idItem: 0
       }
     };
   },
   computed: {
     viewAction() {
-      return this.$route.name == 'edit_company' ? 'edit' : 'new';
+      return this.$route.name == 'edit_contact' ? 'edit' : 'new';
     }
   },
   methods: {
     validate() {
       const self = this;
       self.customErrors = new Map();
-      if (!self.model.name || self.model.name === '')
-        self.customErrors.set('name', 'Campo obrigatório');
       if (!self.model.type || self.model.type === '' || self.model.type === 0)
         self.customErrors.set('type', 'Campo obrigatório');
       if (
@@ -338,56 +281,29 @@ export default {
         self.model.idItem === 0
       )
         self.customErrors.set('idItem', 'Campo obrigatório');
-      if (!self.model.cnpj || self.model.cnpj === '')
-        self.customErrors.set('cnpj', 'Campo obrigatório');
-      else if (!validate.validateCnpj(self.model.cnpj))
-        self.customErrors.set('cnpj', 'CNPJ inválido');
-      if (!self.model.address.name || self.model.address.name === '')
-        self.customErrors.set('addrName', 'Campo obrigatório');
-      if (!self.model.address.zipcode || self.model.address.zipcode === '')
-        self.customErrors.set('zipcode', 'Campo obrigatório');
-      if (!self.model.address.street || self.model.address.street === '')
-        self.customErrors.set('street', 'Campo obrigatório');
-      if (!self.model.address.number || self.model.address.number === '')
-        self.customErrors.set('number', 'Campo obrigatório');
-      if (
-        !self.model.address.neighborhood ||
-        self.model.address.neighborhood === ''
-      )
-        self.customErrors.set('neighborhood', 'Campo obrigatório');
-      if (!self.model.address.city || self.model.address.city === '')
-        self.customErrors.set('city', 'Campo obrigatório');
-      if (!self.model.address.state || self.model.address.state === '')
-        self.customErrors.set('state', 'Campo obrigatório');
 
-      if (!self.model.contact.name || self.model.contact.name === '')
+      if (!self.model.name || self.model.name === '')
         self.customErrors.set('contactName', 'Campo obrigatório');
-      if (!self.model.contact.surname || self.model.contact.surname === '')
+      if (!self.model.surname || self.model.surname === '')
         self.customErrors.set('contactSurname', 'Campo obrigatório');
-      if (!self.model.contact.email || self.model.contact.email === '')
+      if (!self.model.email || self.model.email === '')
         self.customErrors.set('contactEmail', 'Campo obrigatório');
-      else if (!validate.validateEmail(self.model.contact.email))
+      else if (!validate.validateEmail(self.model.email))
         self.customErrors.set('contactEmail', 'E-mail inválido');
-      if (!self.model.contact.jobTitle || self.model.contact.jobTitle === '')
+      if (!self.model.jobTitle || self.model.jobTitle === '')
         self.customErrors.set('contactJobTitle', 'Campo obrigatório');
 
       if (self.customErrors.size === 0) {
         self.submitLoading = true;
-        self.saveCompany(self);
+        self.saveContact(self);
       }
     },
-    async saveCompany(vm) {
+    async saveContact(vm) {
       vm = vm ? vm : this;
       if (vm.viewAction == 'new') {
-        companyService.create(vm.model).then(
+        contactService.create(vm.model).then(
           async res => {
             vm.id = res.id;
-            if (vm.files.length > 0) {
-              for (let i = 0; i < vm.files.length; i++) {
-                vm.files[i].idItem = vm.id;
-                await fileService.create(vm.files[i]);
-              }
-            }
             vm.submitLoading = false;
             vm.showSuccessModal = true;
           },
@@ -414,22 +330,30 @@ export default {
           }
         );
       } else {
-        companyService.update(vm.model).then(
+        contactService.update(vm.model).then(
           async () => {
-            let newFiles = vm.files.filter(f => f.id === 0);
-            if (newFiles.length > 0) {
-              for (let i = 0; i < newFiles.length; i++) {
-                await fileService.create(newFiles[i]);
-              }
-            }
             vm.submitLoading = false;
             vm.showSuccessModal = true;
           },
           err => {
-            vm.$notify({
-              type: 'danger',
-              message: err.message
-            });
+            if (err.response.status === 400 && err.response.data) {
+              if (err.response.data.title) {
+                vm.$notify({
+                  type: 'danger',
+                  message: err.response.data.title
+                });
+              } else {
+                vm.$notify({
+                  type: 'danger',
+                  message: err.response.data.message
+                });
+              }
+            } else {
+              vm.$notify({
+                type: 'danger',
+                message: err.message
+              });
+            }
             vm.submitLoading = false;
           }
         );
@@ -441,39 +365,9 @@ export default {
       self.loadItems();
       if (this.viewAction == 'edit') {
         this.submitLoading = true;
-        companyService.get(self.id).then(
+        contactService.get(self.id).then(
           response => {
             self.model = response.data;
-            self.loadFiles();
-            if (!self.model.contact) {
-              self.model.contact = {
-                id: 0,
-                name: '',
-                surname: '',
-                email: '',
-                jobTitle: '',
-                phone: null,
-                cellPhone: null,
-                comercialPhone: null,
-                comercialPhoneBranch: null
-              };
-            }
-            if (!self.model.address) {
-              self.model.address = {
-                id: 0,
-                name: '',
-                street: '',
-                number: '',
-                complement: null,
-                neighborhood: '',
-                city: '',
-                state: '',
-                country: 'Brasil',
-                zipcode: '',
-                latitude: null,
-                longitude: null
-              };
-            }
             self.submitLoading = false;
           },
           () => {
@@ -481,98 +375,6 @@ export default {
           }
         );
       }
-    },
-    handleFileSelect(event) {
-      if (event.target.files.length == 0) {
-        return;
-      }
-      const self = this;
-      self.submitLoading = true;
-      helperService.uploadFile(event.target.files[0], 'companyFile').then(
-        response => {
-          if (response.status != 200) {
-            self.$notify({
-              type: 'warning',
-              message: response.message
-            });
-            self.submitLoading = false;
-            return;
-          }
-          self.fileCounter++;
-          let idx = 0;
-          if (self.files.length > 0) {
-            self.files.map(obj => {
-              if (obj.idx > idx) idx = obj.idx;
-            });
-            idx++;
-          }
-          self.files.push({
-            id: 0,
-            name: `Contrato ${self.fileCounter}`,
-            fileUrl: response.data.url,
-            fileName: response.data.fileName,
-            idItem: self.model.id,
-            itemType: 31,
-            idx: idx
-          });
-          document.getElementById('fileInput').value = '';
-          self.submitLoading = false;
-        },
-        err => {
-          self.$notify({
-            type: 'danger',
-            message: err.message
-          });
-          self.submitLoading = false;
-        }
-      );
-    },
-    removeFile(item) {
-      const self = this;
-      if (item.id === 0) {
-        for (let i = 0; i < self.files.length; i++) {
-          if (self.files[i].idx === item.idx) self.files.splice(i, 1);
-        }
-      } else {
-        self.submitLoading = true;
-        fileService.delete(item.id).then(
-          () => {
-            for (let i = 0; i < self.files.length; i++) {
-              if (self.files[i].id === item.id) self.files.splice(i, 1);
-            }
-            self.submitLoading = false;
-          },
-          err => {
-            self.$notify({
-              type: 'danger',
-              message: err.message
-            });
-            self.submitLoading = false;
-          }
-        );
-      }
-    },
-    loadFiles() {
-      const self = this;
-      self.submitLoading = true;
-      fileService.findAll(self.model.id, 31).then(
-        response => {
-          if (response && response.data) {
-            self.files = response.data;
-            for (let i = 0; i < self.files.length; i++) {
-              self.files[0].idx = i + 1;
-            }
-          }
-          self.submitLoading = false;
-        },
-        err => {
-          self.$notify({
-            type: 'danger',
-            message: err.message
-          });
-          self.submitLoading = false;
-        }
-      );
     },
     loadItems() {
       const self = this;
@@ -637,6 +439,33 @@ export default {
                 self.imageRight = el.logo;
                 self.altImageRight = el.name;
               }
+            });
+          },
+          () => {
+            self.$data.loading = false;
+          }
+        );
+
+      companyService
+        .findAll({
+          page: 0,
+          pageItems: 100,
+          searchWord: '',
+          sort: 'name ASC',
+          active: true,
+          type: '',
+          idItem: '',
+          idOperation: '',
+          idPartner: ''
+        })
+        .then(
+          response => {
+            self.companies.push({ code: 0, label: 'selecione' });
+            _.each(response.data, function(el) {
+              self.companies.push({
+                code: el.id,
+                label: el.name
+              });
             });
           },
           () => {
