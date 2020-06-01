@@ -14,7 +14,7 @@
     <div class="ias-card">
       <form v-loading="submitLoading" @submit.prevent>
         <div class="form-left">
-          <div class="ias-row" v-if="viewAction === 'new'">
+          <div class="ias-row">
             <div class="select-holder">
               <v-select
                 :options="types"
@@ -22,13 +22,16 @@
                 :key="model.type"
                 v-model="model.type"
                 placeholder="Tipo de Empresa"
+                :disabled="viewAction !== 'new'"
                 :class="{ 'has-error': customErrors.get('type') }"
               >
                 <span slot="no-options">Nenhum Tipo encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('type')" class="ias-error">{{
+              <label v-if="customErrors.get('type')" class="ias-error">
+                {{
                 customErrors.get('type')
-              }}</label>
+                }}
+              </label>
             </div>
           </div>
           <div class="ias-row" v-if="model.type === 22 && viewAction === 'new'">
@@ -43,9 +46,11 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('idItem')" class="ias-error">{{
+              <label v-if="customErrors.get('idItem')" class="ias-error">
+                {{
                 customErrors.get('idItem')
-              }}</label>
+                }}
+              </label>
             </div>
           </div>
           <div class="ias-row" v-if="model.type === 23 && viewAction === 'new'">
@@ -60,9 +65,11 @@
               >
                 <span slot="no-options">Nenhum Parceiro encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('idItem')" class="ias-error">{{
+              <label v-if="customErrors.get('idItem')" class="ias-error">
+                {{
                 customErrors.get('idItem')
-              }}</label>
+                }}
+              </label>
             </div>
           </div>
           <div class="ias-row">
@@ -88,11 +95,7 @@
               maxlength="200"
             ></custom-input>
           </div>
-          <ias-address
-            ref="ias-address"
-            :customErrors="customErrors"
-            :address.sync="model.address"
-          ></ias-address>
+          <ias-address ref="ias-address" :customErrors="customErrors" :address.sync="model.address"></ias-address>
           <div class="ias-row">
             <custom-input
               :required="true"
@@ -172,11 +175,7 @@
           </div>
           <div class="ias-row">
             <div class="form-actions">
-              <button
-                class="bt bg-green c-white"
-                type="button"
-                @click.prevent="validate"
-              >
+              <button class="bt bg-green c-white" type="button" @click.prevent="validate">
                 <span v-if="viewAction === 'new'">Cadastrar</span>
                 <span v-else>Salvar</span>
               </button>
@@ -213,11 +212,7 @@
         </div>
       </form>
     </div>
-    <success-modal
-      :isEdit="viewAction !== 'new'"
-      :show="showSuccessModal"
-      link="/company"
-    ></success-modal>
+    <success-modal :isEdit="viewAction !== 'new'" :show="showSuccessModal" link="/company"></success-modal>
   </div>
 </template>
 <script>

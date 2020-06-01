@@ -258,6 +258,7 @@
         font-family: $font-family-base;
         font-size: $font-size-large;
         font-weight: $font-weight-medium;
+        background-color: transparent !important;
         color: $dark-gray;
         &::placeholder {
           color: $placeholder-color;
@@ -282,6 +283,7 @@
       }
       .vs__clear {
         fill: $red;
+        background-color: transparent !important;
       }
     }
   }
@@ -480,7 +482,7 @@
   .modal-container {
     width: 400px;
     height: 400px;
-    padding: 54px;
+    padding: 56px 24px;
     background-color: $bg-side-menu;
     border-radius: 10px;
     position: absolute;
@@ -494,9 +496,9 @@
       margin: 32px auto 24px;
     }
     p {
-      width: 200px;
+      width: 100%;
       line-height: 19px;
-      margin: 0 46px;
+      margin: 0;
       font-size: $font-size-medium;
       font-weight: $font-weight-black;
       color: $green;
@@ -528,6 +530,9 @@
       padding-right: 7px;
       border-top-right-radius: 5px;
       cursor: pointer;
+      &:hover {
+        background-color: $red;
+      }
     }
     h4 {
       font-size: $font-size-medium;

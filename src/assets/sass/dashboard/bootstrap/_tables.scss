@@ -28,7 +28,6 @@
   }
 }
 
-
 //
 // Condensed table w/ half padding
 //
@@ -39,7 +38,6 @@
     padding: $table-cell-padding-sm;
   }
 }
-
 
 // Border versions
 //
@@ -80,19 +78,9 @@
   }
 }
 
-
 // Hover effect
 //
 // Placed here since it has to come after the potential zebra striping
-
-.table-hover {
-  tbody tr {
-    @include hover {
-      background-color: $table-hover-bg;
-    }
-  }
-}
-
 
 // Table backgrounds
 //
@@ -104,7 +92,6 @@
 }
 
 @include table-row-variant(active, $table-active-bg);
-
 
 // Dark styles
 //
@@ -148,16 +135,7 @@
       background-color: $table-dark-accent-bg;
     }
   }
-
-  &.table-hover {
-    tbody tr {
-      @include hover {
-        background-color: $table-dark-hover-bg;
-      }
-    }
-  }
 }
-
 
 // Responsive tables
 //
