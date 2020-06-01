@@ -12,14 +12,16 @@ export default {
             sort: 'name ASC',
             active: '',
             type: '',
-            idOperation: ''
+            idOperation: '',
+            where: ''
           };
       if (request.active === null) request.active = '';
       if (request.type === null) request.type = '';
       if (request.idOperation === null) request.idOperation = '';
+      if (request.where === null) request.where = '';
       HTTP.get(
         config.apiEndpoints.bannerUri.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}&active=${request.active}&type=${request.type}&idOperation=${request.idOperation}`
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}&active=${request.active}&type=${request.type}&idOperation=${request.idOperation}&where=${request.where}`
         )
       ).then(
         response => {

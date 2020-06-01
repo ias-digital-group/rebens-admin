@@ -26,28 +26,20 @@
             ></custom-input>
           </div>
           <div class="ias-row">
-            <ias-radio v-model="model.idType" name="1" :key="1" :value="1"
-              >Banner Full</ias-radio
-            >
-            <ias-radio v-model="model.idType" name="3" :key="3" :value="3"
-              >Imperdíveis</ias-radio
-            >
+            <ias-radio v-model="model.idType" name="1" :key="1" :value="1">Banner Full</ias-radio>
+            <ias-radio v-model="model.idType" name="3" :key="3" :value="3">Imperdíveis</ias-radio>
           </div>
-          <div
-            class="ias-row"
-            :class="{ 'ias-has-error': customErrors.get('whereToShow') }"
-          >
+          <div class="ias-row" :class="{ 'ias-has-error': customErrors.get('whereToShow') }">
             <ias-checkbox v-model="model.bannerShowHome">Home</ias-checkbox>
-            <ias-checkbox v-model="model.bannerShowHomeLogged"
-              >Home Logada</ias-checkbox
-            >
+            <ias-checkbox v-model="model.bannerShowHomeLogged">Home Logada</ias-checkbox>
             <ias-checkbox
               v-model="model.bannerShowBenefit"
               v-show="model.idType == 3"
-              >Home de benefícios</ias-checkbox
-            >
+            >Home de benefícios</ias-checkbox>
             <label v-if="customErrors.get('whereToShow')" class="ias-error">
-              {{ customErrors.get('whereToShow') }}
+              {{
+              customErrors.get('whereToShow')
+              }}
             </label>
           </div>
           <div class="ias-row">
@@ -92,9 +84,7 @@
             ></custom-input>
           </div>
           <div class="ias-row">
-            <ias-checkbox v-model="model.targetBlank"
-              >Abrir em nova aba?</ias-checkbox
-            >
+            <ias-checkbox v-model="model.targetBlank">Abrir em nova aba?</ias-checkbox>
             <div class="select-holder">
               <v-select
                 :options="orderOptions"
@@ -107,11 +97,7 @@
           </div>
           <div class="ias-row">
             <div class="form-actions">
-              <button
-                class="bt bg-green c-white"
-                type="button"
-                @click.prevent="validate"
-              >
+              <button class="bt bg-green c-white" type="button" @click.prevent="validate">
                 <span v-if="viewAction === 'new'">Cadastrar</span>
                 <span v-else>Salvar</span>
               </button>
@@ -138,17 +124,15 @@
               :class="{ 'has-error': customErrors.get('operations') }"
             ></v-select>
             <label v-if="customErrors.get('operations')" class="ias-error">
-              {{ customErrors.get('operations') }}
+              {{
+              customErrors.get('operations')
+              }}
             </label>
           </div>
         </div>
       </form>
     </div>
-    <success-modal
-      :isEdit="viewAction !== 'new'"
-      :show="showSuccessModal"
-      link="/banners"
-    ></success-modal>
+    <success-modal :isEdit="viewAction !== 'new'" :show="showSuccessModal" link="/banners"></success-modal>
   </div>
 </template>
 <script>
@@ -196,7 +180,7 @@ export default {
       isRebens: false,
       model: {
         name: '',
-        order: 1,
+        order: '',
         image: '',
         active: false,
         link: '',
@@ -322,11 +306,17 @@ export default {
             vm.showSuccessModal = true;
           },
           err => {
-            vm.$notify({
-              type: 'primary',
-              message: err.message,
-              icon: 'tim-icons icon-bell-55'
-            });
+            if (err.response.status === 400 && err.response.data.message) {
+              vm.$notify({
+                type: 'warning',
+                message: err.response.data.message
+              });
+            } else {
+              vm.$notify({
+                type: 'danger',
+                message: err.message
+              });
+            }
             vm.submitLoading = false;
           }
         );

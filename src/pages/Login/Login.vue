@@ -4,7 +4,7 @@
       <form @submit.prevent>
         <card class="card-login card-white">
           <template slot="header">
-            <img src="img/logo-login.png" alt="" />
+            <img src="img/logo-login.png" alt />
           </template>
 
           <div>
@@ -16,8 +16,7 @@
               :name="$t('pages.login.input-email')"
               type="email"
               :placeholder="$t('pages.login.input-email')"
-            >
-            </base-input>
+            ></base-input>
             <base-input
               :placeholder="$t('pages.login.input-password')"
               required
@@ -26,8 +25,7 @@
               v-validate="modelValidations.password"
               :error="getError($t('pages.login.input-password'))"
               type="password"
-            >
-            </base-input>
+            ></base-input>
           </div>
 
           <div slot="footer">
@@ -39,13 +37,9 @@
               @click.native.prevent="validate"
               :loading="fullscreenLoading"
               block
-            >
-              {{ $t('pages.login.signin-button') }}
-            </base-button>
+            >{{ $t('pages.login.signin-button') }}</base-button>
           </div>
-          <base-link class="mt-3" to="/passwordRecovery"
-            >esqueci minha senha</base-link
-          >
+          <base-link class="mt-3" to="/passwordRecovery">esqueci minha senha</base-link>
         </card>
       </form>
     </div>
@@ -112,15 +106,20 @@ export default {
                 });
               },
               err => {
-                const msg =
-                  err.response.status == 404
-                    ? err.response.data.message
-                    : err.message;
-                self.$notify({
-                  type: 'primary',
-                  message: msg,
-                  icon: 'tim-icons icon-bell-55'
-                });
+                if (err.response.status === 400 && err.response.data.message) {
+                  self.$notify({
+                    type: 'warning',
+                    message: err.response.data.message
+                  });
+                } else {
+                  self.$notify({
+                    type: 'danger',
+                    message:
+                      err.response.status == 404
+                        ? err.response.data.message
+                        : err.message
+                  });
+                }
                 self.$data.fullscreenLoading = false;
               }
             );
