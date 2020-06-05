@@ -1,0 +1,262 @@
+<template>
+  <div class="row">
+    <div class="col-12">
+      <card card-body-classes="table-full-width">
+        <template slot="header">
+          <h4 class="card-title">Validação de Cupom</h4>
+        </template>
+        <div>
+          <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
+            <base-input>
+              <el-input
+                type="search"
+                class="mb-3 search-input"
+                style="width:300px"
+                clearable
+                prefix-icon="el-icon-search"
+                placeholder="Procurar beneficios"
+                aria-controls="datatables"
+                v-model="searchQuery"
+              ></el-input>
+            </base-input>
+          </div>
+          <el-table
+            ref="table"
+            :data="tableData"
+            v-loading="loading"
+            :empty-text="$t('pages.benefits.emptytext')"
+            @sort-change="onSortChanged"
+            :default-sort="{ prop: sortField, order: sortOrder }"
+          >
+            <el-table-column
+              v-for="column in tableColumns"
+              :key="column.label"
+              :min-width="column.minWidth"
+              :prop="column.prop"
+              :label="column.label"
+              sortable="custom"
+            ></el-table-column>
+            <el-table-column
+              :min-width="150"
+              align="right"
+              :label="$t('pages.benefits.grid.actions')"
+            >
+              <div slot-scope="props">
+                <base-button
+                  @click.native="toggleStatus(props.$index, props.row)"
+                  class="btn-link"
+                  type="warning"
+                  size="sm"
+                  v-text="props.row.active ? 'inativar' : 'ativar'"
+                  style="padding:0 5px;font-size:12px;font-weight:400;line-height:28px"
+                ></base-button>
+              </div>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div
+          slot="footer"
+          class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
+        >
+          <div class></div>
+          <base-pagination
+            class="pagination-no-border"
+            v-model="pagination.currentPage"
+            :per-page="pagination.perPage"
+            :total="total"
+            v-on:input="onPageChanged"
+          ></base-pagination>
+        </div>
+      </card>
+    </div>
+    <!-- Classic Modal -->
+    <modal :show.sync="modal.visible" headerClasses="justify-content-center">
+      <h4 slot="header" class="title title-up">Remover benefício</h4>
+      <form class="modal-form" ref="modalForm" @submit.prevent v-loading="modal.formLoading">
+        <input type="hidden" name="nome" value="DELETE" ref="nome" />
+        <base-input
+          required
+          v-model="modal.nameConfirmation"
+          label="Digite DELETE para confirmar"
+          placeholder="Digite DELETE para confirmar"
+          :error="getError('confirmação')"
+          type="text"
+          v-validate="modal.modelValidations.name_confirm"
+          name="confirmação"
+        ></base-input>
+      </form>
+      <template slot="footer">
+        <base-button @click.native.prevent="validateModal" type="danger">Remover</base-button>
+        <base-button type="info" @click.native="modal.visible = false">Fechar</base-button>
+      </template>
+    </modal>
+  </div>
+</template>
+<script>
+import { Table, TableColumn, Select, Option } from 'element-ui';
+import { BasePagination, Modal } from 'src/components';
+import benefitService from '../../services/Benefit/benefitService';
+import listPage from '../../mixins/listPage';
+export default {
+  mixins: [listPage],
+  components: {
+    Modal,
+    BasePagination,
+    [Select.name]: Select,
+    [Option.name]: Option,
+    [Table.name]: Table,
+    [TableColumn.name]: TableColumn
+  },
+  data() {
+    return {
+      internalName: 'pages.benefits.list',
+      sortField: 'name',
+      activeFilter: '',
+      typeFilter: '',
+      operationFilter: '',
+      tableColumns: [
+        {
+          prop: 'id',
+          label: this.$i18n.t('pages.benefits.grid.id'),
+          minWidth: 0
+        },
+        {
+          prop: 'name',
+          label: this.$i18n.t('pages.benefits.grid.name'),
+          minWidth: 200
+        },
+        {
+          prop: 'title',
+          label: this.$i18n.t('pages.benefits.grid.title'),
+          minWidth: 200
+        },
+        {
+          prop: 'benefitType',
+          label: this.$i18n.t('pages.benefits.grid.benefitType'),
+          minWidth: 100
+        },
+        {
+          prop: 'statusName',
+          label: this.$i18n.t('pages.benefits.grid.status'),
+          minWidth: 0
+        }
+      ]
+    };
+  },
+  methods: {
+    handleEdit(index, row) {
+      this.$router.push(`/benefits/${row.id}/edit/`);
+    },
+    duplicate(index, row) {
+      const self = this;
+      self.$data.loading = true;
+      benefitService.duplicate(row.id).then(
+        response => {
+          self.$data.loading = false;
+          if (response.status === 'ok') {
+            this.$router.push(`/benefits/${response.message}/edit/`);
+          } else {
+            self.$notify({
+              type: 'primary',
+              message: response.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+          }
+        },
+        () => {
+          self.$data.loading = false;
+        }
+      );
+    },
+    toggleStatus(index, row) {
+      const self = this;
+      debugger;
+      self.$data.loading = true;
+      benefitService.changeActive(row.id, !row.active).then(
+        response => {
+          if (response.status === 'ok') {
+            row.active = !row.active;
+            row.statusName = row.active ? 'Ativo' : 'Inativo';
+            self.$data.loading = false;
+          } else {
+            self.$notify({
+              type: 'primary',
+              message: response.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+          }
+        },
+        () => {
+          self.$data.loading = false;
+        }
+      );
+    },
+    fetchData() {
+      const self = this;
+      const request = {
+        page: this.$data.pagination.currentPage - 1,
+        pageItems: this.$data.pagination.perPage,
+        searchWord: this.searchQuery,
+        sort: this.formatSortFieldParam,
+        active: this.activeFilter,
+        type: this.typeFilter,
+        idOperation: this.operationFilter
+      };
+      this.$data.loading = true;
+      benefitService.findAll(request).then(
+        response => {
+          self.$data.tableData = response.data;
+          self.savePageSettings(self, response.totalItems);
+          self.$data.loading = false;
+        },
+        () => {
+          self.$data.loading = false;
+        }
+      );
+    },
+    validateModal() {
+      const self = this;
+      this.$validator.validateAll().then(isValid => {
+        if (isValid) {
+          self.modal.formLoading = true;
+          benefitService.delete(self.modal.model.id).then(
+            response => {
+              self.$notify({
+                type: 'primary',
+                message: response.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+              self.resetModal();
+              self.pagination.currentPage = 1;
+              self.fetchData();
+            },
+            err => {
+              self.$notify({
+                type: 'primary',
+                message: err.message,
+                icon: 'tim-icons icon-bell-55'
+              });
+              self.modal.formLoading = false;
+            }
+          );
+        }
+      });
+    }
+  },
+  watch: {
+    activeFilter() {
+      this.fetchData();
+    },
+    typeFilter() {
+      this.fetchData();
+    }
+  }
+};
+</script>
+<style lang="scss" scoped>
+.modal-form {
+  .has-label::after {
+    top: 43px !important;
+  }
+}
+</style>

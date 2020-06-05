@@ -35,6 +35,9 @@ const BenefitCategoriesEdit = () =>
   import('src/pages/Benefits/CategoryEdit.vue');
 const BenefitPartnersList = () => import('src/pages/Benefits/PartnerList.vue');
 const BenefitPartnersEdit = () => import('src/pages/Benefits/PartnerEdit.vue');
+const BenefitValidation = () => import('src/pages/Benefits/Validation.vue');
+
+const OrderValidation = () => import('src/pages/Order/Validation.vue');
 
 const BannersList = () => import('src/pages/Banners/List.vue');
 const BannersEdit = () => import('src/pages/Banners/Edit.vue');
@@ -467,6 +470,49 @@ let benefitsPages = {
         requiresAuth: true,
         roles: ['master', 'publisherRebens', 'administratorRebens'],
         title: i18n.t('pages.partners.title')
+      }
+    },
+    {
+      path: 'validation',
+      name: 'validation',
+      props: true,
+      component: BenefitValidation,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'administratorRebens',
+          'administrator',
+          'couponChecker'
+        ],
+        title: 'Validação de Cupom'
+      }
+    }
+  ]
+};
+
+let orderPages = {
+  path: '/orders',
+  component: DashboardLayout,
+  meta: {
+    requiresAuth: true,
+    roles: ['master', 'administrator', 'administratorRebens', 'ticketChecker'],
+    title: 'Validação de Ingresso'
+  },
+  children: [
+    {
+      path: '',
+      name: 'validation',
+      component: OrderValidation,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'administrator',
+          'administratorRebens',
+          'ticketChecker'
+        ],
+        title: 'Validação de Ingresso'
       }
     }
   ]
@@ -1526,7 +1572,8 @@ const routes = [
   courseRegulationPages,
   freeCoursePages,
   promoterPages,
-  scratchcardPages
+  scratchcardPages,
+  orderPages
 ];
 
 export default routes;
