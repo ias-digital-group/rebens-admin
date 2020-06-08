@@ -6,7 +6,9 @@
           <h4 class="card-title">Validação de Cupom</h4>
         </template>
         <div>
-          <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
+          <div
+            class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
+          >
             <base-input>
               <el-input
                 type="search"
@@ -49,7 +51,8 @@
                   size="sm"
                   v-if="!props.row.used"
                   style="padding:0 5px;font-size:12px;font-weight:400;line-height:28px"
-                >Validar</base-button>
+                  >Validar</base-button
+                >
                 <span v-else>Utilizado</span>
               </div>
             </el-table-column>
@@ -73,7 +76,12 @@
     <!-- Classic Modal -->
     <modal :show.sync="modal.visible" headerClasses="justify-content-center">
       <h4 slot="header" class="title title-up">Remover benefício</h4>
-      <form class="modal-form" ref="modalForm" @submit.prevent v-loading="modal.formLoading">
+      <form
+        class="modal-form"
+        ref="modalForm"
+        @submit.prevent
+        v-loading="modal.formLoading"
+      >
         <input type="hidden" name="nome" value="DELETE" ref="nome" />
         <base-input
           required
@@ -87,8 +95,12 @@
         ></base-input>
       </form>
       <template slot="footer">
-        <base-button @click.native.prevent="validateModal" type="danger">Remover</base-button>
-        <base-button type="info" @click.native="modal.visible = false">Fechar</base-button>
+        <base-button @click.native.prevent="validateModal" type="danger"
+          >Remover</base-button
+        >
+        <base-button type="info" @click.native="modal.visible = false"
+          >Fechar</base-button
+        >
       </template>
     </modal>
   </div>
