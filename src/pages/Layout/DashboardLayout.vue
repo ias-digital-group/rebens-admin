@@ -335,7 +335,7 @@ export default {
       this.$store.getters.currentUser.role == 'administratorRebens' ||
       this.$store.getters.currentUser.role == 'administrator' ||
       this.$store.getters.currentUser.role == 'ticketChecker';
-    this.isTicketChecker =
+    this.isCouponChecker =
       this.$store.getters.currentUser.role == 'master' ||
       this.$store.getters.currentUser.role == 'administratorRebens' ||
       this.$store.getters.currentUser.role == 'couponChecker';

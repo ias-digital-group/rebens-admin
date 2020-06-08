@@ -9,12 +9,12 @@ export default {
         : {
             page: 0,
             pageItems: 30,
-            word: '',
+            searchWord: '',
             idOperation: ''
           };
       HTTP.get(
         config.apiEndpoints.orderUri.concat(
-          `Validation?page=${request.page}&pageItems=${request.pageItems}&word=${request.word}` +
+          `Validation?page=${request.page}&pageItems=${request.pageItems}&word=${request.searchWord}` +
             `&idOperation=${request.idOperation}`
         )
       ).then(
@@ -29,7 +29,7 @@ export default {
   },
   validate: id => {
     return new Promise((resolve, reject) => {
-      HTTP.post(config.apiEndpoints.operationUri.concat(`Validate/${id}`)).then(
+      HTTP.post(config.apiEndpoints.orderUri.concat(`Validate/${id}`)).then(
         response => {
           resolve(response.data);
         },

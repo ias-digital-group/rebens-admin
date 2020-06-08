@@ -43,13 +43,14 @@
             >
               <div slot-scope="props">
                 <base-button
-                  @click.native="toggleStatus(props.$index, props.row)"
+                  @click.native="validate(props.row)"
                   class="btn-link"
                   type="warning"
                   size="sm"
-                  v-text="props.row.active ? 'inativar' : 'ativar'"
+                  v-if="!props.row.used"
                   style="padding:0 5px;font-size:12px;font-weight:400;line-height:28px"
-                ></base-button>
+                >Validar</base-button>
+                <span v-else>Utilizado</span>
               </div>
             </el-table-column>
           </el-table>
@@ -110,86 +111,79 @@ export default {
   data() {
     return {
       internalName: 'pages.benefits.list',
-      sortField: 'name',
-      activeFilter: '',
-      typeFilter: '',
-      operationFilter: '',
+      partnerFilter: '',
       tableColumns: [
         {
-          prop: 'id',
-          label: this.$i18n.t('pages.benefits.grid.id'),
-          minWidth: 0
+          prop: 'customerName',
+          label: 'Nome',
+          minWidth: 150
         },
         {
-          prop: 'name',
-          label: this.$i18n.t('pages.benefits.grid.name'),
-          minWidth: 200
+          prop: 'customerCpf',
+          label: 'cpf',
+          minWidth: 150
         },
         {
-          prop: 'title',
-          label: this.$i18n.t('pages.benefits.grid.title'),
-          minWidth: 200
+          prop: 'partnerName',
+          label: 'Parceiro',
+          minWidth: 150
         },
         {
-          prop: 'benefitType',
-          label: this.$i18n.t('pages.benefits.grid.benefitType'),
-          minWidth: 100
+          prop: 'benefitName',
+          label: 'Benefício',
+          minWidth: 150
         },
         {
-          prop: 'statusName',
-          label: this.$i18n.t('pages.benefits.grid.status'),
+          prop: 'code',
+          label: 'Código',
+          minWidth: 150
+        },
+        {
+          prop: 'usedDate',
+          label: 'Data de utilização',
           minWidth: 0
         }
       ]
     };
   },
   methods: {
-    handleEdit(index, row) {
-      this.$router.push(`/benefits/${row.id}/edit/`);
-    },
-    duplicate(index, row) {
+    validate(row) {
       const self = this;
-      self.$data.loading = true;
-      benefitService.duplicate(row.id).then(
-        response => {
-          self.$data.loading = false;
-          if (response.status === 'ok') {
-            this.$router.push(`/benefits/${response.message}/edit/`);
-          } else {
-            self.$notify({
-              type: 'primary',
-              message: response.message,
-              icon: 'tim-icons icon-bell-55'
-            });
-          }
-        },
-        () => {
-          self.$data.loading = false;
-        }
-      );
-    },
-    toggleStatus(index, row) {
-      const self = this;
-      debugger;
-      self.$data.loading = true;
-      benefitService.changeActive(row.id, !row.active).then(
-        response => {
-          if (response.status === 'ok') {
-            row.active = !row.active;
-            row.statusName = row.active ? 'Ativo' : 'Inativo';
+      if (
+        confirm(
+          `Tem certeza que deseja validar o ${row.benefitName}, código ${row.code} do cliente ${row.customerName}?`
+        )
+      ) {
+        self.$data.loading = true;
+        benefitService.validate(row.id).then(
+          response => {
+            if (response.status === 'ok') {
+              row.used = true;
+              const dt = new Date();
+              row.usedDate = `${
+                dt.getDate() < 10 ? '0' + dt.getDate() : dt.getDate()
+              }/${
+                dt.getMonth() + 1 < 10
+                  ? '0' + (dt.getMonth() + 1)
+                  : dt.getMonth() + 1
+              }/${dt.getFullYear()} ${
+                dt.getHours() < 10 ? '0' + dt.getHours() : dt.getHours()
+              }:${
+                dt.getMinutes() < 10 ? '0' + dt.getMinutes() : dt.getMinutes()
+              }`;
+            } else {
+              self.$notify({
+                type: 'danger',
+                message: response.message
+              });
+            }
             self.$data.loading = false;
-          } else {
-            self.$notify({
-              type: 'primary',
-              message: response.message,
-              icon: 'tim-icons icon-bell-55'
-            });
+          },
+          () => {
+            self.$data.loading = false;
           }
-        },
-        () => {
-          self.$data.loading = false;
-        }
-      );
+        );
+      }
     },
     fetchData() {
       const self = this;
@@ -197,13 +191,10 @@ export default {
         page: this.$data.pagination.currentPage - 1,
         pageItems: this.$data.pagination.perPage,
         searchWord: this.searchQuery,
-        sort: this.formatSortFieldParam,
-        active: this.activeFilter,
-        type: this.typeFilter,
-        idOperation: this.operationFilter
+        idPartner: this.partnerFilter
       };
       this.$data.loading = true;
-      benefitService.findAll(request).then(
+      benefitService.findAllToValidate(request).then(
         response => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems);
@@ -213,41 +204,11 @@ export default {
           self.$data.loading = false;
         }
       );
-    },
-    validateModal() {
-      const self = this;
-      this.$validator.validateAll().then(isValid => {
-        if (isValid) {
-          self.modal.formLoading = true;
-          benefitService.delete(self.modal.model.id).then(
-            response => {
-              self.$notify({
-                type: 'primary',
-                message: response.message,
-                icon: 'tim-icons icon-bell-55'
-              });
-              self.resetModal();
-              self.pagination.currentPage = 1;
-              self.fetchData();
-            },
-            err => {
-              self.$notify({
-                type: 'primary',
-                message: err.message,
-                icon: 'tim-icons icon-bell-55'
-              });
-              self.modal.formLoading = false;
-            }
-          );
-        }
-      });
     }
   },
   watch: {
-    activeFilter() {
-      this.fetchData();
-    },
-    typeFilter() {
+    partnerFilter() {
+      this.pagination.currentPage = 1;
       this.fetchData();
     }
   }
