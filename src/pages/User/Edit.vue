@@ -60,8 +60,7 @@
                   :reduce="op => op.code"
                   :key="model.roles"
                   v-model="model.roles"
-                >
-                </v-select>
+                ></v-select>
                 <label
                   v-show="customErrors.includes('roles')"
                   class="text-danger"
@@ -79,8 +78,7 @@
                   :reduce="op => op.code"
                   :key="model.idOperation"
                   v-model="model.idOperation"
-                >
-                </v-select>
+                ></v-select>
                 <label
                   v-show="customErrors.includes('operation')"
                   class="text-danger"
@@ -98,12 +96,31 @@
                   :reduce="op => op.code"
                   :key="model.idOperationPartner"
                   v-model="model.idOperationPartner"
-                >
-                </v-select>
+                ></v-select>
                 <label
                   v-show="customErrors.includes('operationPartner')"
                   class="text-danger"
                   >O campo Parceiro da Operação é obrigatório</label
+                >
+              </div>
+            </div>
+          </div>
+          <div class="row" v-if="showPartners">
+            <label class="col-md-3 col-form-label"
+              >Parceiro de Benefícios</label
+            >
+            <div class="col-md-3">
+              <div class="form-group">
+                <v-select
+                  :options="partners"
+                  :reduce="op => op.code"
+                  :key="model.idPartner"
+                  v-model="model.idPartner"
+                ></v-select>
+                <label
+                  v-show="customErrors.includes('partner')"
+                  class="text-danger"
+                  >O campo Parceiro de Benefícios é obrigatório</label
                 >
               </div>
             </div>
@@ -129,18 +146,16 @@
                 type="info"
                 @click="resendValidation"
                 :loading="sendingLoading"
+                >Reenviar o email de validação</base-button
               >
-                Reenviar o email de validação
-              </base-button>
               <base-button
                 class="mt-3 pull-right"
                 native-type="submit"
                 type="info"
                 @click.native.prevent="validate"
                 :loading="submitLoading"
+                >Salvar</base-button
               >
-                Salvar
-              </base-button>
             </div>
           </div>
         </form>
@@ -151,6 +166,7 @@
 <script>
 import { Select, Option } from 'element-ui';
 import userService from '../../services/User/userService';
+import partnerService from '../../services/Partner/partnerService';
 import operationService from '../../services/Operation/operationService';
 import operationPartnerService from '../../services/OperationPartner/operationPartnerService';
 import _ from 'lodash';
@@ -184,6 +200,7 @@ export default {
         status: false,
         idOperation: null,
         idOperationPartner: null,
+        idPartner: null,
         roles: ''
       },
       modelValidations: {
@@ -200,7 +217,8 @@ export default {
         }
       },
       operations: [],
-      operationPartners: []
+      operationPartners: [],
+      partners: []
     };
   },
   computed: {
@@ -213,7 +231,8 @@ export default {
           this.model.roles == 'publisher' ||
           this.model.roles == 'promoter' ||
           this.model.roles == 'partnerAdministrator' ||
-          this.model.roles == 'partnerApprover') &&
+          this.model.roles == 'partnerApprover' ||
+          this.model.roles == 'ticketChecker') &&
         this.isRebens &&
         !this.isPartnerUser
       );
@@ -224,6 +243,13 @@ export default {
           this.model.roles == 'partnerApprover') &&
         !this.isPartnerUser &&
         this.operationPartners.length > 1
+      );
+    },
+    showPartners() {
+      return (
+        this.model.roles == 'couponChecker' &&
+        !this.isPartnerUser &&
+        this.partners.length > 1
       );
     }
   },
@@ -278,10 +304,18 @@ export default {
           self.model.roles === 'administrator' ||
           self.model.roles == 'promoter' ||
           self.model.roles == 'partnerAdministrator' ||
-          self.model.roles == 'partnerApprover') &&
+          self.model.roles == 'partnerApprover' ||
+          self.model.roles == 'ticketChecker') &&
         self.model.idOperation == null
       )
         self.customErrors.push('operation');
+
+      if (
+        self.isRebens &&
+        self.model.roles == 'couponChecker' &&
+        self.model.idPartner == null
+      )
+        self.customErrors.push('partner');
 
       if (self.customErrors.length == 0) {
         self.submitLoading = true;
@@ -319,17 +353,15 @@ export default {
           () => {
             vm.$notify({
               type: 'success',
-              message: 'usuário cadastrado com sucesso!',
-              icon: 'tim-icons icon-bell-55'
+              message: 'usuário cadastrado com sucesso!'
             });
             vm.$router.push('/users');
             vm.submitLoading = false;
           },
           err => {
             vm.$notify({
-              type: 'primary',
-              message: err.message,
-              icon: 'tim-icons icon-bell-55'
+              type: 'danger',
+              message: err.message
             });
             vm.submitLoading = false;
           }
@@ -339,17 +371,15 @@ export default {
           response => {
             vm.$notify({
               type: 'primary',
-              message: response.message,
-              icon: 'tim-icons icon-bell-55'
+              message: response.message
             });
             vm.$router.push('/users');
             vm.submitLoading = false;
           },
           err => {
             vm.$notify({
-              type: 'primary',
-              message: err.message,
-              icon: 'tim-icons icon-bell-55'
+              type: 'danger',
+              message: err.message
             });
             vm.submitLoading = false;
           }
@@ -365,6 +395,8 @@ export default {
       if (!self.isPartnerUser) {
         self.roles.push({ code: 'publisher', label: 'publisher' });
         self.roles.push({ code: 'administrator', label: 'Administrador' });
+        self.roles.push({ code: 'ticketChecker', label: 'Validador Ingresso' });
+        self.roles.push({ code: 'couponChecker', label: 'Validador Cupom' });
         if (self.isRebens) {
           self.roles.push({
             code: 'publisherRebens',
@@ -414,6 +446,8 @@ export default {
           self.selectLoading = false;
         }
       );
+
+      this.loadPartners(self);
     },
     loadOperationPartner(self) {
       self.formLoading = true;
@@ -461,6 +495,35 @@ export default {
       } else {
         self.formLoading = false;
       }
+    },
+    loadPartners(self) {
+      self.formLoading = true;
+      partnerService
+        .findAll({
+          page: 0,
+          pageItems: 1000,
+          searchWord: '',
+          sort: 'name ASC',
+          active: true,
+          type: 1
+        })
+        .then(
+          response => {
+            self.partners.push({ code: 0, label: 'selecione' });
+            _.each(response.data, function(el) {
+              if (el.id != self.id) {
+                self.partners.push({
+                  code: el.id,
+                  label: el.name
+                });
+              }
+            });
+            self.formLoading = false;
+          },
+          () => {
+            self.formLoading = false;
+          }
+        );
     }
   },
   created() {
