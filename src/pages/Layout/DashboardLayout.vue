@@ -3,13 +3,15 @@
     class="wrapper"
     :class="{
       'nav-open': $sidebar.showSidebar,
-      'no-sidebar': isPromoter || isPartnerApprover
+      'no-sidebar': isPromoter || isPartnerApprover || isTicketChecker || isCouponChecker
     }"
   >
     <notifications></notifications>
-    <sidebar-fixed-toggle-button v-if="!isPromoter && !isPartnerApprover" />
+    <sidebar-fixed-toggle-button
+      v-if="!isPromoter && !isPartnerApprover && !isTicketChecker && !isCouponChecker"
+    />
     <side-bar
-      v-if="!isPromoter && !isPartnerApprover"
+      v-if="!isPromoter && !isPartnerApprover && !isTicketChecker && !isCouponChecker"
       :background-color="sidebarBackground"
       :short-title="$t('sidebar.shortTitle')"
       :title="$t('sidebar.title')"
@@ -88,9 +90,7 @@
           v-show="showCourses"
           :link="{ name: $t('sidebar.courses'), icon: 'fas fa-graduation-cap' }"
         >
-          <sidebar-item
-            :link="{ name: $t('sidebar.courses'), path: '/course' }"
-          ></sidebar-item>
+          <sidebar-item :link="{ name: $t('sidebar.courses'), path: '/course' }"></sidebar-item>
           <sidebar-item
             :link="{
               name: $t('sidebar.courseColleges'),
@@ -103,18 +103,14 @@
               path: '/courseModality'
             }"
           ></sidebar-item>
-          <sidebar-item
-            :link="{ name: $t('sidebar.coursePeriods'), path: '/coursePeriod' }"
-          ></sidebar-item>
+          <sidebar-item :link="{ name: $t('sidebar.coursePeriods'), path: '/coursePeriod' }"></sidebar-item>
           <sidebar-item
             :link="{
               name: $t('sidebar.courseGraduationTypes'),
               path: '/courseGraduationType'
             }"
           ></sidebar-item>
-          <sidebar-item
-            :link="{ name: $t('sidebar.courseFaq'), path: '/courseFaq' }"
-          ></sidebar-item>
+          <sidebar-item :link="{ name: $t('sidebar.courseFaq'), path: '/courseFaq' }"></sidebar-item>
           <sidebar-item
             :link="{
               name: $t('sidebar.courseRegulation'),
@@ -129,9 +125,7 @@
             icon: 'fas fa-graduation-cap'
           }"
         >
-          <sidebar-item
-            :link="{ name: $t('sidebar.freeCourse'), path: '/freeCourse' }"
-          ></sidebar-item>
+          <sidebar-item :link="{ name: $t('sidebar.freeCourse'), path: '/freeCourse' }"></sidebar-item>
           <sidebar-item
             :link="{
               name: $t('sidebar.categories'),
@@ -236,10 +230,7 @@
       <dashboard-navbar></dashboard-navbar>
       <router-view name="header"></router-view>
 
-      <div
-        :class="{ content: !$route.meta.hideContent }"
-        @click="toggleSidebar"
-      >
+      <div :class="{ content: !$route.meta.hideContent }" @click="toggleSidebar">
         <zoom-center-transition :duration="200" mode="out-in">
           <!-- your content here -->
           <router-view></router-view>
