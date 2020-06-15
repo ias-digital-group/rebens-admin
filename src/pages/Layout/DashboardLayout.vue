@@ -3,15 +3,26 @@
     class="wrapper"
     :class="{
       'nav-open': $sidebar.showSidebar,
-      'no-sidebar': isPromoter || isPartnerApprover || isTicketChecker || isCouponChecker
+      'no-sidebar':
+        isPromoter || isPartnerApprover || isTicketChecker || isCouponChecker
     }"
   >
     <notifications></notifications>
     <sidebar-fixed-toggle-button
-      v-if="!isPromoter && !isPartnerApprover && !isTicketChecker && !isCouponChecker"
+      v-if="
+        !isPromoter &&
+          !isPartnerApprover &&
+          !isTicketChecker &&
+          !isCouponChecker
+      "
     />
     <side-bar
-      v-if="!isPromoter && !isPartnerApprover && !isTicketChecker && !isCouponChecker"
+      v-if="
+        !isPromoter &&
+          !isPartnerApprover &&
+          !isTicketChecker &&
+          !isCouponChecker
+      "
       :background-color="sidebarBackground"
       :short-title="$t('sidebar.shortTitle')"
       :title="$t('sidebar.title')"
@@ -90,7 +101,9 @@
           v-show="showCourses"
           :link="{ name: $t('sidebar.courses'), icon: 'fas fa-graduation-cap' }"
         >
-          <sidebar-item :link="{ name: $t('sidebar.courses'), path: '/course' }"></sidebar-item>
+          <sidebar-item
+            :link="{ name: $t('sidebar.courses'), path: '/course' }"
+          ></sidebar-item>
           <sidebar-item
             :link="{
               name: $t('sidebar.courseColleges'),
@@ -103,14 +116,18 @@
               path: '/courseModality'
             }"
           ></sidebar-item>
-          <sidebar-item :link="{ name: $t('sidebar.coursePeriods'), path: '/coursePeriod' }"></sidebar-item>
+          <sidebar-item
+            :link="{ name: $t('sidebar.coursePeriods'), path: '/coursePeriod' }"
+          ></sidebar-item>
           <sidebar-item
             :link="{
               name: $t('sidebar.courseGraduationTypes'),
               path: '/courseGraduationType'
             }"
           ></sidebar-item>
-          <sidebar-item :link="{ name: $t('sidebar.courseFaq'), path: '/courseFaq' }"></sidebar-item>
+          <sidebar-item
+            :link="{ name: $t('sidebar.courseFaq'), path: '/courseFaq' }"
+          ></sidebar-item>
           <sidebar-item
             :link="{
               name: $t('sidebar.courseRegulation'),
@@ -125,7 +142,9 @@
             icon: 'fas fa-graduation-cap'
           }"
         >
-          <sidebar-item :link="{ name: $t('sidebar.freeCourse'), path: '/freeCourse' }"></sidebar-item>
+          <sidebar-item
+            :link="{ name: $t('sidebar.freeCourse'), path: '/freeCourse' }"
+          ></sidebar-item>
           <sidebar-item
             :link="{
               name: $t('sidebar.categories'),
@@ -190,7 +209,7 @@
           }"
         ></sidebar-item>
         <sidebar-item
-          v-show="isTicketChecker"
+          v-show="showTickets"
           :link="{
             name: 'Validação de Ingresso',
             icon: 'tim-icons icon-paper',
@@ -198,7 +217,7 @@
           }"
         ></sidebar-item>
         <sidebar-item
-          v-show="isCouponChecker"
+          v-show="showCoupons"
           :link="{
             name: 'Validação de Cupom',
             icon: 'tim-icons icon-paper',
@@ -230,7 +249,10 @@
       <dashboard-navbar></dashboard-navbar>
       <router-view name="header"></router-view>
 
-      <div :class="{ content: !$route.meta.hideContent }" @click="toggleSidebar">
+      <div
+        :class="{ content: !$route.meta.hideContent }"
+        @click="toggleSidebar"
+      >
         <zoom-center-transition :duration="200" mode="out-in">
           <!-- your content here -->
           <router-view></router-view>
@@ -284,7 +306,9 @@ export default {
       isCouponChecker: false,
       showCourses: true,
       showFreeCourses: true,
-      sidebarBackground: 'blue' //vue|blue|orange|green|red|primary
+      sidebarBackground: 'blue',
+      showTickets: false,
+      showCoupons: false //vue|blue|orange|green|red|primary
     };
   },
   methods: {
@@ -333,14 +357,19 @@ export default {
       'closed-partner'
     );
     this.isTicketChecker =
-      this.$store.getters.currentUser.role == 'master' ||
-      this.$store.getters.currentUser.role == 'administratorRebens' ||
-      this.$store.getters.currentUser.role == 'administrator' ||
       this.$store.getters.currentUser.role == 'ticketChecker';
-    this.isCouponChecker =
+    this.showTickets =
+      this.$store.getters.currentUser.role == 'ticketChecker' ||
       this.$store.getters.currentUser.role == 'master' ||
       this.$store.getters.currentUser.role == 'administratorRebens' ||
+      this.$store.getters.currentUser.role == 'administrator';
+    this.isCouponChecker =
       this.$store.getters.currentUser.role == 'couponChecker';
+    this.showCoupons =
+      this.$store.getters.currentUser.role == 'couponChecker' ||
+      this.$store.getters.currentUser.role == 'master' ||
+      this.$store.getters.currentUser.role == 'administratorRebens' ||
+      this.$store.getters.currentUser.role == 'administrator';
   }
 };
 </script>
