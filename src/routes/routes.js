@@ -502,7 +502,7 @@ let orderPages = {
   children: [
     {
       path: '',
-      name: 'validation',
+      name: 'orderValidation',
       component: OrderValidation,
       meta: {
         requiresAuth: true,

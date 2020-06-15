@@ -4,7 +4,7 @@
       <form @submit.prevent>
         <card class="card-login card-white">
           <template slot="header">
-            <img src="img/logo-login.png" alt="" />
+            <img src="img/logo-login.png" alt />
           </template>
           <p style="text-align:center">{{ $t('pages.validate.info') }}</p>
           <hr />
@@ -17,8 +17,7 @@
               v-validate="modelValidations.password"
               :error="getError($t('pages.validate.input-password'))"
               type="password"
-            >
-            </base-input>
+            ></base-input>
             <base-input
               :placeholder="$t('pages.validate.input-confirm')"
               required
@@ -27,8 +26,7 @@
               v-validate="modelValidations.passwordConfirm"
               :error="getError($t('pages.validate.input-confirm'))"
               type="password"
-            >
-            </base-input>
+            ></base-input>
           </div>
 
           <div slot="footer">
@@ -40,9 +38,8 @@
               @click.native.prevent="validate"
               :loading="fullscreenLoading"
               block
+              >{{ $t('pages.validate.button') }}</base-button
             >
-              {{ $t('pages.validate.button') }}
-            </base-button>
           </div>
         </card>
       </form>
@@ -91,7 +88,21 @@ export default {
               response => {
                 if (response && response.authenticated) {
                   self.$store.dispatch('setUser', response);
-                  window.location = '/';
+                  const jwtData = JSON.parse(
+                    atob(response.accessToken.split('.')[1])
+                  );
+                  if (jwtData.role === 'promoter') {
+                    window.location = '/#/promoter';
+                  } else if (jwtData.role == 'partnerApprover') {
+                    window.location = '/#/operationPartner/approve';
+                  } else if (jwtData.role == 'ticketChecker') {
+                    window.location = '/#/orders';
+                  } else if (jwtData.role == 'couponChecker') {
+                    window.location = '/#/benefits/validation';
+                  } else {
+                    window.location = '/';
+                  }
+
                   return;
                 }
                 self.$data.fullscreenLoading = false;

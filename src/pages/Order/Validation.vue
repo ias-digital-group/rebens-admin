@@ -6,9 +6,7 @@
           <h4 class="card-title">Validação de Ingresso</h4>
         </template>
         <div>
-          <div
-            class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
-          >
+          <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
             <base-input>
               <el-input
                 type="search"
@@ -49,8 +47,7 @@
                   size="sm"
                   v-if="!props.row.used"
                   style="padding:0 5px;font-size:12px;font-weight:400;line-height:28px"
-                  >Validar</base-button
-                >
+                >Validar</base-button>
                 <span v-else>Utilizado</span>
               </div>
             </el-table-column>
@@ -168,7 +165,7 @@ export default {
         searchWord: this.searchQuery,
         idOperation: this.operationFilter
       };
-      this.$data.loading = true;
+      self.$data.loading = true;
       orderService.findAllToValidate(request).then(
         response => {
           self.$data.tableData = response.data;
