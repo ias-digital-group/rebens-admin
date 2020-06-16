@@ -68,7 +68,7 @@
 
           <div class="row">
             <div class="col-md-12">
-              <base-link class="btn mt-3 btn-simple btn-primary" to="/"
+              <base-link class="btn mt-3 btn-simple btn-primary" :to="backUrl"
                 >Voltar</base-link
               >
               <base-button
@@ -77,9 +77,8 @@
                 type="info"
                 @click.native.prevent="validate"
                 :loading="submitLoading"
+                >Salvar</base-button
               >
-                Salvar
-              </base-button>
             </div>
           </div>
         </form>
@@ -101,6 +100,21 @@ export default {
         newPasswordConfirm: ''
       }
     };
+  },
+  computed: {
+    backUrl() {
+      let ret = '/';
+      if (this.$store.getters.currentUser.role === 'ticketChecker') {
+        ret += 'orders';
+      } else if (this.$store.getters.currentUser.role === 'promoter') {
+        ret += 'promoter';
+      } else if (this.$store.getters.currentUser.role === 'partnerApprover') {
+        ret += 'operationPartner/approve';
+      } else if (this.$store.getters.currentUser.role === 'couponChecker') {
+        ret += 'benefits/validation';
+      }
+      return ret;
+    }
   },
   methods: {
     getError(fieldName) {

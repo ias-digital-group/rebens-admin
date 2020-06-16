@@ -734,7 +734,9 @@ let accountPages = {
           'administratorRebens',
           'promoter',
           'partnerApprover',
-          'partnerAdministrator'
+          'partnerAdministrator',
+          'ticketChecker',
+          'couponChecker'
         ],
         title: i18n.t('pages.change-password.title')
       }
