@@ -92,25 +92,22 @@ export default {
                   const jwtData = JSON.parse(
                     atob(response.accessToken.split('.')[1])
                   );
+                  console.log(jwtData);
+                  let url = '/';
                   if (jwtData.role === 'promoter') {
-                    window.location = '/#/promoter';
+                    url += '#/promoter';
                   } else if (jwtData.role == 'partnerApprover') {
-                    window.location = '/#/operationPartner/approve';
+                    url += '#/operationPartner/approve';
                   } else if (jwtData.role == 'ticketChecker') {
-                    window.location = '/#/orders';
+                    url += '#/orders';
                   } else if (jwtData.role == 'couponChecker') {
-                    window.location = '/#/benefits/validation';
-                  } else {
-                    window.location = '/';
+                    url += '#/benefits/validation';
                   }
+                  window.location = url;
+
                   return;
                 }
                 self.$data.fullscreenLoading = false;
-                self.$notify({
-                  type: 'primary',
-                  message: response.message,
-                  icon: 'tim-icons icon-bell-55'
-                });
               },
               err => {
                 const msg =
