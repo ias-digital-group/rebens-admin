@@ -28,6 +28,7 @@ export default {
     staticTextUri: process.env.VUE_APP_API_URI.concat('statictext/'),
     faqUri: process.env.VUE_APP_API_URI.concat('faq/'),
     userUri: process.env.VUE_APP_API_URI.concat('adminuser/'),
+    wirecardUri: process.env.VUE_APP_API_URI.concat('wirecard/'),
     reportUri: process.env.VUE_APP_API_URI.concat('report/'),
     operationPartnerUri: process.env.VUE_APP_API_URI.concat(
       'operationPartner/'

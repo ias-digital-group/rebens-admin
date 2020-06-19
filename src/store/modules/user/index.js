@@ -22,6 +22,7 @@ const mutations = {
     state.pageSettings.pages.push(settings);
   },
   saveAuthData(state, payload) {
+    console.log('saveAuthData - payload', payload);
     state.user = payload.user;
     state.token = payload.accessToken;
     localStorage.setItem('token', payload.accessToken);

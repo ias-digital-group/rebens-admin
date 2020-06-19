@@ -89,21 +89,21 @@ export default {
               response => {
                 if (response && response.authenticated) {
                   self.$store.dispatch('setUser', response);
-                  const jwtData = JSON.parse(
-                    atob(response.accessToken.split('.')[1])
-                  );
-                  console.log(jwtData);
-                  let url = '/';
-                  if (jwtData.role === 'promoter') {
-                    url += '#/promoter';
-                  } else if (jwtData.role == 'partnerApprover') {
-                    url += '#/operationPartner/approve';
-                  } else if (jwtData.role == 'ticketChecker') {
-                    url += '#/orders';
-                  } else if (jwtData.role == 'couponChecker') {
-                    url += '#/benefits/validation';
-                  }
-                  window.location = url;
+                  // const jwtData = JSON.parse(
+                  //   atob(response.accessToken.split('.')[1])
+                  // );
+                  // console.log(jwtData);
+                  // let url = '/';
+                  // if (jwtData.role === 'promoter') {
+                  //   url += '#/promoter';
+                  // } else if (jwtData.role == 'partnerApprover') {
+                  //   url += '#/operationPartner/approve';
+                  // } else if (jwtData.role == 'ticketChecker') {
+                  //   url += '#/orders';
+                  // } else if (jwtData.role == 'couponChecker') {
+                  //   url += '#/benefits/validation';
+                  // }
+                  window.location = '/';
 
                   return;
                 }

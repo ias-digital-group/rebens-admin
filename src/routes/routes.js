@@ -102,6 +102,8 @@ const PromoterReport = () => import('src/pages/Promoter/Report.vue');
 const ScratchcardList = () => import('src/pages/Scratchcard/List.vue');
 const ScratchcardEdit = () => import('src/pages/Scratchcard/Edit.vue');
 
+const SubscriptionList = () => import('src/pages/Subscription/List.vue');
+
 let operationsPages = {
   path: '/operations',
   component: DashboardLayout,
@@ -1461,6 +1463,28 @@ let scratchcardPages = {
   ]
 };
 
+let subscriptionPages = {
+  path: '/subscriptions',
+  component: DashboardLayout,
+  meta: {
+    requiresAuth: true,
+    roles: ['administrator', 'administratorRebens', 'master'],
+    title: 'Assinaturas'
+  },
+  children: [
+    {
+      path: '',
+      name: 'subscriptions',
+      component: SubscriptionList,
+      meta: {
+        requiresAuth: true,
+        roles: ['administrator', 'administratorRebens', 'master'],
+        title: 'Assinaturas'
+      }
+    }
+  ]
+};
+
 const routes = [
   {
     path: '/',
@@ -1575,7 +1599,8 @@ const routes = [
   freeCoursePages,
   promoterPages,
   scratchcardPages,
-  orderPages
+  orderPages,
+  subscriptionPages
 ];
 
 export default routes;

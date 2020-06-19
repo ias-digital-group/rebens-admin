@@ -209,6 +209,14 @@
           }"
         ></sidebar-item>
         <sidebar-item
+          v-show="showSubscriptions"
+          :link="{
+            name: 'Assinaturas',
+            icon: 'tim-icons icon-paper',
+            path: '/subscriptions'
+          }"
+        ></sidebar-item>
+        <sidebar-item
           v-show="showTickets"
           :link="{
             name: 'Validação de Ingresso',
@@ -308,7 +316,8 @@ export default {
       showFreeCourses: true,
       sidebarBackground: 'blue',
       showTickets: false,
-      showCoupons: false //vue|blue|orange|green|red|primary
+      showCoupons: false,
+      showSubscriptions: false //vue|blue|orange|green|red|primary
     };
   },
   methods: {
@@ -367,6 +376,10 @@ export default {
       this.$store.getters.currentUser.role == 'couponChecker';
     this.showCoupons =
       this.$store.getters.currentUser.role == 'couponChecker' ||
+      this.$store.getters.currentUser.role == 'master' ||
+      this.$store.getters.currentUser.role == 'administratorRebens' ||
+      this.$store.getters.currentUser.role == 'administrator';
+    this.showSubscriptions =
       this.$store.getters.currentUser.role == 'master' ||
       this.$store.getters.currentUser.role == 'administratorRebens' ||
       this.$store.getters.currentUser.role == 'administrator';
