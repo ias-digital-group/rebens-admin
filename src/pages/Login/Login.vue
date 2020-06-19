@@ -37,9 +37,12 @@
               @click.native.prevent="validate"
               :loading="fullscreenLoading"
               block
-            >{{ $t('pages.login.signin-button') }}</base-button>
+              >{{ $t('pages.login.signin-button') }}</base-button
+            >
           </div>
-          <base-link class="mt-3" to="/passwordRecovery">esqueci minha senha</base-link>
+          <base-link class="mt-3" to="/passwordRecovery"
+            >esqueci minha senha</base-link
+          >
         </card>
       </form>
     </div>

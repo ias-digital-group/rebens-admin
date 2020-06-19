@@ -49,12 +49,6 @@ const OperationsEdit = () => import('src/pages/Operations/Edit.vue');
 
 const BenefitsList = () => import('src/pages/Benefits/List.vue');
 const BenefitsEdit = () => import('src/pages/Benefits/Edit.vue');
-const BenefitCategoriesList = () =>
-  import('src/pages/Benefits/CategoryList.vue');
-const BenefitCategoriesEdit = () =>
-  import('src/pages/Benefits/CategoryEdit.vue');
-const BenefitPartnersList = () => import('src/pages/Benefits/PartnerList.vue');
-const BenefitPartnersEdit = () => import('src/pages/Benefits/PartnerEdit.vue');
 
 const CustomerReport = () => import('src/pages/Report/Customer.vue');
 const BenefitUseReport = () => import('src/pages/Report/BenefitUse.vue');
@@ -616,7 +610,7 @@ let pagesPages = {
 
 let benefitsPages = {
   path: '/benefits',
-  component: DashboardLayout,
+  component: MainLayout,
   meta: {
     requiresAuth: true,
     roles: [
@@ -676,84 +670,6 @@ let benefitsPages = {
           'administratorRebens'
         ],
         title: i18n.t('pages.benefits.title')
-      }
-    },
-    {
-      path: 'categories/',
-      name: 'categoryBenefit',
-      component: BenefitCategoriesList,
-      meta: {
-        requiresAuth: true,
-        roles: [
-          'master',
-          'publisher',
-          'administrator',
-          'publisherRebens',
-          'administratorRebens'
-        ],
-        title: i18n.t('pages.categories.title')
-      }
-    },
-    {
-      path: 'categories/new/',
-      name: `new_categoryBenefit`,
-      component: BenefitCategoriesEdit,
-      meta: {
-        requiresAuth: true,
-        roles: [
-          'master',
-          'administrator',
-          'publisherRebens',
-          'administratorRebens'
-        ],
-        title: i18n.t('pages.categories.title')
-      }
-    },
-    {
-      path: 'categories/:id/edit/',
-      name: 'edit_categoryBenefit',
-      props: true,
-      component: BenefitCategoriesEdit,
-      meta: {
-        requiresAuth: true,
-        roles: [
-          'master',
-          'administrator',
-          'publisherRebens',
-          'administratorRebens'
-        ],
-        title: i18n.t('pages.categories.title')
-      }
-    },
-    {
-      path: 'partner/',
-      name: 'partnerBenefit',
-      component: BenefitPartnersList,
-      meta: {
-        requiresAuth: true,
-        roles: ['master', 'publisherRebens', 'administratorRebens'],
-        title: i18n.t('pages.partners.title')
-      }
-    },
-    {
-      path: 'partner/new',
-      name: `new_partnerBenefit`,
-      component: BenefitPartnersEdit,
-      meta: {
-        requiresAuth: true,
-        roles: ['master', 'publisherRebens', 'administratorRebens'],
-        title: i18n.t('pages.partners.title')
-      }
-    },
-    {
-      path: 'partner/:id/edit',
-      name: 'edit_partnerBenefit',
-      props: true,
-      component: BenefitPartnersEdit,
-      meta: {
-        requiresAuth: true,
-        roles: ['master', 'publisherRebens', 'administratorRebens'],
-        title: i18n.t('pages.partners.title')
       }
     }
   ]

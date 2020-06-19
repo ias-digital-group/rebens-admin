@@ -28,9 +28,7 @@
                 <span slot="no-options">Nenhum Tipo encontrado</span>
               </v-select>
               <label v-if="customErrors.get('type')" class="ias-error">
-                {{
-                customErrors.get('type')
-                }}
+                {{ customErrors.get('type') }}
               </label>
             </div>
           </div>
@@ -47,9 +45,7 @@
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
               <label v-if="customErrors.get('idItem')" class="ias-error">
-                {{
-                customErrors.get('idItem')
-                }}
+                {{ customErrors.get('idItem') }}
               </label>
             </div>
           </div>
@@ -66,9 +62,7 @@
                 <span slot="no-options">Nenhum Parceiro encontrado</span>
               </v-select>
               <label v-if="customErrors.get('idItem')" class="ias-error">
-                {{
-                customErrors.get('idItem')
-                }}
+                {{ customErrors.get('idItem') }}
               </label>
             </div>
           </div>
@@ -95,7 +89,11 @@
               maxlength="200"
             ></custom-input>
           </div>
-          <ias-address ref="ias-address" :customErrors="customErrors" :address.sync="model.address"></ias-address>
+          <ias-address
+            ref="ias-address"
+            :customErrors="customErrors"
+            :address.sync="model.address"
+          ></ias-address>
           <div class="ias-row">
             <custom-input
               :required="true"
@@ -175,7 +173,11 @@
           </div>
           <div class="ias-row">
             <div class="form-actions">
-              <button class="bt bg-green c-white" type="button" @click.prevent="validate">
+              <button
+                class="bt bg-green c-white"
+                type="button"
+                @click.prevent="validate"
+              >
                 <span v-if="viewAction === 'new'">Cadastrar</span>
                 <span v-else>Salvar</span>
               </button>
@@ -212,7 +214,11 @@
         </div>
       </form>
     </div>
-    <success-modal :isEdit="viewAction !== 'new'" :show="showSuccessModal" link="/company"></success-modal>
+    <success-modal
+      :isEdit="viewAction !== 'new'"
+      :show="showSuccessModal"
+      link="/company"
+    ></success-modal>
   </div>
 </template>
 <script>

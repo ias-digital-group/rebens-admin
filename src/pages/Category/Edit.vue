@@ -38,19 +38,25 @@
               >
                 <span slot="no-options">Nenhum Tipo encontrado</span>
               </v-select>
-              <label
-                v-if="customErrors.get('type')"
-                class="ias-error"
-              >{{ customErrors.get('type') }}</label>
+              <label v-if="customErrors.get('type')" class="ias-error">{{
+                customErrors.get('type')
+              }}</label>
             </div>
             <div class="opts-holder">
-              <ias-radio v-model="level" name="root" value="root" :disabled="model.hasChild">Raiz</ias-radio>
+              <ias-radio
+                v-model="level"
+                name="root"
+                value="root"
+                :disabled="model.hasChild"
+                >Raiz</ias-radio
+              >
               <ias-radio
                 v-model="level"
                 name="sub"
                 value="sub"
                 :disabled="model.hasChild"
-              >Subcategoria</ias-radio>
+                >Subcategoria</ias-radio
+              >
             </div>
           </div>
           <div class="ias-row">
@@ -66,16 +72,19 @@
               >
                 <span slot="no-options">Nenhuma Categoria encontrada</span>
               </v-select>
-              <label
-                v-if="customErrors.get('idParent')"
-                class="ias-error"
-              >{{ customErrors.get('idParent') }}</label>
+              <label v-if="customErrors.get('idParent')" class="ias-error">{{
+                customErrors.get('idParent')
+              }}</label>
             </div>
           </div>
 
           <div class="ias-row">
             <div class="form-actions">
-              <button class="bt bg-green c-white" type="button" @click.prevent="validate">
+              <button
+                class="bt bg-green c-white"
+                type="button"
+                @click.prevent="validate"
+              >
                 <span v-if="viewAction === 'new'">Cadastrar</span>
                 <span v-else>Salvar</span>
               </button>
@@ -87,7 +96,11 @@
         <div class="form-right"></div>
       </form>
     </div>
-    <success-modal :isEdit="viewAction !== 'new'" :show="showSuccessModal" link="/category"></success-modal>
+    <success-modal
+      :isEdit="viewAction !== 'new'"
+      :show="showSuccessModal"
+      link="/category"
+    ></success-modal>
   </div>
 </template>
 <script>
