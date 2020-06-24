@@ -26,10 +26,9 @@
               >
                 <span slot="no-options">Nenhum parceiro encontrado</span>
               </v-select>
-              <label
-                v-show="customErrors.get('idPartner')"
-                class="ias-error"
-              >{{ customErrors.get('idPartner') }}</label>
+              <label v-show="customErrors.get('idPartner')" class="ias-error">
+                {{ customErrors.get('idPartner') }}
+              </label>
             </div>
           </div>
           <div class="ias-row">
@@ -42,10 +41,9 @@
               :error="customErrors.get('name')"
               maxlength="200"
             ></custom-input>
-            <label
-              v-show="customErrors.get('name')"
-              class="ias-error"
-            >{{ customErrors.get('name') }}</label>
+            <label v-show="customErrors.get('name')" class="ias-error">
+              {{ customErrors.get('name') }}
+            </label>
           </div>
           <div class="ias-row">
             <custom-input
@@ -57,10 +55,9 @@
               :error="customErrors.get('title')"
               maxlength="200"
             ></custom-input>
-            <label
-              v-show="customErrors.get('title')"
-              class="ias-error"
-            >{{ customErrors.get('title') }}</label>
+            <label v-show="customErrors.get('title')" class="ias-error">
+              {{ customErrors.get('title') }}
+            </label>
           </div>
           <div class="ias-row">
             <custom-input
@@ -72,43 +69,82 @@
               :error="customErrors.get('benefitCall')"
               maxlength="200"
             ></custom-input>
-            <label
-              v-show="customErrors.get('benefitCall')"
-              class="ias-error"
-            >{{ customErrors.get('benefitCall') }}</label>
+            <label v-show="customErrors.get('benefitCall')" class="ias-error">
+              {{ customErrors.get('benefitCall') }}
+            </label>
           </div>
-          <div class="ias-row-editor" :class="{ 'has-error': customErrors.get('detail') }">
+          <div
+            class="ias-row-editor"
+            :class="{ 'has-error': customErrors.get('detail') }"
+          >
             <vue-editor
               :editorToolbar="customToolbar"
               v-model="model.detail"
               placeholder="Detalhes"
             />
-            <label
-              v-show="customErrors.get('detail')"
-              class="ias-error"
-            >{{ customErrors.get('detail') }}</label>
+            <label v-show="customErrors.get('detail')" class="ias-error">
+              {{ customErrors.get('detail') }}
+            </label>
           </div>
-          <div class="ias-row-editor" :class="{ 'has-error': customErrors.get('howToUse') }">
+          <div
+            class="ias-row-editor"
+            :class="{ 'has-error': customErrors.get('howToUse') }"
+          >
             <vue-editor
               :editorToolbar="customToolbar"
               v-model="model.howToUse"
               placeholder="Como usar"
             />
-            <label v-show="customErrors.get('howToUse')" class="text-danger">Campo obrigatório</label>
+            <label v-show="customErrors.get('howToUse')" class="text-danger"
+              >Campo obrigatório</label
+            >
           </div>
           <div class="ias-row">
-            <ias-radio v-model="model.idBenefitType" name="1" :key="1" :value="1">E-commerce</ias-radio>
-            <ias-radio v-model="model.idBenefitType" name="2" :key="2" :value="2">Varejo Local</ias-radio>
-            <ias-radio v-model="model.idBenefitType" name="3" :key="3" :value="3">Cashback</ias-radio>
-            <label v-show="customErrors.get('benefitType')" class="text-danger">Campo obrigatório</label>
+            <ias-radio
+              v-model="model.idBenefitType"
+              name="1"
+              :key="1"
+              :value="1"
+              >E-commerce</ias-radio
+            >
+            <ias-radio
+              v-model="model.idBenefitType"
+              name="2"
+              :key="2"
+              :value="2"
+              >Varejo Local</ias-radio
+            >
+            <ias-radio
+              v-model="model.idBenefitType"
+              name="3"
+              :key="3"
+              :value="3"
+              >Cashback</ias-radio
+            >
+            <label v-show="customErrors.get('benefitType')" class="text-danger"
+              >Campo obrigatório</label
+            >
           </div>
           <div class="ias-row">
-            <ias-radio v-model="model.idIntegrationType" name="1" :key="1" :value="1">Rebens</ias-radio>
-            <ias-radio v-model="model.idIntegrationType" name="2" :key="2" :value="2">Zanox</ias-radio>
+            <ias-radio
+              v-model="model.idIntegrationType"
+              name="1"
+              :key="1"
+              :value="1"
+              >Rebens</ias-radio
+            >
+            <ias-radio
+              v-model="model.idIntegrationType"
+              name="2"
+              :key="2"
+              :value="2"
+              >Zanox</ias-radio
+            >
             <label
               v-show="customErrors.get('integrationType')"
               class="text-danger"
-            >Campo obrigatório!</label>
+              >Campo obrigatório!</label
+            >
           </div>
           <div class="ias-row">
             <custom-input
@@ -116,7 +152,11 @@
               v-model="model.minDiscountPercentage"
               type="text"
               name="minDiscountPercentage"
-              :label="model.idBenefitType == 3 ? 'Porcentagem mínima' : 'Desconto mínimo'"
+              :label="
+                model.idBenefitType == 3
+                  ? 'Porcentagem mínima'
+                  : 'Desconto mínimo'
+              "
               :error="customErrors.get('minDiscount')"
               :isMoney="true"
             ></custom-input>
@@ -125,7 +165,11 @@
               v-model="model.maxDiscountPercentage"
               type="text"
               name="maxDiscountPercentage"
-              :label="model.idBenefitType == 3 ? 'Porcentagem máxima' : 'Desconto máximo'"
+              :label="
+                model.idBenefitType == 3
+                  ? 'Porcentagem máxima'
+                  : 'Desconto máximo'
+              "
               :error="customErrors.get('maxDiscount')"
               :isMoney="true"
             ></custom-input>
@@ -171,7 +215,9 @@
           <div class="ias-row" v-if="model.idBenefitType == 3">
             <custom-input
               label="Validade (DD/MM/AAAA)"
-              :class="{ 'ias-focus': model.dueDate != null && model.dueDate != '' }"
+              :class="{
+                'ias-focus': model.dueDate != null && model.dueDate != ''
+              }"
               :error="customErrors.get('dueDate')"
             >
               <el-date-picker
@@ -196,7 +242,9 @@
             ></custom-input>
             <custom-input
               label="Validade (DD/MM/AAAA)"
-              :class="{ 'ias-focus': model.dueDate != null && model.dueDate != '' }"
+              :class="{
+                'ias-focus': model.dueDate != null && model.dueDate != ''
+              }"
               :error="customErrors.get('dueDate')"
             >
               <el-date-picker
@@ -219,7 +267,9 @@
               v-model="model.voucherText"
               placeholder="Texto do voucher"
             />
-            <label v-show="customErrors.get('voucherText')" class="text-danger">Campo obrigatório</label>
+            <label v-show="customErrors.get('voucherText')" class="text-danger"
+              >Campo obrigatório</label
+            >
           </div>
           <div class="ias-row" v-else>
             <custom-input
@@ -231,10 +281,9 @@
               :error="customErrors.get('link')"
               maxlength="200"
             ></custom-input>
-            <label
-              v-show="customErrors.get('link')"
-              class="ias-error"
-            >{{ customErrors.get('link') }}</label>
+            <label v-show="customErrors.get('link')" class="ias-error">
+              {{ customErrors.get('link') }}
+            </label>
           </div>
           <div class="ias-row">
             <custom-input
@@ -282,7 +331,8 @@
               <label
                 v-show="customErrors.get('homeHighlight')"
                 class="ias-error"
-              >{{ customErrors.get('homeHighlight') }}</label>
+                >{{ customErrors.get('homeHighlight') }}</label
+              >
             </div>
             <div class="select-holder">
               <v-select
@@ -291,14 +341,17 @@
                 :key="model.homeBenefitHighlight"
                 v-model="model.homeBenefitHighlight"
                 placeholder="Destaque home benefícios?"
-                :class="{ 'has-error': customErrors.get('homeBenefitHighlight') }"
+                :class="{
+                  'has-error': customErrors.get('homeBenefitHighlight')
+                }"
               >
                 <span slot="no-options">Nenhum destaque encontrado</span>
               </v-select>
               <label
                 v-show="customErrors.get('homeBenefitHighlight')"
                 class="ias-error"
-              >{{ customErrors.get('homeBenefitHighlight') }}</label>
+                >{{ customErrors.get('homeBenefitHighlight') }}</label
+              >
             </div>
           </div>
           <div class="ias-row" v-show="isRebens">
@@ -311,16 +364,19 @@
                 v-model="model.idOperation"
                 placeholder="Operação"
               ></v-select>
-              <label
-                v-show="customErrors.get('operation')"
-                class="text-danger"
-              >customErrors.get('operation')</label>
+              <label v-show="customErrors.get('operation')" class="text-danger"
+                >customErrors.get('operation')</label
+              >
             </div>
           </div>
 
           <div class="ias-row">
             <div class="form-actions">
-              <button class="bt bg-green c-white" type="button" @click.prevent="validate">
+              <button
+                class="bt bg-green c-white"
+                type="button"
+                @click.prevent="validate"
+              >
                 <span v-if="viewAction === 'new'">Cadastrar</span>
                 <span v-else>Salvar</span>
               </button>
@@ -346,15 +402,18 @@
               multiple
               :class="{ 'has-error': customErrors.get('operations') }"
             ></v-select>
-            <label
-              v-if="customErrors.get('operations')"
-              class="ias-error"
-            >{{ customErrors.get('operations') }}</label>
+            <label v-if="customErrors.get('operations')" class="ias-error">
+              {{ customErrors.get('operations') }}
+            </label>
           </div>
         </div>
       </form>
     </div>
-    <success-modal :isEdit="viewAction !== 'new'" :show="showSuccessModal" link="/benefits"></success-modal>
+    <success-modal
+      :isEdit="viewAction !== 'new'"
+      :show="showSuccessModal"
+      link="/benefits"
+    ></success-modal>
   </div>
 </template>
 <script>
@@ -582,7 +641,7 @@ export default {
       }
       if (vw.viewAction == 'new') {
         benefitService.create(vw.model).then(
-          response => {
+          () => {
             vw.$notify({
               type: 'success',
               message: 'Beneficio cadastrado com sucesso!'

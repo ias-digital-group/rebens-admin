@@ -21,10 +21,20 @@
         />
       </template>
       <template v-else-if="isMoney">
-        <money class="ias-input" :value="value" v-bind="money" v-on="listeners"></money>
+        <money
+          class="ias-input"
+          :value="value"
+          v-bind="money"
+          v-on="listeners"
+        ></money>
       </template>
       <template v-else>
-        <input :value="value" v-bind="$attrs" v-on="listeners" class="ias-input" />
+        <input
+          :value="value"
+          v-bind="$attrs"
+          v-on="listeners"
+          class="ias-input"
+        />
       </template>
     </slot>
     <div v-if="hasIcon" class="ias-icon-holder">
