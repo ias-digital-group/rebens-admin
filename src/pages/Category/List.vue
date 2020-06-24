@@ -137,7 +137,6 @@
         :total-pages="pagination.totalPages"
         :current-page="pagination.currentPage"
         v-on:input="onPageChanged"
-        @update-per-page="changePerPage"
       ></pagination>
     </div>
     <delete-modal

@@ -151,10 +151,10 @@ export default {
       );
     });
   },
-  changeActive: function(id, active) {
+  toggleActive: function(id) {
     return new Promise((resolve, reject) => {
       HTTP.post(
-        config.apiEndpoints.benefitUri.concat(`changeActive/${id}/${active}`)
+        config.apiEndpoints.benefitUri.concat(`toggleActive/${id}`)
       ).then(
         response => {
           resolve(response.data);

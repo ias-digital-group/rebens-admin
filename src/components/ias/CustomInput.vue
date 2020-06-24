@@ -20,13 +20,11 @@
           class="ias-input"
         />
       </template>
+      <template v-else-if="isMoney">
+        <money class="ias-input" :value="value" v-bind="money" v-on="listeners"></money>
+      </template>
       <template v-else>
-        <input
-          :value="value"
-          v-bind="$attrs"
-          v-on="listeners"
-          class="ias-input"
-        />
+        <input :value="value" v-bind="$attrs" v-on="listeners" class="ias-input" />
       </template>
     </slot>
     <div v-if="hasIcon" class="ias-icon-holder">
@@ -36,7 +34,11 @@
   </div>
 </template>
 <script>
+import { Money } from 'v-money';
 export default {
+  components: {
+    Money
+  },
   inheritAttrs: false,
   name: 'custom-input',
   props: {
@@ -73,6 +75,10 @@ export default {
     disabled: {
       type: Boolean,
       description: 'Input disabled'
+    },
+    isMoney: {
+      type: Boolean,
+      description: 'is currency'
     }
   },
   model: {
@@ -82,7 +88,15 @@ export default {
   data() {
     return {
       focused: false,
-      touched: false
+      touched: false,
+      money: {
+        decimal: ',',
+        thousands: '.',
+        prefix: '',
+        suffix: '',
+        precision: 2,
+        masked: false
+      }
     };
   },
   computed: {
