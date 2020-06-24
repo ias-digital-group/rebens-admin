@@ -300,9 +300,7 @@ export default {
       }
       if (vm.viewAction == 'new') {
         bannerService.create(vm.model).then(
-          res => {
-            vm.operationKey++;
-            vm.id = res.id;
+          () => {
             vm.submitLoading = false;
             vm.showSuccessModal = true;
           },

@@ -26,9 +26,9 @@
               >
                 <span slot="no-options">Nenhum parceiro encontrado</span>
               </v-select>
-              <label v-show="customErrors.get('idPartner')" class="ias-error">
-                {{ customErrors.get('idPartner') }}
-              </label>
+              <label v-show="customErrors.get('idPartner')" class="ias-error">{{
+                customErrors.get('idPartner')
+              }}</label>
             </div>
           </div>
           <div class="ias-row">
@@ -41,9 +41,9 @@
               :error="customErrors.get('name')"
               maxlength="200"
             ></custom-input>
-            <label v-show="customErrors.get('name')" class="ias-error">
-              {{ customErrors.get('name') }}
-            </label>
+            <label v-show="customErrors.get('name')" class="ias-error">{{
+              customErrors.get('name')
+            }}</label>
           </div>
           <div class="ias-row">
             <custom-input
@@ -55,9 +55,9 @@
               :error="customErrors.get('title')"
               maxlength="200"
             ></custom-input>
-            <label v-show="customErrors.get('title')" class="ias-error">
-              {{ customErrors.get('title') }}
-            </label>
+            <label v-show="customErrors.get('title')" class="ias-error">{{
+              customErrors.get('title')
+            }}</label>
           </div>
           <div class="ias-row">
             <custom-input
@@ -69,9 +69,9 @@
               :error="customErrors.get('benefitCall')"
               maxlength="200"
             ></custom-input>
-            <label v-show="customErrors.get('benefitCall')" class="ias-error">
-              {{ customErrors.get('benefitCall') }}
-            </label>
+            <label v-show="customErrors.get('benefitCall')" class="ias-error">{{
+              customErrors.get('benefitCall')
+            }}</label>
           </div>
           <div
             class="ias-row-editor"
@@ -82,9 +82,9 @@
               v-model="model.detail"
               placeholder="Detalhes"
             />
-            <label v-show="customErrors.get('detail')" class="ias-error">
-              {{ customErrors.get('detail') }}
-            </label>
+            <label v-show="customErrors.get('detail')" class="ias-error">{{
+              customErrors.get('detail')
+            }}</label>
           </div>
           <div
             class="ias-row-editor"
@@ -99,7 +99,10 @@
               >Campo obrigatório</label
             >
           </div>
-          <div class="ias-row">
+          <div
+            class="ias-row"
+            :class="{ 'ias-has-error': customErrors.get('benefitType') }"
+          >
             <ias-radio
               v-model="model.idBenefitType"
               name="1"
@@ -125,7 +128,10 @@
               >Campo obrigatório</label
             >
           </div>
-          <div class="ias-row">
+          <div
+            class="ias-row"
+            :class="{ 'ias-has-error': customErrors.get('integrationType') }"
+          >
             <ias-radio
               v-model="model.idIntegrationType"
               name="1"
@@ -281,9 +287,9 @@
               :error="customErrors.get('link')"
               maxlength="200"
             ></custom-input>
-            <label v-show="customErrors.get('link')" class="ias-error">
-              {{ customErrors.get('link') }}
-            </label>
+            <label v-show="customErrors.get('link')" class="ias-error">{{
+              customErrors.get('link')
+            }}</label>
           </div>
           <div class="ias-row">
             <custom-input
@@ -363,6 +369,7 @@
                 :key="model.idOperation"
                 v-model="model.idOperation"
                 placeholder="Operação"
+                :disabled="!model.exclusive"
               ></v-select>
               <label v-show="customErrors.get('operation')" class="text-danger"
                 >customErrors.get('operation')</label
@@ -402,9 +409,9 @@
               multiple
               :class="{ 'has-error': customErrors.get('operations') }"
             ></v-select>
-            <label v-if="customErrors.get('operations')" class="ias-error">
-              {{ customErrors.get('operations') }}
-            </label>
+            <label v-if="customErrors.get('operations')" class="ias-error">{{
+              customErrors.get('operations')
+            }}</label>
           </div>
         </div>
       </form>
@@ -601,6 +608,8 @@ export default {
         self.model.homeBenefitHighlight != 0
       )
         self.customErrors.set('homeBenefitHighlight', 'Campo obrigatório');
+      if (!self.model.operations || self.model.operations.length === 0)
+        self.customErrors.set('operations', 'Campo obrigatório');
 
       if (self.customErrors.size === 0) {
         self.submitLoading = true;
@@ -642,14 +651,8 @@ export default {
       if (vw.viewAction == 'new') {
         benefitService.create(vw.model).then(
           () => {
-            vw.$notify({
-              type: 'success',
-              message: 'Beneficio cadastrado com sucesso!'
-            });
-            vw.$router.push({
-              path: `/benefits`
-            });
             vw.submitLoading = false;
+            vw.showSuccessModal = true;
           },
           err => {
             if (err.response.status === 400) {
@@ -668,13 +671,9 @@ export default {
         );
       } else {
         benefitService.update(vw.model).then(
-          response => {
-            vw.$notify({
-              type: 'success',
-              message: response.message
-            });
-            vw.$router.push('/benefits');
+          () => {
             vw.submitLoading = false;
+            vw.showSuccessModal = true;
           },
           err => {
             vw.$notify({
@@ -714,14 +713,6 @@ export default {
     },
     onImageChange(file) {
       this.image = file;
-    }
-  },
-  watch: {
-    'model.idBenefitType': function() {
-      if (this.viewAction == 'new') {
-        this.model.howToUse =
-          '<div><p>Realize suas compras, seu CASH BACK será ativado automaticamente.</p><br /><p><b>Regras Cash Back (Dinheiro Volta)</b></p><br /><ul><li>Em até 5 dias úteis o parceiro nos avisa da compra, seu Cash Back aparecerá no seu saldo como pendente;</li><li>Em até 120 dias este saldo será confirmado, caso não haja troca ou devolução.</li></ul><br /><p><b>Seu Cash Back pode ser invalidado nas seguintes situações:</b></p><br /><ul><li>Não concluiu o pagamento da compra Utilizou um código ou cupom indevido;&nbsp;</li><li>Uso de vale-presente, vale-compra;</li><li>Utilizar outros programas de fidelidade;</li><li>Comprar de listas de casamento;</li><li>Ser direcionado para a loja através de algum e-mail promocional enviado pela loja ou por outro site;</li><li>Alterar o pedido (devolver/trocar algum produto), alterar a forma de pagamento ou cancelar o pedido/compra;</li><li>Não cumulativo com Programas de Fidelidade</li></ul></div>';
-      }
     }
   },
   created() {

@@ -30,7 +30,7 @@
         </svg>
       </span>
     </div>
-    <div v-else class="no-image">
+    <div v-else class="no-image" :class="{ 'ias-img-error': error }">
       <input
         accept="image/*"
         @change="handlePreview"
@@ -90,4 +90,8 @@ export default {
   }
 };
 </script>
-<style></style>
+<style scoped>
+.ias-img-error {
+  background-color: #fbdddd !important;
+}
+</style>

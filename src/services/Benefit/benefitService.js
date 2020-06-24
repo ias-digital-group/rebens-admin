@@ -18,7 +18,13 @@ export default {
           };
       HTTP.get(
         config.apiEndpoints.benefitUri.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}&active=${request.active}&type=${request.type}&idOperation=${request.idOperation}`
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
+            request.searchWord
+          }&sort=${request.sort}&active=${
+            request.active != null ? request.active : ''
+          }&type=${request.type != null ? request.type : ''}&idOperation=${
+            request.idOperation != null ? request.idOperation : ''
+          }`
         )
       ).then(
         response => {
