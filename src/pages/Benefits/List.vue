@@ -4,30 +4,16 @@
       <h2>Benefícios</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Digite aqui o que deseja encontrar"
-          />
+          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i
-            v-else
-            class="bt-clear-search icon-icon-times c-red"
-            @click="searchQuery = ''"
-          ></i>
+          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
         </div>
         <div class="filter" :class="{ active: showFilters }">
-          <a
-            class="bt bt-square bg-white-2 c-light-blue"
-            @click="showFilters = !showFilters"
-          >
+          <a class="bt bt-square bg-white-2 c-light-blue" @click="showFilters = !showFilters">
             <i class="icon-icon-filter"></i>
           </a>
         </div>
-        <base-link
-          to="/benefits/new"
-          class="bt bt-square bg-white-2 c-light-blue"
-        >
+        <base-link to="/benefits/new" class="bt bt-square bg-white-2 c-light-blue">
           <i class="icon-icon-plus"></i>
         </base-link>
       </div>
@@ -107,12 +93,7 @@
                 >
                   <i class="icon-icon-check"></i>
                 </button>
-                <button
-                  @click="duplicate(item)"
-                  type="button"
-                  title="Duplicar"
-                  class="bt c-green"
-                >
+                <button @click="duplicate(item)" type="button" title="Duplicar" class="bt c-green">
                   <i class="icon-icon-duplicate"></i>
                 </button>
                 <button
@@ -123,12 +104,7 @@
                 >
                   <i class="icon-icon-edit"></i>
                 </button>
-                <button
-                  @click="handleDelete(item)"
-                  type="button"
-                  title="apagar"
-                  class="bt c-red"
-                >
+                <button @click="handleDelete(item)" type="button" title="apagar" class="bt c-red">
                   <i class="icon-icon-delete"></i>
                 </button>
               </div>
@@ -150,6 +126,8 @@
       @confirmDelete="confirmDelete"
       :itemName="modal.itemName"
       :show="modal.visible"
+      :showSuccess="modal.showSuccess"
+      @closeDeleteSuccess="closeDeleteSuccess"
     ></delete-modal>
   </div>
 </template>
@@ -245,6 +223,7 @@ export default {
               } com sucesso`
             });
             self.$data.loading = false;
+            self.fetchData();
           } else {
             self.$notify({
               type: 'danger',
@@ -280,34 +259,6 @@ export default {
         }
       );
     },
-    validateModal() {
-      const self = this;
-      this.$validator.validateAll().then(isValid => {
-        if (isValid) {
-          self.modal.formLoading = true;
-          benefitService.delete(self.modal.model.id).then(
-            response => {
-              self.$notify({
-                type: 'primary',
-                message: response.message,
-                icon: 'tim-icons icon-bell-55'
-              });
-              self.resetModal();
-              self.pagination.currentPage = 1;
-              self.fetchData();
-            },
-            err => {
-              self.$notify({
-                type: 'primary',
-                message: err.message,
-                icon: 'tim-icons icon-bell-55'
-              });
-              self.modal.formLoading = false;
-            }
-          );
-        }
-      });
-    },
     confirmDelete(val) {
       const self = this;
       if (val) {
@@ -315,13 +266,9 @@ export default {
           if (isValid) {
             self.modal.formLoading = true;
             benefitService.delete(self.modal.model.id).then(
-              response => {
-                self.$notify({
-                  type: 'success',
-                  message: response.message
-                });
+              () => {
+                self.showSuccess(true);
                 self.resetModal();
-                self.pagination.currentPage = 1;
                 self.fetchData();
               },
               err => {
@@ -344,13 +291,18 @@ export default {
       } else {
         self.resetModal();
       }
+    },
+    closeDeleteSuccess() {
+      this.showSuccess(false);
     }
   },
   watch: {
     activeFilter() {
+      this.pagination.currentPage = 1;
       this.fetchData();
     },
     typeFilter() {
+      this.pagination.currentPage = 1;
       this.fetchData();
     }
   }

@@ -17,7 +17,8 @@ export default {
         visible: false,
         formLoading: false,
         model: {},
-        itemName: ''
+        itemName: '',
+        showSuccess: false
       }
     };
   },
@@ -83,6 +84,9 @@ export default {
       this.modal.model = {};
       this.modal.formLoading = false;
       this.modal.itemName = '';
+    },
+    showSuccess(val) {
+      this.modal.showSuccess = val;
     },
     getError(fieldName) {
       return this.errors.first(fieldName);

@@ -4,23 +4,12 @@
       <h2>{{ $t('pages.users.title') }}</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Digite aqui o que deseja encontrar"
-          />
+          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i
-            v-else
-            class="bt-clear-search icon-icon-times c-red"
-            @click="searchQuery = ''"
-          ></i>
+          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
         </div>
         <div class="filter" :class="{ active: showFilters }">
-          <a
-            class="bt bt-square bg-white-2 c-light-blue"
-            @click="showFilters = !showFilters"
-          >
+          <a class="bt bt-square bg-white-2 c-light-blue" @click="showFilters = !showFilters">
             <i class="icon-icon-filter"></i>
           </a>
         </div>
@@ -130,12 +119,7 @@
                 >
                   <i class="icon-icon-edit"></i>
                 </button>
-                <button
-                  @click="handleDelete(item)"
-                  type="button"
-                  title="apagar"
-                  class="bt c-red"
-                >
+                <button @click="handleDelete(item)" type="button" title="apagar" class="bt c-red">
                   <i class="icon-icon-delete"></i>
                 </button>
               </div>
@@ -158,6 +142,8 @@
       @confirmDelete="confirmDelete"
       :itemName="modal.itemName"
       :show="modal.visible"
+      :showSuccess="modal.showSuccess"
+      @closeDeleteSuccess="closeDeleteSuccess"
     ></delete-modal>
   </div>
 </template>
@@ -273,13 +259,9 @@ export default {
       if (val) {
         userService.delete(self.modal.model.id).then(
           response => {
-            self.$notify({
-              type: 'success',
-              message: response.message
-            });
-            this.resetModal();
-            self.pagination.currentPage = 1;
+            self.resetModal();
             self.fetchData();
+            self.showSuccess(true);
           },
           err => {
             self.$notify({
@@ -291,6 +273,9 @@ export default {
       } else {
         this.resetModal();
       }
+    },
+    closeDeleteSuccess() {
+      this.showSuccess(false);
     },
     populateFilters(self) {
       self.isMaster = self.$store.getters.currentUser.role === 'master';

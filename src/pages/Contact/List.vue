@@ -4,30 +4,16 @@
       <h2>Contatos</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Digite aqui o que deseja encontrar"
-          />
+          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i
-            v-else
-            class="bt-clear-search icon-icon-times c-red"
-            @click="searchQuery = ''"
-          ></i>
+          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
         </div>
         <div class="filter" :class="{ active: showFilters }">
-          <a
-            class="bt bt-square bg-white-2 c-light-blue"
-            @click="showFilters = !showFilters"
-          >
+          <a class="bt bt-square bg-white-2 c-light-blue" @click="showFilters = !showFilters">
             <i class="icon-icon-filter"></i>
           </a>
         </div>
-        <base-link
-          to="/contact/new"
-          class="bt bt-square bg-white-2 c-light-blue"
-        >
+        <base-link to="/contact/new" class="bt bt-square bg-white-2 c-light-blue">
           <i class="icon-icon-plus"></i>
         </base-link>
       </div>
@@ -107,12 +93,7 @@
                 >
                   <i class="icon-icon-edit"></i>
                 </button>
-                <button
-                  @click="handleDelete(item)"
-                  type="button"
-                  title="apagar"
-                  class="bt c-red"
-                >
+                <button @click="handleDelete(item)" type="button" title="apagar" class="bt c-red">
                   <i class="icon-icon-delete"></i>
                 </button>
               </div>
@@ -135,6 +116,8 @@
       @confirmDelete="confirmDelete"
       :itemName="modal.itemName"
       :show="modal.visible"
+      :showSuccess="modal.showSuccess"
+      @closeDeleteSuccess="closeDeleteSuccess"
     ></delete-modal>
   </div>
 </template>
@@ -235,13 +218,9 @@ export default {
             self.modal.formLoading = true;
             contactService.delete(self.modal.model.id).then(
               response => {
-                self.$notify({
-                  type: 'success',
-                  message: response.message
-                });
                 self.resetModal();
-                self.pagination.currentPage = 1;
                 self.fetchData();
+                self.showSuccess(true);
               },
               err => {
                 if (err.response.status === 400 && err.response.data.message) {
@@ -263,6 +242,9 @@ export default {
       } else {
         this.resetModal();
       }
+    },
+    closeDeleteSuccess() {
+      this.showSuccess(false);
     }
   },
   watch: {

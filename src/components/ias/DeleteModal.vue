@@ -1,5 +1,5 @@
 <template>
-  <transition name="modal">
+  <div>
     <div class="modal-mask" v-show="show">
       <div class="modal-container">
         <span @click="closeModal" class="bt-remove">
@@ -41,24 +41,39 @@
           name="confirm"
           label="Digite DELETE para confirmar"
           maxlength="200"
+          :error="errorMsg"
         ></custom-input>
-        <button class="bg-red" :disabled="disabled" @click="deleteItem">
-          EXCLUIR
-        </button>
+        <button class="bg-red" @click="deleteItem">EXCLUIR</button>
       </div>
     </div>
-  </transition>
+    <div class="modal-mask" v-show="showSuccess">
+      <div class="modal-container">
+        <img src="/img/icon-success.png" alt="Sucesso" />
+        <p>
+          ITEM EXCLUIDO
+          <br />COM SUCESSO!
+        </p>
+        <button class="bg-green" @click="closeSuccess">IR PARA LISTAGEM</button>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 export default {
   name: 'delete-modal',
   data() {
     return {
-      confirm: ''
+      confirm: '',
+      hasError: false,
+      errorMsg: ''
     };
   },
   props: {
     show: {
+      type: Boolean,
+      default: false
+    },
+    showSuccess: {
       type: Boolean,
       default: false
     },
@@ -67,15 +82,23 @@ export default {
       default: ''
     }
   },
-  computed: {
-    disabled() {
-      return this.confirm !== 'DELETE';
-    }
-  },
   methods: {
     deleteItem() {
-      this.$emit('confirmDelete', true);
-      this.confirm = '';
+      this.hasError = false;
+      this.errorMsg = '';
+      if (this.confirm === '') {
+        this.hasError = true;
+        this.errorMsg = 'Campo obrigatório';
+      } else if (this.confirm !== 'DELETE') {
+        this.hasError = true;
+        this.errorMsg = 'Campo inválido';
+      } else {
+        this.$emit('confirmDelete', true);
+        this.confirm = '';
+      }
+    },
+    closeSuccess() {
+      this.$emit('closeDeleteSuccess');
     },
     closeModal() {
       this.$emit('confirmDelete', false);
