@@ -1,7 +1,7 @@
 <template>
   <div class="ias-image-upload">
-    <div v-if="imagePreview" class="thumb-preview">
-      <img :src="imagePreview" alt="preview" />
+    <div v-if="img" class="thumb-preview">
+      <img :src="img" alt="preview" />
       <span @click="removeFile" class="bt-remove">
         <svg
           width="23"
@@ -69,6 +69,13 @@ export default {
       imagePreview: null
     };
   },
+  computed: {
+    img() {
+      if (this.imagePreview) return this.imagePreview;
+      if (this.src) return this.src;
+      return null;
+    }
+  },
   methods: {
     handlePreview(event) {
       if (event.target.files.length == 0) {
@@ -81,11 +88,6 @@ export default {
     removeFile() {
       this.imagePreview = null;
       this.$emit('change', null);
-    }
-  },
-  watch: {
-    src() {
-      this.imagePreview = this.src;
     }
   }
 };

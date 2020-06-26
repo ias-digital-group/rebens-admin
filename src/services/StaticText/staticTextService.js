@@ -11,14 +11,15 @@ export default {
             pageItems: 30,
             searchWord: '',
             sort: 'name ASC',
-            idStaticTextType: 4
+            idStaticTextType: 4,
+            idOperation: ''
           };
       HTTP.get(
         config.apiEndpoints.staticTextUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
             request.searchWord
           }&sort=${request.sort}&idStaticTextType=${request.idStaticTextType}${
-            request.parentId ? '&idOperation=' + request.parentId : ''
+            request.idOperation ? '&idOperation=' + request.idOperation : ''
           }`
         )
       ).then(

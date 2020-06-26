@@ -1,45 +1,105 @@
 <template>
-  <div class="row">
-    <div class="col-md-12">
-      <card :title="$t('pages.pages.title')">
-        <h4 slot="header" class="card-title">{{ $t('pages.pages.title') }}</h4>
-        <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
-          <static-text-form
-            ref="staticTextForm"
-            :staticText.sync="model"
-          ></static-text-form>
-          <div class="row">
-            <div class="col-md-12">
-              <base-link class="btn mt-3 btn-simple btn-primary" to="/pages"
-                >Voltar</base-link
-              >
-              <base-button
-                class="mt-3 pull-right"
-                native-type="submit"
-                type="info"
-                @click.native.prevent="validateForm"
-                :loading="submitLoading"
-                >Salvar</base-button
-              >
-            </div>
-          </div>
-        </form>
-      </card>
+  <div class="edit-box">
+    <div class="page-header">
+      <h2>
+        <span>{{ model.name }} - {{ model.operationName }}</span>
+      </h2>
+      <div class="box-actions">
+        <base-link to="/pages" class="bt bt-square bg-white-2 c-light-blue">
+          <i class="icon-icon-arrow-left"></i>
+        </base-link>
+      </div>
     </div>
+    <div class="ias-card">
+      <form v-loading="formLoading" @submit.prevent>
+        <div class="form-left">
+          <template v-for="(field, idx) in model.data.fields">
+            <div class="ias-row" :key="idx" v-if="field.type == 'text'">
+              <custom-input
+                :required="true"
+                v-model="field.data"
+                type="text"
+                :name="field.name"
+                :label="field.label"
+                :placeholder="field.label"
+                maxlength="200"
+              ></custom-input>
+            </div>
+
+            <div
+              class="ias-row"
+              :key="idx"
+              v-else-if="field.type == 'tel' || field.type == 'phone'"
+            >
+              <custom-input
+                :required="true"
+                v-model="model.data"
+                type="tel"
+                :name="field.name"
+                :label="field.label"
+                :placeholder="field.label"
+                :inputMask="['(##) ####-####', '(##) #####-####']"
+                maxlength="50"
+              ></custom-input>
+            </div>
+            <div class="ias-row" :key="idx" v-else-if="field.type == 'boolean'">
+              <ias-checkbox v-model="field.checked">{{
+                field.label
+              }}</ias-checkbox>
+            </div>
+            <div
+              class="ias-row-editor"
+              :key="idx"
+              v-else-if="field.type == 'html'"
+            >
+              <vue-editor
+                :editorToolbar="customToolbar"
+                v-model="field.data"
+                :placeholder="field.label"
+              />
+            </div>
+          </template>
+          <div class="ias-row">
+            <div class="form-actions">
+              <button
+                class="bt bg-green c-white"
+                type="button"
+                @click.prevent="validateForm"
+              >
+                Salvar
+              </button>
+            </div>
+            <div class="div-spacer"></div>
+          </div>
+        </div>
+        <div class="form-right">
+          <div v-for="(field, idx) in model.data.fields" :key="idx">
+            <template v-if="field.type == 'image'">
+              <ias-image-upload
+                @change="onImageChange"
+                :img-size="field.label"
+                :src="field.data"
+              />
+            </template>
+          </div>
+        </div>
+      </form>
+    </div>
+    <success-modal
+      :isEdit="true"
+      :show="showSuccessModal"
+      link="/pages"
+    ></success-modal>
   </div>
 </template>
 <script>
-import { Select, Option, DatePicker } from 'element-ui';
-import StaticTextForm from '../../components/StaticTextForm.vue';
 import staticTextService from '../../services/StaticText/staticTextService';
 import helperService from '../../services/Helper/helperService';
+import { SuccessModal } from 'src/components';
 
 export default {
   components: {
-    [Option.name]: Option,
-    [Select.name]: Select,
-    [DatePicker.name]: DatePicker,
-    [StaticTextForm.name]: StaticTextForm
+    SuccessModal
   },
   props: {
     id: String,
@@ -50,6 +110,7 @@ export default {
   },
   data() {
     return {
+      showSuccessModal: false,
       selectLoading: false,
       formLoading: false,
       submitLoading: false,
@@ -60,7 +121,8 @@ export default {
         data: {},
         idOperation: 0,
         active: true,
-        images: []
+        images: [],
+        operationName: ''
       }
     };
   },
@@ -96,9 +158,8 @@ export default {
           })
           .catch(reason => {
             self.$notify({
-              type: 'primary',
-              message: reason.message,
-              icon: 'tim-icons icon-bell-55'
+              type: 'danger',
+              message: reason.message
             });
             self.submitLoading = false;
           });
@@ -109,19 +170,11 @@ export default {
     saveStaticText(self) {
       self.formLoading = true;
       staticTextService.update(self.model).then(
-        response => {
-          self.$notify({
-            type: 'primary',
-            message: response
-              ? response.message
-              : 'Página atualizada com sucesso.',
-            icon: 'tim-icons icon-bell-55'
-          });
+        () => {
+          self.showSuccessModal = true;
           self.formLoading = false;
-          self.$router.push('/pages');
         },
         () => {
-          console.log('erro');
           self.formLoading = false;
         }
       );

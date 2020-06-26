@@ -125,7 +125,7 @@ export default {
         pageItems: this.$data.pagination.perPage,
         searchWord: this.searchQuery,
         sort: this.formatSortFieldParam,
-        parentId: this.parentId,
+        idOperation: this.parentId,
         parent: this.parent,
         idStaticTextType: 4
       };

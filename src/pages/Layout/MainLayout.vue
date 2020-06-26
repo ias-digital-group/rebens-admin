@@ -152,11 +152,26 @@ export default {
         },
         {
           name: 'Operações',
-          path: '/operations',
+          path: '#',
           active: false,
-          roles: 'master,administratorRebens,publisherRebens',
+          roles:
+            'master,administratorRebens,publisherRebens,administrator,publisher',
           needModule: '',
-          subitens: []
+          subitens: [
+            {
+              name: 'Operações',
+              path: '/operations',
+              active: false,
+              roles: 'master,administratorRebens,publisherRebens'
+            },
+            {
+              name: 'Páginas',
+              path: '/pages',
+              active: false,
+              roles:
+                'master,administratorRebens,publisherRebens,administrator,publisher'
+            }
+          ]
         },
         {
           name: 'Clientes',
@@ -365,12 +380,21 @@ export default {
       const self = this;
       self.actualPath = self.$router.currentRoute.path;
       self.menuItens.forEach(item => {
-        if (item.path === self.actualPath) {
+        if (
+          item.path === self.actualPath ||
+          (self.actualPath.startsWith(item.path) &&
+            self.actualPath.endsWith('edit/') &&
+            item.path != '/')
+        ) {
           item.active = true;
         } else {
           if (item.subitens) {
             item.subitens.forEach(sub => {
-              if (sub.path === self.actualPath) {
+              if (
+                sub.path === self.actualPath ||
+                (self.actualPath.startsWith(sub.path) &&
+                  self.actualPath.endsWith('edit/'))
+              ) {
                 sub.active = true;
                 item.active = true;
               }

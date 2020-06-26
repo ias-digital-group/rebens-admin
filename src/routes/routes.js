@@ -567,10 +567,16 @@ let customersPages = {
 
 let pagesPages = {
   path: '/pages',
-  component: DashboardLayout,
+  component: MainLayout,
   meta: {
     requiresAuth: true,
-    roles: ['publisher', 'administrator', 'master'],
+    roles: [
+      'publisher',
+      'administrator',
+      'master',
+      'publisherRebens',
+      'administratorRebens'
+    ],
     title: i18n.t('pages.pages.title')
   },
   children: [
@@ -580,17 +586,13 @@ let pagesPages = {
       component: PagesList,
       meta: {
         requiresAuth: true,
-        roles: ['publisher', 'administrator', 'master'],
-        title: i18n.t('pages.pages.title')
-      }
-    },
-    {
-      path: 'new',
-      name: `new_page`,
-      component: PagesEdit,
-      meta: {
-        requiresAuth: true,
-        roles: ['publisher', 'administrator', 'master'],
+        roles: [
+          'publisher',
+          'administrator',
+          'master',
+          'publisherRebens',
+          'administratorRebens'
+        ],
         title: i18n.t('pages.pages.title')
       }
     },
@@ -601,7 +603,13 @@ let pagesPages = {
       component: PagesEdit,
       meta: {
         requiresAuth: true,
-        roles: ['publisher', 'administrator', 'master'],
+        roles: [
+          'publisher',
+          'administrator',
+          'master',
+          'publisherRebens',
+          'administratorRebens'
+        ],
         title: i18n.t('pages.pages.title')
       }
     }
