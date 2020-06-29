@@ -33,7 +33,7 @@
             >
               <custom-input
                 :required="true"
-                v-model="model.data"
+                v-model="field.data"
                 type="tel"
                 :name="field.name"
                 :label="field.label"

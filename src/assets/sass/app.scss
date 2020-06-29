@@ -591,9 +591,15 @@
           .ql-editor {
             color: $dark-gray;
             font-family: $font-family-base;
-            font-size: $font-size-medium;
+            font-size: $font-size-large;
             font-weight: $font-weight-medium;
             max-height: 500px;
+            p {
+              color: $dark-gray;
+              font-family: $font-family-base;
+              font-size: $font-size-large;
+              font-weight: $font-weight-medium;
+            }
           }
         }
       }
