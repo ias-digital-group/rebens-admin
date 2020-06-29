@@ -4,23 +4,12 @@
       <h2>Páginas</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Digite aqui o que deseja encontrar"
-          />
+          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i
-            v-else
-            class="bt-clear-search icon-icon-times c-red"
-            @click="searchQuery = ''"
-          ></i>
+          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
         </div>
         <div class="filter" :class="{ active: showFilters }">
-          <a
-            class="bt bt-square bg-white-2 c-light-blue"
-            @click="showFilters = !showFilters"
-          >
+          <a class="bt bt-square bg-white-2 c-light-blue" @click="showFilters = !showFilters">
             <i class="icon-icon-filter"></i>
           </a>
         </div>
@@ -41,18 +30,40 @@
       <table v-loading="loading">
         <thead>
           <tr>
-            <th>Nome</th>
             <th>Operação</th>
+            <th>Nome</th>
+            <th>Usuário/Criação</th>
+            <th>Usuário/Atualização</th>
             <th style="width:144px;">Ações</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="item in tableData" :key="item.id">
-            <td>
-              <span>{{ item.name }}</span>
+            <td class="td-flex">
+              <div class="img-holder">
+                <img
+                  v-if="item.operationLogo && item.operationLogo !== ''"
+                  :src="item.operationLogo"
+                  :alt="item.operationName"
+                />
+                <span v-else>{{ item.operationName[0] }}</span>
+              </div>
+              <span>{{ item.operationName }}</span>
             </td>
             <td>
-              <span>{{ item.operationName }}</span>
+              <span>{{ item.title }}</span>
+            </td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.createdUserName }}</span>
+                <span class="blue">{{ item.created }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.modifiedUserName }}</span>
+                <span class="blue">{{ item.modified }}</span>
+              </div>
             </td>
             <td>
               <div class="actions">
