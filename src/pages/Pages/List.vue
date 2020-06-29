@@ -18,7 +18,7 @@
         <v-select
           :options="operations"
           :reduce="op => op.code"
-          v-model="operationFilter"
+          v-model="filters.operation"
           class="no-margin"
           placeholder="Filtre pelo Clube"
         >
@@ -114,7 +114,6 @@ export default {
       internalName: 'pages.pages.list',
       sortField: 'name',
       operations: [],
-      operationFilter: '',
       showFilters: false
     };
   },
@@ -130,7 +129,7 @@ export default {
         searchWord: this.searchQuery,
         sort: this.formatSortFieldParam,
         idStaticTextType: 4,
-        idOperation: this.operationFilter
+        idOperation: this.filters.operation
       };
       this.$data.loading = true;
       staticTextService.findAll(request).then(

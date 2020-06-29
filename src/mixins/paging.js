@@ -6,6 +6,7 @@ export default {
       searchQuery: '',
       sortField: '',
       sortOrder: 'ascending',
+      filters: {},
       pagination: {
         perPage: 10,
         currentPage: 1,
@@ -58,6 +59,7 @@ export default {
       this.searchQuery = c.searchQuery;
       this.sortField = c.sortField;
       this.sortOrder = c.sortOrder;
+      this.filters = c.filters;
     }
     this.fetchData();
   },
@@ -101,7 +103,8 @@ export default {
         },
         searchQuery: vm.searchQuery,
         sortField: vm.sortField,
-        sortOrder: vm.sortOrder
+        sortOrder: vm.sortOrder,
+        filters: vm.filters
       });
       vm.$data.pagination.totalItems = totalItems;
       vm.$data.pagination.totalPages = totalPages;
