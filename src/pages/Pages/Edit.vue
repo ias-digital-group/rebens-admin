@@ -43,15 +43,13 @@
               ></custom-input>
             </div>
             <div class="ias-row" :key="idx" v-else-if="field.type == 'boolean'">
-              <ias-checkbox v-model="field.checked">{{
+              <ias-checkbox v-model="field.checked">
+                {{
                 field.label
-              }}</ias-checkbox>
+                }}
+              </ias-checkbox>
             </div>
-            <div
-              class="ias-row-editor"
-              :key="idx"
-              v-else-if="field.type == 'html'"
-            >
+            <div class="ias-row-editor" :key="idx" v-else-if="field.type == 'html'">
               <vue-editor
                 :editorToolbar="customToolbar"
                 v-model="field.data"
@@ -61,13 +59,7 @@
           </template>
           <div class="ias-row">
             <div class="form-actions">
-              <button
-                class="bt bg-green c-white"
-                type="button"
-                @click.prevent="validateForm"
-              >
-                Salvar
-              </button>
+              <button class="bt bg-green c-white" type="button" @click.prevent="validateForm">Salvar</button>
             </div>
             <div class="div-spacer"></div>
           </div>
@@ -75,27 +67,20 @@
         <div class="form-right">
           <div v-for="(field, idx) in model.data.fields" :key="idx">
             <template v-if="field.type == 'image'">
-              <ias-image-upload
-                @change="onImageChange"
-                :img-size="field.label"
-                :src="field.data"
-              />
+              <ias-image-upload @change="onImageChange" :img-size="field.label" :src="field.data" />
             </template>
           </div>
         </div>
       </form>
     </div>
-    <success-modal
-      :isEdit="true"
-      :show="showSuccessModal"
-      link="/pages"
-    ></success-modal>
+    <success-modal :isEdit="true" :show="showSuccessModal" link="/pages"></success-modal>
   </div>
 </template>
 <script>
 import staticTextService from '../../services/StaticText/staticTextService';
 import helperService from '../../services/Helper/helperService';
 import { SuccessModal } from 'src/components';
+import config from '../../config';
 
 export default {
   components: {
@@ -114,6 +99,7 @@ export default {
       selectLoading: false,
       formLoading: false,
       submitLoading: false,
+      customToolbar: [],
       model: {
         id: 0,
         page: '',
@@ -185,6 +171,7 @@ export default {
     },
     fetchData() {
       const self = this;
+      self.customToolbar = config.customToolbar;
       self.formLoading = true;
       staticTextService.get(self.id).then(
         response => {
