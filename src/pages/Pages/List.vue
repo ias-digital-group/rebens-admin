@@ -45,7 +45,7 @@
             <th>Nome</th>
             <th>Usuário/Criação</th>
             <th>Usuário/Atualização</th>
-            <th style="width:144px;">Ações</th>
+            <th style="width:80px;">Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -188,5 +188,8 @@ export default {
   .has-label::after {
     top: 43px !important;
   }
+}
+.list-box table tbody tr td .actions {
+  justify-content: flex-end;
 }
 </style>
