@@ -506,7 +506,7 @@
       font-weight: $font-weight-black;
       color: $green;
     }
-    button {
+    button.bt-modal {
       width: 200px;
       height: 56px;
       line-height: 56px;
@@ -544,8 +544,109 @@
       text-transform: uppercase;
       text-align: center;
     }
-    .ias-input-group {
+    .mtb-40 {
       margin: 40px 0;
+    }
+  }
+  &.modal-faq {
+    .modal-container {
+      width: 800px;
+      height: auto;
+      padding: 24px 24px 0;
+      .bt-remove {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: $red;
+        border-bottom-left-radius: 48px;
+        float: left;
+        width: 48px;
+        height: 48px;
+        text-align: right;
+        padding-top: 7px;
+        padding-right: 7px;
+        border-top-right-radius: 5px;
+        cursor: pointer;
+      }
+      h4 {
+        line-height: 48px;
+        margin: 0 0 32px 0;
+        display: inline-block;
+        font-size: $font-size-title;
+        color: $light-blue;
+        font-weight: $font-weight-medium;
+        text-transform: uppercase;
+      }
+      .ias-row {
+        height: 56px;
+        margin-bottom: 32px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        align-items: stretch;
+        .ias-input-group {
+          margin-right: 0;
+        }
+        .form-actions {
+          flex-basis: 100%;
+          display: flex;
+          flex-direction: row;
+          flex-wrap: nowrap;
+          justify-content: flex-start;
+          align-items: stretch;
+          .ias-check {
+            margin-left: 24px;
+            margin-right: 12px;
+          }
+        }
+        .div-spacer {
+          flex-grow: 1;
+          margin-right: 24px;
+          flex-basis: 60%;
+        }
+      }
+      .ias-row-editor {
+        min-height: 250px;
+        margin-bottom: 32px;
+        padding-right: 0;
+        position: relative;
+        .quillWrapper {
+          border-radius: 5px;
+          margin: 0;
+          background-color: $bg-side-menu-30;
+          .ql-toolbar {
+            border: none;
+            text-align: left;
+            border-bottom: 1px solid $white;
+          }
+          .ql-container.ql-snow {
+            border: none;
+            .ql-editor {
+              color: $dark-gray;
+              font-family: $font-family-base;
+              font-size: $font-size-large;
+              font-weight: $font-weight-medium;
+              max-height: 500px;
+              p {
+                color: $dark-gray;
+                font-family: $font-family-base;
+                font-size: $font-size-large;
+                font-weight: $font-weight-medium;
+              }
+            }
+            &.ql-blank::before {
+              color: $dark-gray;
+              opacity: 0.6;
+            }
+          }
+        }
+        &.has-error {
+          .quillWrapper {
+            background-color: $red-20;
+          }
+        }
+      }
     }
   }
 }

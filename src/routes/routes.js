@@ -39,7 +39,6 @@ const PasswordRecovery = () => import('src/pages/Login/PasswordRecovery.vue');
 const Validate = () => import('src/pages/Validate/Validate.vue');
 
 const FaqsList = () => import('src/pages/Faqs/List.vue');
-const FaqsEdit = () => import('src/pages/Faqs/Edit.vue');
 
 const PagesList = () => import('src/pages/Pages/List.vue');
 const PagesEdit = () => import('src/pages/Pages/Edit.vue');
@@ -457,7 +456,7 @@ let operationsPages = {
 
 let faqsPages = {
   path: '/faqs',
-  component: DashboardLayout,
+  component: MainLayout,
   meta: {
     requiresAuth: true,
     roles: ['publisher', 'administrator', 'master'],
@@ -465,30 +464,10 @@ let faqsPages = {
   },
   children: [
     {
-      path: '',
+      path: ':id',
       name: 'faq',
-      component: FaqsList,
-      meta: {
-        requiresAuth: true,
-        roles: ['publisher', 'administrator', 'master'],
-        title: i18n.t('pages.faqs.title')
-      }
-    },
-    {
-      path: 'new',
-      name: `new_faq`,
-      component: FaqsEdit,
-      meta: {
-        requiresAuth: true,
-        roles: ['publisher', 'administrator', 'master'],
-        title: i18n.t('pages.faqs.title')
-      }
-    },
-    {
-      path: ':id/edit',
-      name: 'edit_faq',
       props: true,
-      component: FaqsEdit,
+      component: FaqsList,
       meta: {
         requiresAuth: true,
         roles: ['publisher', 'administrator', 'master'],

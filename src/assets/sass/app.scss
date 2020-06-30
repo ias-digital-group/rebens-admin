@@ -584,6 +584,7 @@
         background-color: $bg-side-menu-30;
         .ql-toolbar {
           border: none;
+          text-align: left;
           border-bottom: 1px solid $white;
         }
         .ql-container.ql-snow {
@@ -599,6 +600,10 @@
               font-family: $font-family-base;
               font-size: $font-size-large;
               font-weight: $font-weight-medium;
+            }
+            &.ql-blank::before {
+              color: $dark-gray;
+              opacity: 0.6;
             }
           }
         }
@@ -716,4 +721,41 @@ button {
   &:disabled {
     cursor: not-allowed !important;
   }
+}
+.edit-box .ias-card .ias-row.ias-questions {
+  background-color: #f5fbfc;
+  border-radius: 5px;
+  justify-content: space-between;
+  padding: 16px;
+  margin-bottom: 16px;
+  .actions {
+    margin: 0;
+    display: flex;
+    height: 24px;
+    flex-flow: row;
+    flex-wrap: nowrap;
+    .bt {
+      height: 24px;
+      width: 24px;
+      margin-left: 24px;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+      i {
+        display: block;
+        width: 24px;
+        height: 24px;
+        font-size: 24px;
+      }
+      &.c-light-gray {
+        .icon-icon-check:before {
+          color: #ababab;
+        }
+      }
+    }
+  }
+}
+.ql-editor.ql-blank::before {
+  color: $dark-gray !important;
+  opacity: 0.6 !important;
 }

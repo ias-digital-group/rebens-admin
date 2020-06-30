@@ -1,236 +1,324 @@
 <template>
-  <div class="row">
-    <div class="col-12">
-      <card card-body-classes="table-full-width">
-        <template slot="header">
-          <h4 class="card-title">
-            {{ $t('pages.faqs.title') }}
-            <base-link
-              to="/faqs/new"
-              class="btn btn-icon btn-simple btn-twitter btn-sm"
-              ><i class="fas fa-plus"></i
-            ></base-link>
-          </h4>
-        </template>
-        <div>
-          <div
-            class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
-          >
-            <el-select
-              class="select-primary mb-3 pagination-select"
-              v-model="pagination.perPage"
-              :placeholder="$t('pages.banners.perpage-placeholder')"
-              v-if="!loading"
-            >
-              <el-option
-                class="select-primary"
-                v-for="item in pagination.perPageOptions"
-                :key="item"
-                :label="item"
-                :value="item"
-              >
-              </el-option>
-            </el-select>
-            <base-input>
-              <el-input
-                type="search"
-                class="mb-3 search-input"
-                style="width:300px"
-                clearable
-                prefix-icon="el-icon-search"
-                placeholder="Procurar categorias"
-                aria-controls="datatables"
-                v-model="searchQuery"
-              >
-              </el-input>
-            </base-input>
-          </div>
-          <el-table
-            ref="table"
-            :data="tableData"
-            v-loading="loading"
-            :empty-text="$t('pages.banners.emptytext')"
-            @sort-change="onSortChanged"
-            :default-sort="{ prop: sortField, order: sortOrder }"
-          >
-            <el-table-column
-              v-for="column in tableColumns"
-              :key="column.label"
-              :min-width="column.minWidth"
-              :prop="column.prop"
-              :label="column.label"
-              sortable="custom"
-            >
-            </el-table-column>
-            <el-table-column
-              :min-width="135"
-              align="right"
-              :label="$t('pages.faqs.grid.actions')"
-            >
-              <div slot-scope="props">
-                <base-button
-                  @click.native="handleEdit(props.$index, props.row)"
-                  class="edit btn-link"
-                  type="info"
-                  size="sm"
-                  icon
-                >
-                  <i class="fas fa-edit"></i>
-                </base-button>
-                <base-button
-                  @click.native="handleDelete(props.$index, props.row)"
-                  class="remove btn-link"
-                  type="danger"
-                  size="sm"
-                  icon
-                >
-                  <i class="fas fa-times"></i>
-                </base-button>
-              </div>
-            </el-table-column>
-          </el-table>
-        </div>
-        <div
-          slot="footer"
-          class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
-        >
-          <div>
-            <p class="card-category"></p>
-          </div>
-          <base-pagination
-            class="pagination-no-border"
-            v-model="pagination.currentPage"
-            :per-page="pagination.perPage"
-            :total="total"
-            v-on:input="onPageChanged"
-          >
-          </base-pagination>
-        </div>
-      </card>
+  <div class="edit-box">
+    <div class="page-header">
+      <h2>
+        <span>Perguntas Frequentes - {{ model.operation.title }}</span>
+      </h2>
+      <div class="box-actions">
+        <base-link to="/pages" class="bt bt-square bg-white-2 c-light-blue">
+          <i class="icon-icon-arrow-left"></i>
+        </base-link>
+        <button class="bt bt-square bg-white-2 c-light-blue" @click="createFaq">
+          <i class="icon-icon-plus"></i>
+        </button>
+      </div>
     </div>
-    <!-- Classic Modal -->
-    <modal :show.sync="modal.visible" headerClasses="justify-content-center">
-      <h4 slot="header" class="title title-up">Remover Pergunta</h4>
-      <form
-        class="modal-form"
-        ref="modalForm"
-        @submit.prevent
-        v-loading="modal.formLoading"
-      >
-        <input type="hidden" name="nome" value="DELETE" ref="nome" />
-        <base-input
-          required
-          v-model="modal.nameConfirmation"
-          label="Digite DELETE para confirmar"
-          placeholder="Digite DELETE para confirmar"
-          :error="getError('confirmação')"
-          type="text"
-          v-validate="modal.modelValidations.name_confirm"
-          name="confirmação"
-        >
-        </base-input>
+    <div class="ias-card">
+      <form v-loading="formLoading" @submit.prevent>
+        <div class="form-left">
+          <div
+            class="ias-row ias-questions"
+            v-for="item in model.faqs"
+            :key="item.id"
+          >
+            <div class="question">{{ item.question }}</div>
+            <div class="actions">
+              <button
+                @click="handleEdit(item)"
+                type="button"
+                title="Editar"
+                class="bt c-light-blue"
+              >
+                <i class="icon-icon-edit"></i>
+              </button>
+              <button
+                @click="handleDelete(item)"
+                type="button"
+                title="apagar"
+                class="bt c-red"
+              >
+                <i class="icon-icon-delete"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="form-right"></div>
       </form>
-      <template slot="footer">
-        <base-button @click.native.prevent="validateModal" type="danger"
-          >Remover</base-button
-        >
-        <base-button type="info" @click.native="modal.visible = false"
-          >Fechar</base-button
-        >
-      </template>
-    </modal>
+    </div>
+    <transition name="modal">
+      <div class="modal-mask" v-show="showSuccessModal">
+        <div class="modal-container">
+          <img src="/img/icon-success.png" alt="Sucesso" />
+          <p>
+            CADASTRO SALVO
+            <br />COM SUCESSO!
+          </p>
+
+          <button class="bg-green bt-modal" @click="showSuccessModal = false">
+            IR PARA LISTAGEM
+          </button>
+        </div>
+      </div>
+    </transition>
+    <transition name="modal">
+      <div class="modal-mask modal-faq" v-show="showEditModal">
+        <div class="modal-container">
+          <span @click="showEditModal = false" class="bt-remove">
+            <svg
+              width="23"
+              height="23"
+              viewBox="0 0 23 23"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g clip-path="url(#clip0)">
+                <path
+                  d="M17.6777 14.8492L14.1421 11.3137L17.6777 7.77817C18.0666 7.38927 18.0666 6.75287 17.6777 6.36396L16.2635 4.94975C15.8746 4.56084 15.2382 4.56084 14.8493 4.94975L11.3137 8.48528L7.77819 4.94975C7.38928 4.56084 6.75288 4.56084 6.36397 4.94975L4.94976 6.36396C4.56085 6.75287 4.56085 7.38927 4.94976 7.77817L8.48529 11.3137L4.94976 14.8492C4.56085 15.2382 4.56085 15.8745 4.94976 16.2635L6.36397 17.6777C6.75288 18.0666 7.38928 18.0666 7.77819 17.6777L11.3137 14.1421L14.8493 17.6777C15.2382 18.0666 15.8746 18.0666 16.2635 17.6777L17.6777 16.2635C18.0666 15.8745 18.0666 15.2382 17.6777 14.8492Z"
+                  fill="white"
+                />
+              </g>
+              <defs>
+                <clipPath id="clip0">
+                  <rect
+                    x="11.3137"
+                    width="16"
+                    height="16"
+                    transform="rotate(45 11.3137 0)"
+                    fill="white"
+                  />
+                </clipPath>
+              </defs>
+            </svg>
+          </span>
+          <h4>
+            {{ editFaq.id > 0 ? 'EDIÇÃO' : 'CADASTRO' }} DE PERGUNTAS FREQUENTES
+          </h4>
+          <div style="display:block">
+            <form v-loading="modalLoading" @submit.prevent>
+              <div class="ias-row">
+                <custom-input
+                  :required="true"
+                  v-model="editFaq.question"
+                  type="text"
+                  name="question"
+                  label="Digite a pergunta"
+                  :error="customErrors.get('question')"
+                  maxlength="200"
+                ></custom-input>
+              </div>
+              <div
+                class="ias-row-editor"
+                :class="{ 'has-error': customErrors.get('answer') }"
+              >
+                <vue-editor
+                  :editorToolbar="customToolbar"
+                  v-model="editFaq.answer"
+                  placeholder="Escreva aqui a resposta"
+                />
+                <label v-show="customErrors.get('answer')" class="ias-error">
+                  {{ customErrors.get('answer') }}
+                </label>
+              </div>
+              <div class="ias-row">
+                <div class="form-actions">
+                  <button class="bt bg-green c-white" @click="saveItem">
+                    {{ editFaq.id > 0 ? 'Salvar' : 'Adicionar' }}
+                  </button>
+                  <ias-checkbox v-model="editFaq.active">Ativo</ias-checkbox>
+                </div>
+                <div class="div-spacer"></div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </transition>
+    <delete-modal
+      @confirmDelete="confirmDelete"
+      :itemName="modal.itemName"
+      :show="modal.visible"
+      :showSuccess="modal.showSuccess"
+      @closeDeleteSuccess="closeDeleteSuccess"
+    ></delete-modal>
   </div>
 </template>
 <script>
-import { Table, TableColumn, Select, Option } from 'element-ui';
-import { BasePagination, Modal } from 'src/components';
+import { Select, Option } from 'element-ui';
+import operationService from '../../services/Operation/operationService';
+import { DeleteModal } from 'src/components';
 import faqService from '../../services/Faq/faqService';
-import listPage from '../../mixins/listPage';
+import config from '../../config';
+import paging from '../../mixins/paging';
+
 export default {
-  mixins: [listPage],
+  mixins: [paging],
   components: {
-    Modal,
-    BasePagination,
+    DeleteModal,
     [Select.name]: Select,
-    [Option.name]: Option,
-    [Table.name]: Table,
-    [TableColumn.name]: TableColumn
+    [Option.name]: Option
+  },
+  props: {
+    id: String
   },
   data() {
     return {
       internalName: 'pages.faqs.list',
-      sortField: 'name',
-      tableColumns: [
-        {
-          prop: 'id',
-          label: this.$i18n.t('pages.faqs.grid.id'),
-          minWidth: 0
-        },
-        {
-          prop: 'question',
-          label: this.$i18n.t('pages.faqs.grid.name'),
-          minWidth: 200
-        },
-        {
-          prop: 'order',
-          label: this.$i18n.t('pages.faqs.grid.order'),
-          minWidth: 0
-        }
-      ]
+      formLoading: false,
+      customErrors: new Map(),
+      customToolbar: [],
+      showSuccessModal: false,
+      showEditModal: false,
+      modalLoading: false,
+      editFaq: {
+        id: 0,
+        question: '',
+        answer: '',
+        idOperation: 0,
+        order: 0,
+        active: true
+      },
+      model: {
+        operation: {},
+        faqs: []
+      }
     };
   },
   methods: {
-    handleEdit(index, row) {
-      this.$router.push(`/faqs/${row.id}/edit/`);
+    createFaq() {
+      const self = this;
+      self.editFaq.id = 0;
+      self.editFaq.question = '';
+      self.editFaq.answer = '';
+      self.editFaq.idOperation = 0;
+      self.editFaq.order = 0;
+      self.editFaq.active = true;
+
+      self.showEditModal = true;
+    },
+    handleEdit(row) {
+      this.editFaq = row;
+      this.showEditModal = true;
+      // this.$router.push(`/faqs/${row.id}/edit/`);
     },
     fetchData() {
       const self = this;
+      self.customToolbar = config.customToolbar;
       const request = {
-        page: this.$data.pagination.currentPage - 1,
-        pageItems: this.$data.pagination.perPage,
-        searchWord: this.searchQuery,
-        sort: this.formatSortFieldParam
+        page: 0,
+        pageItems: 1000,
+        sort: 'order asc',
+        idOperation: self.id,
+        searchWord: ''
       };
-      this.$data.loading = true;
+      this.formLoading = true;
       faqService.findAll(request).then(
         response => {
-          self.$data.tableData = response.data;
-          self.savePageSettings(self, response.totalItems);
-          self.$data.loading = false;
+          self.model.faqs = response.data;
+          operationService.get(self.id).then(
+            response => {
+              self.model.operation = response.data;
+              self.formLoading = false;
+            },
+            () => {
+              self.formLoading = false;
+            }
+          );
         },
         () => {
-          self.$data.loading = false;
+          self.formLoading = false;
         }
       );
     },
-    validateModal() {
+    handleDelete(item) {
+      this.modal.model = item;
+      this.modal.itemName = item.question;
+      this.modal.visible = true;
+    },
+    confirmDelete(val) {
       const self = this;
-      this.$validator.validateAll().then(isValid => {
-        if (isValid) {
-          self.modal.formLoading = true;
-          faqService.delete(self.modal.model.id).then(
-            response => {
-              self.$notify({
-                type: 'primary',
-                message: response.message,
-                icon: 'tim-icons icon-bell-55'
-              });
-              self.resetModal();
-              self.pagination.currentPage = 1;
+      if (val) {
+        this.$validator.validateAll().then(isValid => {
+          if (isValid) {
+            self.modal.formLoading = true;
+            faqService.delete(self.modal.model.id).then(
+              () => {
+                self.resetModal();
+                self.fetchData();
+                self.showSuccess(true);
+              },
+              err => {
+                if (err.response.status === 400 && err.response.data.message) {
+                  self.$notify({
+                    type: 'warning',
+                    message: err.response.data.message
+                  });
+                } else {
+                  self.$notify({
+                    type: 'danger',
+                    message: err.message
+                  });
+                }
+                self.modal.formLoading = false;
+              }
+            );
+          }
+        });
+      } else {
+        this.resetModal();
+      }
+    },
+    closeDeleteSuccess() {
+      this.showSuccess(false);
+    },
+    saveItem() {
+      const self = this;
+      self.customErrors = new Map();
+      if (!self.editFaq.question || self.editFaq.question === '')
+        self.customErrors.set('question', 'Campo obrigatório');
+      if (!self.editFaq.answer || self.editFaq.answer === '')
+        self.customErrors.set('question', 'Campo obrigatório');
+
+      if (self.customErrors.size === 0) {
+        self.editFaq.idOperation = self.id;
+        self.modalLoading = true;
+        if (self.editFaq.id === 0) {
+          faqService.create(self.editFaq).then(
+            () => {
+              self.modalLoading = false;
+              self.showEditModal = false;
+              self.showSuccessModal = true;
               self.fetchData();
             },
             err => {
               self.$notify({
-                type: 'primary',
-                message: err.message,
-                icon: 'tim-icons icon-bell-55'
+                type: 'danger',
+                message: err.message
               });
-              self.modal.formLoading = false;
+              self.modalLoading = false;
+            }
+          );
+        } else {
+          faqService.update(self.editFaq).then(
+            () => {
+              self.modalLoading = false;
+              self.showEditModal = false;
+              self.showSuccessModal = true;
+              self.fetchData();
+            },
+            err => {
+              self.$notify({
+                type: 'danger',
+                message: err.message
+              });
+              self.modalLoading = false;
             }
           );
         }
-      });
+      }
     }
+  },
+  created() {
+    this.fetchData();
   }
 };
 </script>

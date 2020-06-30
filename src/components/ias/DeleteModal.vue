@@ -34,16 +34,18 @@
           <br />REALMENTE EXCLUIR
         </h4>
         <p class="c-red">{{ itemName }}</p>
-        <custom-input
-          :required="true"
-          v-model="confirm"
-          type="text"
-          name="confirm"
-          label="Digite DELETE para confirmar"
-          maxlength="200"
-          :error="errorMsg"
-        ></custom-input>
-        <button class="bg-red" @click="deleteItem">EXCLUIR</button>
+        <div class="mtb-40">
+          <custom-input
+            :required="true"
+            v-model="confirm"
+            type="text"
+            name="confirm"
+            label="Digite DELETE para confirmar"
+            maxlength="200"
+            :error="errorMsg"
+          ></custom-input>
+        </div>
+        <button class="bg-red bt-modal" @click="deleteItem">EXCLUIR</button>
       </div>
     </div>
     <div class="modal-mask" v-show="showSuccess">
@@ -53,7 +55,9 @@
           ITEM EXCLUIDO
           <br />COM SUCESSO!
         </p>
-        <button class="bg-green" @click="closeSuccess">IR PARA LISTAGEM</button>
+        <button class="bg-green bt-modal" @click="closeSuccess">
+          IR PARA LISTAGEM
+        </button>
       </div>
     </div>
   </div>

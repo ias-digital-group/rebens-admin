@@ -4,12 +4,23 @@
       <h2>Páginas</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Digite aqui o que deseja encontrar"
+          />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
+          <i
+            v-else
+            class="bt-clear-search icon-icon-times c-red"
+            @click="searchQuery = ''"
+          ></i>
         </div>
         <div class="filter" :class="{ active: showFilters }">
-          <a class="bt bt-square bg-white-2 c-light-blue" @click="showFilters = !showFilters">
+          <a
+            class="bt bt-square bg-white-2 c-light-blue"
+            @click="showFilters = !showFilters"
+          >
             <i class="icon-icon-filter"></i>
           </a>
         </div>
@@ -119,7 +130,11 @@ export default {
   },
   methods: {
     handleEdit(row) {
-      this.$router.push(`/pages/${row.id}/edit/`);
+      if (row.url === 'faq') {
+        this.$router.push(`/faqs/${row.idOperation}`);
+      } else {
+        this.$router.push(`/pages/${row.id}/edit/`);
+      }
     },
     fetchData() {
       const self = this;
@@ -158,7 +173,7 @@ export default {
     }
   },
   watch: {
-    operationFilter() {
+    'filters.operation'() {
       this.pagination.currentPage = 1;
       this.fetchData();
     }
