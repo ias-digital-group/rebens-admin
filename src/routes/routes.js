@@ -413,7 +413,7 @@ let contactPages = {
 
 let operationsPages = {
   path: '/operations',
-  component: DashboardLayout,
+  component: MainLayout,
   meta: {
     requiresAuth: true,
     roles: ['master', 'administratorRebens', 'publisherRebens'],
