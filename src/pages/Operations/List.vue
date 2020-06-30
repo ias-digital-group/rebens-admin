@@ -4,16 +4,30 @@
       <h2>Operações</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Digite aqui o que deseja encontrar"
+          />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
+          <i
+            v-else
+            class="bt-clear-search icon-icon-times c-red"
+            @click="searchQuery = ''"
+          ></i>
         </div>
         <div class="filter" :class="{ active: showFilters }">
-          <a class="bt bt-square bg-white-2 c-light-blue" @click="showFilters = !showFilters">
+          <a
+            class="bt bt-square bg-white-2 c-light-blue"
+            @click="showFilters = !showFilters"
+          >
             <i class="icon-icon-filter"></i>
           </a>
         </div>
-        <base-link to="/operations/new" class="bt bt-square bg-white-2 c-light-blue">
+        <base-link
+          to="/operations/new"
+          class="bt bt-square bg-white-2 c-light-blue"
+        >
           <i class="icon-icon-plus"></i>
         </base-link>
       </div>
@@ -42,7 +56,11 @@
             <tr v-for="item in tableData" :key="item.id">
               <td class="td-flex">
                 <div class="img-holder">
-                  <img v-if="item.image && item.image !== ''" :src="item.image" :alt="item.title" />
+                  <img
+                    v-if="item.image && item.image !== ''"
+                    :src="item.image"
+                    :alt="item.title"
+                  />
                   <span v-else>{{ item.title[0] }}</span>
                 </div>
                 <span>{{ item.title }}</span>
@@ -73,9 +91,9 @@
                     :title="item.active ? 'Inativar' : 'Ativar'"
                     class="bt"
                     :class="{
-                    'c-green': item.active,
-                    'c-light-gray': !item.active
-                  }"
+                      'c-green': item.active,
+                      'c-light-gray': !item.active
+                    }"
                   >
                     <i class="icon-icon-check"></i>
                   </button>
@@ -87,9 +105,9 @@
                   >
                     <i class="icon-icon-edit"></i>
                   </button>
-                  <button @click="handleDelete(item)" type="button" title="apagar" class="bt c-red">
+                  <!-- <button @click="handleDelete(item)" type="button" title="apagar" class="bt c-red">
                     <i class="icon-icon-delete"></i>
-                  </button>
+                  </button>-->
                 </div>
               </td>
             </tr>
@@ -121,7 +139,6 @@ import { Select, Option } from 'element-ui';
 import { Pagination, DeleteModal } from 'src/components';
 import operationService from '../../services/Operation/operationService';
 import paging from '../../mixins/paging';
-import _ from 'lodash';
 
 export default {
   mixins: [paging],
@@ -137,6 +154,7 @@ export default {
       sortField: 'name',
       isMaster: false,
       activeFilter: '',
+      showFilters: false,
       statuses: [
         { code: true, label: 'Ativos' },
         { code: false, label: 'Inativos' }
@@ -144,7 +162,7 @@ export default {
     };
   },
   methods: {
-    handleEdit(index, row) {
+    handleEdit(row) {
       this.$router.push(`/operations/${row.id}/edit/`);
     },
     fetchData() {
@@ -193,6 +211,61 @@ export default {
               self.modal.formLoading = false;
             }
           );
+        }
+      });
+    },
+    handleDelete(item) {
+      this.modal.model = item;
+      this.modal.itemName = item.name;
+      this.modal.visible = true;
+    },
+    confirmDelete(val) {
+      const self = this;
+      if (val) {
+        this.$validator.validateAll().then(isValid => {
+          if (isValid) {
+            self.modal.formLoading = true;
+            operationService.delete(self.modal.model.id).then(
+              () => {
+                self.resetModal();
+                self.fetchData();
+                self.showSuccess(true);
+              },
+              err => {
+                if (err.response.status === 400 && err.response.data.message) {
+                  self.$notify({
+                    type: 'warning',
+                    message: err.response.data.message
+                  });
+                } else {
+                  self.$notify({
+                    type: 'danger',
+                    message: err.message
+                  });
+                }
+                self.modal.formLoading = false;
+              }
+            );
+          }
+        });
+      } else {
+        this.resetModal();
+      }
+    },
+    closeDeleteSuccess() {
+      this.showSuccess(false);
+    },
+    toggleActive(row) {
+      const self = this;
+      operationService.toggleActive(row.id).then(data => {
+        if (data.status === 'ok') {
+          row.active = data.data;
+          self.$notify({
+            type: 'success',
+            message: `Banner ${
+              row.active ? 'ativado' : 'inativado'
+            } com sucesso`
+          });
         }
       });
     }
