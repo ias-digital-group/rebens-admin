@@ -57,9 +57,9 @@
               >
               <ul class="sub-item">
                 <li v-for="(subitem, idx2) in item.subitens" :key="idx2">
-                  <router-link :to="subitem.path">{{
-                    subitem.name
-                  }}</router-link>
+                  <router-link :to="subitem.path">
+                    {{ subitem.name }}
+                  </router-link>
                 </li>
               </ul>
             </template>
@@ -190,134 +190,134 @@ export default {
             'master,administratorRebens,publisherRebens,partnerAdministrator',
           needModule: '',
           subitens: []
-        },
-        {
-          name: 'Cursos',
-          path: '#',
-          active: false,
-          roles: 'master,administratorRebens,publisherRebens,publisher',
-          needModule: 'course',
-          subitens: [
-            { name: 'Cursos', path: '/course', active: false, roles: '' },
-            {
-              name: 'Faculdades',
-              path: '/courseCollege',
-              active: false,
-              roles: ''
-            },
-            {
-              name: 'Modalidade',
-              path: '/courseModality',
-              active: false,
-              roles: ''
-            },
-            {
-              name: 'Períodos',
-              path: '/coursePeriod',
-              active: false,
-              roles: ''
-            },
-            {
-              name: 'Tipo de graduação',
-              path: '/courseGraduationType',
-              active: false,
-              roles: ''
-            },
-            {
-              name: 'Perguntas frequentes',
-              path: '/courseFaq',
-              active: false,
-              roles: ''
-            },
-            {
-              name: 'Regulamento',
-              path: '/courseRegulation',
-              active: false,
-              roles: ''
-            }
-          ]
-        },
-        {
-          name: 'Cursos Livres',
-          path: '#',
-          active: false,
-          roles: 'master,administratorRebens,publisherRebens,publisher',
-          needModule: 'freeCourse',
-          subitens: [
-            {
-              name: 'Cursos Livres',
-              path: '/freeCourse',
-              active: false,
-              roles: ''
-            },
-            {
-              name: 'Parceiros',
-              path: '/freeCourse/partner',
-              active: false,
-              roles: ''
-            }
-          ]
-        },
-        {
-          name: 'Perguntas frequentes',
-          path: '/faqs',
-          active: false,
-          roles: 'publisher',
-          needModule: '',
-          subitens: []
-        },
-        {
-          name: 'Páginas',
-          path: '/pages',
-          active: false,
-          roles: 'publisher',
-          needModule: '',
-          subitens: []
-        },
-        {
-          name: 'Parceiros',
-          path: '/operationPartner',
-          active: false,
-          roles: 'partnerAdministrator',
-          needModule: '',
-          subitens: []
-        },
-        {
-          name: 'Aprovação de clientes',
-          path: '/operationPartner/approve',
-          active: false,
-          roles: 'partnerAdministrator',
-          needModule: '',
-          subitens: []
-        },
-        {
-          name: 'Raspadinhas',
-          path: '/scratchcard',
-          active: false,
-          roles: 'master,administratorRebens,publisherRebens',
-          needModule: '',
-          subitens: []
-        },
-        {
-          name: 'Relatórios',
-          path: '#',
-          active: false,
-          roles: 'master,administratorRebens',
-          subitens: [
-            // {
-            //   name: 'Utilização',
-            //   path: '/report/benefit-use',
-            //   active: false,
-            //   roles: ''
-            // },
-            {
-              name: 'Promotores',
-              path: '/promoter/report',
-              active: false,
-              roles: ''
-            }
-          ]
         }
+        // {
+        //   name: 'Cursos',
+        //   path: '#',
+        //   active: false,
+        //   roles: 'master,administratorRebens,publisherRebens,publisher',
+        //   needModule: 'course',
+        //   subitens: [
+        //     { name: 'Cursos', path: '/course', active: false, roles: '' },
+        //     {
+        //       name: 'Faculdades',
+        //       path: '/courseCollege',
+        //       active: false,
+        //       roles: ''
+        //     },
+        //     {
+        //       name: 'Modalidade',
+        //       path: '/courseModality',
+        //       active: false,
+        //       roles: ''
+        //     },
+        //     {
+        //       name: 'Períodos',
+        //       path: '/coursePeriod',
+        //       active: false,
+        //       roles: ''
+        //     },
+        //     {
+        //       name: 'Tipo de graduação',
+        //       path: '/courseGraduationType',
+        //       active: false,
+        //       roles: ''
+        //     },
+        //     {
+        //       name: 'Perguntas frequentes',
+        //       path: '/courseFaq',
+        //       active: false,
+        //       roles: ''
+        //     },
+        //     {
+        //       name: 'Regulamento',
+        //       path: '/courseRegulation',
+        //       active: false,
+        //       roles: ''
+        //     }
+        //   ]
+        // },
+        // {
+        //   name: 'Cursos Livres',
+        //   path: '#',
+        //   active: false,
+        //   roles: 'master,administratorRebens,publisherRebens,publisher',
+        //   needModule: 'freeCourse',
+        //   subitens: [
+        //     {
+        //       name: 'Cursos Livres',
+        //       path: '/freeCourse',
+        //       active: false,
+        //       roles: ''
+        //     },
+        //     {
+        //       name: 'Parceiros',
+        //       path: '/freeCourse/partner',
+        //       active: false,
+        //       roles: ''
+        //     }
+        //   ]
+        // },
+        // {
+        //   name: 'Perguntas frequentes',
+        //   path: '/faqs',
+        //   active: false,
+        //   roles: 'publisher',
+        //   needModule: '',
+        //   subitens: []
+        // },
+        // {
+        //   name: 'Páginas',
+        //   path: '/pages',
+        //   active: false,
+        //   roles: 'publisher',
+        //   needModule: '',
+        //   subitens: []
+        // },
+        // {
+        //   name: 'Parceiros',
+        //   path: '/operationPartner',
+        //   active: false,
+        //   roles: 'partnerAdministrator',
+        //   needModule: '',
+        //   subitens: []
+        // },
+        // {
+        //   name: 'Aprovação de clientes',
+        //   path: '/operationPartner/approve',
+        //   active: false,
+        //   roles: 'partnerAdministrator',
+        //   needModule: '',
+        //   subitens: []
+        // },
+        // {
+        //   name: 'Raspadinhas',
+        //   path: '/scratchcard',
+        //   active: false,
+        //   roles: 'master,administratorRebens,publisherRebens',
+        //   needModule: '',
+        //   subitens: []
+        // },
+        // {
+        //   name: 'Relatórios',
+        //   path: '#',
+        //   active: false,
+        //   roles: 'master,administratorRebens',
+        //   subitens: [
+        //     // {
+        //     //   name: 'Utilização',
+        //     //   path: '/report/benefit-use',
+        //     //   active: false,
+        //     //   roles: ''
+        //     // },
+        //     {
+        //       name: 'Promotores',
+        //       path: '/promoter/report',
+        //       active: false,
+        //       roles: ''
+        //     }
+        //   ]
+        // }
       ]
     };
   },

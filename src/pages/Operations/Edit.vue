@@ -138,6 +138,8 @@
               label="Url do Domínio"
               :error="customErrors.get('domain')"
               maxlength="500"
+              :isLink="true"
+              :link="model.domain"
             ></custom-input>
           </div>
           <div class="ias-row tmp-url">
@@ -148,6 +150,8 @@
               :error="customErrors.get('temporarySubdomain')"
               label="Url temporária"
               maxlength="500"
+              :isLink="true"
+              :link="model.temporarySubdomain + '.sistemarebens.com.br'"
             ></custom-input>
           </div>
           <template v-for="(field, idx) in config.data.fields">
@@ -277,9 +281,10 @@
           <div v-for="(field, idx) in config.data.fields" :key="idx">
             <template v-if="field.type == 'image'">
               <ias-image-upload
-                @change="onImageChange"
+                @change="onConfigImageChange"
                 :img-size="field.label"
                 :src="field.data"
+                :optionalData="getOptionalData(field, idx)"
               />
             </template>
           </div>
@@ -708,8 +713,33 @@ export default {
         self.modules = response;
       });
     },
+    getOptionalData(field, idx) {
+      return { field: field, index: idx, data: field.data, img: null };
+    },
     onImageChange(file) {
       this.image = file;
+      this.model.logo = null;
+    },
+    onConfigImageChange(file, element) {
+      const self = this;
+      if (self.config.images.length == 0) {
+        element.img = file;
+        self.config.images.push(element);
+      } else {
+        _.forEach(self.config.images, el => {
+          if (el.index == element.index) {
+            el.img = file;
+          }
+        });
+      }
+
+      if (file === null) {
+        _.forEach(this.config.data.fields, el => {
+          if (el.type == 'image' && el.name == element.field.name) {
+            el.data = file;
+          }
+        });
+      }
     },
     onRegisterType(type) {
       this.registerType = type;
@@ -723,14 +753,13 @@ export default {
 </script>
 <style>
 .tmp-url .ias-input-group .ias-input {
-  padding-right: 50%;
-  text-align: right;
+  padding-right: 35%;
 }
 .tmp-url .ias-input-group::after {
   content: '.sistemarebens.com.br';
   position: absolute;
   bottom: 0;
-  left: 50%;
+  left: 65%;
   line-height: 43px;
   color: #41b0ce;
   font-size: 16px;

@@ -8,9 +8,6 @@
         <base-link to="/pages" class="bt bt-square bg-white-2 c-light-blue">
           <i class="icon-icon-arrow-left"></i>
         </base-link>
-        <button class="bt bt-square bg-white-2 c-light-blue" @click="createFaq">
-          <i class="icon-icon-plus"></i>
-        </button>
       </div>
     </div>
     <div class="ias-card">
@@ -23,6 +20,18 @@
           >
             <div class="question">{{ item.question }}</div>
             <div class="actions">
+              <button
+                @click="toggleActive(item)"
+                type="button"
+                :title="item.active ? 'Inativar' : 'Ativar'"
+                class="bt"
+                :class="{
+                  'c-green': item.active,
+                  'c-light-gray': !item.active
+                }"
+              >
+                <i class="icon-icon-check"></i>
+              </button>
               <button
                 @click="handleEdit(item)"
                 type="button"
@@ -41,6 +50,19 @@
               </button>
             </div>
           </div>
+          <div class="ias-row">
+            <div
+              class="form-actions"
+              style="justify-content:flex-end;margin-top:20px"
+            >
+              <button
+                class="bt bt-square bg-light-blue c-white"
+                @click="createFaq"
+              >
+                <i class="icon-icon-plus" style="display:block"></i>
+              </button>
+            </div>
+          </div>
         </div>
         <div class="form-right"></div>
       </form>
@@ -53,7 +75,6 @@
             CADASTRO SALVO
             <br />COM SUCESSO!
           </p>
-
           <button class="bg-green bt-modal" @click="showSuccessModal = false">
             IR PARA LISTAGEM
           </button>
@@ -120,11 +141,24 @@
                 </label>
               </div>
               <div class="ias-row">
+                <custom-input
+                  :required="true"
+                  v-model="editFaq.order"
+                  type="number"
+                  name="order"
+                  label="Digite a ordem"
+                  :error="customErrors.get('order')"
+                  maxlength="50"
+                ></custom-input>
+                <div class="div-spacer"></div>
+              </div>
+              <div class="ias-row">
                 <div class="form-actions">
                   <button class="bt bg-green c-white" @click="saveItem">
                     {{ editFaq.id > 0 ? 'Salvar' : 'Adicionar' }}
                   </button>
                   <ias-checkbox v-model="editFaq.active">Ativo</ias-checkbox>
+                  <div class="div-spacer"></div>
                 </div>
                 <div class="div-spacer"></div>
               </div>
@@ -315,6 +349,20 @@ export default {
           );
         }
       }
+    },
+    toggleActive(row) {
+      const self = this;
+      faqService.toggleActive(row.id).then(data => {
+        if (data.status === 'ok') {
+          row.active = data.data;
+          self.$notify({
+            type: 'success',
+            message: `Pergunta ${
+              row.active ? 'ativada' : 'inativada'
+            } com sucesso`
+          });
+        }
+      });
     }
   },
   created() {

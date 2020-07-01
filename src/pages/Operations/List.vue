@@ -41,97 +41,105 @@
           <span slot="no-options">Nenhum status encontrado</span>
         </v-select>
       </div>
-      <div class="list-table">
-        <table v-loading="loading">
-          <thead>
-            <tr>
-              <th>Nome do clube</th>
-              <th>Usuário / Criação</th>
-              <th>Usuário / Publicação</th>
-              <th>Usuário / Atualização</th>
-              <th style="width:144px;">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="item in tableData" :key="item.id">
-              <td class="td-flex">
-                <div class="img-holder">
-                  <img
-                    v-if="item.image && item.image !== ''"
-                    :src="item.image"
-                    :alt="item.title"
-                  />
-                  <span v-else>{{ item.title[0] }}</span>
-                </div>
-                <span>{{ item.title }}</span>
-              </td>
-              <td>
-                <div class="two-lines">
-                  <span>{{ item.createdUserName }}</span>
-                  <span class="blue">{{ item.created }}</span>
-                </div>
-              </td>
-              <td>
-                <div class="two-lines">
-                  <span>{{ item.publishedUserName }}</span>
-                  <span class="blue">{{ item.publishedDate }}</span>
-                </div>
-              </td>
-              <td>
-                <div class="two-lines">
-                  <span>{{ item.modifiedUserName }}</span>
-                  <span class="blue">{{ item.modified }}</span>
-                </div>
-              </td>
-              <td>
-                <div class="actions">
-                  <button
-                    @click="toggleActive(item)"
-                    type="button"
-                    :title="item.active ? 'Inativar' : 'Ativar'"
-                    class="bt"
-                    :class="{
-                      'c-green': item.active,
-                      'c-light-gray': !item.active
-                    }"
-                  >
-                    <i class="icon-icon-check"></i>
-                  </button>
-                  <button
-                    @click="handleEdit(item)"
-                    type="button"
-                    title="Editar"
-                    class="bt c-light-blue"
-                  >
-                    <i class="icon-icon-edit"></i>
-                  </button>
-                  <!-- <button @click="handleDelete(item)" type="button" title="apagar" class="bt c-red">
-                    <i class="icon-icon-delete"></i>
-                  </button>-->
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <pagination
-          class="box-pagination"
-          v-model="pagination.currentPage"
-          :per-page="pagination.perPage"
-          :total-items="pagination.totalItems"
-          :total-pages="pagination.totalPages"
-          :current-page="pagination.currentPage"
-          v-on:input="onPageChanged"
-          @update-per-page="changePerPage"
-        ></pagination>
-      </div>
-      <delete-modal
-        @confirmDelete="confirmDelete"
-        :itemName="modal.itemName"
-        :show="modal.visible"
-        :showSuccess="modal.showSuccess"
-        @closeDeleteSuccess="closeDeleteSuccess"
-      ></delete-modal>
     </div>
+    <div class="list-table">
+      <table v-loading="loading">
+        <thead>
+          <tr>
+            <th>Nome do clube</th>
+            <th>Usuário / Criação</th>
+            <th>Usuário / Publicação</th>
+            <th>Usuário / Atualização</th>
+            <th style="width:144px;">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in tableData" :key="item.id">
+            <td class="td-flex">
+              <div class="img-holder">
+                <img
+                  v-if="item.image && item.image !== ''"
+                  :src="item.image"
+                  :alt="item.title"
+                />
+                <span v-else>{{ item.title[0] }}</span>
+              </div>
+              <span>{{ item.title }}</span>
+            </td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.createdUserName }}</span>
+                <span class="blue">{{ item.created }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.publishedUserName }}</span>
+                <span class="blue">{{ item.publishedDate }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.modifiedUserName }}</span>
+                <span class="blue">{{ item.modified }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="actions">
+                <button
+                  @click="toggleActive(item)"
+                  type="button"
+                  :title="item.active ? 'Inativar' : 'Ativar'"
+                  class="bt"
+                  :class="{
+                    'c-green': item.active,
+                    'c-light-gray': !item.active
+                  }"
+                >
+                  <i class="icon-icon-check"></i>
+                </button>
+                <button
+                  @click="handleEdit(item)"
+                  type="button"
+                  title="Editar"
+                  class="bt c-light-blue"
+                >
+                  <i class="icon-icon-edit"></i>
+                </button>
+                <a
+                  type="button"
+                  title="visualizar"
+                  class="bt c-orange"
+                  v-if="item.publishedDate !== ' - ' && item.active"
+                >
+                  <i class="icon-icon-view"></i>
+                </a>
+                <span v-else class="bt c-gray" title="visualizar">
+                  <i class="icon-icon-view"></i>
+                </span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <pagination
+        class="box-pagination"
+        v-model="pagination.currentPage"
+        :per-page="pagination.perPage"
+        :total-items="pagination.totalItems"
+        :total-pages="pagination.totalPages"
+        :current-page="pagination.currentPage"
+        v-on:input="onPageChanged"
+        @update-per-page="changePerPage"
+      ></pagination>
+    </div>
+    <delete-modal
+      @confirmDelete="confirmDelete"
+      :itemName="modal.itemName"
+      :show="modal.visible"
+      :showSuccess="modal.showSuccess"
+      @closeDeleteSuccess="closeDeleteSuccess"
+    ></delete-modal>
   </div>
 </template>
 <script>
@@ -178,7 +186,7 @@ export default {
       operationService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;
-          self.savePageSettings(self, response.totalItems);
+          self.savePageSettings(self, response.totalItems, response.totalPages);
           self.$data.loading = false;
         },
         () => {

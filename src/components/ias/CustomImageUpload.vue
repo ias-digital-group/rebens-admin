@@ -62,6 +62,10 @@ export default {
     error: {
       type: String,
       default: ''
+    },
+    optionalData: {
+      type: Object,
+      default: null
     }
   },
   data() {
@@ -83,11 +87,11 @@ export default {
       }
       let file = event.target.files[0];
       this.imagePreview = URL.createObjectURL(file);
-      this.$emit('change', this.$refs.file.files[0]);
+      this.$emit('change', this.$refs.file.files[0], this.optionalData);
     },
     removeFile() {
       this.imagePreview = null;
-      this.$emit('change', null);
+      this.$emit('change', null, this.optionalData);
     }
   }
 };

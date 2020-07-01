@@ -1543,7 +1543,7 @@ let scratchcardPages = {
 const routes = [
   {
     path: '/',
-    component: DashboardLayout,
+    component: MainLayout,
     redirect: '/dashboard',
     name: 'Dashboard layout',
     children: [

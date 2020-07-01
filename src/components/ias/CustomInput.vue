@@ -40,6 +40,17 @@
     <div v-if="hasIcon" class="ias-icon-holder">
       <i :class="iconName"></i>
     </div>
+    <a
+      v-if="isLink"
+      :href="'http://' + link"
+      :class="{
+        'c-orange': link && link !== '',
+        'c-dark-gray': !link || link === ''
+      }"
+      class="ias-icon-link"
+    >
+      <i class="icon-icon-view"></i>
+    </a>
     <label v-if="error" class="ias-error">{{ error }}</label>
   </div>
 </template>
@@ -67,11 +78,11 @@ export default {
       description: 'Input value'
     },
     hasIcon: {
-      type: String,
+      type: Boolean,
       description: 'Has icon'
     },
     iconName: {
-      type: Boolean,
+      type: String,
       description: 'Name of the icon'
     },
     inputMask: {
@@ -89,6 +100,14 @@ export default {
     isMoney: {
       type: Boolean,
       description: 'is currency'
+    },
+    isLink: {
+      type: Boolean,
+      description: 'is link'
+    },
+    link: {
+      type: String,
+      description: 'is link'
     }
   },
   model: {

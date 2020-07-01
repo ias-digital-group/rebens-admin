@@ -759,3 +759,30 @@ button {
   color: $dark-gray !important;
   opacity: 0.6 !important;
 }
+.ias-dash-row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  h2 {
+    color: $light-blue !important;
+    margin: 32px 16px 16px;
+  }
+  .card {
+    background-color: $bg-body !important;
+    padding: 15px !important;
+    border-radius: 10px !important;
+    box-shadow: none !important;
+    margin: 0 10px !important;
+    .card-title {
+      color: $light-blue !important;
+    }
+  }
+  .chart-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    .card {
+      width: calc(25% - 20px);
+    }
+  }
+}

@@ -143,6 +143,12 @@
   flex-grow: 1;
   margin-right: 24px;
   flex-basis: 100%;
+  .ias-icon-link {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 50;
+  }
   .ias-label {
     position: absolute;
     top: 0;
@@ -341,8 +347,9 @@
   position: relative;
   margin-bottom: 40px;
   .thumb-preview {
+    text-align: center;
     img {
-      width: 100%;
+      max-width: 100%;
       border: none;
     }
     .bt-remove {
@@ -569,8 +576,8 @@
         cursor: pointer;
       }
       h4 {
-        line-height: 48px;
-        margin: 0 0 32px 0;
+        line-height: 30px;
+        margin: 32px 0 48px 0;
         display: inline-block;
         font-size: $font-size-title;
         color: $light-blue;
@@ -587,6 +594,7 @@
         align-items: stretch;
         .ias-input-group {
           margin-right: 0;
+          background-color: #fff;
         }
         .form-actions {
           flex-basis: 100%;
@@ -598,6 +606,7 @@
           .ias-check {
             margin-left: 24px;
             margin-right: 12px;
+            background-color: #fff;
           }
         }
         .div-spacer {
@@ -607,14 +616,15 @@
         }
       }
       .ias-row-editor {
-        min-height: 250px;
+        height: 200px;
         margin-bottom: 32px;
         padding-right: 0;
         position: relative;
         .quillWrapper {
           border-radius: 5px;
           margin: 0;
-          background-color: $bg-side-menu-30;
+          background-color: #fff;
+
           .ql-toolbar {
             border: none;
             text-align: left;
@@ -627,7 +637,9 @@
               font-family: $font-family-base;
               font-size: $font-size-large;
               font-weight: $font-weight-medium;
-              max-height: 500px;
+              height: 150px;
+              min-height: 150px;
+              max-height: 150px;
               p {
                 color: $dark-gray;
                 font-family: $font-family-base;
