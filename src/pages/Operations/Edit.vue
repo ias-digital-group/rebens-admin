@@ -179,9 +179,9 @@
               ></custom-input>
             </div>
             <div class="ias-row" :key="idx" v-else-if="field.type == 'boolean'">
-              <ias-checkbox v-model="field.checked">
-                {{ field.label }}
-              </ias-checkbox>
+              <ias-checkbox v-model="field.checked">{{
+                field.label
+              }}</ias-checkbox>
             </div>
             <div
               class="ias-row-editor"
@@ -227,9 +227,9 @@
           </div>
           <div v-for="(arr, idx1) in modulesChunk" class="ias-row" :key="idx1">
             <template v-for="(mod, idx) in arr">
-              <ias-checkbox v-model="mod.checked" :key="idx">
-                {{ mod.title }}
-              </ias-checkbox>
+              <ias-checkbox v-model="mod.checked" :key="idx">{{
+                mod.title
+              }}</ias-checkbox>
             </template>
             <div class="div-spacer" v-show="arr.length === 1"></div>
             <div class="div-spacer" v-show="arr.length === 2"></div>
@@ -244,6 +244,25 @@
                 Salvar
               </button>
               <ias-checkbox v-model="model.active">Ativo</ias-checkbox>
+            </div>
+            <div class="div-spacer"></div>
+          </div>
+          <div
+            class="ias-row"
+            v-if="showTempPublishBtn && isMaster && !model.isCustom"
+          >
+            <div class="form-actions">
+              <button
+                class="bt bg-orange c-white bt-full"
+                type="button"
+                @click.prevent="publishTemp"
+                :disabled="
+                  model.temporaryPublishStatus == 'Publicado Temporário'
+                "
+                :loading="publishTempLoading"
+              >
+                {{ model.temporaryPublishStatus }}
+              </button>
             </div>
             <div class="div-spacer"></div>
           </div>
@@ -335,6 +354,7 @@ export default {
         temporaryPublishStatus: '',
         publishStatus: '',
         canPublishTemporary: false,
+        isCustom: false,
         mainContact: {
           id: 0,
           name: '',
@@ -597,18 +617,16 @@ export default {
       operationService.publish(self.id).then(
         () => {
           self.$notify({
-            type: 'primary',
+            type: 'success',
             message:
-              'A operação está sendo publicada, e assim que estiver concluído você verá aqui.',
-            icon: 'tim-icons icon-bell-55'
+              'A operação está sendo publicada, e assim que estiver concluído você verá aqui.'
           });
           self.model.publishStatus = 'Processando';
         },
         err => {
           self.$notify({
-            type: 'primary',
-            message: err.message,
-            icon: 'tim-icons icon-bell-55'
+            type: 'danger',
+            message: err.message
           });
           self.publishLoading = false;
         }
@@ -620,18 +638,16 @@ export default {
       operationService.publish(self.id).then(
         () => {
           self.$notify({
-            type: 'primary',
+            type: 'success',
             message:
-              'A operação está sendo publicada, e assim que estiver concluído você verá aqui.',
-            icon: 'tim-icons icon-bell-55'
+              'A operação está sendo publicada, e assim que estiver concluído você verá aqui.'
           });
           self.model.temporaryPublishStatus = 'Processando';
         },
         err => {
           self.$notify({
-            type: 'primary',
-            message: err.message,
-            icon: 'tim-icons icon-bell-55'
+            type: 'danger',
+            message: err.message
           });
           self.publishTempLoading = false;
         }
@@ -719,5 +735,9 @@ export default {
   color: #41b0ce;
   font-size: 16px;
   font-weight: 500;
+}
+.form-actions .bt-full {
+  width: 100%;
+  margin-right: 12px;
 }
 </style>
