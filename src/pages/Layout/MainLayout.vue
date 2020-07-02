@@ -95,7 +95,7 @@ export default {
       menuItens: [
         {
           name: 'Dashboard',
-          path: '/',
+          path: '/dashboard',
           active: false,
           roles: '',
           needModule: '',
