@@ -85,7 +85,7 @@ export default {
                   {
                     label: response.data.benefitUse.title,
                     fill: true,
-                    borderColor: config.colors.info,
+                    borderColor: '#fff',
                     borderWidth: 2,
                     borderDash: [],
                     borderDashOffset: 0.0,
@@ -101,7 +101,7 @@ export default {
                   {
                     label: response.data.benefitView.title,
                     fill: true,
-                    borderColor: config.colors.info,
+                    borderColor: '#fff',
                     borderWidth: 2,
                     borderDash: [],
                     borderDashOffset: 0.0,
@@ -126,7 +126,7 @@ export default {
                         {
                           label: element.users.title,
                           fill: true,
-                          borderColor: config.colors.info,
+                          borderColor: '#fff',
                           borderWidth: 2,
                           borderDash: [],
                           borderDashOffset: 0.0,
@@ -148,7 +148,7 @@ export default {
                         {
                           label: element.regionState.title,
                           fill: true,
-                          borderColor: config.colors.info,
+                          borderColor: '#fff',
                           borderWidth: 2,
                           borderDash: [],
                           borderDashOffset: 0.0,
@@ -170,7 +170,7 @@ export default {
                         {
                           label: element.regionCity.title,
                           fill: true,
-                          borderColor: config.colors.info,
+                          borderColor: '#fff',
                           borderWidth: 2,
                           borderDash: [],
                           borderDashOffset: 0.0,
@@ -192,7 +192,7 @@ export default {
                         {
                           label: element.regionNeighborhood.title,
                           fill: true,
-                          borderColor: config.colors.info,
+                          borderColor: '#fff',
                           borderWidth: 2,
                           borderDash: [],
                           borderDashOffset: 0.0,
