@@ -7,7 +7,7 @@
       <div
         v-for="(chart, index) in operation.charts"
         :key="index"
-        class="chart-row"
+        class="chart-column"
       >
         <card type="chart">
           <template slot="header">

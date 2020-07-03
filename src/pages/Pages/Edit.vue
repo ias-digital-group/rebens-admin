@@ -43,9 +43,9 @@
               ></custom-input>
             </div>
             <div class="ias-row" :key="idx" v-else-if="field.type == 'boolean'">
-              <ias-checkbox v-model="field.checked">
-                {{ field.label }}
-              </ias-checkbox>
+              <ias-checkbox v-model="field.checked">{{
+                field.label
+              }}</ias-checkbox>
             </div>
             <div
               class="ias-row-editor"
@@ -79,6 +79,7 @@
                 @change="onImageChange"
                 :img-size="field.label"
                 :src="field.data"
+                :optionalData="getOptionalData(field, idx)"
               />
             </template>
           </div>
@@ -97,6 +98,7 @@ import staticTextService from '../../services/StaticText/staticTextService';
 import helperService from '../../services/Helper/helperService';
 import { SuccessModal } from 'src/components';
 import config from '../../config';
+import _ from 'lodash';
 
 export default {
   components: {
@@ -142,6 +144,9 @@ export default {
     }
   },
   methods: {
+    getOptionalData(field, idx) {
+      return { field: field, index: idx, data: field.data, img: null };
+    },
     validateForm() {
       const self = this;
       self.submitLoading = true;
@@ -199,6 +204,27 @@ export default {
           self.formLoading = false;
         }
       );
+    },
+    onImageChange(file, element) {
+      const self = this;
+      if (self.model.images.length == 0) {
+        element.img = file;
+        self.model.images.push(element);
+      } else {
+        _.forEach(self.model.images, el => {
+          if (el.index == element.index) {
+            el.img = file;
+          }
+        });
+      }
+
+      if (file === null) {
+        _.forEach(self.model.data.fields, el => {
+          if (el.type == 'image' && el.name == element.field.name) {
+            el.data = file;
+          }
+        });
+      }
     }
   },
   created() {

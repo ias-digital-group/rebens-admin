@@ -14,6 +14,7 @@ export default {
             sort: 'name ASC',
             active: ''
           };
+      if (request.active == null) request.active = '';
       HTTP.get(
         config.apiEndpoints.operationUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}&active=${request.active}`
@@ -212,6 +213,7 @@ export default {
     });
   },
   getConfiguration: function(id) {
+    if (!id) id = 0;
     return new Promise((resolve, reject) => {
       HTTP.get(
         config.apiEndpoints.operationUri.concat(`${id}/Configuration`)
@@ -254,6 +256,7 @@ export default {
     });
   },
   listModules: function(id) {
+    if (!id) id = 0;
     return new Promise((resolve, reject) => {
       HTTP.get(config.apiEndpoints.operationUri.concat(`Modules/${id}`)).then(
         response => {

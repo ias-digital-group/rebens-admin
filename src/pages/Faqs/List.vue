@@ -136,15 +136,15 @@
                   v-model="editFaq.answer"
                   placeholder="Escreva aqui a resposta"
                 />
-                <label v-show="customErrors.get('answer')" class="ias-error">
-                  {{ customErrors.get('answer') }}
-                </label>
+                <label v-show="customErrors.get('answer')" class="ias-error">{{
+                  customErrors.get('answer')
+                }}</label>
               </div>
               <div class="ias-row">
                 <custom-input
                   :required="true"
                   v-model="editFaq.order"
-                  type="number"
+                  type="text"
                   name="order"
                   label="Digite a ordem"
                   :error="customErrors.get('order')"
@@ -208,7 +208,7 @@ export default {
         question: '',
         answer: '',
         idOperation: 0,
-        order: 0,
+        order: '',
         active: true
       },
       model: {
@@ -224,7 +224,7 @@ export default {
       self.editFaq.question = '';
       self.editFaq.answer = '';
       self.editFaq.idOperation = 0;
-      self.editFaq.order = 0;
+      self.editFaq.order = '';
       self.editFaq.active = true;
 
       self.showEditModal = true;
@@ -310,7 +310,11 @@ export default {
       if (!self.editFaq.question || self.editFaq.question === '')
         self.customErrors.set('question', 'Campo obrigatório');
       if (!self.editFaq.answer || self.editFaq.answer === '')
-        self.customErrors.set('question', 'Campo obrigatório');
+        self.customErrors.set('answer', 'Campo obrigatório');
+      if (!self.editFaq.order || self.editFaq.order === '')
+        self.customErrors.set('order', 'Campo obrigatório');
+      else if (!parseInt(self.editFaq.order))
+        self.customErrors.set('order', 'Campo inválido');
 
       if (self.customErrors.size === 0) {
         self.editFaq.idOperation = self.id;

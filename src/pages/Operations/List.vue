@@ -19,7 +19,7 @@
         <div class="filter" :class="{ active: showFilters }">
           <a
             class="bt bt-square bg-white-2 c-light-blue"
-            @click="showFilters = !showFilters"
+            @click="toogleFilters"
           >
             <i class="icon-icon-filter"></i>
           </a>
@@ -35,7 +35,8 @@
         <v-select
           :options="statuses"
           :reduce="op => op.code"
-          v-model="activeFilter"
+          v-model="filters.active"
+          class="no-margin"
           placeholder="Filtre pelo Status"
         >
           <span slot="no-options">Nenhum status encontrado</span>
@@ -110,11 +111,16 @@
                   type="button"
                   title="visualizar"
                   class="bt c-orange"
+                  target="_blank"
                   v-if="item.publishedDate !== ' - ' && item.active"
                 >
                   <i class="icon-icon-view"></i>
                 </a>
-                <span v-else class="bt c-gray" title="visualizar">
+                <span
+                  v-else
+                  class="bt c-orange cursor-block"
+                  title="visualizar"
+                >
                   <i class="icon-icon-view"></i>
                 </span>
               </div>
@@ -133,25 +139,24 @@
         @update-per-page="changePerPage"
       ></pagination>
     </div>
-    <delete-modal
-      @confirmDelete="confirmDelete"
+    <inactivate-operation-modal
+      @confirmInacitve="confirmInacitve"
       :itemName="modal.itemName"
       :show="modal.visible"
-      :showSuccess="modal.showSuccess"
-      @closeDeleteSuccess="closeDeleteSuccess"
-    ></delete-modal>
+      @closeInactivateModal="closeInactivateModal"
+    ></inactivate-operation-modal>
   </div>
 </template>
 <script>
 import { Select, Option } from 'element-ui';
-import { Pagination, DeleteModal } from 'src/components';
+import { Pagination, InactivateOperationModal } from 'src/components';
 import operationService from '../../services/Operation/operationService';
 import paging from '../../mixins/paging';
 
 export default {
   mixins: [paging],
   components: {
-    DeleteModal,
+    InactivateOperationModal,
     Pagination,
     [Select.name]: Select,
     [Option.name]: Option
@@ -161,12 +166,15 @@ export default {
       internalName: 'pages.operations.list',
       sortField: 'name',
       isMaster: false,
-      activeFilter: '',
-      showFilters: false,
       statuses: [
         { code: true, label: 'Ativos' },
         { code: false, label: 'Inativos' }
-      ]
+      ],
+      modal: {
+        itemName: '',
+        visible: false,
+        item: {}
+      }
     };
   },
   methods: {
@@ -180,8 +188,10 @@ export default {
         pageItems: this.$data.pagination.perPage,
         searchWord: this.searchQuery,
         sort: this.formatSortFieldParam,
-        active: this.activeFilter
+        active: this.filters.active
       };
+      if (this.filters.active != null && this.filters.active != '')
+        this.showFilters = true;
       this.$data.loading = true;
       operationService.findAll(request).then(
         response => {
@@ -222,60 +232,36 @@ export default {
         }
       });
     },
-    handleDelete(item) {
-      this.modal.model = item;
-      this.modal.itemName = item.name;
-      this.modal.visible = true;
-    },
-    confirmDelete(val) {
-      const self = this;
-      if (val) {
-        this.$validator.validateAll().then(isValid => {
-          if (isValid) {
-            self.modal.formLoading = true;
-            operationService.delete(self.modal.model.id).then(
-              () => {
-                self.resetModal();
-                self.fetchData();
-                self.showSuccess(true);
-              },
-              err => {
-                if (err.response.status === 400 && err.response.data.message) {
-                  self.$notify({
-                    type: 'warning',
-                    message: err.response.data.message
-                  });
-                } else {
-                  self.$notify({
-                    type: 'danger',
-                    message: err.message
-                  });
-                }
-                self.modal.formLoading = false;
-              }
-            );
-          }
-        });
+    toggleActive(row) {
+      this.modal.item = row;
+      if (row.active) {
+        this.modal.visible = true;
+        this.modal.itemName = row.title;
       } else {
-        this.resetModal();
+        this.confirmInacitve();
       }
     },
-    closeDeleteSuccess() {
-      this.showSuccess(false);
-    },
-    toggleActive(row) {
+    confirmInacitve() {
       const self = this;
-      operationService.toggleActive(row.id).then(data => {
+      self.$data.loading = true;
+      operationService.toggleActive(self.modal.item.id).then(data => {
         if (data.status === 'ok') {
-          row.active = data.data;
+          self.modal.item.active = data.data;
+          self.$data.loading = false;
           self.$notify({
             type: 'success',
-            message: `Banner ${
-              row.active ? 'ativado' : 'inativado'
+            message: `Operação ${
+              self.modal.item.active ? 'ativada' : 'inativada'
             } com sucesso`
           });
+          self.closeInactivateModal();
         }
       });
+    },
+    closeInactivateModal() {
+      this.modal.visible = false;
+      this.modal.item = {};
+      this.modal.itemName = '';
     }
   },
   created() {
@@ -283,7 +269,8 @@ export default {
     this.fetchData();
   },
   watch: {
-    activeFilter() {
+    'filters.active'() {
+      this.pagination.currentPage = 1;
       this.fetchData();
     }
   }

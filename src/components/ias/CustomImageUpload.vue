@@ -1,7 +1,7 @@
 <template>
   <div class="ias-image-upload">
     <div v-if="img" class="thumb-preview">
-      <img :src="img" alt="preview" />
+      <img :src="img" alt="preview" :style="'height:' + height" />
       <span @click="removeFile" class="bt-remove">
         <svg
           width="23"
@@ -66,6 +66,10 @@ export default {
     optionalData: {
       type: Object,
       default: null
+    },
+    height: {
+      type: String,
+      default: 'auto'
     }
   },
   data() {

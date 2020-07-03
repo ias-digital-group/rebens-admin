@@ -40,17 +40,20 @@
     <div v-if="hasIcon" class="ias-icon-holder">
       <i :class="iconName"></i>
     </div>
-    <a
-      v-if="isLink"
-      :href="'http://' + link"
-      :class="{
-        'c-orange': link && link !== '',
-        'c-dark-gray': !link || link === ''
-      }"
-      class="ias-icon-link"
-    >
-      <i class="icon-icon-view"></i>
-    </a>
+    <template v-if="isLink">
+      <a
+        v-if="link && link != ''"
+        :href="'http://' + link"
+        target="_blank"
+        class="ias-icon-link c-light-blue"
+      >
+        <i class="icon-icon-view"></i>
+      </a>
+      <span v-else class="cursor-block ias-icon-link c-light-blue">
+        <i class="icon-icon-view"></i>
+      </span>
+    </template>
+
     <label v-if="error" class="ias-error">{{ error }}</label>
   </div>
 </template>

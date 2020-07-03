@@ -52,6 +52,7 @@ import CustomRadio from './ias/CustomRadio.vue';
 import DeleteModal from './ias/DeleteModal.vue';
 import Pagination from './ias/Pagination.vue';
 import SuccessModal from './ias/SuccessModal.vue';
+import InactivateOperationModal from './ias/InactivateOperationModal.vue';
 
 export {
   Address,
@@ -62,6 +63,7 @@ export {
   DeleteModal,
   Pagination,
   SuccessModal,
+  InactivateOperationModal,
   BaseCheckbox,
   IconCheckbox,
   BaseSwitch,

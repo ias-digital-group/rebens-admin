@@ -5,7 +5,7 @@
     </div>
     <div class="ias-card">
       <div class="ias-dash-row">
-        <card type="chart">
+        <card type="chart" v-if="benefitViewChart.chartData">
           <template slot="header">
             <h3 class="card-title">Benefícios Mais Vistos</h3>
           </template>
@@ -18,7 +18,7 @@
             ></bar-chart>
           </div>
         </card>
-        <card type="chart">
+        <card type="chart" v-if="benefitUseChart.chartData">
           <template slot="header">
             <h3 class="card-title">Benefícios Mais Utilizados</h3>
           </template>

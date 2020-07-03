@@ -76,11 +76,15 @@
           :options="stateList"
           :reduce="op => op.code"
           :key="address.state"
+          :class="{ 'has-error': customErrors.get('state') }"
           v-model="address.state"
           placeholder="Estado"
         >
           <span slot="no-options">Nenhum Estado encontrado</span>
         </v-select>
+        <label v-if="customErrors.get('state')" class="ias-error">{{
+          customErrors.get('state')
+        }}</label>
       </div>
       <custom-input
         v-model="address.country"

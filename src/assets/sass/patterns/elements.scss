@@ -554,6 +554,9 @@
     .mtb-40 {
       margin: 40px 0;
     }
+    .ias-input-group {
+      background-color: $white;
+    }
   }
   &.modal-faq {
     .modal-container {
@@ -753,4 +756,8 @@
 .ias-error-label {
   position: absolute;
   top: 56px;
+}
+
+.cursor-block {
+  cursor: not-allowed !important;
 }

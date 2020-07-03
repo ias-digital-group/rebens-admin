@@ -70,7 +70,6 @@
                 <span class="blue">{{ item.address.name }}</span>
               </div>
             </td>
-            <td></td>
             <td>
               <div class="two-lines">
                 <span>{{ item.contact.name }}</span>

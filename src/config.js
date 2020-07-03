@@ -52,6 +52,7 @@ export default {
   customToolbar: [
     ['bold', 'italic', 'underline'],
     [{ list: 'ordered' }, { list: 'bullet' }],
+    [{ align: '' }, { align: 'center' }],
     ['link'],
     ['clean']
   ],

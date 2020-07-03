@@ -7,6 +7,7 @@ export default {
       sortField: '',
       sortOrder: 'ascending',
       filters: {},
+      showFilters: false,
       pagination: {
         perPage: 10,
         currentPage: 1,
@@ -64,6 +65,9 @@ export default {
     this.fetchData();
   },
   methods: {
+    toogleFilters() {
+      this.showFilters = !this.showFilters;
+    },
     changePerPage(val) {
       this.$data.pagination.perPage = val;
       this.$data.pagination.currentPage = 1;
@@ -106,6 +110,14 @@ export default {
         sortOrder: vm.sortOrder,
         filters: vm.filters
       });
+      for (let prop in vm.filters) {
+        if (
+          vm.filters[prop] != null &&
+          vm.filters[prop] != undefined &&
+          vm.filters[prop] !== ''
+        )
+          vm.showFilters = true;
+      }
       vm.$data.pagination.totalItems = totalItems;
       vm.$data.pagination.totalPages = totalPages;
     }

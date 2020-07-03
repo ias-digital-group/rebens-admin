@@ -766,6 +766,8 @@ button {
   h2 {
     color: $light-blue !important;
     margin: 32px 16px 16px;
+    font-size: $font-size-big;
+    text-transform: uppercase;
   }
   .card {
     background-color: $bg-body !important;
@@ -776,14 +778,10 @@ button {
     .card-title {
       color: $light-blue !important;
       text-transform: uppercase;
+      font-size: $font-size-large;
     }
   }
-  .chart-row {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    .card {
-      width: calc(25% - 20px);
-    }
+  .chart-column {
+    width: calc(25% - 20px);
   }
 }

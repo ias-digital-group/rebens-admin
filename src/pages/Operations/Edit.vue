@@ -109,7 +109,7 @@
               name="contactMobile"
               label="Celular Comercial"
               maxlength="50"
-              :error="customErrors.get('contactMobile')"
+              :error="customErrors.get('contactPhone')"
               :inputMask="['(##) ####-####', '(##) #####-####']"
             ></custom-input>
             <div class="phone-branch">
@@ -119,6 +119,7 @@
                 name="contactComercialPhone"
                 label="Telefone Comercial"
                 maxlength="50"
+                :error="customErrors.get('contactPhone')"
                 :inputMask="['(##) ####-####']"
               ></custom-input>
               <custom-input
@@ -274,7 +275,7 @@
         <div class="form-right">
           <ias-image-upload
             @change="onImageChange"
-            img-size="(360x360)"
+            img-size="Logo (168x60)"
             :src="model.logo"
             :error="customErrors.get('logo')"
           />
@@ -285,6 +286,8 @@
                 :img-size="field.label"
                 :src="field.data"
                 :optionalData="getOptionalData(field, idx)"
+                height="50px"
+                :error="customErrors.get(`config.${field.name}`)"
               />
             </template>
           </div>
@@ -296,10 +299,21 @@
       :show="showSuccessModal"
       link="/operations"
     ></success-modal>
+    <inactivate-operation-modal
+      @confirmInacitve="confirmInacitve"
+      :itemName="modal.itemName"
+      :show="modal.visible"
+      @closeInactivateModal="closeInactivateModal"
+    ></inactivate-operation-modal>
   </div>
 </template>
 <script>
-import { SuccessModal, Address, Modal } from 'src/components';
+import {
+  SuccessModal,
+  Address,
+  Modal,
+  InactivateOperationModal
+} from 'src/components';
 import operationService from '../../services/Operation/operationService';
 import helperService from '../../services/Helper/helperService';
 import validate from '../../validate';
@@ -309,7 +323,8 @@ export default {
   components: {
     SuccessModal,
     [Address.name]: Address,
-    Modal
+    Modal,
+    InactivateOperationModal
   },
   props: {
     id: String
@@ -330,6 +345,7 @@ export default {
       customErrors: new Map(),
       selectedOperationType: '',
       modules: [],
+      actualStatus: false,
       wirecard: {
         token: '',
         jsToken: ''
@@ -349,7 +365,7 @@ export default {
         companyName: '',
         companyDoc: '',
         domain: '',
-        idOperationType: 0,
+        idOperationType: 2,
         cachbackPercentage: 0,
         active: false,
         logo: '',
@@ -386,7 +402,12 @@ export default {
           longitude: null
         }
       },
-      operationTypeList: []
+      operationTypeList: [],
+      modal: {
+        itemName: '',
+        visible: false,
+        item: {}
+      }
     };
   },
   computed: {
@@ -430,13 +451,13 @@ export default {
     validate() {
       const self = this;
       self.customErrors = new Map();
-      if (
-        !self.model.idOperationType ||
-        self.model.idOperationType === '' ||
-        self.model.idOperationType === 0
-      ) {
-        self.customErrors.set('idOperationType', 'Campo obrigatório');
-      }
+      // if (
+      //   !self.model.idOperationType ||
+      //   self.model.idOperationType === '' ||
+      //   self.model.idOperationType === 0
+      // ) {
+      //   self.customErrors.set('idOperationType', 'Campo obrigatório');
+      // }
 
       if (!self.model.title || self.model.title === '') {
         self.customErrors.set('title', 'Campo obrigatório');
@@ -515,37 +536,61 @@ export default {
       )
         self.customErrors.set('contactJobTitle', 'Campo obrigatório');
 
+      if (
+        (!self.model.mainContact.phone ||
+          self.model.mainContact.phone === '') &&
+        (!self.model.mainContact.cellPhone ||
+          self.model.mainContact.cellPhone === '') &&
+        (!self.model.mainContact.comercialPhone ||
+          self.model.mainContact.comercialPhone === '')
+      )
+        self.customErrors.set(
+          'contactPhone',
+          'Preencha pelo menos um telefone'
+        );
+
       for (let i = 0; i < self.config.data.fields.length; i++) {
         if (
           self.config.data.fields[i].isRequired &&
           self.config.data.fields[i].data === ''
         ) {
-          self.customErrors.set(
-            `config.${self.model.data.fields[i].name}`,
-            'Campo obrigatório'
-          );
+          if (self.config.data.fields[i].type === 'image') {
+            if (self.config.images.length === 0) {
+              self.customErrors.set(
+                `config.${self.config.data.fields[i].name}`,
+                'Campo obrigatório'
+              );
+            }
+          } else {
+            self.customErrors.set(
+              `config.${self.config.data.fields[i].name}`,
+              'Campo obrigatório'
+            );
+          }
         }
       }
 
       if (self.customErrors.size === 0) {
-        self.submitLoading = true;
-
         if (
           self.image ||
           (self.config.images && self.config.images.length > 0)
         ) {
+          self.submitLoading = true;
+          let start = 0;
           let promises = new Array(
             (self.image ? 1 : 0) +
               (self.config.images ? self.config.images.length : 0)
           );
           if (self.image) {
-            promises[i] = helperService.uploadImage(self.image);
+            promises[start] = helperService.uploadImage(self.image);
+            start++;
           }
           if (self.config.images && self.config.images.length > 0) {
             for (var i = 0; i <= self.config.images.length - 1; i++) {
-              promises[i] = helperService.uploadImage(
+              promises[start] = helperService.uploadImage(
                 self.config.images[i].img
               );
+              start++;
             }
           }
           Promise.all(promises)
@@ -557,9 +602,10 @@ export default {
               }
               for (var j = start; j <= values.length - 1; j++) {
                 const fieldIndex = self.config.images[j - start].index;
-                self.model.data.fields[fieldIndex].data = values[j].data.url;
+                self.config.data.fields[fieldIndex].data = values[j].data.url;
               }
-              self.saveOperation(self);
+              self.submitLoading = false;
+              self.checkStatus();
             })
             .catch(reason => {
               self.$notify({
@@ -569,15 +615,24 @@ export default {
               self.submitLoading = false;
             });
         } else {
-          self.saveOperation(self);
+          self.checkStatus();
         }
       }
     },
-    saveOperation(vw) {
+    checkStatus() {
+      if (!this.model.active && this.actualStatus) {
+        this.modal.visible = true;
+        this.modal.itemName = this.model.title;
+      } else {
+        this.saveOperation();
+      }
+    },
+    saveOperation() {
+      const vw = this;
       if (vw.viewAction == 'new') {
         operationService.create(vw.model).then(
           response => {
-            vw.model.id = response.data.id;
+            vw.model.id = response.id;
             vw.saveConfiguration(vw);
           },
           err => {
@@ -665,6 +720,7 @@ export default {
         operationService.get(self.id).then(
           response => {
             self.model = response.data;
+            self.actualStatus = self.model.active;
             self.publishLoading = response.data.publishStatus === 'Processando';
             self.formLoading = false;
             self.publishTempLoading =
@@ -678,19 +734,19 @@ export default {
         );
       }
       this.selectLoading = true;
-      helperService.findAllOperationTypes().then(
-        response => {
-          _.each(response.data, function(el) {
-            self.operationTypeList.push({ code: el.id, label: el.name });
-            if (el.id === self.model.idOperationType)
-              self.selectedOperationType = el.name;
-          });
-          self.selectLoading = false;
-        },
-        () => {
-          self.selectLoading = false;
-        }
-      );
+      // helperService.findAllOperationTypes().then(
+      //   response => {
+      //     _.each(response.data, function(el) {
+      //       self.operationTypeList.push({ code: el.id, label: el.name });
+      //       if (el.id === self.model.idOperationType)
+      //         self.selectedOperationType = el.name;
+      //     });
+      //     self.selectLoading = false;
+      //   },
+      //   () => {
+      //     self.selectLoading = false;
+      //   }
+      // );
       operationService.getConfiguration(self.id).then(
         response => {
           self.config.images = [];
@@ -743,6 +799,15 @@ export default {
     },
     onRegisterType(type) {
       this.registerType = type;
+    },
+    confirmInacitve() {
+      this.closeInactivateModal();
+      this.saveOperation();
+    },
+    closeInactivateModal() {
+      this.modal.visible = false;
+      this.modal.item = {};
+      this.modal.itemName = '';
     }
   },
   created() {
