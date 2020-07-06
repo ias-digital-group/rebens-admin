@@ -1,124 +1,102 @@
 <template>
-  <div class="row">
-    <div class="col-12">
-      <card card-body-classes="table-full-width">
-        <template slot="header">
-          <h4 class="card-title">Promotores</h4>
-        </template>
-        <div>
-          <div
-            class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
-          >
-            <el-select
-              class="select-primary mb-3 pagination-select"
-              v-model="pagination.perPage"
-              :placeholder="$t('pages.banners.perpage-placeholder')"
-              v-if="!loading"
-            >
-              <el-option
-                class="select-primary"
-                v-for="item in pagination.perPageOptions"
-                :key="item"
-                :label="item"
-                :value="item"
-              >
-              </el-option>
-            </el-select>
-            <base-input>
-              <el-input
-                type="search"
-                class="mb-3 search-input"
-                style="width:300px"
-                clearable
-                prefix-icon="el-icon-search"
-                placeholder="Procurar Promotor"
-                aria-controls="datatables"
-                v-model="searchQuery"
-              >
-              </el-input>
-            </base-input>
-          </div>
-          <el-table
-            ref="table"
-            :data="tableData"
-            v-loading="loading"
-            :empty-text="$t('pages.banners.emptytext')"
-            @sort-change="onSortChanged"
-            :default-sort="{ prop: sortField, order: sortOrder }"
-          >
-            <el-table-column
-              v-for="column in tableColumns"
-              :key="column.label"
-              :min-width="column.minWidth"
-              :prop="column.prop"
-              :label="column.label"
-              sortable="custom"
-            >
-            </el-table-column>
-          </el-table>
+  <div class="list-box">
+    <div class="page-header">
+      <h2>Promotores</h2>
+      <div class="box-actions">
+        <div class="input-post-icon search">
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Digite aqui o que deseja encontrar"
+          />
+          <i v-if="searchQuery === ''" class="icon-icon-search"></i>
+          <i
+            v-else
+            class="bt-clear-search icon-icon-times c-red"
+            @click="searchQuery = ''"
+          ></i>
         </div>
-        <div
-          slot="footer"
-          class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
-        >
-          <base-pagination
-            class="pagination-no-border mt-3"
-            v-model="pagination.currentPage"
-            :per-page="pagination.perPage"
-            :total="total"
-            v-on:input="onPageChanged"
-          >
-          </base-pagination>
-        </div>
-      </card>
+      </div>
+    </div>
+    <div class="list-table">
+      <table v-loading="loading">
+        <thead>
+          <tr>
+            <th>Nome / E-mail</th>
+            <th>Validação</th>
+            <th>Incompleto</th>
+            <th>Completo</th>
+            <th>Ativo</th>
+            <th>Inativo</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in tableData" :key="item.id">
+            <td class="td-flex">
+              <div class="avatar">
+                <img
+                  v-if="item.picture && item.picture !== ''"
+                  :src="item.picture"
+                  :alt="item.name"
+                />
+                <span v-else>{{ item.name[0] }}</span>
+              </div>
+              <div class="two-lines">
+                <span>{{ item.name }} {{ item.surname }}</span>
+                <span class="blue">{{ item.email }}</span>
+              </div>
+            </td>
+            <td>
+              <span>{{ item.totalValidation }}</span>
+            </td>
+            <td>
+              <span>{{ item.totalIncomplete }}</span>
+            </td>
+            <td>
+              <span>{{ item.totalComplete }}</span>
+            </td>
+            <td>
+              <span>{{ item.totalActive }}</span>
+            </td>
+            <td>
+              <span>{{ item.totalInactive }}</span>
+            </td>
+            <td>
+              <span>{{ item.total }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <pagination
+        class="box-pagination"
+        v-model="pagination.currentPage"
+        :per-page="pagination.perPage"
+        :total-items="pagination.totalItems"
+        :total-pages="pagination.totalPages"
+        :current-page="pagination.currentPage"
+        v-on:input="onPageChanged"
+        @update-per-page="changePerPage"
+      ></pagination>
     </div>
   </div>
 </template>
 <script>
-import { Table, TableColumn, Select, Option } from 'element-ui';
-import { BasePagination } from 'src/components';
+import { Select, Option } from 'element-ui';
+import { Pagination } from 'src/components';
 import promoterService from '../../services/Promoter/promoterService';
-import listPage from '../../mixins/listPage';
+import paging from '../../mixins/paging';
 export default {
-  mixins: [listPage],
+  mixins: [paging],
   components: {
-    BasePagination,
+    Pagination,
     [Select.name]: Select,
-    [Option.name]: Option,
-    [Table.name]: Table,
-    [TableColumn.name]: TableColumn
+    [Option.name]: Option
   },
   data() {
     return {
       internalName: 'Promotores',
-      sortField: 'name',
-      formLoading: false,
-      tableColumns: [
-        {
-          prop: 'name',
-          label: 'Nome'
-        },
-        {
-          prop: 'totalActive',
-          label: 'Ativos'
-        },
-        {
-          prop: 'totalInactive',
-          label: 'Inativos'
-        },
-        {
-          prop: 'totalValidation',
-          label: 'Validação'
-        },
-        {
-          prop: 'totalIncomplete',
-          label: 'Incompletos'
-        },
-        {
-          prop: 'total',
-          label: 'Total'
-        }
-      ]
+      formLoading: false
     };
   },
   methods: {

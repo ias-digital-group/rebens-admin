@@ -190,7 +190,7 @@ export default {
             'master,administratorRebens,publisherRebens,partnerAdministrator',
           needModule: '',
           subitens: []
-        }
+        },
         // {
         //   name: 'Cursos',
         //   path: '#',
@@ -298,26 +298,26 @@ export default {
         //   needModule: '',
         //   subitens: []
         // },
-        // {
-        //   name: 'Relatórios',
-        //   path: '#',
-        //   active: false,
-        //   roles: 'master,administratorRebens',
-        //   subitens: [
-        //     // {
-        //     //   name: 'Utilização',
-        //     //   path: '/report/benefit-use',
-        //     //   active: false,
-        //     //   roles: ''
-        //     // },
-        //     {
-        //       name: 'Promotores',
-        //       path: '/promoter/report',
-        //       active: false,
-        //       roles: ''
-        //     }
-        //   ]
-        // }
+        {
+          name: 'Relatórios',
+          path: '#',
+          active: false,
+          roles: 'master,administratorRebens',
+          subitens: [
+            // {
+            //   name: 'Utilização',
+            //   path: '/report/benefit-use',
+            //   active: false,
+            //   roles: ''
+            // },
+            {
+              name: 'Promotores',
+              path: '/promoter/report',
+              active: false,
+              roles: ''
+            }
+          ]
+        }
       ]
     };
   },
