@@ -112,7 +112,8 @@
                   title="visualizar"
                   class="bt c-orange"
                   target="_blank"
-                  v-if="item.publishedDate !== ' - ' && item.active"
+                  v-if="item.link !== ''"
+                  :href="'http://' + item.link"
                 >
                   <i class="icon-icon-view"></i>
                 </a>

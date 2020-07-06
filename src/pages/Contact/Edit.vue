@@ -26,9 +26,9 @@
               >
                 <span slot="no-options">Nenhum Tipo encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('type')" class="ias-error">
-                {{ customErrors.get('type') }}
-              </label>
+              <label v-if="customErrors.get('type')" class="ias-error">{{
+                customErrors.get('type')
+              }}</label>
             </div>
           </div>
           <div class="ias-row" v-if="model.type === 22 && viewAction === 'new'">
@@ -43,9 +43,9 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('idItem')" class="ias-error">
-                {{ customErrors.get('idItem') }}
-              </label>
+              <label v-if="customErrors.get('idItem')" class="ias-error">{{
+                customErrors.get('idItem')
+              }}</label>
             </div>
           </div>
           <div class="ias-row" v-if="model.type === 23 && viewAction === 'new'">
@@ -60,9 +60,9 @@
               >
                 <span slot="no-options">Nenhum Parceiro encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('idItem')" class="ias-error">
-                {{ customErrors.get('idItem') }}
-              </label>
+              <label v-if="customErrors.get('idItem')" class="ias-error">{{
+                customErrors.get('idItem')
+              }}</label>
             </div>
           </div>
           <div class="ias-row" v-if="model.type === 31 && viewAction === 'new'">
@@ -77,9 +77,9 @@
               >
                 <span slot="no-options">Nenhuma Empresa encontrada</span>
               </v-select>
-              <label v-if="customErrors.get('idItem')" class="ias-error">
-                {{ customErrors.get('idItem') }}
-              </label>
+              <label v-if="customErrors.get('idItem')" class="ias-error">{{
+                customErrors.get('idItem')
+              }}</label>
             </div>
           </div>
           <div class="ias-row">
@@ -126,7 +126,7 @@
               type="text"
               name="contactPhone"
               label="Telefone"
-              :error="customErrors.get('contactPhone')"
+              :error="customErrors.get('phone')"
               maxlength="50"
               :inputMask="['(##) ####-####', '(##) #####-####']"
             ></custom-input>
@@ -138,7 +138,7 @@
               name="contactMobile"
               label="Celular Comercial"
               maxlength="50"
-              :error="customErrors.get('contactMobile')"
+              :error="customErrors.get('phone')"
               :inputMask="['(##) ####-####', '(##) #####-####']"
             ></custom-input>
             <div class="phone-branch">
@@ -147,6 +147,7 @@
                 type="text"
                 name="contactComercialPhone"
                 label="Telefone Comercial"
+                :error="customErrors.get('phone')"
                 maxlength="50"
                 :inputMask="['(##) ####-####']"
               ></custom-input>
@@ -174,7 +175,11 @@
             <div class="div-spacer"></div>
           </div>
         </div>
-        <div class="form-right"></div>
+        <div class="form-right">
+          <div class="right-img-holder">
+            <img :src="imageRight" :alt="altImageRight" />
+          </div>
+        </div>
       </form>
     </div>
     <success-modal
@@ -222,11 +227,8 @@ export default {
             this.altImageRight = part[0].label;
           }
         } else {
-          const part = this.companies.filter(o => o.code === value);
-          if (part && part.length > 0) {
-            this.imageRight = part[0].img;
-            this.altImageRight = part[0].label;
-          }
+          this.imageRight = '/img/img-holder.png';
+          this.altImageRight = '';
         }
       }
     },
@@ -243,6 +245,8 @@ export default {
       operations: [],
       partners: [],
       companies: [],
+      imageRight: '/img/img-holder.png',
+      altImageRight: '',
       types: [
         { code: 22, label: 'Clube' },
         { code: 23, label: 'Parceiro' },
@@ -292,6 +296,12 @@ export default {
         self.customErrors.set('contactEmail', 'E-mail inválido');
       if (!self.model.jobTitle || self.model.jobTitle === '')
         self.customErrors.set('contactJobTitle', 'Campo obrigatório');
+      if (
+        (!self.model.phone || self.model.phone === '') &&
+        (!self.model.cellPhone || self.model.cellPhone === '') &&
+        (!self.model.comercialPhone || self.model.comercialPhone === '')
+      )
+        self.customErrors.set('phone', 'Preencha pelo menos um telefone');
 
       if (self.customErrors.size === 0) {
         self.submitLoading = true;
@@ -394,7 +404,7 @@ export default {
               self.operations.push({
                 code: el.id,
                 label: el.title,
-                img: el.logo
+                img: el.image
               });
 
               if (

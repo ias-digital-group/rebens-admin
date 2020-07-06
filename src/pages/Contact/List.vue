@@ -35,7 +35,7 @@
         <v-select
           :options="types"
           :reduce="op => op.code"
-          v-model="typeFilter"
+          v-model="filters.type"
           class="no-margin"
           placeholder="Filtre por tipo"
         >
@@ -44,7 +44,7 @@
         <v-select
           :options="statuses"
           :reduce="op => op.code"
-          v-model="activeFilter"
+          v-model="filters.active"
           placeholder="Filtre pelo Status"
         >
           <span slot="no-options">Nenhum status encontrado</span>
@@ -66,7 +66,7 @@
           <tr v-for="item in tableData" :key="item.id">
             <td>
               <div class="two-lines">
-                <span>{{ item.name }}</span>
+                <span>{{ item.name }} {{ item.surname }}</span>
                 <span class="blue">{{ item.email }}</span>
               </div>
             </td>
@@ -76,13 +76,15 @@
             <td>
               <div class="two-lines">
                 <span>{{ item.jobTitle }}</span>
-                <span class="blue">{{ item.phone }}</span>
+                <span class="blue">{{ formatPhone(item.phone) }}</span>
               </div>
             </td>
             <td>
               <div class="two-lines">
-                <span>{{ item.comercialPhone }}</span>
-                <span class="blue">{{ item.cellPhone }}</span>
+                <span>{{
+                  formatPhone(item.comercialPhone, item.comercialPhoneBranch)
+                }}</span>
+                <span class="blue">{{ formatPhone(item.cellPhone) }}</span>
               </div>
             </td>
             <td>
@@ -158,9 +160,6 @@ export default {
     return {
       internalName: 'Contato',
       sortField: 'name',
-      activeFilter: '',
-      typeFilter: '',
-      showFilters: false,
       statuses: [
         { code: true, label: 'Ativos' },
         { code: false, label: 'Inativos' }
@@ -173,6 +172,26 @@ export default {
     };
   },
   methods: {
+    formatPhone(phone, branch) {
+      let ret = '';
+      if (phone) {
+        if (phone.length === 10) {
+          ret = `(${phone.substring(0, 2)}) ${phone.substring(
+            2,
+            6
+          )}-${phone.substring(6, 10)}`;
+        } else if (phone.length === 11) {
+          ret = `(${phone.substring(0, 2)}) ${phone.substring(
+            2,
+            7
+          )}-${phone.substring(7, 11)}`;
+        }
+        if (branch && branch !== '') {
+          ret += ' r. ' + branch;
+        }
+      }
+      return ret;
+    },
     handleEdit(row) {
       this.$router.push(`/contact/${row.id}/edit/`);
     },
@@ -180,7 +199,7 @@ export default {
       const self = this;
       contactService.toggleActive(row.id).then(data => {
         if (data.status === 'ok') {
-          row.active = data.data;
+          self.fetchData();
           self.$notify({
             type: 'success',
             message: `Contato ${
@@ -197,8 +216,8 @@ export default {
         pageItems: this.$data.pagination.perPage,
         searchWord: this.searchQuery,
         sort: this.formatSortFieldParam,
-        active: this.activeFilter,
-        type: this.typeFilter,
+        active: this.filters.active,
+        type: this.filters.type,
         idItem: ''
       };
       this.$data.loading = true;
@@ -267,11 +286,11 @@ export default {
     }
   },
   watch: {
-    activeFilter() {
+    'filters.active'() {
       this.pagination.currentPage = 1;
       this.fetchData();
     },
-    typeFilter() {
+    'filters.type'() {
       this.pagination.currentPage = 1;
       this.fetchData();
     }

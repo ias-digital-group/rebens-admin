@@ -43,9 +43,9 @@
               ></custom-input>
             </div>
             <div class="ias-row" :key="idx" v-else-if="field.type == 'boolean'">
-              <ias-checkbox v-model="field.checked">{{
-                field.label
-              }}</ias-checkbox>
+              <ias-checkbox v-model="field.checked">
+                {{ field.label }}
+              </ias-checkbox>
             </div>
             <div
               class="ias-row-editor"
@@ -151,9 +151,11 @@ export default {
       const self = this;
       self.submitLoading = true;
       if (self.model.images && self.model.images.length > 0) {
-        let promises = new Array(self.model.images.length);
+        let promises = new Array();
         for (var i = 0; i <= self.model.images.length - 1; i++) {
-          promises[i] = helperService.uploadImage(self.model.images[i].img);
+          if (self.model.images[i].img) {
+            promises.push(helperService.uploadImage(self.model.images[i].img));
+          }
         }
         Promise.all(promises)
           .then(values => {

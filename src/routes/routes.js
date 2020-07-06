@@ -1439,7 +1439,7 @@ let courseRegulationPages = {
 
 let promoterPages = {
   path: '/promoter',
-  component: DashboardLayout,
+  component: MainLayout,
   meta: {
     requiresAuth: true,
     roles: ['promoter'],

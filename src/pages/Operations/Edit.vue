@@ -184,9 +184,9 @@
               ></custom-input>
             </div>
             <div class="ias-row" :key="idx" v-else-if="field.type == 'boolean'">
-              <ias-checkbox v-model="field.checked">{{
-                field.label
-              }}</ias-checkbox>
+              <ias-checkbox v-model="field.checked">
+                {{ field.label }}
+              </ias-checkbox>
             </div>
             <div
               class="ias-row-editor"
@@ -199,7 +199,14 @@
                 :placeholder="field.label"
               />
             </div>
-            <div class="ias-row" v-else-if="field.type == 'select'" :key="idx">
+            <div
+              class="ias-row"
+              :class="{
+                'ias-has-error': customErrors.get(`config.${field.name}`)
+              }"
+              v-else-if="field.type == 'select'"
+              :key="idx"
+            >
               <ias-radio
                 v-for="(t, index) in field.options"
                 :value="t.value"
@@ -207,6 +214,11 @@
                 :name="t.value"
                 v-model="field.data"
                 >{{ t.name }}</ias-radio
+              >
+              <label
+                v-if="customErrors.get(`config.${field.name}`)"
+                class="ias-error"
+                >{{ customErrors.get(`config.${field.name}`) }}</label
               >
             </div>
           </template>
@@ -232,9 +244,9 @@
           </div>
           <div v-for="(arr, idx1) in modulesChunk" class="ias-row" :key="idx1">
             <template v-for="(mod, idx) in arr">
-              <ias-checkbox v-model="mod.checked" :key="idx">{{
-                mod.title
-              }}</ias-checkbox>
+              <ias-checkbox v-model="mod.checked" :key="idx">
+                {{ mod.title }}
+              </ias-checkbox>
             </template>
             <div class="div-spacer" v-show="arr.length === 1"></div>
             <div class="div-spacer" v-show="arr.length === 2"></div>

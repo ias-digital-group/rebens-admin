@@ -35,7 +35,7 @@
         <v-select
           :options="types"
           :reduce="op => op.code"
-          v-model="typeFilter"
+          v-model="filters.type"
           class="no-margin"
           placeholder="Filtre por tipo"
         >
@@ -44,7 +44,7 @@
         <v-select
           :options="statuses"
           :reduce="op => op.code"
-          v-model="activeFilter"
+          v-model="filters.active"
           placeholder="Filtre pelo Status"
         >
           <span slot="no-options">Nenhum status encontrado</span>
@@ -79,13 +79,20 @@
             <td>
               <div class="two-lines">
                 <span>{{ item.contact.jobTitle }}</span>
-                <span class="blue">{{ item.contact.phone }}</span>
+                <span class="blue">{{ formatPhone(item.contact.phone) }}</span>
               </div>
             </td>
             <td>
               <div class="two-lines">
-                <span>{{ item.contact.comercialPhone }}</span>
-                <span class="blue">{{ item.contact.cellPhone }}</span>
+                <span>{{
+                  formatPhone(
+                    item.contact.comercialPhone,
+                    item.contact.comercialPhoneBranch
+                  )
+                }}</span>
+                <span class="blue">{{
+                  formatPhone(item.contact.cellPhone)
+                }}</span>
               </div>
             </td>
             <td>
@@ -159,9 +166,6 @@ export default {
     return {
       internalName: 'Empresa',
       sortField: 'name',
-      activeFilter: '',
-      typeFilter: '',
-      showFilters: false,
       statuses: [
         { code: true, label: 'Ativos' },
         { code: false, label: 'Inativos' }
@@ -173,6 +177,26 @@ export default {
     };
   },
   methods: {
+    formatPhone(phone, branch) {
+      let ret = '';
+      if (phone) {
+        if (phone.length === 10) {
+          ret = `(${phone.substring(0, 2)}) ${phone.substring(
+            2,
+            6
+          )}-${phone.substring(6, 10)}`;
+        } else if (phone.length === 11) {
+          ret = `(${phone.substring(0, 2)}) ${phone.substring(
+            2,
+            7
+          )}-${phone.substring(7, 11)}`;
+        }
+        if (branch && branch !== '') {
+          ret += ' r. ' + branch;
+        }
+      }
+      return ret;
+    },
     handleEdit(row) {
       this.$router.push(`/company/${row.id}/edit/`);
     },
@@ -180,7 +204,7 @@ export default {
       const self = this;
       companyService.toggleActive(row.id).then(data => {
         if (data.status === 'ok') {
-          row.active = data.data;
+          self.fetchData();
           self.$notify({
             type: 'success',
             message: `Empresa ${
@@ -197,8 +221,8 @@ export default {
         pageItems: this.$data.pagination.perPage,
         searchWord: this.searchQuery,
         sort: this.formatSortFieldParam,
-        active: this.activeFilter,
-        type: this.typeFilter,
+        active: this.filters.active,
+        type: this.filters.type,
         idOperation: '',
         idPartner: ''
       };
@@ -269,11 +293,11 @@ export default {
     }
   },
   watch: {
-    activeFilter() {
+    'filters.active'() {
       this.pagination.currentPage = 1;
       this.fetchData();
     },
-    typeFilter() {
+    'filters.type'() {
       this.pagination.currentPage = 1;
       this.fetchData();
     }

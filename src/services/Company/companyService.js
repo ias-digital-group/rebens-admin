@@ -20,10 +20,16 @@ export default {
         config.apiEndpoints.companyUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}` +
             `&sort=${request.sort}&active=${
-              request.active === null ? '' : request.active
+              request.active === undefined || request.active === null
+                ? ''
+                : request.active
             }&idOperation=${
               request.idOperation === null ? '' : request.idOperation
-            }&type=${request.type === null ? '' : request.type}` +
+            }&type=${
+              request.type === undefined || request.type === null
+                ? ''
+                : request.type
+            }` +
             `&idPartner=${request.idPartner === null ? '' : request.idPartner}`
         )
       ).then(

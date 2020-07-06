@@ -20,10 +20,14 @@ export default {
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
             request.searchWord
           }&sort=${request.sort}&active=${
-            request.active === null ? '' : request.active
-          }&type=${request.type === null ? '' : request.type}&idItem=${
-            request.idItem === null ? '' : request.idItem
-          }`
+            request.active === undefined || request.active === null
+              ? ''
+              : request.active
+          }&type=${
+            request.type === undefined || request.type === null
+              ? ''
+              : request.type
+          }&idItem=${request.idItem === null ? '' : request.idItem}`
         )
       ).then(
         response => {

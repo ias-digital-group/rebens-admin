@@ -57,9 +57,9 @@
               >
               <ul class="sub-item">
                 <li v-for="(subitem, idx2) in item.subitens" :key="idx2">
-                  <router-link :to="subitem.path">
-                    {{ subitem.name }}
-                  </router-link>
+                  <router-link :to="subitem.path">{{
+                    subitem.name
+                  }}</router-link>
                 </li>
               </ul>
             </template>
@@ -105,7 +105,8 @@ export default {
           name: 'Benefícios',
           path: '/benefits',
           active: false,
-          roles: 'master,administratorRebens,publisherRebens,publisher',
+          roles:
+            'master,administratorRebens,publisherRebens,publisher,administrator',
           needModule: '',
           subitens: []
         },
@@ -299,24 +300,11 @@ export default {
         //   subitens: []
         // },
         {
-          name: 'Relatórios',
-          path: '#',
+          name: 'Promotores',
+          path: '/promoter/report',
           active: false,
-          roles: 'master,administratorRebens',
-          subitens: [
-            // {
-            //   name: 'Utilização',
-            //   path: '/report/benefit-use',
-            //   active: false,
-            //   roles: ''
-            // },
-            {
-              name: 'Promotores',
-              path: '/promoter/report',
-              active: false,
-              roles: ''
-            }
-          ]
+          roles: 'master,administrator,administratorRebens',
+          subitens: []
         }
       ]
     };
@@ -343,6 +331,22 @@ export default {
     },
     filteredMenu() {
       return this.menuItens.filter(item => {
+        if (item.subitens) {
+          item.subitens.filter(sub => {
+            if (sub.roles === '') {
+              return true;
+            } else if (
+              sub.roles
+                .split(',')
+                .includes(this.$store.getters.currentUser.role)
+            ) {
+              return true;
+            } else {
+              return false;
+            }
+          });
+        }
+
         if (item.roles === '') {
           return true;
         } else if (

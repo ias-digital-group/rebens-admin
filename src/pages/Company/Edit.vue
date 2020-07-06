@@ -27,9 +27,9 @@
               >
                 <span slot="no-options">Nenhum Tipo encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('type')" class="ias-error">
-                {{ customErrors.get('type') }}
-              </label>
+              <label v-if="customErrors.get('type')" class="ias-error">{{
+                customErrors.get('type')
+              }}</label>
             </div>
           </div>
           <div class="ias-row" v-if="model.type === 22 && viewAction === 'new'">
@@ -44,9 +44,9 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('idItem')" class="ias-error">
-                {{ customErrors.get('idItem') }}
-              </label>
+              <label v-if="customErrors.get('idItem')" class="ias-error">{{
+                customErrors.get('idItem')
+              }}</label>
             </div>
           </div>
           <div class="ias-row" v-if="model.type === 23 && viewAction === 'new'">
@@ -61,9 +61,9 @@
               >
                 <span slot="no-options">Nenhum Parceiro encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('idItem')" class="ias-error">
-                {{ customErrors.get('idItem') }}
-              </label>
+              <label v-if="customErrors.get('idItem')" class="ias-error">{{
+                customErrors.get('idItem')
+              }}</label>
             </div>
           </div>
           <div class="ias-row">
@@ -160,6 +160,7 @@
                 name="contactComercialPhone"
                 label="Telefone Comercial"
                 maxlength="50"
+                :error="customErrors.get('contactPhone')"
                 :inputMask="['(##) ####-####']"
               ></custom-input>
               <custom-input
@@ -371,6 +372,17 @@ export default {
         self.customErrors.set('contactEmail', 'E-mail inválido');
       if (!self.model.contact.jobTitle || self.model.contact.jobTitle === '')
         self.customErrors.set('contactJobTitle', 'Campo obrigatório');
+      if (
+        (!self.model.contact.phone || self.model.contact.phone === '') &&
+        (!self.model.contact.cellPhone ||
+          self.model.contact.cellPhone === '') &&
+        (!self.model.contact.comercialPhone ||
+          self.model.contact.comercialPhone === '')
+      )
+        self.customErrors.set(
+          'contactPhone',
+          'Preencha pelo menos um telefone'
+        );
 
       if (self.customErrors.size === 0) {
         self.submitLoading = true;
@@ -593,7 +605,7 @@ export default {
               self.operations.push({
                 code: el.id,
                 label: el.title,
-                img: el.logo
+                img: el.image
               });
 
               if (
