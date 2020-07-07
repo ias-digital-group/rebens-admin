@@ -117,7 +117,7 @@ export default {
           } else {
             self.showTable = false;
           }
-          self.savePageSettings(self, response.totalItems);
+          self.savePageSettings(self, response.totalItems, response.totalPages);
           self.$data.loading = false;
         },
         () => {

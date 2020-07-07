@@ -1,129 +1,84 @@
 <template>
-  <div class="row">
-    <div class="col-md-12">
-      <card title="Pré-cadastro">
-        <h4 slot="header" class="card-title">Cliente</h4>
-        <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
-          <div class="row">
-            <label class="col-md-3 col-form-label">Nome</label>
-            <div class="col-md-4">
-              <base-input
-                required
-                v-model="model.name"
-                type="text"
-                name="nome"
-                placeholder="Nome"
-                maxlength="150"
-              ></base-input>
-              <label v-show="customErros.includes('name')" class="text-danger"
-                >O campo Nome é obrigatório</label
-              >
-              <label
-                v-show="customErros.includes('name-length')"
-                class="text-danger"
-                >O campo Nome possui um limite de 300 caracteres</label
-              >
-            </div>
-            <div class="col-md-4">
-              <base-input
-                required
-                v-model="model.surname"
-                type="text"
-                name="surname"
-                placeholder="Sobrenome"
-                maxlength="150"
-              ></base-input>
-              <label
-                v-show="customErros.includes('surname')"
-                class="text-danger"
-                >O campo Sobrenome é obrigatório</label
-              >
-              <label
-                v-show="customErros.includes('surname-length')"
-                class="text-danger"
-                >O campo Sobrenome possui um limite de 300 caracteres</label
-              >
-            </div>
-          </div>
-          <div class="row">
-            <label class="col-md-3 col-form-label">CPF</label>
-            <div class="col-md-5">
-              <base-input
-                required
-                v-model="model.cpf"
-                type="text"
-                name="cpf"
-                placeholder="CPF"
-                :inputMask="['###.###.###-##']"
-                maxlength="50"
-              ></base-input>
-              <label v-show="customErros.includes('cpf')" class="text-danger"
-                >O campo CPF é obrigatório</label
-              >
-              <label
-                v-show="customErros.includes('cpf-registered')"
-                class="text-danger"
-                >O CPF digitado já está cadastrado em nossa base</label
-              >
-            </div>
-          </div>
-          <div class="row">
-            <label class="col-md-3 col-form-label">E-mail</label>
-            <div class="col-md-5">
-              <base-input
-                required
-                v-model="model.email"
-                type="email"
-                name="email1"
-                placeholder="email"
-                maxlength="500"
-              ></base-input>
-              <label v-show="customErros.includes('email')" class="text-danger"
-                >O campo E-mail é obrigatório</label
-              >
-              <label
-                v-show="customErros.includes('email-length')"
-                class="text-danger"
-                >O campo E-mail possui um limite de 300 caracteres</label
-              >
-              <label
-                v-show="customErros.includes('email-format')"
-                class="text-danger"
-                >O E-mail digitado não é válido</label
-              >
-              <label
-                v-show="customErros.includes('email-registered')"
-                class="text-danger"
-                >O E-mail digitado já está cadastrado em nossa base</label
-              >
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <base-link class="btn mt-3 btn-simple btn-primary" to="/promoter"
-                >Voltar</base-link
-              >
-              <base-button
-                class="mt-3 pull-right"
-                native-type="submit"
-                type="info"
-                @click.native.prevent="validateCustomer"
-                :loading="submitLoading"
-              >
-                Salvar
-              </base-button>
-            </div>
-          </div>
-        </form>
-      </card>
+  <div class="edit-box">
+    <div class="page-header">
+      <h2>Cadastro Cliente</h2>
+      <div class="box-actions">
+        <base-link to="/promoter" class="bt bt-square bg-white-2 c-light-blue">
+          <i class="icon-icon-arrow-left"></i>
+        </base-link>
+      </div>
     </div>
+    <div class="ias-card">
+      <form v-loading="formLoading" @submit.prevent>
+        <div class="form-left">
+          <div class="ias-row">
+            <custom-input
+              :required="true"
+              v-model="model.name"
+              type="text"
+              name="name"
+              label="Nome"
+              :error="customErrors.get('name')"
+              maxlength="200"
+            ></custom-input>
+            <custom-input
+              :required="true"
+              v-model="model.surname"
+              type="text"
+              name="surname"
+              label="Sobrenome"
+              :error="customErrors.get('surname')"
+              maxlength="200"
+            ></custom-input>
+          </div>
+          <div class="ias-row">
+            <custom-input
+              :required="true"
+              v-model="model.email"
+              type="text"
+              name="email"
+              label="E-mail"
+              :error="customErrors.get('email')"
+              maxlength="500"
+            ></custom-input>
+          </div>
+          <div class="ias-row">
+            <custom-input
+              :required="true"
+              v-model="model.cpf"
+              type="text"
+              name="cpf"
+              label="CPF"
+              :inputMask="['###.###.###-##']"
+              :error="customErrors.get('cpf')"
+              maxlength="50"
+            ></custom-input>
+          </div>
+          <div class="ias-row">
+            <div class="form-actions">
+              <button
+                class="bt bg-green c-white"
+                type="button"
+                @click.prevent="validateCustomer"
+              >Cadastrar</button>
+            </div>
+            <div class="div-spacer"></div>
+          </div>
+        </div>
+        <div class="form-right"></div>
+      </form>
+    </div>
+    <success-modal :isEdit="false" :show="showSuccessModal" link="/promoter"></success-modal>
   </div>
 </template>
 <script>
+import { SuccessModal } from 'src/components';
 import { Select, Option } from 'element-ui';
 import promoterService from '../../services/Promoter/promoterService';
+import validate from '../../validate';
 export default {
   components: {
+    SuccessModal,
     [Option.name]: Option,
     [Select.name]: Select
   },
@@ -139,8 +94,8 @@ export default {
       selectLoading: false,
       formLoading: false,
       submitLoading: false,
-      customErros: [],
-      reg: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
+      customErrors: new Map(),
+      showSuccessModal: false,
       model: {
         name: '',
         surname: '',
@@ -150,85 +105,76 @@ export default {
     };
   },
   methods: {
-    getError(fieldName) {
-      return this.errors.first(fieldName);
-    },
     validateCustomer() {
       const self = this;
-      self.customErros = [];
+      self.customErrors = new Map();
       if (!self.model.name || self.model.name === '')
-        self.customErros.push('name');
+        self.customErrors.set('name', 'Campo obrigatório');
       else if (self.model.name.length > 150)
-        self.customErros.push('name-length');
+        self.customErrors.set('name', 'Máximo 150 caracteres');
       if (!self.model.surname || self.model.surname === '')
-        self.customErros.push('surname');
+        self.customErrors.set('surname', 'Campo obrigatório');
       else if (self.model.surname.length > 150)
-        self.customErros.push('surname-length');
+        self.customErrors.set('surname', 'Máximo 150 caracteres');
       if (!self.model.cpf || self.model.cpf === '')
-        self.customErros.push('cpf');
+        self.customErrors.set('cpf', 'Campo obrigatório');
+      else if (!validate.validateCpf(self.model.cpf))
+        self.customErrors.set('cpf', 'CPF inválido!');
       if (!self.model.email || self.model.email === '')
-        self.customErros.push('email');
-      else if (!self.reg.test(self.model.email))
-        self.customErros.push('email-format');
+        self.customErrors.set('email', 'Campo obrigatório');
+      else if (!validate.validateEmail(self.model.email))
+        self.customErrors.set('email', 'E-mail inválido');
       else if (!self.model.email.length > 300)
-        self.customErros.push('email-length');
+        self.customErrors.set('email', 'Máximo 150 caracteres');
 
-      this.$validator.validateAll().then(isValid => {
-        if (isValid) {
-          self.submitLoading = true;
-          self.saveCustomer(self);
-        }
-      });
+      if (self.customErrors.size === 0) {
+        self.submitLoading = true;
+        self.saveCustomer(self);
+      }
     },
     clearForm() {
       const self = this;
       self.model.name = '';
       self.model.cpf = '';
       self.model.email = '';
+      self.customErrors = new Map();
     },
     saveCustomer() {
       const self = this;
-      this.$validator.validateAll().then(isValid => {
-        if (isValid) {
-          promoterService.create(self.model).then(
-            response => {
-              if (response.status === 'ok') {
-                self.$notify({
-                  type: 'primary',
-                  message: response
-                    ? response.message
-                    : 'Cliente cadastrado com sucesso.',
-                  icon: 'tim-icons icon-bell-55'
-                });
-                self.clearForm();
-                self.submitLoading = false;
-                self.$router.push('/promoter');
-              } else if (response.status === 'cpf-registered') {
-                self.customErros.push('cpf-registered');
-                self.submitLoading = false;
-              } else if (response.status === 'email-registered') {
-                self.customErros.push('email-registered');
-                self.submitLoading = false;
-              } else {
-                self.$notify({
-                  type: 'danger',
-                  message: response.message,
-                  icon: 'tim-icons icon-bell-55'
-                });
-                self.submitLoading = false;
-              }
-            },
-            err => {
-              self.$notify({
-                type: 'primary',
-                message: err.message,
-                icon: 'tim-icons icon-bell-55'
-              });
-              self.submitLoading = false;
-            }
-          );
+      promoterService.create(self.model).then(
+        response => {
+          if (response.status === 'ok') {
+            self.clearForm();
+            self.submitLoading = false;
+            self.showSuccessModal = true;
+          } else if (response.status === 'cpf-registered') {
+            self.customErrors.set(
+              'cpf',
+              'Este cpf já está cadastrado em nossa base'
+            );
+            self.submitLoading = false;
+          } else if (response.status === 'email-registered') {
+            self.customErrors.set(
+              'email',
+              'Este email já está cadastrado em nossa base'
+            );
+            self.submitLoading = false;
+          } else {
+            self.$notify({
+              type: 'warning',
+              message: response.message
+            });
+            self.submitLoading = false;
+          }
+        },
+        err => {
+          self.$notify({
+            type: 'danger',
+            message: err.message
+          });
+          self.submitLoading = false;
         }
-      });
+      );
     }
   }
 };
