@@ -1,46 +1,30 @@
 <template>
-  <div class="container">
-    <div class="col-lg-4 col-md-6 ml-auto mr-auto">
+  <div class="login-mask">
+    <div class="modal-login">
+      <img src="img/logo-login.png" alt />
       <form @submit.prevent>
-        <card class="card-login card-white">
-          <template slot="header">
-            <img src="img/logo-login.png" alt="" />
-          </template>
-
-          <div>
-            <base-input
-              required
-              v-model="credentials.email"
-              v-validate="modelValidations.email"
-              :error="getError($t('pages.login.input-email'))"
-              :name="$t('pages.login.input-email')"
-              type="email"
-              :placeholder="$t('pages.login.input-email')"
-            >
-            </base-input>
-          </div>
-
-          <div slot="footer">
-            <base-link class="mb-3 btn btn-simple" to="/Login"
-              >voltar</base-link
-            >
-            <base-button
-              type="info"
-              class="mb-3 pull-right"
-              native-type="submit"
-              @click.native.prevent="validate"
-              :loading="fullscreenLoading"
-            >
-              {{ $t('pages.password-recovery.signin-button') }}
-            </base-button>
-          </div>
-        </card>
+        <div class="mt-24">
+          <custom-input
+            :required="true"
+            v-model="credentials.email"
+            type="text"
+            name="email"
+            label="Digite seu e-mail"
+            maxlength="500"
+            :error="errorEmail"
+          ></custom-input>
+        </div>
+        <button class="bg-green bt-modal" @click="validate">ENVIAR</button>
+        <div class="mt-8">
+          <base-link to="/Login">Sei minha senha / Ir para o login</base-link>
+        </div>
       </form>
     </div>
   </div>
 </template>
 <script>
 import accountService from '../../services/Account/accountService';
+import validate from '../../validate';
 export default {
   data() {
     return {
@@ -48,50 +32,46 @@ export default {
       credentials: {
         email: ''
       },
-      modelValidations: {
-        email: {
-          required: true,
-          email: true
-        }
-      }
+      errorEmail: ''
     };
   },
   methods: {
-    getError(fieldName) {
-      return this.errors.first(fieldName);
-    },
     validate() {
       const self = this;
-      this.$data.fullscreenLoading = true;
-      this.$validator.validateAll().then(isValid => {
-        //R3bens#123
-        if (isValid) {
-          accountService.rememberPassword(self.$data.credentials.email).then(
-            response => {
-              self.$data.fullscreenLoading = false;
-              self.$notify({
-                type: 'primary',
-                message: response.message,
-                icon: 'tim-icons icon-bell-55'
-              });
-            },
-            err => {
-              const msg =
-                err.response.status == 404
-                  ? err.response.data.message
-                  : err.message;
-              self.$notify({
-                type: 'primary',
-                message: msg,
-                icon: 'tim-icons icon-bell-55'
-              });
-              self.$data.fullscreenLoading = false;
-            }
-          );
-        } else {
-          this.$data.fullscreenLoading = false;
-        }
-      });
+      self.errorEmail = '';
+
+      if (!self.credentials.email || self.credentials.email === '')
+        self.errorEmail = 'Campo obrigatório';
+      else if (!validate.validateEmail(self.credentials.email))
+        self.errorEmail = 'E-mail inválido';
+      else if (!self.credentials.email.length > 500)
+        self.errorEmail = 'Máximo 500 caracteres';
+
+      if (self.errorEmail == '') {
+        self.$data.fullscreenLoading = true;
+        accountService.rememberPassword(self.$data.credentials.email).then(
+          response => {
+            self.$data.fullscreenLoading = false;
+            self.$notify({
+              type: 'primary',
+              message: response.message,
+              icon: 'tim-icons icon-bell-55'
+            });
+          },
+          err => {
+            const msg =
+              err.response.status == 404
+                ? err.response.data.message
+                : err.message;
+            self.$notify({
+              type: 'primary',
+              message: msg,
+              icon: 'tim-icons icon-bell-55'
+            });
+            self.$data.fullscreenLoading = false;
+          }
+        );
+      }
     }
   }
 };

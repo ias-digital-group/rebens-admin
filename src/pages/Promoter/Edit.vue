@@ -60,7 +60,9 @@
                 class="bt bg-green c-white"
                 type="button"
                 @click.prevent="validateCustomer"
-              >Cadastrar</button>
+              >
+                Cadastrar
+              </button>
             </div>
             <div class="div-spacer"></div>
           </div>
@@ -68,7 +70,11 @@
         <div class="form-right"></div>
       </form>
     </div>
-    <success-modal :isEdit="false" :show="showSuccessModal" link="/promoter"></success-modal>
+    <success-modal
+      :isEdit="false"
+      :show="showSuccessModal"
+      link="/promoter"
+    ></success-modal>
   </div>
 </template>
 <script>
