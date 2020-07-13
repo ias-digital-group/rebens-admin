@@ -27,9 +27,9 @@
               >
                 <span slot="no-options">Nenhum Tipo encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('type')" class="ias-error">
-                {{ customErrors.get('type') }}
-              </label>
+              <label v-if="customErrors.get('type')" class="ias-error">{{
+                customErrors.get('type')
+              }}</label>
             </div>
           </div>
           <div class="ias-row" v-if="model.type === 22">
@@ -45,9 +45,9 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('idItem')" class="ias-error">
-                {{ customErrors.get('idItem') }}
-              </label>
+              <label v-if="customErrors.get('idItem')" class="ias-error">{{
+                customErrors.get('idItem')
+              }}</label>
             </div>
           </div>
           <div class="ias-row" v-if="model.type === 23">
@@ -63,9 +63,9 @@
               >
                 <span slot="no-options">Nenhum Parceiro encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('idItem')" class="ias-error">
-                {{ customErrors.get('idItem') }}
-              </label>
+              <label v-if="customErrors.get('idItem')" class="ias-error">{{
+                customErrors.get('idItem')
+              }}</label>
             </div>
           </div>
           <div class="ias-row" v-if="model.type === 31">
@@ -81,9 +81,9 @@
               >
                 <span slot="no-options">Nenhuma Empresa encontrada</span>
               </v-select>
-              <label v-if="customErrors.get('idItem')" class="ias-error">
-                {{ customErrors.get('idItem') }}
-              </label>
+              <label v-if="customErrors.get('idItem')" class="ias-error">{{
+                customErrors.get('idItem')
+              }}</label>
             </div>
           </div>
           <div class="ias-row">
@@ -229,6 +229,12 @@ export default {
           if (part && part.length > 0) {
             this.imageRight = part[0].img;
             this.altImageRight = part[0].label;
+          }
+        } else if (this.model.type === 31) {
+          const co = this.companies.filter(o => o.code === value);
+          if (co && co.length > 0) {
+            this.imageRight = co[0].img;
+            this.altImageRight = co[0].label;
           }
         } else {
           this.imageRight = '/img/img-holder.png';
@@ -478,7 +484,8 @@ export default {
             _.each(response.data, function(el) {
               self.companies.push({
                 code: el.id,
-                label: el.name
+                label: el.name,
+                img: el.logo
               });
             });
           },

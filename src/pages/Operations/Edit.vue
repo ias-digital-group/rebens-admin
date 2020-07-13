@@ -184,9 +184,9 @@
               ></custom-input>
             </div>
             <div class="ias-row" :key="idx" v-else-if="field.type == 'boolean'">
-              <ias-checkbox v-model="field.checked">
-                {{ field.label }}
-              </ias-checkbox>
+              <ias-checkbox v-model="field.checked">{{
+                field.label
+              }}</ias-checkbox>
             </div>
             <div
               class="ias-row-editor"
@@ -244,9 +244,9 @@
           </div>
           <div v-for="(arr, idx1) in modulesChunk" class="ias-row" :key="idx1">
             <template v-for="(mod, idx) in arr">
-              <ias-checkbox v-model="mod.checked" :key="idx">
-                {{ mod.title }}
-              </ias-checkbox>
+              <ias-checkbox v-model="mod.checked" :key="idx">{{
+                mod.title
+              }}</ias-checkbox>
             </template>
             <div class="div-spacer" v-show="arr.length === 1"></div>
             <div class="div-spacer" v-show="arr.length === 2"></div>
@@ -273,9 +273,7 @@
                 class="bt bg-orange c-white bt-full"
                 type="button"
                 @click.prevent="publishTemp"
-                :disabled="
-                  model.temporaryPublishStatus == 'Publicado Temporário'
-                "
+                :disabled="model.temporaryPublishStatus.includes('processando')"
                 :loading="publishTempLoading"
               >
                 {{ model.temporaryPublishStatus }}
@@ -343,6 +341,7 @@ export default {
   },
   data() {
     return {
+      isPublish: false,
       selectLoading: false,
       formLoading: false,
       submitLoading: false,
@@ -677,6 +676,25 @@ export default {
           () => {
             vw.submitLoading = false;
             vw.showSuccessModal = true;
+            if (vw.isPublish) {
+              operationService.publish(self.id).then(
+                () => {
+                  self.$notify({
+                    type: 'success',
+                    message:
+                      'A operação está sendo publicada, e assim que estiver concluído você verá aqui.'
+                  });
+                  self.model.temporaryPublishStatus = 'Processando';
+                },
+                err => {
+                  self.$notify({
+                    type: 'danger',
+                    message: err.message
+                  });
+                  self.publishTempLoading = false;
+                }
+              );
+            }
           },
           () => {
             self.formLoading = false;
@@ -707,23 +725,8 @@ export default {
     publishTemp() {
       const self = this;
       self.publishTempLoading = true;
-      operationService.publish(self.id).then(
-        () => {
-          self.$notify({
-            type: 'success',
-            message:
-              'A operação está sendo publicada, e assim que estiver concluído você verá aqui.'
-          });
-          self.model.temporaryPublishStatus = 'Processando';
-        },
-        err => {
-          self.$notify({
-            type: 'danger',
-            message: err.message
-          });
-          self.publishTempLoading = false;
-        }
-      );
+      self.isPublish = true;
+      self.validate();
     },
     fetchData() {
       const self = this;
@@ -786,7 +789,9 @@ export default {
     },
     onImageChange(file) {
       this.image = file;
-      this.model.logo = null;
+      if (file == null) {
+        this.model.logo = file;
+      }
     },
     onConfigImageChange(file, element) {
       const self = this;

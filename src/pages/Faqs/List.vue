@@ -75,7 +75,10 @@
             CADASTRO SALVO
             <br />COM SUCESSO!
           </p>
-          <button class="bg-green bt-modal" @click="showSuccessModal = false">
+          <button
+            class="bg-green bt-modal mt-24"
+            @click="showSuccessModal = false"
+          >
             IR PARA LISTAGEM
           </button>
         </div>
@@ -136,9 +139,9 @@
                   v-model="editFaq.answer"
                   placeholder="Escreva aqui a resposta"
                 />
-                <label v-show="customErrors.get('answer')" class="ias-error">{{
-                  customErrors.get('answer')
-                }}</label>
+                <label v-show="customErrors.get('answer')" class="ias-error">
+                  {{ customErrors.get('answer') }}
+                </label>
               </div>
               <div class="ias-row">
                 <custom-input

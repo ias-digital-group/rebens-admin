@@ -33,6 +33,7 @@
       </div>
       <div class="filters" v-show="showFilters">
         <v-select
+          v-show="isRebens"
           :options="operations"
           :reduce="op => op.code"
           v-model="operationFilter"
@@ -42,6 +43,7 @@
           <span slot="no-options">Nenhum clube encontrado</span>
         </v-select>
         <v-select
+          v-show="isRebens"
           :options="operationPartners"
           :reduce="op => op.code"
           v-model="operationPartnerFilter"
@@ -53,6 +55,7 @@
           :options="statuses"
           :reduce="op => op.code"
           v-model="statusFilter"
+          :class="{ 'no-margin': !isRebens }"
           placeholder="Filtre pelo Status de cadastro"
         >
           <span slot="no-options">Nenhum status de cadastro encontrado</span>
@@ -166,11 +169,17 @@
       :showSuccess="modal.showSuccess"
       @closeDeleteSuccess="closeDeleteSuccess"
     ></delete-modal>
+    <confirm-modal
+      @closeModal="closeResendPassword"
+      question="Deseja reenviar o e-mail de validação?"
+      :show="showResendPassModal"
+      @confirm="confirmResendPassword"
+    ></confirm-modal>
   </div>
 </template>
 <script>
 import { Select, Option } from 'element-ui';
-import { Pagination, DeleteModal } from 'src/components';
+import { Pagination, DeleteModal, ConfirmModal } from 'src/components';
 import customerService from '../../services/Customer/customerService';
 import operationService from '../../services/Operation/operationService';
 import operationPartnerService from '../../services/OperationPartner/operationPartnerService';
@@ -183,7 +192,8 @@ export default {
     DeleteModal,
     Pagination,
     [Select.name]: Select,
-    [Option.name]: Option
+    [Option.name]: Option,
+    ConfirmModal
   },
   data() {
     return {
@@ -194,6 +204,8 @@ export default {
       showFilters: false,
       activeFilter: '',
       statusFilter: '',
+      resendPassId: 0,
+      showResendPassModal: false,
       operations: [],
       operationPartners: [],
       statuses: [
@@ -227,23 +239,31 @@ export default {
         }
       });
     },
+    confirmResendPassword() {
+      const self = this;
+      self.$data.loading = true;
+      self.showResendPassModal = false;
+      customerService.resendValidation(self.resendPassId).then(
+        () => {
+          self.$notify({
+            type: 'success',
+            message: 'E-mail reenviado com sucesso!'
+          });
+          self.$data.loading = false;
+          self.resendPassId = 0;
+        },
+        () => {
+          self.$data.loading = false;
+        }
+      );
+    },
     handleResendPassword(row) {
-      if (confirm('Deseja reenviar o e-mail de validação?')) {
-        const self = this;
-        self.$data.loading = true;
-        customerService.resendValidation(row.id).then(
-          () => {
-            self.$notify({
-              type: 'success',
-              message: 'E-mail reenviado com sucesso!'
-            });
-            self.$data.loading = false;
-          },
-          () => {
-            self.$data.loading = false;
-          }
-        );
-      }
+      this.resendPassId = row.id;
+      this.showResendPassModal = true;
+    },
+    closeResendPassword() {
+      this.resendPassId = 0;
+      this.showResendPassModal = false;
     },
     fetchData() {
       const self = this;
@@ -305,7 +325,7 @@ export default {
     },
     handleDelete(item) {
       this.modal.model = item;
-      this.modal.itemName = item.name + ' ' + item.surname;
+      this.modal.itemName = item.email;
       this.modal.visible = true;
     },
     confirmDelete(val) {
@@ -362,6 +382,11 @@ export default {
       this.pagination.currentPage = 1;
       this.fetchData();
     }
+  },
+  created() {
+    this.isRebens =
+      this.$store.getters.currentUser.role != 'administrator' &&
+      this.$store.getters.currentUser.role != 'publisher';
   }
 };
 </script>

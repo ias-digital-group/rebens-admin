@@ -21,8 +21,14 @@ export default {
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
             request.searchWord
           }&sort=${request.sort}&active=${
-            request.active != null ? request.active : ''
-          }&type=${request.type != null ? request.type : ''}&idOperation=${
+            request.active != null && request.active != undefined
+              ? request.active
+              : ''
+          }&type=${
+            request.type != null && request.type != undefined
+              ? request.type
+              : ''
+          }&idOperation=${
             request.idOperation != null ? request.idOperation : ''
           }`
         )

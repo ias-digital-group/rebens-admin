@@ -56,7 +56,7 @@
         <thead>
           <tr>
             <th>Responsável / E-mail</th>
-            <th>Nome / Endereço</th>
+            <th>Tipo / Nome</th>
             <th>Cargo / Telefone</th>
             <th>Tel. Comercial / Celular</th>
             <th style="width:144px;">Ações</th>
@@ -72,8 +72,8 @@
             </td>
             <td>
               <div class="two-lines">
-                <span>{{ item.relationshipName }}</span>
-                <span class="blue">{{ item.address }}</span>
+                <span>{{ item.typeName }}</span>
+                <span class="blue">{{ item.relationshipName }}</span>
               </div>
             </td>
             <td>
@@ -89,7 +89,7 @@
                     formatPhone(item.comercialPhone, item.comercialPhoneBranch)
                   }}
                 </span>
-                <span class="blue">{{ formatPhone(item.cellphone) }}</span>
+                <span class="blue">{{ formatPhone(item.cellPhone) }}</span>
               </div>
             </td>
             <td>

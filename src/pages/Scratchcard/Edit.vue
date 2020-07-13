@@ -11,8 +11,7 @@
             type="info"
             @click="generate"
             v-if="model.canPublish"
-          >
-            Gerar Raspadinhas</base-button
+            >Gerar Raspadinhas</base-button
           >
         </h4>
         <el-tabs>
@@ -58,8 +57,7 @@
                       data-vv-name="start"
                       placeholder="Início"
                       v-model="model.start"
-                    >
-                    </el-date-picker>
+                    ></el-date-picker>
                   </base-input>
                 </div>
                 <div class="col-md-9 offset-md-3 offset-lg-0 col-lg-4">
@@ -71,8 +69,7 @@
                       data-vv-name="end"
                       placeholder="Fim"
                       v-model="model.end"
-                    >
-                    </el-date-picker>
+                    ></el-date-picker>
                   </base-input>
                 </div>
               </div>
@@ -106,8 +103,7 @@
                       :reduce="op => op.code"
                       :key="model.idOperation"
                       v-model="model.idOperation"
-                    >
-                    </v-select>
+                    ></v-select>
                     <base-input
                       disabled
                       type="text"
@@ -133,8 +129,7 @@
                       :reduce="op => op.code"
                       :key="model.type"
                       v-model="model.type"
-                    >
-                    </v-select>
+                    ></v-select>
                     <base-input
                       disabled
                       type="text"
@@ -161,8 +156,7 @@
                       :reduce="op => op.code"
                       :key="model.distributionType"
                       v-model="model.distributionType"
-                    >
-                    </v-select>
+                    ></v-select>
                     <base-input
                       disabled
                       type="text"
@@ -194,9 +188,10 @@
                 </div>
               </div>
               <div class="row">
-                <label class="col-md-3 col-form-label"
-                  >Instruções de resgate <br />(max. 500 caracteres)</label
-                >
+                <label class="col-md-3 col-form-label">
+                  Instruções de resgate
+                  <br />(max. 500 caracteres)
+                </label>
                 <div class="col-md-8">
                   <vue-editor
                     :editorToolbar="customToolbar"
@@ -238,9 +233,9 @@
                       v-if="model.canEdit"
                       >&nbsp;</base-checkbox
                     >
-                    <label class="col-form-label" v-if="!model.canEdit">{{
-                      model.scratchcardExpire ? 'sim' : 'não'
-                    }}</label>
+                    <label class="col-form-label" v-if="!model.canEdit">
+                      {{ model.scratchcardExpire ? 'sim' : 'não' }}
+                    </label>
                   </div>
                 </div>
               </div>
@@ -255,15 +250,16 @@
                       v-if="model.canEdit"
                       >&nbsp;</base-checkbox
                     >
-                    <label class="col-form-label" v-if="!model.canEdit">{{
-                      model.getNotifications ? 'sim' : 'não'
-                    }}</label>
+                    <label class="col-form-label" v-if="!model.canEdit">
+                      {{ model.getNotifications ? 'sim' : 'não' }}
+                    </label>
                   </div>
                 </div>
               </div>
               <div class="row">
-                <label class="col-md-3 col-form-label"
-                  >Imagem sem prêmio <br />
+                <label class="col-md-3 col-form-label">
+                  Imagem sem prêmio
+                  <br />
                   <span>(200x200)</span>
                 </label>
                 <div class="col-md-9">
@@ -279,7 +275,8 @@
                           class="btn-simple btn-file"
                           type="danger"
                         >
-                          <i class="fas fa-times"></i> {{ removeText }}
+                          <i class="fas fa-times"></i>
+                          {{ removeText }}
                         </base-button>
                       </div>
                     </div>
@@ -290,7 +287,8 @@
                       change-text="Alterar"
                       remove-text="Remover"
                       select-text="Selecione uma imagem"
-                    /><br />
+                    />
+                    <br />
                     <label
                       v-show="customErrors.includes('image')"
                       class="text-danger"
@@ -315,9 +313,8 @@
                     @click.native.prevent="validate"
                     :loading="submitLoading"
                     v-if="model.canEdit"
+                    >Salvar</base-button
                   >
-                    Salvar
-                  </base-button>
                 </div>
               </div>
             </form>

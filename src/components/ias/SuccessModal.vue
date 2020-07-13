@@ -11,7 +11,7 @@
           CADASTRO REALIZADO
           <br />COM SUCESSO!
         </p>
-        <button class="bg-green bt-modal" @click="backToList">
+        <button class="bg-green bt-modal mt-24" @click="backToList">
           IR PARA LISTAGEM
         </button>
       </div>

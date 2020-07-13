@@ -14,7 +14,7 @@
             :error="errorEmail"
           ></custom-input>
         </div>
-        <div class="mt-40">
+        <div class="mt-24">
           <custom-input
             :required="true"
             v-model="credentials.password"
@@ -25,11 +25,13 @@
             :error="errorPassword"
           ></custom-input>
         </div>
-        <div class="text-right mt-8">
-          <base-link to="/passwordRecovery">Esqueci minha senha</base-link>
+        <button class="bg-green bt-modal" @click="validate">ENTRAR</button>
+        <div class="text-center mt-8">
+          <base-link class="bt-link" to="/passwordRecovery"
+            >Esqueci minha senha</base-link
+          >
         </div>
       </form>
-      <button class="bg-green bt-modal" @click="validate">ENTRAR</button>
     </div>
   </div>
 </template>
@@ -73,20 +75,23 @@ export default {
                 const jwtData = JSON.parse(
                   atob(response.accessToken.split('.')[1])
                 );
-                if (jwtData.role === 'promoter') {
-                  window.location = '/#/promoter';
-                } else if (jwtData.role == 'partnerApprover') {
-                  window.location = '/#/operationPartner/approve';
-                } else {
-                  window.location = '/';
-                }
+                setTimeout(() => {
+                  if (jwtData.role === 'promoter') {
+                    self.$router.push(`/promoter`);
+                  } else if (jwtData.role == 'partnerApprover') {
+                    self.$router.push(`/operationPartner/approve`);
+                  } else {
+                    window.location = '/';
+                  }
+                }, 500);
                 return;
+              } else {
+                self.$data.fullscreenLoading = false;
+                self.$notify({
+                  type: 'warning',
+                  message: response.message
+                });
               }
-              self.$data.fullscreenLoading = false;
-              self.$notify({
-                type: 'warning',
-                message: response.message
-              });
             },
             err => {
               if (err.response.status === 400 && err.response.data.message) {

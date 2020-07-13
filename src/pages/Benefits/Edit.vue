@@ -26,9 +26,9 @@
               >
                 <span slot="no-options">Nenhum parceiro encontrado</span>
               </v-select>
-              <label v-show="customErrors.get('idPartner')" class="ias-error">
-                {{ customErrors.get('idPartner') }}
-              </label>
+              <label v-show="customErrors.get('idPartner')" class="ias-error">{{
+                customErrors.get('idPartner')
+              }}</label>
             </div>
           </div>
           <div class="ias-row">
@@ -73,9 +73,9 @@
               v-model="model.detail"
               placeholder="Detalhes"
             />
-            <label v-show="customErrors.get('detail')" class="ias-error">
-              {{ customErrors.get('detail') }}
-            </label>
+            <label v-show="customErrors.get('detail')" class="ias-error">{{
+              customErrors.get('detail')
+            }}</label>
           </div>
           <div
             class="ias-row-editor"
@@ -352,7 +352,7 @@
           </div>
           <div class="ias-row" v-show="isRebens">
             <ias-checkbox v-model="model.exclusive">Exclusivo</ias-checkbox>
-            <div class="select-holder">
+            <div class="select-holder" v-show="model.exclusive">
               <v-select
                 :options="operationList"
                 :reduce="op => op.code"
@@ -365,6 +365,7 @@
                 >customErrors.get('operation')</label
               >
             </div>
+            <div class="div-spacer" v-show="!model.exclusive"></div>
           </div>
 
           <div class="ias-row">
@@ -389,7 +390,7 @@
             :src="model.image"
             :error="customErrors.get('image')"
           />
-          <div class="select-holder-right">
+          <div class="select-holder-right" v-show="!model.exclusive">
             <v-select
               :options="operationList"
               :reduce="op => op.code"
@@ -399,9 +400,9 @@
               multiple
               :class="{ 'has-error': customErrors.get('operations') }"
             ></v-select>
-            <label v-if="customErrors.get('operations')" class="ias-error">
-              {{ customErrors.get('operations') }}
-            </label>
+            <label v-if="customErrors.get('operations')" class="ias-error">{{
+              customErrors.get('operations')
+            }}</label>
           </div>
         </div>
       </form>
@@ -546,9 +547,6 @@ export default {
     }
   },
   methods: {
-    getError(fieldName) {
-      return this.errors.first(fieldName);
-    },
     validate() {
       const self = this;
       self.customErrors = new Map();
@@ -569,6 +567,11 @@ export default {
       if (self.model.idBenefitType == 2) {
         if (!self.model.voucherText)
           self.customErrors.set('voucherText', 'Campo obrigatório');
+        else if (self.model.voucherText.length > 500)
+          self.customErrors.set(
+            'voucherText',
+            'campo aceita no máximo 500 caracteres'
+          );
       } else {
         if (!self.model.link || self.model.link == '')
           self.customErrors.set('link', 'Campo obrigatório');
@@ -598,7 +601,10 @@ export default {
         self.model.homeBenefitHighlight != 0
       )
         self.customErrors.set('homeBenefitHighlight', 'Campo obrigatório');
-      if (!self.model.operations || self.model.operations.length === 0)
+      if (
+        !self.model.exclusive &&
+        (!self.model.operations || self.model.operations.length === 0)
+      )
         self.customErrors.set('operations', 'Campo obrigatório');
 
       if (self.customErrors.size === 0) {
@@ -700,16 +706,23 @@ export default {
           self.operationList.push({ label: el.title, code: el.id });
         });
       });
+      if (!self.isRebens) {
+        self.model.exclusive = true;
+        self.model.idOperation = this.$store.getters.currentUser.idOperation;
+      }
     },
     onImageChange(file) {
       this.image = file;
+      if (file == null) {
+        this.model.image = file;
+      }
     }
   },
   created() {
-    this.fetchData();
     this.isRebens =
       this.$store.getters.currentUser.role != 'administrator' &&
       this.$store.getters.currentUser.role != 'publisher';
+    this.fetchData();
   }
 };
 </script>

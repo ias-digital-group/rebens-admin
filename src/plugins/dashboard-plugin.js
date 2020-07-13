@@ -1,7 +1,7 @@
 // Polyfills for js features used in the Dashboard but not supported in some browsers (mainly IE)
 import 'src/polyfills';
 // Notifications plugin. Used on Notifications page
-import Notifications from 'src/components/NotificationPlugin';
+import Notifications from 'src/components/ias/NotificationPlugin';
 // Validation plugin used to validate forms
 import VeeValidate, { Validator } from 'vee-validate';
 // A plugin file where you could register global components used across the app
@@ -32,6 +32,7 @@ export default {
     Vue.use(SideBar);
     Vue.use(Notifications);
     Vue.use(VueTheMask);
+
     if (process.env.VUE_APP_I18N_LOCALE == 'pt') {
       Validator.localize('pt_BR', ptBr);
       Vue.use(VeeValidate, { fieldsBagName: 'veeFields', locale: ptBr });

@@ -32,7 +32,7 @@
         </base-link>
       </div>
       <div class="filters" v-show="showFilters">
-        <v-select
+        <!-- <v-select
           :options="types"
           :reduce="op => op.code"
           v-model="typeFilter"
@@ -40,11 +40,12 @@
           placeholder="Filtre por tipo"
         >
           <span slot="no-options">Nenhum tipo encontrado</span>
-        </v-select>
+        </v-select>-->
         <v-select
           :options="statuses"
           :reduce="op => op.code"
-          v-model="activeFilter"
+          class="no-margin"
+          v-model="filters.active"
           placeholder="Filtre pelo Status"
         >
           <span slot="no-options">Nenhum status encontrado</span>
@@ -52,7 +53,7 @@
         <v-select
           :options="levels"
           :reduce="op => op.code"
-          v-model="levelFilter"
+          v-model="filters.level"
           placeholder="Filtre por nível"
         >
           <span slot="no-options">Nenhum nível encontrado</span>
@@ -166,9 +167,7 @@ export default {
     return {
       internalName: 'Categoria',
       sortField: 'name',
-      activeFilter: '',
-      typeFilter: '',
-      levelFilter: '',
+      typeFilter: 4,
       showFilters: false,
       statuses: [
         { code: true, label: 'Ativos' },
@@ -179,8 +178,8 @@ export default {
         { code: 1, label: 'Secundária' }
       ],
       types: [
-        { code: 1, label: 'Benefícios' },
-        { code: 2, label: 'Cursos Livres' }
+        { code: 4, label: 'Benefícios' },
+        { code: 19, label: 'Cursos Livres' }
       ]
     };
   },
@@ -204,6 +203,7 @@ export default {
               row.active ? 'ativada' : 'inativada'
             } com sucesso`
           });
+          self.fetchData();
         }
       });
     },
@@ -214,11 +214,16 @@ export default {
         pageItems: this.$data.pagination.perPage,
         searchWord: this.searchQuery,
         sort: this.formatSortFieldParam,
-        active: this.activeFilter === null ? '' : this.activeFilter,
-        type: this.typeFilter === null ? '' : this.typeFilter,
+        active: this.filters.active,
+        type: this.typeFilter,
         idParent: '',
-        level: this.levelFilter === null ? '' : this.levelFilter
+        level: this.filters.level
       };
+      if (
+        (this.filters.active != null && this.filters.active != '') ||
+        (this.filters.level != null && this.filters.level != '')
+      )
+        this.showFilters = true;
       this.$data.loading = true;
       categoryService.findAll(request).then(
         response => {
@@ -269,15 +274,11 @@ export default {
     }
   },
   watch: {
-    activeFilter() {
+    'filters.active'() {
       this.pagination.currentPage = 1;
       this.fetchData();
     },
-    typeFilter() {
-      this.pagination.currentPage = 1;
-      this.fetchData();
-    },
-    levelFilter() {
+    'filters.level'() {
       this.pagination.currentPage = 1;
       this.fetchData();
     }

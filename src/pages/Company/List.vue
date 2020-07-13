@@ -208,7 +208,7 @@ export default {
           self.$notify({
             type: 'success',
             message: `Empresa ${
-              row.active ? 'ativada' : 'inativada'
+              row.active ? 'inativada' : 'ativada'
             } com sucesso`
           });
         }

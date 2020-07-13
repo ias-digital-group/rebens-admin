@@ -16,10 +16,26 @@
         </div>
         <button class="bg-green bt-modal" @click="validate">ENVIAR</button>
         <div class="mt-8">
-          <base-link to="/Login">Sei minha senha / Ir para o login</base-link>
+          <base-link class="bt-link" to="/Login"
+            >Sei minha senha / Ir para o login</base-link
+          >
         </div>
       </form>
     </div>
+    <transition name="modal">
+      <div class="modal-mask" v-show="show">
+        <div class="modal-container">
+          <img src="/img/icon-success.png" alt="Sucesso" />
+          <h5>
+            Enviamos um link com<br />
+            as instruções para definir<br />uma nova senha.
+          </h5>
+          <base-link class="bg-green bt-modal" to="/Login"
+            >IR PARA o LOGIN</base-link
+          >
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 <script>
@@ -32,7 +48,8 @@ export default {
       credentials: {
         email: ''
       },
-      errorEmail: ''
+      errorEmail: '',
+      show: false
     };
   },
   methods: {
@@ -50,13 +67,9 @@ export default {
       if (self.errorEmail == '') {
         self.$data.fullscreenLoading = true;
         accountService.rememberPassword(self.$data.credentials.email).then(
-          response => {
+          () => {
             self.$data.fullscreenLoading = false;
-            self.$notify({
-              type: 'primary',
-              message: response.message,
-              icon: 'tim-icons icon-bell-55'
-            });
+            self.show = true;
           },
           err => {
             const msg =
@@ -64,9 +77,8 @@ export default {
                 ? err.response.data.message
                 : err.message;
             self.$notify({
-              type: 'primary',
-              message: msg,
-              icon: 'tim-icons icon-bell-55'
+              type: 'danger',
+              message: msg
             });
             self.$data.fullscreenLoading = false;
           }

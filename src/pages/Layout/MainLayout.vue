@@ -57,9 +57,9 @@
               >
               <ul class="sub-item">
                 <li v-for="(subitem, idx2) in item.subitens" :key="idx2">
-                  <router-link :to="subitem.path">{{
-                    subitem.name
-                  }}</router-link>
+                  <router-link :to="subitem.path">
+                    {{ subitem.name }}
+                  </router-link>
                 </li>
               </ul>
             </template>
@@ -97,7 +97,16 @@ export default {
           name: 'Dashboard',
           path: '/dashboard',
           active: false,
-          roles: '',
+          roles:
+            'master,administratorRebens,publisherRebens,publisher,administrator',
+          needModule: '',
+          subitens: []
+        },
+        {
+          name: 'Clientes',
+          path: '/promoter',
+          active: false,
+          roles: 'promoter',
           needModule: '',
           subitens: []
         },
@@ -152,11 +161,18 @@ export default {
           subitens: []
         },
         {
+          name: 'Páginas',
+          path: '/pages',
+          active: false,
+          roles: 'administrator,publisher',
+          needModule: '',
+          subitens: []
+        },
+        {
           name: 'Operações',
           path: '#',
           active: false,
-          roles:
-            'master,administratorRebens,publisherRebens,administrator,publisher',
+          roles: 'master,administratorRebens,publisherRebens',
           needModule: '',
           subitens: [
             {
@@ -169,8 +185,7 @@ export default {
               name: 'Páginas',
               path: '/pages',
               active: false,
-              roles:
-                'master,administratorRebens,publisherRebens,administrator,publisher'
+              roles: 'master,administratorRebens,publisherRebens'
             }
           ]
         },

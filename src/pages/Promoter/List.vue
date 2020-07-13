@@ -36,6 +36,7 @@
           :options="statuses"
           :reduce="op => op.code"
           v-model="filters.status"
+          class="no-margin"
           placeholder="Filtre pelo Status"
         >
           <span slot="no-options">Nenhum status encontrado</span>
@@ -51,7 +52,7 @@
             <th>Email</th>
             <th>Data Criação</th>
             <th>Status</th>
-            <th style="width:144px;">Ações</th>
+            <th style="width:64px;">Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -97,11 +98,17 @@
         @update-per-page="changePerPage"
       ></pagination>
     </div>
+    <confirm-modal
+      @closeModal="closeResendPassword"
+      question="Deseja reenviar o e-mail de validação?"
+      :show="showResendPassModal"
+      @confirm="confirmResendPassword"
+    ></confirm-modal>
   </div>
 </template>
 <script>
 import { Select, Option } from 'element-ui';
-import { Pagination } from 'src/components';
+import { Pagination, ConfirmModal } from 'src/components';
 import promoterService from '../../services/Promoter/promoterService';
 import paging from '../../mixins/paging';
 export default {
@@ -109,16 +116,19 @@ export default {
   components: {
     Pagination,
     [Select.name]: Select,
-    [Option.name]: Option
+    [Option.name]: Option,
+    ConfirmModal
   },
   data() {
     return {
       internalName: 'Clientes',
       sortField: 'name',
       formLoading: false,
+      resendPassId: 0,
+      showResendPassModal: false,
       statuses: [
         { code: 1, label: 'Completo' },
-        { code: 2, label: 'Validação' },
+        { code: 3, label: 'Validação' },
         { code: 5, label: 'Incompleto' }
       ]
     };
@@ -145,25 +155,31 @@ export default {
         }
       );
     },
+    closeResendPassword() {
+      this.resendPassId = 0;
+      this.showResendPassModal = false;
+    },
+    confirmResendPassword() {
+      const self = this;
+      self.$data.loading = true;
+      self.showResendPassModal = false;
+      promoterService.resendValidation(self.resendPassId).then(
+        () => {
+          self.$notify({
+            type: 'success',
+            message: 'E-mail reenviado com sucesso!'
+          });
+          self.$data.loading = false;
+          self.resendPassId = 0;
+        },
+        () => {
+          self.$data.loading = false;
+        }
+      );
+    },
     resendValidation(id) {
-      if (confirm('Deseja reenviar o e-mail de validação?')) {
-        const self = this;
-        self.$data.loading = true;
-        promoterService.resendValidation(id).then(
-          response => {
-            if (response.status === 'ok') {
-              self.$notify({
-                type: 'success',
-                message: 'E-mail reenviado com sucesso!'
-              });
-              self.$data.loading = false;
-            }
-          },
-          () => {
-            self.$data.loading = false;
-          }
-        );
-      }
+      this.resendPassId = id;
+      this.showResendPassModal = true;
     }
   },
   watch: {

@@ -2,6 +2,9 @@
 @import 'patterns/colors';
 @import 'patterns/elements';
 
+button {
+  outline: none !important;
+}
 .wrapper {
   font-family: $font-family-base;
   font-size: $font-size-medium;
@@ -34,7 +37,8 @@
       position: fixed;
       top: 24px;
       right: 24px;
-      width: 240px;
+      min-width: 150px;
+      width: auto;
       justify-content: space-between;
       .avatar {
         width: 48px;
@@ -62,9 +66,11 @@
         }
       }
       .text {
-        width: 168px;
+        width: auto;
+        min-width: 100px;
         height: 48px;
         float: left;
+        margin-right: 12px;
         span {
           font-size: $font-size-medium;
           font-weight: $font-weight-bold;
@@ -353,8 +359,8 @@
           .img-holder {
             background: $white;
             height: 40px;
-            margin: 16px 0;
-            width: 100px;
+            margin: 16px 16px 16px 0;
+            max-width: 100px;
             img {
               height: 40px;
               box-shadow: 0 0 4px #ccc;
@@ -376,6 +382,7 @@
             height: 24px;
             flex-flow: row;
             flex-wrap: nowrap;
+            justify-content: flex-end;
             .bt {
               height: 24px;
               width: 24px;
@@ -775,7 +782,10 @@ button {
     padding: 15px !important;
     border-radius: 10px !important;
     box-shadow: none !important;
-    margin: 0 10px !important;
+    margin: 0 24px 0 0 !important;
+    &:last-child {
+      margin: 0 !important;
+    }
     .card-title {
       color: $light-blue !important;
       text-transform: uppercase;
@@ -824,7 +834,7 @@ button {
       font-size: $font-size-medium;
       font-weight: $font-weight-black;
       border-radius: 5px;
-      margin: 40px 0 0 0;
+      margin: 24px 0 0 0;
       border: none;
       font-family: $font-family-base;
       cursor: pointer;
@@ -832,13 +842,22 @@ button {
     .text-right {
       text-align: right;
     }
-    .text-right a {
+    .bt-link {
       font-style: italic;
+      font-size: $font-size-small;
+      color: $dark-gray;
     }
     h4 {
       font-size: $font-size-medium;
       font-weight: $font-weight-black;
       color: $dark-gray;
+      text-transform: uppercase;
+      text-align: center;
+    }
+    h5 {
+      font-size: $font-size-medium;
+      color: $dark-gray;
+      font-weight: $font-weight-bold;
       text-transform: uppercase;
       text-align: center;
     }

@@ -261,6 +261,9 @@ export default {
     },
     onImageChange(file) {
       this.image = file;
+      if (file == null) {
+        this.model.logo = file;
+      }
     }
   },
   created() {

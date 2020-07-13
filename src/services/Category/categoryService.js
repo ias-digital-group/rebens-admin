@@ -18,8 +18,16 @@ export default {
       HTTP.get(
         config.apiEndpoints.categoryUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}` +
-            `&sort=${request.sort}&active=${request.active}&idParent=${request.idParent}&type=${request.type}` +
-            `&level=${request.level}`
+            `&sort=${request.sort}&active=${
+              request.active == null || request.active == undefined
+                ? ''
+                : request.active
+            }&idParent=${request.idParent}&type=${request.type}` +
+            `&level=${
+              request.level == null || request.level == undefined
+                ? ''
+                : request.level
+            }`
         )
       ).then(
         response => {

@@ -26,7 +26,7 @@
             ></custom-input>
           </div>
           <div class="ias-row">
-            <div class="select-holder">
+            <!--   <div class="select-holder">
               <v-select
                 :options="types"
                 :reduce="op => op.code"
@@ -41,7 +41,7 @@
               <label v-if="customErrors.get('type')" class="ias-error">{{
                 customErrors.get('type')
               }}</label>
-            </div>
+            </div>-->
             <div class="opts-holder">
               <ias-radio
                 v-model="level"
@@ -72,9 +72,9 @@
               >
                 <span slot="no-options">Nenhuma Categoria encontrada</span>
               </v-select>
-              <label v-if="customErrors.get('idParent')" class="ias-error">{{
-                customErrors.get('idParent')
-              }}</label>
+              <label v-if="customErrors.get('idParent')" class="ias-error">
+                {{ customErrors.get('idParent') }}
+              </label>
             </div>
           </div>
 
@@ -139,7 +139,7 @@ export default {
         idParent: '',
         active: false,
         icon: '',
-        type: 0
+        type: 4
       }
     };
   },

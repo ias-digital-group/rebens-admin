@@ -78,9 +78,6 @@ export default {
     };
   },
   methods: {
-    getError(fieldName) {
-      return this.errors.first(fieldName);
-    },
     validate() {
       const self = this;
       self.customErrors = new Map();
@@ -104,7 +101,7 @@ export default {
           'A nova senha e a confirmação devem ser iguais.'
         );
       }
-      if (self.customErrors.length === 0) {
+      if (self.customErrors.size === 0) {
         self.submitLoading = true;
         self.changePass(self);
       }

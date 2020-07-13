@@ -38,6 +38,7 @@
           v-model="operationFilter"
           class="no-margin"
           placeholder="Filtre pelo Clube"
+          v-show="isRebens"
         >
           <span slot="no-options">Nenhum clube encontrado</span>
         </v-select>
@@ -46,6 +47,7 @@
           :reduce="op => op.code"
           v-model="typeFilter"
           placeholder="Filtre por tipo"
+          :class="{ 'no-margin': !isRebens }"
         >
           <span slot="no-options">Nenhum tipo encontrado</span>
         </v-select>
@@ -331,6 +333,11 @@ export default {
       this.pagination.currentPage = 1;
       this.fetchData();
     }
+  },
+  created() {
+    this.isRebens =
+      this.$store.getters.currentUser.role != 'administrator' &&
+      this.$store.getters.currentUser.role != 'publisher';
   }
 };
 </script>

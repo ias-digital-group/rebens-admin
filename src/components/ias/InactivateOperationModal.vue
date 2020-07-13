@@ -34,7 +34,7 @@
           <br />INATIVAR A OPERAÇÃO
         </h4>
         <p class="c-light-blue">{{ itemName }}</p>
-        <div class="mtb-40">
+        <div class="mt-24">
           <custom-input
             :required="true"
             v-model="confirm"
@@ -45,7 +45,9 @@
             :error="errorMsg"
           ></custom-input>
         </div>
-        <button class="bg-red bt-modal" @click="inativateItem">INATIVAR</button>
+        <button class="bg-red mt-24 bt-modal" @click="inativateItem">
+          INATIVAR
+        </button>
       </div>
     </div>
   </div>

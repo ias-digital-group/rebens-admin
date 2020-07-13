@@ -161,11 +161,17 @@
       :showSuccess="modal.showSuccess"
       @closeDeleteSuccess="closeDeleteSuccess"
     ></delete-modal>
+    <confirm-modal
+      @closeModal="closeResendPassword"
+      question="Deseja reenviar o e-mail de validação?"
+      :show="showResendPassModal"
+      @confirm="confirmResendPassword"
+    ></confirm-modal>
   </div>
 </template>
 <script>
 import { Select, Option } from 'element-ui';
-import { Pagination, DeleteModal } from 'src/components';
+import { Pagination, DeleteModal, ConfirmModal } from 'src/components';
 import userService from '../../services/User/userService';
 import operationService from '../../services/Operation/operationService';
 import operationPartnerService from '../../services/OperationPartner/operationPartnerService';
@@ -178,7 +184,8 @@ export default {
     Pagination,
     [Select.name]: Select,
     [Option.name]: Option,
-    DeleteModal
+    DeleteModal,
+    ConfirmModal
   },
   data() {
     return {
@@ -194,6 +201,8 @@ export default {
       operations: [],
       operationPartners: [],
       roles: [],
+      resendPassId: 0,
+      showResendPassModal: false,
       statuses: [
         { code: true, label: 'Ativos' },
         { code: false, label: 'Inativos' }
@@ -218,23 +227,31 @@ export default {
         }
       });
     },
+    confirmResendPassword() {
+      const self = this;
+      self.$data.loading = true;
+      self.showResendPassModal = false;
+      userService.resendValidation(self.resendPassId).then(
+        () => {
+          self.$notify({
+            type: 'success',
+            message: 'E-mail reenviado com sucesso!'
+          });
+          self.$data.loading = false;
+          self.resendPassId = 0;
+        },
+        () => {
+          self.$data.loading = false;
+        }
+      );
+    },
     handleResendPassword(row) {
-      if (confirm('Deseja reenviar o e-mail de validação?')) {
-        const self = this;
-        self.$data.loading = true;
-        userService.resendValidation(row.id).then(
-          () => {
-            self.$notify({
-              type: 'success',
-              message: 'E-mail reenviado com sucesso!'
-            });
-            self.$data.loading = false;
-          },
-          () => {
-            self.$data.loading = false;
-          }
-        );
-      }
+      this.resendPassId = row.id;
+      this.showResendPassModal = true;
+    },
+    closeResendPassword() {
+      this.resendPassId = 0;
+      this.showResendPassModal = false;
     },
     fetchData() {
       const self = this;

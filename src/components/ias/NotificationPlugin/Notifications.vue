@@ -1,14 +1,13 @@
 <template>
   <div class="notifications">
-    <transition-group :name="transitionName" :mode="transitionMode">
+    <transition-group>
       <notification
         v-for="notification in notifications"
         v-bind="notification"
         :clickHandler="notification.onClick"
         :key="notification.timestamp.getTime()"
         @close="removeNotification"
-      >
-      </notification>
+      ></notification>
     </transition-group>
   </div>
 </template>

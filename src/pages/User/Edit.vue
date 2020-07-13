@@ -88,9 +88,9 @@
               >
                 <span slot="no-options">Nenhum papel encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('roles')" class="ias-error">
-                {{ customErrors.get('roles') }}
-              </label>
+              <label v-if="customErrors.get('roles')" class="ias-error">{{
+                customErrors.get('roles')
+              }}</label>
             </div>
           </div>
           <div class="ias-row">
@@ -106,9 +106,9 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">
-                {{ customErrors.get('operation') }}
-              </label>
+              <label v-if="customErrors.get('operation')" class="ias-error">{{
+                customErrors.get('operation')
+              }}</label>
             </div>
           </div>
           <div class="ias-row">
@@ -442,16 +442,10 @@ export default {
           },
           err => {
             if (err.response.status === 400 && err.response.data.message) {
-              if (err.response.data.status === 'errorCPF') {
-                self.customErrors.set('doc', err.response.data.message);
-              } else if (err.response.data.status === 'errorCPF') {
-                self.customErrors.set('email', err.response.data.message);
-              } else {
-                vm.$notify({
-                  type: 'warning',
-                  message: err.response.data.message
-                });
-              }
+              vm.$notify({
+                type: 'warning',
+                message: err.response.data.message
+              });
             } else {
               vm.$notify({
                 type: 'danger',
@@ -484,7 +478,7 @@ export default {
         self.roles.push({ code: 'master', label: 'Master' });
       }
       if (!self.isPartnerUser) {
-        self.roles.push({ code: 'publisher', label: 'publisher' });
+        self.roles.push({ code: 'publisher', label: 'Publicador' });
         self.roles.push({ code: 'administrator', label: 'Administrador' });
         if (self.isRebens) {
           self.roles.push({

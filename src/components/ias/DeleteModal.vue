@@ -34,7 +34,7 @@
           <br />REALMENTE EXCLUIR
         </h4>
         <p class="c-red">{{ itemName }}</p>
-        <div class="mtb-40">
+        <div class="mt-24">
           <custom-input
             :required="true"
             v-model="confirm"
@@ -45,7 +45,9 @@
             :error="errorMsg"
           ></custom-input>
         </div>
-        <button class="bg-red bt-modal" @click="deleteItem">EXCLUIR</button>
+        <button class="bg-red mt-24 bt-modal" @click="deleteItem">
+          EXCLUIR
+        </button>
       </div>
     </div>
     <div class="modal-mask" v-show="showSuccess">
@@ -55,7 +57,7 @@
           ITEM EXCLUIDO
           <br />COM SUCESSO!
         </p>
-        <button class="bg-green bt-modal" @click="closeSuccess">
+        <button class="bg-green bt-modal mt-24" @click="closeSuccess">
           IR PARA LISTAGEM
         </button>
       </div>

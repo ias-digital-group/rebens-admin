@@ -35,7 +35,7 @@
         <v-select
           :options="types"
           :reduce="op => op.code"
-          v-model="typeFilter"
+          v-model="filters.type"
           class="no-margin"
           placeholder="Filtre por tipo"
         >
@@ -44,7 +44,7 @@
         <v-select
           :options="statuses"
           :reduce="op => op.code"
-          v-model="activeFilter"
+          v-model="filters.active"
           placeholder="Filtre pelo Status"
         >
           <span slot="no-options">Nenhum status encontrado</span>
@@ -173,8 +173,6 @@ export default {
     return {
       internalName: 'pages.benefits.list',
       sortField: 'name',
-      activeFilter: '',
-      typeFilter: '',
       operationFilter: '',
       showFilters: false,
       statuses: [
@@ -263,13 +261,13 @@ export default {
     fetchData() {
       const self = this;
       const request = {
-        page: this.$data.pagination.currentPage - 1,
-        pageItems: this.$data.pagination.perPage,
-        searchWord: this.searchQuery,
-        sort: this.formatSortFieldParam,
-        active: this.activeFilter,
-        type: this.typeFilter,
-        idOperation: this.operationFilter
+        page: self.$data.pagination.currentPage - 1,
+        pageItems: self.$data.pagination.perPage,
+        searchWord: self.searchQuery,
+        sort: self.formatSortFieldParam,
+        active: self.filters.active,
+        type: self.filters.type,
+        idOperation: self.operationFilter
       };
       this.$data.loading = true;
       benefitService.findAll(request).then(
@@ -321,11 +319,11 @@ export default {
     }
   },
   watch: {
-    activeFilter() {
+    'filters.active'() {
       this.pagination.currentPage = 1;
       this.fetchData();
     },
-    typeFilter() {
+    'filters.type'() {
       this.pagination.currentPage = 1;
       this.fetchData();
     }

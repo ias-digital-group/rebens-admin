@@ -487,13 +487,13 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: $white;
+  background: $bg-side-menu;
   z-index: 100;
   .modal-container {
     width: 400px;
-    height: 400px;
-    padding: 56px 24px;
-    background-color: $bg-side-menu;
+    height: auto;
+    padding: 56px 24px 24px;
+    background-color: $white;
     border-radius: 10px;
     position: absolute;
     left: 50%;
@@ -503,7 +503,7 @@
     img {
       width: 80px;
       height: 80px;
-      margin: 32px auto 24px;
+      margin: 16px auto 24px;
     }
     p {
       width: 100%;
@@ -511,20 +511,35 @@
       margin: 0;
       font-size: $font-size-medium;
       font-weight: $font-weight-black;
-      color: $green;
+      &.ias-alert-danger {
+        color: $red;
+      }
+      &.ias-alert-primary {
+        color: $dark-gray;
+      }
+      &.ias-alert-info {
+        color: $light-blue;
+      }
+      &.ias-alert-warning {
+        color: $orange;
+      }
+      &.ias-alert-success {
+        color: $green;
+      }
     }
-    button.bt-modal {
-      width: 200px;
+    .bt-modal {
+      width: 100%;
       height: 56px;
       line-height: 56px;
       color: $white;
       font-size: $font-size-medium;
       font-weight: $font-weight-black;
       border-radius: 5px;
-      margin: 62px 46px 0;
+      margin: 0;
       border: none;
       font-family: $font-family-base;
       cursor: pointer;
+      display: block;
     }
     .bt-remove {
       position: absolute;
@@ -551,11 +566,25 @@
       text-transform: uppercase;
       text-align: center;
     }
-    .mtb-40 {
-      margin: 40px 0;
+    h5 {
+      font-size: $font-size-medium;
+      font-weight: $font-weight-bold;
+      color: $dark-gray;
+      text-transform: uppercase;
+      text-align: center;
+    }
+    .mt-24 {
+      margin-top: 24px;
     }
     .ias-input-group {
-      background-color: $white;
+      margin: 0;
+    }
+    .btns-actions {
+      display: flex;
+      justify-content: space-between;
+      .bt-modal {
+        width: 45%;
+      }
     }
   }
   &.modal-faq {
@@ -597,7 +626,6 @@
         align-items: stretch;
         .ias-input-group {
           margin-right: 0;
-          background-color: #fff;
         }
         .form-actions {
           flex-basis: 100%;
@@ -689,7 +717,7 @@
     font-weight: $font-weight-medium;
     color: $dark-gray;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     position: relative;
     cursor: pointer;
     input[type='file'] {
@@ -704,26 +732,53 @@
   .files-holder {
     width: 100%;
     .item {
-      height: 32px;
-      line-height: 32px;
-      display: flex;
+      height: 96px;
+      padding: 24px;
+      border-radius: 10px;
+      margin-bottom: 24px;
+      position: relative;
+      background-color: $bg-body;
       i {
-        width: 24px;
-        height: 24px;
-        line-height: 24px;
-        text-align: center;
+        width: 32px;
+        height: 32px;
+        line-height: 28px;
+        padding-left: 11px;
         color: $white;
         background-color: $red;
-        border-radius: 5px;
+        border-top-right-radius: 10px;
+        border-bottom-left-radius: 32px;
         font-size: 16px;
         display: inline-block;
-        margin: 4px 0;
         cursor: pointer;
+        position: absolute;
+        top: 0;
+        right: 0;
       }
-      a {
-        margin-left: 8px;
-        line-height: 32px;
-        color: $dark-gray;
+      a.file-content {
+        display: block;
+        width: 100%;
+        height: 48px;
+        display: flex;
+        img {
+          height: 48px;
+          width: 48px;
+          margin: 0 16px 0 0;
+        }
+        p {
+          font-size: $font-size-medium;
+          span {
+            color: $dark-gray;
+            font-weight: $font-weight-bold;
+            display: block;
+            width: 100%;
+          }
+          b {
+            color: $light-blue;
+            font-weight: $font-weight-medium;
+            display: block;
+            width: 100%;
+          }
+        }
       }
     }
   }

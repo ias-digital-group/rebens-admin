@@ -47,7 +47,7 @@
               :error="customErrors.get('cnpj')"
               maxlength="50"
             ></custom-input>
-            <div class="select-holder">
+            <!-- <div class="select-holder">
               <v-select
                 :options="types"
                 :reduce="op => op.code"
@@ -61,7 +61,7 @@
               <label v-if="customErrors.get('type')" class="ias-error">
                 {{ customErrors.get('type') }}
               </label>
-            </div>
+            </div>-->
           </div>
           <ias-address
             ref="ias-address"
@@ -77,9 +77,9 @@
               v-model="model.description"
               placeholder="Descrição"
             />
-            <label v-show="customErrors.get('description')" class="ias-error">
-              {{ customErrors.get('description') }}
-            </label>
+            <label v-show="customErrors.get('description')" class="ias-error">{{
+              customErrors.get('description')
+            }}</label>
           </div>
           <div class="ias-row">
             <custom-input
@@ -137,7 +137,7 @@
               name="contactMobile"
               label="Celular Comercial"
               maxlength="50"
-              :error="customErrors.get('contactMobile')"
+              :error="customErrors.get('contactPhone')"
               :inputMask="['(##) ####-####', '(##) #####-####']"
             ></custom-input>
             <div class="phone-branch">
@@ -147,6 +147,7 @@
                 name="contactComercialPhone"
                 label="Telefone Comercial"
                 maxlength="50"
+                :error="customErrors.get('contactPhone')"
                 :inputMask="['(##) ####-####']"
               ></custom-input>
               <custom-input
@@ -197,7 +198,13 @@
             <div class="files-holder">
               <div class="item" v-for="item in files" :key="item.idx">
                 <i class="icon-icon-times" @click="removeFile(item)"></i>
-                <a target="_blank" :href="item.fileURL">{{ item.name }}</a>
+                <a target="_blank" :href="item.fileURL" class="file-content">
+                  <img src="/img/icon-file.png" :alt="item.name" />
+                  <p>
+                    <span>{{ item.name }}</span>
+                    <b>{{ item.createdUserName }} - {{ item.created }}</b>
+                  </p>
+                </a>
               </div>
             </div>
           </div>
@@ -267,7 +274,7 @@ export default {
         active: true,
         logo: '',
         description: '',
-        type: 0,
+        type: 4,
         idMainAddress: null,
         idMainContact: null,
         mainContact: {
@@ -364,6 +371,19 @@ export default {
         self.model.mainContact.jobTitle === ''
       )
         self.customErrors.set('contactJobTitle', 'Campo obrigatório');
+
+      if (
+        (!self.model.mainContact.phone ||
+          self.model.mainContact.phone === '') &&
+        (!self.model.mainContact.cellPhone ||
+          self.model.mainContact.cellPhone === '') &&
+        (!self.model.mainContact.comercialPhone ||
+          self.model.mainContact.comercialPhone === '')
+      )
+        self.customErrors.set(
+          'contactPhone',
+          'Preencha pelo menos um telefone'
+        );
 
       if (self.customErrors.size === 0) {
         self.submitLoading = true;
@@ -519,7 +539,9 @@ export default {
             fileName: response.data.fileName,
             idItem: self.model.id,
             itemType: 23,
-            idx: idx
+            idx: idx,
+            created: ' - ',
+            createdUserName: ' - '
           });
           document.getElementById('fileInput').value = '';
           self.submitLoading = false;
@@ -535,6 +557,9 @@ export default {
     },
     onImageChange(file) {
       this.image = file;
+      if (file == null) {
+        this.model.logo = file;
+      }
     },
     removeFile(item) {
       const self = this;

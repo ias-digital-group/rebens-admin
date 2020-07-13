@@ -27,9 +27,9 @@
               >
                 <span slot="no-options">Nenhum Tipo encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('type')" class="ias-error">{{
-                customErrors.get('type')
-              }}</label>
+              <label v-if="customErrors.get('type')" class="ias-error">
+                {{ customErrors.get('type') }}
+              </label>
             </div>
           </div>
           <div class="ias-row" v-if="model.type === 22 && viewAction === 'new'">
@@ -44,9 +44,9 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('idItem')" class="ias-error">{{
-                customErrors.get('idItem')
-              }}</label>
+              <label v-if="customErrors.get('idItem')" class="ias-error">
+                {{ customErrors.get('idItem') }}
+              </label>
             </div>
           </div>
           <div class="ias-row" v-if="model.type === 23 && viewAction === 'new'">
@@ -61,9 +61,9 @@
               >
                 <span slot="no-options">Nenhum Parceiro encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('idItem')" class="ias-error">{{
-                customErrors.get('idItem')
-              }}</label>
+              <label v-if="customErrors.get('idItem')" class="ias-error">
+                {{ customErrors.get('idItem') }}
+              </label>
             </div>
           </div>
           <div class="ias-row">
@@ -208,7 +208,13 @@
             <div class="files-holder">
               <div class="item" v-for="item in files" :key="item.idx">
                 <i class="icon-icon-times" @click="removeFile(item)"></i>
-                <a target="_blank" :href="item.fileURL">{{ item.name }}</a>
+                <a target="_blank" :href="item.fileURL" class="file-content">
+                  <img src="/img/icon-file.png" :alt="item.name" />
+                  <p>
+                    <span>{{ item.name }}</span>
+                    <b>{{ item.createdUserName }} - {{ item.created }}</b>
+                  </p>
+                </a>
               </div>
             </div>
           </div>
@@ -526,7 +532,9 @@ export default {
             fileName: response.data.fileName,
             idItem: self.model.id,
             itemType: 31,
-            idx: idx
+            idx: idx,
+            created: ' - ',
+            createdUserName: ' - '
           });
           document.getElementById('fileInput').value = '';
           self.submitLoading = false;

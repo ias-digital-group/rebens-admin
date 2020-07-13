@@ -18,7 +18,9 @@ export default {
         config.apiEndpoints.partnerUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}` +
             `&sort=${request.sort}&active=${
-              request.active === null ? '' : request.active
+              request.active == null || request.active == undefined
+                ? ''
+                : request.active
             }&type=${request.type === null ? '' : request.type}`
         )
       ).then(

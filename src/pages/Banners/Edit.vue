@@ -46,9 +46,9 @@
               v-show="model.idType == 3"
               >Home de benefícios</ias-checkbox
             >
-            <label v-if="customErrors.get('whereToShow')" class="ias-error">
-              {{ customErrors.get('whereToShow') }}
-            </label>
+            <label v-if="customErrors.get('whereToShow')" class="ias-error">{{
+              customErrors.get('whereToShow')
+            }}</label>
           </div>
           <div class="ias-row">
             <custom-input
@@ -101,8 +101,12 @@
                 :reduce="op => op.code"
                 :key="model.order"
                 v-model="model.order"
+                :class="{ 'has-error': customErrors.get('order') }"
                 placeholder="Ordem"
               ></v-select>
+              <label v-show="customErrors.get('order')" class="ias-error">{{
+                customErrors.get('order')
+              }}</label>
             </div>
           </div>
           <div class="ias-row">
@@ -127,7 +131,7 @@
             :src="model.image"
             :error="customErrors.get('picture')"
           />
-          <div class="select-holder-right">
+          <div class="select-holder-right" v-show="isRebens">
             <v-select
               :options="operations"
               :reduce="op => op.code"
@@ -137,9 +141,9 @@
               multiple
               :class="{ 'has-error': customErrors.get('operations') }"
             ></v-select>
-            <label v-if="customErrors.get('operations')" class="ias-error">
-              {{ customErrors.get('operations') }}
-            </label>
+            <label v-if="customErrors.get('operations')" class="ias-error">{{
+              customErrors.get('operations')
+            }}</label>
           </div>
         </div>
       </form>
@@ -225,9 +229,6 @@ export default {
     }
   },
   methods: {
-    getError(fieldName) {
-      return this.errors.first(fieldName);
-    },
     querySearch(query, cb) {
       var list = this.benefits;
       var results = query ? list.filter(this.createFilter(query)) : list;
@@ -258,10 +259,15 @@ export default {
         !self.model.bannerShowBenefit
       )
         self.customErrors.set('whereToShow', 'Campo obrigatório');
+      if (!self.model.order || self.model.order === '')
+        self.customErrors.set('order', 'Campo obrigatório');
 
       if (!self.image && !self.model.image)
         self.customErrors.set('picture', 'Campo obrigatório');
-      if (!self.model.operations || self.model.operations.length === 0)
+      if (
+        self.isRebens &&
+        (!self.model.operations || self.model.operations.length === 0)
+      )
         self.customErrors.set('operations', 'Campo obrigatório');
 
       if (self.customErrors.size === 0) {
@@ -368,13 +374,16 @@ export default {
     },
     onImageChange(file) {
       this.image = file;
+      if (file == null) {
+        this.model.image = file;
+      }
     }
   },
   created() {
-    this.fetchData();
     this.isRebens =
       this.$store.getters.currentUser.role != 'administrator' &&
       this.$store.getters.currentUser.role != 'publisher';
+    this.fetchData();
   }
 };
 </script>

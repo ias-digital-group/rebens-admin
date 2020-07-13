@@ -1,50 +1,35 @@
 <template>
-  <div class="container">
-    <div class="col-lg-4 col-md-6 ml-auto mr-auto">
+  <div class="login-mask">
+    <div class="modal-login">
+      <img src="img/logo-login.png" alt />
       <form @submit.prevent>
-        <card class="card-login card-white">
-          <template slot="header">
-            <img src="img/logo-login.png" alt="" />
-          </template>
-          <p style="text-align:center">{{ $t('pages.validate.info') }}</p>
-          <hr />
-          <div>
-            <base-input
-              :placeholder="$t('pages.validate.input-password')"
-              required
-              :name="$t('pages.validate.input-password')"
-              v-model="credentials.password"
-              v-validate="modelValidations.password"
-              :error="getError($t('pages.validate.input-password'))"
-              type="password"
-            >
-            </base-input>
-            <base-input
-              :placeholder="$t('pages.validate.input-confirm')"
-              required
-              :name="$t('pages.validate.input-confirm')"
-              v-model="credentials.passwordConfirm"
-              v-validate="modelValidations.passwordConfirm"
-              :error="getError($t('pages.validate.input-confirm'))"
-              type="password"
-            >
-            </base-input>
-          </div>
-
-          <div slot="footer">
-            <base-button
-              type="info"
-              class="mb-3"
-              size="lg"
-              native-type="submit"
-              @click.native.prevent="validate"
-              :loading="fullscreenLoading"
-              block
-            >
-              {{ $t('pages.validate.button') }}
-            </base-button>
-          </div>
-        </card>
+        <h5>
+          crie sua senha!
+          <br />para validar seu cadastro.
+        </h5>
+        <div class="mt-24">
+          <custom-input
+            :required="true"
+            v-model="credentials.password"
+            type="password"
+            name="password"
+            label="Digite sua senha"
+            maxlength="50"
+            :error="errorPassword"
+          ></custom-input>
+        </div>
+        <div class="mt-24">
+          <custom-input
+            :required="true"
+            v-model="credentials.passwordConfirm"
+            type="password"
+            name="password"
+            label="Digite sua confirmação de senha"
+            maxlength="50"
+            :error="errorConfirm"
+          ></custom-input>
+        </div>
+        <button class="bg-green bt-modal" @click="validate">VALIDAR</button>
       </form>
     </div>
   </div>
@@ -60,64 +45,73 @@ export default {
         passwordConfirm: '',
         password: ''
       },
-      modelValidations: {
-        password: {
-          required: true,
-          min: 8
-        },
-        passwordConfirm: {
-          required: true,
-          min: 8
-        }
-      }
+      errorPassword: '',
+      errorConfirm: ''
     };
   },
   methods: {
-    getError(fieldName) {
-      return this.errors.first(fieldName);
-    },
     validate() {
       const self = this;
-      this.$data.fullscreenLoading = true;
-      this.$validator.validateAll().then(isValid => {
-        if (isValid) {
-          accountService
-            .validate(
-              self.$data.credentials.code,
-              self.$data.credentials.password,
-              self.$data.credentials.passwordConfirm
-            )
-            .then(
-              response => {
-                if (response && response.authenticated) {
-                  self.$store.dispatch('setUser', response);
-                  window.location = '/';
-                  return;
-                }
-                self.$data.fullscreenLoading = false;
-                self.$notify({
-                  type: 'primary',
-                  message: response.message,
-                  icon: 'tim-icons icon-bell-55'
-                });
-              },
-              err => {
-                const msg =
-                  err.response.status == 404
-                    ? err.response.data.message
-                    : err.message;
-                self.$notify({
-                  type: 'primary',
-                  message: msg,
-                  icon: 'tim-icons icon-bell-55'
-                });
-                self.$data.fullscreenLoading = false;
+      self.errorConfirm = '';
+      self.errorPassword = '';
+      if (!self.credentials.password || self.credentials.password === '')
+        self.errorPassword = 'Campo obrigatório';
+      else if (!self.credentials.password.length > 50)
+        self.errorPassword = 'Máximo 50 caracteres';
+      if (
+        !self.credentials.passwordConfirm ||
+        self.credentials.passwordConfirm === ''
+      )
+        self.errorConfirm = 'Campo obrigatório';
+      else if (self.credentials.passwordConfirm !== self.credentials.password)
+        self.errorConfirm = self.errorPassword =
+          'A senha e a confirmação devem ser iguais';
+
+      if (self.errorConfirm == '' && self.errorPassword == '') {
+        self.$data.fullscreenLoading = true;
+        accountService
+          .validate(
+            self.$data.credentials.code,
+            self.$data.credentials.password,
+            self.$data.credentials.passwordConfirm
+          )
+          .then(
+            response => {
+              if (response && response.authenticated) {
+                self.$store.dispatch('setUser', response);
+                const jwtData = JSON.parse(
+                  atob(response.accessToken.split('.')[1])
+                );
+                setTimeout(() => {
+                  if (jwtData.role === 'promoter') {
+                    self.$router.push(`/promoter`);
+                  } else if (jwtData.role == 'partnerApprover') {
+                    self.$router.push(`/operationPartner/approve`);
+                  } else {
+                    window.location = '/';
+                  }
+                }, 500);
+                return;
               }
-            );
-        } else {
-          this.$data.fullscreenLoading = false;
-        }
-      });
+              self.$data.fullscreenLoading = false;
+              self.$notify({
+                type: 'warning',
+                message: response.message
+              });
+            },
+            err => {
+              const msg =
+                err.response.status == 404
+                  ? err.response.data.message
+                  : err.message;
+              self.$notify({
+                type: 'danger',
+                message: msg
+              });
+              self.$data.fullscreenLoading = false;
+            }
+          );
+      }
     }
   },
   created() {

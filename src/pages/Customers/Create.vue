@@ -26,9 +26,9 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">
-                {{ customErrors.get('operation') }}
-              </label>
+              <label v-if="customErrors.get('operation')" class="ias-error">{{
+                customErrors.get('operation')
+              }}</label>
             </div>
             <div class="select-holder">
               <v-select
@@ -230,10 +230,17 @@ export default {
           self.showSuccessModal = true;
         },
         err => {
-          self.$notify({
-            type: 'danger',
-            message: err.message
-          });
+          if (err.response.status == 400 && err.response.data) {
+            self.$notify({
+              type: 'danger',
+              message: err.response.data.message
+            });
+          } else {
+            self.$notify({
+              type: 'danger',
+              message: err.message
+            });
+          }
           self.submitLoading = false;
         }
       );
