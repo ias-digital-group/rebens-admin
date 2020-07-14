@@ -184,9 +184,9 @@
               ></custom-input>
             </div>
             <div class="ias-row" :key="idx" v-else-if="field.type == 'boolean'">
-              <ias-checkbox v-model="field.checked">{{
-                field.label
-              }}</ias-checkbox>
+              <ias-checkbox v-model="field.checked">
+                {{ field.label }}
+              </ias-checkbox>
             </div>
             <div
               class="ias-row-editor"
@@ -244,9 +244,9 @@
           </div>
           <div v-for="(arr, idx1) in modulesChunk" class="ias-row" :key="idx1">
             <template v-for="(mod, idx) in arr">
-              <ias-checkbox v-model="mod.checked" :key="idx">{{
-                mod.title
-              }}</ias-checkbox>
+              <ias-checkbox v-model="mod.checked" :key="idx">
+                {{ mod.title }}
+              </ias-checkbox>
             </template>
             <div class="div-spacer" v-show="arr.length === 1"></div>
             <div class="div-spacer" v-show="arr.length === 2"></div>
@@ -674,30 +674,32 @@ export default {
         .saveConfiguration(vw.model.id, vw.config.data, vw.modules, vw.wirecard)
         .then(
           () => {
-            vw.submitLoading = false;
-            vw.showSuccessModal = true;
             if (vw.isPublish) {
-              operationService.publish(self.id).then(
+              operationService.publish(vw.model.id).then(
                 () => {
-                  self.$notify({
+                  vw.$notify({
                     type: 'success',
                     message:
                       'A operação está sendo publicada, e assim que estiver concluído você verá aqui.'
                   });
-                  self.model.temporaryPublishStatus = 'Processando';
+                  vw.model.temporaryPublishStatus = 'Processando';
+                  vw.isPublish = false;
                 },
                 err => {
-                  self.$notify({
+                  vw.$notify({
                     type: 'danger',
                     message: err.message
                   });
-                  self.publishTempLoading = false;
+                  vw.publishTempLoading = false;
                 }
               );
+            } else {
+              vw.submitLoading = false;
+              vw.showSuccessModal = true;
             }
           },
           () => {
-            self.formLoading = false;
+            vw.formLoading = false;
           }
         );
     },
