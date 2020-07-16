@@ -24,10 +24,14 @@
         <div class="user-menu">
           <ul>
             <li>
-              <router-link :to="`/users/${userId}/edit/`">Editar Meu perfil</router-link>
+              <router-link :to="`/users/${userId}/edit/`"
+                >Editar Meu perfil</router-link
+              >
             </li>
             <li>
-              <router-link to="/account/changePassword">Alterar Senha</router-link>
+              <router-link to="/account/changePassword"
+                >Alterar Senha</router-link
+              >
             </li>
             <li>
               <a href="javascript:void(0)" @click="signout">Sair</a>
@@ -39,16 +43,23 @@
     <div class="main-content">
       <div class="side-menu">
         <ul>
-          <li v-for="(item, idx) in filteredMenu" :key="idx" :class="{ active: item.active }">
+          <li
+            v-for="(item, idx) in filteredMenu"
+            :key="idx"
+            :class="{ active: item.active }"
+          >
             <template v-if="item.subitens.length > 0">
               <a
                 href="javascript:void(0)"
                 @click.prevent="item.active = !item.active"
                 class="parent"
-              >{{ item.name }}</a>
+                >{{ item.name }}</a
+              >
               <ul class="sub-item">
                 <li v-for="(subitem, idx2) in item.subitens" :key="idx2">
-                  <router-link :to="subitem.path">{{ subitem.name }}</router-link>
+                  <router-link :to="subitem.path">{{
+                    subitem.name
+                  }}</router-link>
                 </li>
               </ul>
             </template>
@@ -191,6 +202,30 @@ export default {
           active: false,
           roles:
             'master,administrator,administratorRebens,publisher,publisherRebens',
+          needModule: '',
+          subitens: []
+        },
+        {
+          name: 'Assinaturas',
+          path: '/subscriptions',
+          active: false,
+          roles: 'master,administrator,administratorRebens',
+          needModule: '',
+          subitens: []
+        },
+        {
+          name: 'Validação de Cupom',
+          path: '/benefits/validation',
+          active: false,
+          roles: 'master,administrator,administratorRebens,couponChecker',
+          needModule: '',
+          subitens: []
+        },
+        {
+          name: 'Validação de Ingresso',
+          path: '/orders',
+          active: false,
+          roles: 'master,administrator,administratorRebens,ticketChecker',
           needModule: '',
           subitens: []
         },

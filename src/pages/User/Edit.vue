@@ -6,7 +6,11 @@
         <span v-else>Editar Usuário</span>
       </h2>
       <div class="box-actions">
-        <button @click="resendValidation" type="button" class="bt bt-square bg-white-2 c-orange">
+        <button
+          @click="resendValidation"
+          type="button"
+          class="bt bt-square bg-white-2 c-orange"
+        >
           <i class="icon-icon-send"></i>
         </button>
         <base-link to="/users" class="bt bt-square bg-white-2 c-light-blue">
@@ -85,9 +89,7 @@
                 <span slot="no-options">Nenhum papel encontrado</span>
               </v-select>
               <label v-if="customErrors.get('roles')" class="ias-error">
-                {{
-                customErrors.get('roles')
-                }}
+                {{ customErrors.get('roles') }}
               </label>
             </div>
           </div>
@@ -105,9 +107,7 @@
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
               <label v-if="customErrors.get('operation')" class="ias-error">
-                {{
-                customErrors.get('operation')
-                }}
+                {{ customErrors.get('operation') }}
               </label>
             </div>
           </div>
@@ -162,7 +162,11 @@
           </div>
           <div class="ias-row">
             <div class="form-actions">
-              <button class="bt bg-green c-white" type="button" @click.prevent="validate">
+              <button
+                class="bt bg-green c-white"
+                type="button"
+                @click.prevent="validate"
+              >
                 <span v-if="viewAction === 'new'">Cadastrar</span>
                 <span v-else>Salvar</span>
               </button>
@@ -173,11 +177,19 @@
           </div>
         </div>
         <div class="form-right">
-          <ias-image-upload @change="onImageChange" img-size="(360x360)" :src="model.picture" />
+          <ias-image-upload
+            @change="onImageChange"
+            img-size="(360x360)"
+            :src="model.picture"
+          />
         </div>
       </form>
     </div>
-    <success-modal :isEdit="viewAction !== 'new'" :show="showSuccessModal" link="/users"></success-modal>
+    <success-modal
+      :isEdit="viewAction !== 'new'"
+      :show="showSuccessModal"
+      link="/users"
+    ></success-modal>
   </div>
 </template>
 <script>

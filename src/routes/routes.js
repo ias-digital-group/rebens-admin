@@ -590,22 +590,6 @@ let pagesPages = {
         ],
         title: i18n.t('pages.pages.title')
       }
-    },
-    {
-      path: 'validation',
-      name: 'validation',
-      props: true,
-      component: BenefitValidation,
-      meta: {
-        requiresAuth: true,
-        roles: [
-          'master',
-          'administratorRebens',
-          'administrator',
-          'couponChecker'
-        ],
-        title: 'Validação de Cupom'
-      }
     }
   ]
 };
@@ -699,6 +683,22 @@ let benefitsPages = {
           'administratorRebens'
         ],
         title: i18n.t('pages.benefits.title')
+      }
+    },
+    {
+      path: 'validation',
+      name: 'validation',
+      props: true,
+      component: BenefitValidation,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'administratorRebens',
+          'administrator',
+          'couponChecker'
+        ],
+        title: 'Validação de Cupom'
       }
     }
   ]
@@ -1597,7 +1597,7 @@ let scratchcardPages = {
 
 let subscriptionPages = {
   path: '/subscriptions',
-  component: DashboardLayout,
+  component: MainLayout,
   meta: {
     requiresAuth: true,
     roles: ['administrator', 'administratorRebens', 'master'],

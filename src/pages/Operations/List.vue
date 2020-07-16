@@ -4,16 +4,30 @@
       <h2>Operações</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Digite aqui o que deseja encontrar"
+          />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
+          <i
+            v-else
+            class="bt-clear-search icon-icon-times c-red"
+            @click="searchQuery = ''"
+          ></i>
         </div>
         <div class="filter" :class="{ active: showFilters }">
-          <a class="bt bt-square bg-white-2 c-light-blue" @click="toogleFilters">
+          <a
+            class="bt bt-square bg-white-2 c-light-blue"
+            @click="toogleFilters"
+          >
             <i class="icon-icon-filter"></i>
           </a>
         </div>
-        <base-link to="/operations/new" class="bt bt-square bg-white-2 c-light-blue">
+        <base-link
+          to="/operations/new"
+          class="bt bt-square bg-white-2 c-light-blue"
+        >
           <i class="icon-icon-plus"></i>
         </base-link>
       </div>
@@ -44,7 +58,11 @@
           <tr v-for="item in tableData" :key="item.id">
             <td class="td-flex">
               <div class="img-holder">
-                <img v-if="item.image && item.image !== ''" :src="item.image" :alt="item.title" />
+                <img
+                  v-if="item.image && item.image !== ''"
+                  :src="item.image"
+                  :alt="item.title"
+                />
                 <span v-else>{{ item.title[0] }}</span>
               </div>
               <span>{{ item.title }}</span>
@@ -99,7 +117,11 @@
                 >
                   <i class="icon-icon-view"></i>
                 </a>
-                <span v-else class="bt c-orange cursor-block" title="visualizar">
+                <span
+                  v-else
+                  class="bt c-orange cursor-block"
+                  title="visualizar"
+                >
                   <i class="icon-icon-view"></i>
                 </span>
               </div>

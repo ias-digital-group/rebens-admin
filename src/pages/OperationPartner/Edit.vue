@@ -6,7 +6,10 @@
         <span v-else>Editar Parceiro</span>
       </h2>
       <div class="box-actions">
-        <base-link to="/operationPartner" class="bt bt-square bg-white-2 c-light-blue">
+        <base-link
+          to="/operationPartner"
+          class="bt bt-square bg-white-2 c-light-blue"
+        >
           <i class="icon-icon-arrow-left"></i>
         </base-link>
       </div>
@@ -16,7 +19,10 @@
         <div class="form-left">
           <div
             class="ias-row"
-            v-show="$store.getters.currentUser.role === 'master' || $store.getters.currentUser.role === 'administratorRebens'"
+            v-show="
+              $store.getters.currentUser.role === 'master' ||
+                $store.getters.currentUser.role === 'administratorRebens'
+            "
           >
             <div class="select-holder">
               <v-select
@@ -30,9 +36,7 @@
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
               <label v-if="customErrors.get('operation')" class="ias-error">
-                {{
-                customErrors.get('operation')
-                }}
+                {{ customErrors.get('operation') }}
               </label>
             </div>
           </div>
@@ -61,7 +65,11 @@
           </div>
           <div class="ias-row">
             <div class="form-actions">
-              <button class="bt bg-green c-white" type="button" @click.prevent="validate">
+              <button
+                class="bt bg-green c-white"
+                type="button"
+                @click.prevent="validate"
+              >
                 <span v-if="viewAction === 'new'">Cadastrar</span>
                 <span v-else>Salvar</span>
               </button>
@@ -73,7 +81,11 @@
         <div class="form-right"></div>
       </form>
     </div>
-    <success-modal :isEdit="viewAction !== 'new'" :show="showSuccessModal" link="/operationParter"></success-modal>
+    <success-modal
+      :isEdit="viewAction !== 'new'"
+      :show="showSuccessModal"
+      link="/operationParter"
+    ></success-modal>
   </div>
 </template>
 <script>

@@ -46,7 +46,13 @@
           </div>
           <div class="ias-row">
             <div class="form-actions">
-              <button class="bt bg-green c-white" type="button" @click.prevent="validate">Salvar</button>
+              <button
+                class="bt bg-green c-white"
+                type="button"
+                @click.prevent="validate"
+              >
+                Salvar
+              </button>
             </div>
             <div class="div-spacer"></div>
           </div>
