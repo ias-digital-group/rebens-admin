@@ -697,12 +697,13 @@ let reportPages = {
 
 let operationPartnerPages = {
   path: '/operationPartner',
-  component: DashboardLayout,
+  component: MainLayout,
   meta: {
     requiresAuth: true,
     roles: [
-      'publisher',
+      'master',
       'administrator',
+      'administratorRebens',
       'partnerAdministrator',
       'partnerApprover'
     ],
@@ -716,8 +717,9 @@ let operationPartnerPages = {
       meta: {
         requiresAuth: true,
         roles: [
-          'publisher',
+          'master',
           'administrator',
+          'administratorRebens',
           'partnerAdministrator',
           'partnerApprover'
         ],
@@ -731,8 +733,9 @@ let operationPartnerPages = {
       meta: {
         requiresAuth: true,
         roles: [
-          'publisher',
+          'master',
           'administrator',
+          'administratorRebens',
           'partnerAdministrator',
           'partnerApprover'
         ],
@@ -747,8 +750,9 @@ let operationPartnerPages = {
       meta: {
         requiresAuth: true,
         roles: [
-          'publisher',
+          'master',
           'administrator',
+          'administratorRebens',
           'partnerAdministrator',
           'partnerApprover'
         ],
@@ -763,8 +767,9 @@ let operationPartnerPages = {
       meta: {
         requiresAuth: true,
         roles: [
-          'publisher',
+          'master',
           'administrator',
+          'administratorRebens',
           'partnerAdministrator',
           'partnerApprover'
         ],
@@ -778,7 +783,13 @@ let operationPartnerPages = {
       component: OperationPartnerCustomers,
       meta: {
         requiresAuth: true,
-        roles: ['publisher', 'administrator', 'partnerAdministrator'],
+        roles: [
+          'master',
+          'administrator',
+          'administratorRebens',
+          'partnerAdministrator',
+          'partnerApprover'
+        ],
         title: 'Clientes'
       }
     }

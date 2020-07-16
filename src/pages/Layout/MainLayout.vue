@@ -24,14 +24,10 @@
         <div class="user-menu">
           <ul>
             <li>
-              <router-link :to="`/users/${userId}/edit/`"
-                >Editar Meu perfil</router-link
-              >
+              <router-link :to="`/users/${userId}/edit/`">Editar Meu perfil</router-link>
             </li>
             <li>
-              <router-link to="/account/changePassword"
-                >Alterar Senha</router-link
-              >
+              <router-link to="/account/changePassword">Alterar Senha</router-link>
             </li>
             <li>
               <a href="javascript:void(0)" @click="signout">Sair</a>
@@ -43,23 +39,16 @@
     <div class="main-content">
       <div class="side-menu">
         <ul>
-          <li
-            v-for="(item, idx) in filteredMenu"
-            :key="idx"
-            :class="{ active: item.active }"
-          >
+          <li v-for="(item, idx) in filteredMenu" :key="idx" :class="{ active: item.active }">
             <template v-if="item.subitens.length > 0">
               <a
                 href="javascript:void(0)"
                 @click.prevent="item.active = !item.active"
                 class="parent"
-                >{{ item.name }}</a
-              >
+              >{{ item.name }}</a>
               <ul class="sub-item">
                 <li v-for="(subitem, idx2) in item.subitens" :key="idx2">
-                  <router-link :to="subitem.path">
-                    {{ subitem.name }}
-                  </router-link>
+                  <router-link :to="subitem.path">{{ subitem.name }}</router-link>
                 </li>
               </ul>
             </template>
@@ -186,6 +175,13 @@ export default {
               path: '/pages',
               active: false,
               roles: 'master,administratorRebens,publisherRebens'
+            },
+            {
+              name: 'Parceiros',
+              path: '/operationPartner',
+              active: false,
+              roles:
+                'master,administrator,administratorRebens,partnerAdministrator,partnerApprover'
             }
           ]
         },
@@ -207,113 +203,6 @@ export default {
           needModule: '',
           subitens: []
         },
-        // {
-        //   name: 'Cursos',
-        //   path: '#',
-        //   active: false,
-        //   roles: 'master,administratorRebens,publisherRebens,publisher',
-        //   needModule: 'course',
-        //   subitens: [
-        //     { name: 'Cursos', path: '/course', active: false, roles: '' },
-        //     {
-        //       name: 'Faculdades',
-        //       path: '/courseCollege',
-        //       active: false,
-        //       roles: ''
-        //     },
-        //     {
-        //       name: 'Modalidade',
-        //       path: '/courseModality',
-        //       active: false,
-        //       roles: ''
-        //     },
-        //     {
-        //       name: 'Períodos',
-        //       path: '/coursePeriod',
-        //       active: false,
-        //       roles: ''
-        //     },
-        //     {
-        //       name: 'Tipo de graduação',
-        //       path: '/courseGraduationType',
-        //       active: false,
-        //       roles: ''
-        //     },
-        //     {
-        //       name: 'Perguntas frequentes',
-        //       path: '/courseFaq',
-        //       active: false,
-        //       roles: ''
-        //     },
-        //     {
-        //       name: 'Regulamento',
-        //       path: '/courseRegulation',
-        //       active: false,
-        //       roles: ''
-        //     }
-        //   ]
-        // },
-        // {
-        //   name: 'Cursos Livres',
-        //   path: '#',
-        //   active: false,
-        //   roles: 'master,administratorRebens,publisherRebens,publisher',
-        //   needModule: 'freeCourse',
-        //   subitens: [
-        //     {
-        //       name: 'Cursos Livres',
-        //       path: '/freeCourse',
-        //       active: false,
-        //       roles: ''
-        //     },
-        //     {
-        //       name: 'Parceiros',
-        //       path: '/freeCourse/partner',
-        //       active: false,
-        //       roles: ''
-        //     }
-        //   ]
-        // },
-        // {
-        //   name: 'Perguntas frequentes',
-        //   path: '/faqs',
-        //   active: false,
-        //   roles: 'publisher',
-        //   needModule: '',
-        //   subitens: []
-        // },
-        // {
-        //   name: 'Páginas',
-        //   path: '/pages',
-        //   active: false,
-        //   roles: 'publisher',
-        //   needModule: '',
-        //   subitens: []
-        // },
-        // {
-        //   name: 'Parceiros',
-        //   path: '/operationPartner',
-        //   active: false,
-        //   roles: 'partnerAdministrator',
-        //   needModule: '',
-        //   subitens: []
-        // },
-        // {
-        //   name: 'Aprovação de clientes',
-        //   path: '/operationPartner/approve',
-        //   active: false,
-        //   roles: 'partnerAdministrator',
-        //   needModule: '',
-        //   subitens: []
-        // },
-        // {
-        //   name: 'Raspadinhas',
-        //   path: '/scratchcard',
-        //   active: false,
-        //   roles: 'master,administratorRebens,publisherRebens',
-        //   needModule: '',
-        //   subitens: []
-        // },
         {
           name: 'Promotores',
           path: '/promoter/report',
@@ -346,34 +235,23 @@ export default {
     },
     filteredMenu() {
       return this.menuItens.filter(item => {
-        if (item.subitens) {
-          item.subitens.filter(sub => {
-            if (sub.roles === '') {
-              return true;
-            } else if (
-              sub.roles
-                .split(',')
-                .includes(this.$store.getters.currentUser.role)
-            ) {
-              return true;
-            } else {
-              return false;
-            }
-          });
-        }
-
         if (item.roles === '') {
           return true;
         } else if (
           item.roles.split(',').includes(this.$store.getters.currentUser.role)
         ) {
-          if (item.needModule === '') {
-            return true;
-          } else if (this.$store.getters.currentUser.role === 'publisher') {
-            return this.$store.getters.currentUser.modules.includes('course');
-          } else {
-            return true;
+          if (item.subitens) {
+            item.subitens = item.subitens.filter(sub => {
+              if (sub.roles === '') {
+                return true;
+              } else {
+                return sub.roles
+                  .split(',')
+                  .includes(this.$store.getters.currentUser.role);
+              }
+            });
           }
+          return true;
         }
         return false;
       });

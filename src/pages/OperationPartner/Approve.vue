@@ -1,127 +1,103 @@
 <template>
-  <div class="row">
-    <div class="col-12">
-      <card card-body-classes="table-full-width">
-        <div>
-          <el-table
-            ref="table"
-            :data="tableData"
-            v-loading="loading"
-            :empty-text="$t('pages.operationPartners.emptytext')"
-            @sort-change="onSortChanged"
-            :default-sort="{ prop: sortField, order: sortOrder }"
-          >
-            <el-table-column
-              v-for="column in tableColumns"
-              :key="column.label"
-              :min-width="column.minWidth"
-              :prop="column.prop"
-              :label="column.label"
-              sortable="custom"
-            >
-            </el-table-column>
-            <el-table-column
-              :min-width="135"
-              align="right"
-              :label="$t('pages.operationPartners.grid.actions')"
-            >
-              <div slot-scope="props">
-                <base-button
-                  v-show="props.row.status == 1"
-                  @click.native="approve(props.$index, props.row)"
-                  title="Aprovar"
-                  class="edit btn-link"
-                  type="success"
-                  size="sm"
-                  icon
-                >
-                  <i class="tim-icons icon-check-2"></i>
-                </base-button>
-                <base-button
-                  v-show="props.row.status == 1"
-                  @click.native="disapprove(props.$index, props.row)"
-                  title="Reprovar"
-                  class="remove btn-link"
-                  type="danger"
-                  size="sm"
-                  icon
-                >
-                  <i class="fas fa-times"></i>
-                </base-button>
-              </div>
-            </el-table-column>
-          </el-table>
-        </div>
-      </card>
+  <div class="list-box">
+    <div class="page-header">
+      <h2>Clientes</h2>
     </div>
-    <!-- Classic Modal -->
+    <div class="list-table">
+      <table v-loading="loading">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>E-mail / CPF</th>
+            <th>Parceiro / Status</th>
+            <th style="width:144px;">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in tableData" :key="item.id">
+            <td>{{ item.name }}</td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.email }}</span>
+                <span class="blue">{{ item.cpf }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.operationPartnerName }}</span>
+                <span class="blue">{{ item.statusName }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="actions">
+                <button
+                  type="button"
+                  :title="item.active ? 'Inativar' : 'Ativar'"
+                  class="bt c-green"
+                  v-show="item.status == 1 || item.status == 3"
+                  @click.native="approve(item)"
+                >
+                  <i class="icon-icon-check"></i>
+                </button>
+                <button
+                  v-show="item.status == 1"
+                  @click.native="disapprove(item)"
+                  type="button"
+                  title="Editar"
+                  class="bt c-red"
+                >
+                  <i class="icon-icon-times"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <pagination
+        class="box-pagination"
+        v-model="pagination.currentPage"
+        :per-page="pagination.perPage"
+        :total-items="pagination.totalItems"
+        :total-pages="pagination.totalPages"
+        :current-page="pagination.currentPage"
+        v-on:input="onPageChanged"
+        @update-per-page="changePerPage"
+      ></pagination>
+    </div>
   </div>
 </template>
 <script>
-import { Table, TableColumn, Select, Option } from 'element-ui';
-import { BasePagination } from 'src/components';
+import { Select, Option } from 'element-ui';
+import { Pagination } from 'src/components';
 import operationPartnerService from '../../services/OperationPartner/operationPartnerService';
-import listPage from '../../mixins/listPage';
+import paging from '../../mixins/paging';
 export default {
-  mixins: [listPage],
+  mixins: [paging],
   components: {
-    BasePagination,
+    Pagination,
     [Select.name]: Select,
-    [Option.name]: Option,
-    [Table.name]: Table,
-    [TableColumn.name]: TableColumn
+    [Option.name]: Option
   },
   data() {
     return {
       internalName: 'Parceiros',
       sortField: 'name',
-      formLoading: false,
-      tableColumns: [
-        {
-          prop: 'id',
-          label: 'Id',
-          minWidth: 0
-        },
-        {
-          prop: 'name',
-          label: 'Nome',
-          minWidth: 150
-        },
-        {
-          prop: 'email',
-          label: 'Email',
-          minWidth: 200
-        },
-        {
-          prop: 'cpf',
-          label: 'CPF',
-          minWidth: 100
-        },
-        {
-          prop: 'operationPartnerName',
-          label: 'Parceiro',
-          minWidth: 150
-        },
-        {
-          prop: 'statusName',
-          label: 'Status'
-        }
-      ]
+      formLoading: false
     };
   },
   methods: {
     fetchData() {
       const self = this;
       const request = {
-        page: this.$data.pagination.currentPage - 1,
-        pageItems: this.$data.pagination.perPage,
-        searchWord: this.searchQuery,
-        sort: this.formatSortFieldParam,
-        idOperation: this.$store.getters.currentUser.idOperation,
+        page: self.$data.pagination.currentPage - 1,
+        pageItems: self.$data.pagination.perPage,
+        searchWord: self.searchQuery,
+        sort: self.formatSortFieldParam,
+        idOperation: self.$store.getters.currentUser.idOperation,
         status: 1,
-        idOperationPartner: this.$store.getters.currentUser.idOperationPartner
+        idOperationPartner: self.$store.getters.currentUser.idOperationPartner
       };
-      this.$data.loading = true;
+      self.$data.loading = true;
       operationPartnerService.findAllCustomers(request).then(
         response => {
           self.$data.tableData = response.data;
@@ -134,48 +110,44 @@ export default {
         }
       );
     },
-    approve(index, row) {
+    approve(row) {
       const self = this;
       operationPartnerService
         .changeCustomerStatus({ id: row.id, status: 2 })
         .then(
           () => {
             self.$notify({
-              type: 'primary',
-              message: 'Cliente aprovado com sucesso!',
-              icon: 'tim-icons icon-bell-55'
+              type: 'success',
+              message: 'Cliente aprovado com sucesso!'
             });
             row.status = 2;
             row.statusName = 'aprovado';
           },
           err => {
             self.$notify({
-              type: 'primary',
-              message: err.message,
-              icon: 'tim-icons icon-bell-55'
+              type: 'danger',
+              message: err.message
             });
           }
         );
     },
-    disapprove(index, row) {
+    disapprove(row) {
       const self = this;
       operationPartnerService
         .changeCustomerStatus({ id: row.id, status: 3 })
         .then(
           () => {
             self.$notify({
-              type: 'primary',
-              message: 'Cliente reprovado com sucesso!',
-              icon: 'tim-icons icon-bell-55'
+              type: 'success',
+              message: 'Cliente reprovado com sucesso!'
             });
             row.status = 3;
             row.statusName = 'reprovado';
           },
           err => {
             self.$notify({
-              type: 'primary',
-              message: err.message,
-              icon: 'tim-icons icon-bell-55'
+              type: 'danger',
+              message: err.message
             });
           }
         );
