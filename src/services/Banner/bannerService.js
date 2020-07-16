@@ -15,10 +15,13 @@ export default {
             idOperation: '',
             where: ''
           };
-      if (request.active === null) request.active = '';
-      if (request.type === null) request.type = '';
-      if (request.idOperation === null) request.idOperation = '';
-      if (request.where === null) request.where = '';
+      if (request.active == null || request.active == undefined)
+        request.active = '';
+      if (request.type == null || request.type == undefined) request.type = '';
+      if (request.idOperation == null || request.idOperation == undefined)
+        request.idOperation = '';
+      if (request.where == null || request.where == undefined)
+        request.where = '';
       HTTP.get(
         config.apiEndpoints.bannerUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}&active=${request.active}&type=${request.type}&idOperation=${request.idOperation}&where=${request.where}`

@@ -21,7 +21,11 @@ export default {
               request.active == null || request.active == undefined
                 ? ''
                 : request.active
-            }&type=${request.type === null ? '' : request.type}`
+            }&type=${
+              request.type == null || request.type == undefined
+                ? ''
+                : request.type
+            }`
         )
       ).then(
         response => {

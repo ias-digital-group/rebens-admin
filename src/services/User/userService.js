@@ -18,7 +18,21 @@ export default {
           };
       HTTP.get(
         config.apiEndpoints.userUri.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}&active=${request.active}&role=${request.role}&idOperation=${request.idOperation}`
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
+            request.searchWord
+          }&sort=${request.sort}&active=${
+            request.active != null && request.active != undefined
+              ? request.active
+              : ''
+          }&role=${
+            request.role != null && request.role != undefined
+              ? request.role
+              : ''
+          }&idOperation=${
+            request.idOperation != null && request.idOperation != undefined
+              ? request.idOperation
+              : ''
+          }`
         )
       ).then(
         response => {

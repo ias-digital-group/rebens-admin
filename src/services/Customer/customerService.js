@@ -20,14 +20,19 @@ export default {
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
             request.searchWord
           }&sort=${request.sort}${
-            request.idOperation ? '&idOperation=' + request.idOperation : ''
+            request.idOperation != null && request.idOperation != undefined
+              ? '&idOperation=' + request.idOperation
+              : ''
           }${
-            request.idOperationPartner
+            request.idOperationPartner != null &&
+            request.idOperationPartner != undefined
               ? '&idOperationPartner=' + request.idOperationPartner
               : ''
-          }${request.status ? '&status=' + request.status : ''}&active=${
-            request.active
-          }`
+          }${
+            request.status != null && request.status != undefined
+              ? '&status=' + request.status
+              : ''
+          }&active=${request.active}`
         )
       ).then(
         response => {

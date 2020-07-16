@@ -4,30 +4,16 @@
       <h2>Clientes</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Digite aqui o que deseja encontrar"
-          />
+          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i
-            v-else
-            class="bt-clear-search icon-icon-times c-red"
-            @click="searchQuery = ''"
-          ></i>
+          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
         </div>
         <div class="filter" :class="{ active: showFilters }">
-          <a
-            class="bt bt-square bg-white-2 c-light-blue"
-            @click="showFilters = !showFilters"
-          >
+          <a class="bt bt-square bg-white-2 c-light-blue" @click="showFilters = !showFilters">
             <i class="icon-icon-filter"></i>
           </a>
         </div>
-        <base-link
-          to="/customers/new"
-          class="bt bt-square bg-white-2 c-light-blue"
-        >
+        <base-link to="/customers/new" class="bt bt-square bg-white-2 c-light-blue">
           <i class="icon-icon-plus"></i>
         </base-link>
       </div>
@@ -36,7 +22,7 @@
           v-show="isRebens"
           :options="operations"
           :reduce="op => op.code"
-          v-model="operationFilter"
+          v-model="filters.operation"
           class="no-margin"
           placeholder="Filtre pelo Clube"
         >
@@ -46,7 +32,7 @@
           v-show="isRebens"
           :options="operationPartners"
           :reduce="op => op.code"
-          v-model="operationPartnerFilter"
+          v-model="filters.company"
           placeholder="Filtre por empresa"
         >
           <span slot="no-options">Nenhuma empresa encontrada</span>
@@ -54,7 +40,7 @@
         <v-select
           :options="statuses"
           :reduce="op => op.code"
-          v-model="statusFilter"
+          v-model="filters.status"
           :class="{ 'no-margin': !isRebens }"
           placeholder="Filtre pelo Status de cadastro"
         >
@@ -63,7 +49,7 @@
         <v-select
           :options="activeOpts"
           :reduce="op => op.code"
-          v-model="activeFilter"
+          v-model="filters.active"
           placeholder="Filtre pelo Status"
         >
           <span slot="no-options">Nenhum status encontrado</span>
@@ -138,12 +124,7 @@
                 >
                   <i class="icon-icon-edit"></i>
                 </button>
-                <button
-                  @click="handleDelete(item)"
-                  type="button"
-                  title="apagar"
-                  class="bt c-red"
-                >
+                <button @click="handleDelete(item)" type="button" title="apagar" class="bt c-red">
                   <i class="icon-icon-delete"></i>
                 </button>
               </div>
@@ -272,12 +253,10 @@ export default {
         pageItems: self.$data.pagination.perPage,
         searchWord: self.searchQuery,
         sort: self.formatSortFieldParam,
-        status: self.statusFilter !== null ? self.statusFilter : '',
-        active: self.activeFilter !== null ? self.activeFilter : '',
-        idOperation: self.operationFilter ? self.operationFilter : '',
-        idOperationPartner: self.operationPartnerFilter
-          ? self.operationPartnerFilter
-          : ''
+        status: self.filters.status,
+        active: self.filters.active,
+        idOperation: self.filters.operation,
+        idOperationPartner: self.filters.company
       };
       this.$data.loading = true;
       customerService.findAll(request).then(
@@ -366,19 +345,19 @@ export default {
     }
   },
   watch: {
-    activeFilter() {
+    'filters.active'() {
       this.pagination.currentPage = 1;
       this.fetchData();
     },
-    statusFilter() {
+    'filters.status'() {
       this.pagination.currentPage = 1;
       this.fetchData();
     },
-    operationFilter() {
+    'filters.operation'() {
       this.pagination.currentPage = 1;
       this.fetchData();
     },
-    operationPartnerFilter() {
+    'filters.company'() {
       this.pagination.currentPage = 1;
       this.fetchData();
     }

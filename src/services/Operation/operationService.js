@@ -17,7 +17,13 @@ export default {
       if (request.active == null) request.active = '';
       HTTP.get(
         config.apiEndpoints.operationUri.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}&active=${request.active}`
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
+            request.searchWord
+          }&sort=${request.sort}&active=${
+            request.active != null && request.active != undefined
+              ? request.active
+              : ''
+          }`
         )
       ).then(
         response => {

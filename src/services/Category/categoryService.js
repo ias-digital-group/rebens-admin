@@ -22,7 +22,11 @@ export default {
               request.active == null || request.active == undefined
                 ? ''
                 : request.active
-            }&idParent=${request.idParent}&type=${request.type}` +
+            }&idParent=${request.idParent}&type=${
+              request.type == null || request.type == undefined
+                ? ''
+                : request.type
+            }` +
             `&level=${
               request.level == null || request.level == undefined
                 ? ''

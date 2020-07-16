@@ -6,7 +6,16 @@ export default {
       searchQuery: '',
       sortField: '',
       sortOrder: 'ascending',
-      filters: {},
+      filters: {
+        type: '',
+        active: '',
+        operation: '',
+        place: '',
+        level: '',
+        company: '',
+        status: '',
+        role: ''
+      },
       showFilters: false,
       pagination: {
         perPage: 10,

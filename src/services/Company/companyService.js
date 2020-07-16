@@ -24,7 +24,9 @@ export default {
                 ? ''
                 : request.active
             }&idOperation=${
-              request.idOperation === null ? '' : request.idOperation
+              request.idOperation === null || request.idOperation == undefined
+                ? ''
+                : request.idOperation
             }&type=${
               request.type === undefined || request.type === null
                 ? ''

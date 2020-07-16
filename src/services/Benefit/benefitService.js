@@ -29,7 +29,9 @@ export default {
               ? request.type
               : ''
           }&idOperation=${
-            request.idOperation != null ? request.idOperation : ''
+            request.idOperation != null && request != undefined
+              ? request.idOperation
+              : ''
           }`
         )
       ).then(
