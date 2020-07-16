@@ -111,13 +111,15 @@
           data-toggle="dropdown"
           aria-expanded="true"
         >
-          <div class="photo"><img src="img/default-avatar.png" /></div>
+          <div class="photo">
+            <img src="img/default-avatar.png" />
+          </div>
           <b class="caret d-none d-lg-block d-xl-block"></b>
           <p class="d-lg-none">{{ $t('navbar.user.logout') }}</p>
         </a>
         <!-- <li class="nav-link">
           <a href="#" class="nav-item dropdown-item">{{$t('navbar.user.profile')}}</a>
-        </li> -->
+        </li>-->
         <li class="nav-link">
           <router-link
             class="nav-item dropdown-item"
@@ -192,6 +194,8 @@ export default {
   created() {
     this.showNavbar =
       this.$store.getters.currentUser.role !== 'promoter' &&
+      this.$store.getters.currentUser.role !== 'ticketChecker' &&
+      this.$store.getters.currentUser.role !== 'couponChecker' &&
       this.$store.getters.currentUser.role !== 'partnerApprover';
   }
 };

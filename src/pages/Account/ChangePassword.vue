@@ -46,13 +46,7 @@
           </div>
           <div class="ias-row">
             <div class="form-actions">
-              <button
-                class="bt bg-green c-white"
-                type="button"
-                @click.prevent="validate"
-              >
-                Salvar
-              </button>
+              <button class="bt bg-green c-white" type="button" @click.prevent="validate">Salvar</button>
             </div>
             <div class="div-spacer"></div>
           </div>
@@ -76,6 +70,21 @@ export default {
         newPasswordConfirm: ''
       }
     };
+  },
+  computed: {
+    backUrl() {
+      let ret = '/';
+      if (this.$store.getters.currentUser.role === 'ticketChecker') {
+        ret += 'orders';
+      } else if (this.$store.getters.currentUser.role === 'promoter') {
+        ret += 'promoter';
+      } else if (this.$store.getters.currentUser.role === 'partnerApprover') {
+        ret += 'operationPartner/approve';
+      } else if (this.$store.getters.currentUser.role === 'couponChecker') {
+        ret += 'benefits/validation';
+      }
+      return ret;
+    }
   },
   methods: {
     validate() {

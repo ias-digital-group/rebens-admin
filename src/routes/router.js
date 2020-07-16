@@ -21,8 +21,21 @@ router.beforeEach((to, from, next) => {
       if (matchedRole) {
         next();
       } else {
+        let url = '';
+        if (store.getters.currentUser.role === 'promoter') {
+          url = '/promoter';
+        } else if (store.getters.currentUser.role == 'partnerApprover') {
+          url = '/operationPartner/approve';
+        } else if (store.getters.currentUser.role == 'ticketChecker') {
+          url = '/orders';
+        } else if (store.getters.currentUser.role == 'couponChecker') {
+          url = '/benefits/validation';
+        } else {
+          url = '/access-denied';
+        }
+
         next({
-          path: '/access-denied'
+          path: url
         });
       }
 

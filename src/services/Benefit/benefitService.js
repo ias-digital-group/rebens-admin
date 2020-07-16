@@ -190,5 +190,41 @@ export default {
         }
       );
     });
+  },
+  findAllToValidate: request => {
+    return new Promise((resolve, reject) => {
+      request = request
+        ? request
+        : {
+            page: 0,
+            pageItems: 30,
+            searchWord: '',
+            idPartner: ''
+          };
+      HTTP.get(
+        config.apiEndpoints.benefitUri.concat(
+          `UseValidation?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&idPartner=${request.idPartner}`
+        )
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  validate: id => {
+    return new Promise((resolve, reject) => {
+      HTTP.post(config.apiEndpoints.benefitUri.concat(`Validate/${id}`)).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
   }
 };

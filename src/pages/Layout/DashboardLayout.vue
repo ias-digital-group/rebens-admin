@@ -3,13 +3,26 @@
     class="wrapper"
     :class="{
       'nav-open': $sidebar.showSidebar,
-      'no-sidebar': isPromoter || isPartnerApprover
+      'no-sidebar':
+        isPromoter || isPartnerApprover || isTicketChecker || isCouponChecker
     }"
   >
     <notifications></notifications>
-    <sidebar-fixed-toggle-button v-if="!isPromoter && !isPartnerApprover" />
+    <sidebar-fixed-toggle-button
+      v-if="
+        !isPromoter &&
+          !isPartnerApprover &&
+          !isTicketChecker &&
+          !isCouponChecker
+      "
+    />
     <side-bar
-      v-if="!isPromoter && !isPartnerApprover"
+      v-if="
+        !isPromoter &&
+          !isPartnerApprover &&
+          !isTicketChecker &&
+          !isCouponChecker
+      "
       :background-color="sidebarBackground"
       :short-title="$t('sidebar.shortTitle')"
       :title="$t('sidebar.title')"
@@ -86,9 +99,7 @@
           v-show="showCourses"
           :link="{ name: $t('sidebar.courses'), icon: 'fas fa-graduation-cap' }"
         >
-          <sidebar-item
-            :link="{ name: $t('sidebar.courses'), path: '/course' }"
-          ></sidebar-item>
+          <sidebar-item :link="{ name: $t('sidebar.courses'), path: '/course' }"></sidebar-item>
           <sidebar-item
             :link="{
               name: $t('sidebar.courseColleges'),
@@ -101,18 +112,14 @@
               path: '/courseModality'
             }"
           ></sidebar-item>
-          <sidebar-item
-            :link="{ name: $t('sidebar.coursePeriods'), path: '/coursePeriod' }"
-          ></sidebar-item>
+          <sidebar-item :link="{ name: $t('sidebar.coursePeriods'), path: '/coursePeriod' }"></sidebar-item>
           <sidebar-item
             :link="{
               name: $t('sidebar.courseGraduationTypes'),
               path: '/courseGraduationType'
             }"
           ></sidebar-item>
-          <sidebar-item
-            :link="{ name: $t('sidebar.courseFaq'), path: '/courseFaq' }"
-          ></sidebar-item>
+          <sidebar-item :link="{ name: $t('sidebar.courseFaq'), path: '/courseFaq' }"></sidebar-item>
           <sidebar-item
             :link="{
               name: $t('sidebar.courseRegulation'),
@@ -127,9 +134,7 @@
             icon: 'fas fa-graduation-cap'
           }"
         >
-          <sidebar-item
-            :link="{ name: $t('sidebar.freeCourse'), path: '/freeCourse' }"
-          ></sidebar-item>
+          <sidebar-item :link="{ name: $t('sidebar.freeCourse'), path: '/freeCourse' }"></sidebar-item>
           <sidebar-item
             :link="{
               name: $t('sidebar.categories'),
@@ -192,15 +197,33 @@
           }"
         ></sidebar-item>
         <sidebar-item
+          v-show="showSubscriptions"
+          :link="{
+            name: 'Assinaturas',
+            icon: 'tim-icons icon-paper',
+            path: '/subscriptions'
+          }"
+        ></sidebar-item>
+        <sidebar-item
+          v-show="showTickets"
+          :link="{
+            name: 'Validação de Ingresso',
+            icon: 'tim-icons icon-paper',
+            path: '/orders'
+          }"
+        ></sidebar-item>
+        <sidebar-item
+          v-show="showCoupons"
+          :link="{
+            name: 'Validação de Cupom',
+            icon: 'tim-icons icon-paper',
+            path: '/benefits/validation'
+          }"
+        ></sidebar-item>
+        <sidebar-item
           v-show="!isPublisher && !isPartnerAdmin"
           :link="{ name: $t('sidebar.report'), icon: 'fas fa-chart-bar' }"
         >
-          <!-- <sidebar-item
-            :link="{
-              name: $t('sidebar.benefitUse'),
-              path: '/report/benefit-use'
-            }"
-          ></sidebar-item>-->
           <sidebar-item
             :link="{
               name: $t('sidebar.promoterReport'),
@@ -214,10 +237,7 @@
       <dashboard-navbar></dashboard-navbar>
       <router-view name="header"></router-view>
 
-      <div
-        :class="{ content: !$route.meta.hideContent }"
-        @click="toggleSidebar"
-      >
+      <div :class="{ content: !$route.meta.hideContent }" @click="toggleSidebar">
         <zoom-center-transition :duration="200" mode="out-in">
           <!-- your content here -->
           <router-view></router-view>
@@ -267,9 +287,14 @@ export default {
       isPublisher: false,
       isPartnerApprover: false,
       isPartnerAdmin: false,
+      isTicketChecker: false,
+      isCouponChecker: false,
       showCourses: true,
       showFreeCourses: true,
-      sidebarBackground: 'blue' //vue|blue|orange|green|red|primary
+      sidebarBackground: 'blue',
+      showTickets: false,
+      showCoupons: false,
+      showSubscriptions: false //vue|blue|orange|green|red|primary
     };
   },
   methods: {
@@ -317,6 +342,24 @@ export default {
     this.showOperationPartner = this.$store.getters.currentUser.modules.includes(
       'closed-partner'
     );
+    this.isTicketChecker =
+      this.$store.getters.currentUser.role == 'ticketChecker';
+    this.showTickets =
+      this.$store.getters.currentUser.role == 'ticketChecker' ||
+      this.$store.getters.currentUser.role == 'master' ||
+      this.$store.getters.currentUser.role == 'administratorRebens' ||
+      this.$store.getters.currentUser.role == 'administrator';
+    this.isCouponChecker =
+      this.$store.getters.currentUser.role == 'couponChecker';
+    this.showCoupons =
+      this.$store.getters.currentUser.role == 'couponChecker' ||
+      this.$store.getters.currentUser.role == 'master' ||
+      this.$store.getters.currentUser.role == 'administratorRebens' ||
+      this.$store.getters.currentUser.role == 'administrator';
+    this.showSubscriptions =
+      this.$store.getters.currentUser.role == 'master' ||
+      this.$store.getters.currentUser.role == 'administratorRebens' ||
+      this.$store.getters.currentUser.role == 'administrator';
   }
 };
 </script>

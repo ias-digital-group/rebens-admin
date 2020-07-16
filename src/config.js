@@ -24,12 +24,14 @@ export default {
     operationUri: process.env.VUE_APP_API_URI.concat('operation/'),
     partnerUri: process.env.VUE_APP_API_URI.concat('partner/'),
     fileUri: process.env.VUE_APP_API_URI.concat('file/'),
+    orderUri: process.env.VUE_APP_API_URI.concat('order/'),
     benefitUri: process.env.VUE_APP_API_URI.concat('benefit/'),
     bannerUri: process.env.VUE_APP_API_URI.concat('banner/'),
     staticTextUri: process.env.VUE_APP_API_URI.concat('statictext/'),
     faqUri: process.env.VUE_APP_API_URI.concat('faq/'),
     customerUri: process.env.VUE_APP_API_URI.concat('customer/'),
     userUri: process.env.VUE_APP_API_URI.concat('adminuser/'),
+    wirecardUri: process.env.VUE_APP_API_URI.concat('wirecard/'),
     reportUri: process.env.VUE_APP_API_URI.concat('report/'),
     operationPartnerUri: process.env.VUE_APP_API_URI.concat(
       'operationPartner/'

@@ -26,9 +26,11 @@
               >
                 <span slot="no-options">Nenhum parceiro encontrado</span>
               </v-select>
-              <label v-show="customErrors.get('idPartner')" class="ias-error">{{
+              <label v-show="customErrors.get('idPartner')" class="ias-error">
+                {{
                 customErrors.get('idPartner')
-              }}</label>
+                }}
+              </label>
             </div>
           </div>
           <div class="ias-row">
@@ -64,86 +66,42 @@
               maxlength="200"
             ></custom-input>
           </div>
-          <div
-            class="ias-row-editor"
-            :class="{ 'has-error': customErrors.get('detail') }"
-          >
+          <div class="ias-row-editor" :class="{ 'has-error': customErrors.get('detail') }">
             <vue-editor
               :editorToolbar="customToolbar"
               v-model="model.detail"
               placeholder="Detalhes"
             />
-            <label v-show="customErrors.get('detail')" class="ias-error">{{
+            <label v-show="customErrors.get('detail')" class="ias-error">
+              {{
               customErrors.get('detail')
-            }}</label>
+              }}
+            </label>
           </div>
-          <div
-            class="ias-row-editor"
-            :class="{ 'has-error': customErrors.get('howToUse') }"
-          >
+          <div class="ias-row-editor" :class="{ 'has-error': customErrors.get('howToUse') }">
             <vue-editor
               :editorToolbar="customToolbar"
               v-model="model.howToUse"
               placeholder="Como usar"
             />
-            <label v-show="customErrors.get('howToUse')" class="ias-error"
-              >Campo obrigatório</label
-            >
+            <label v-show="customErrors.get('howToUse')" class="ias-error">Campo obrigatório</label>
           </div>
-          <div
-            class="ias-row"
-            :class="{ 'ias-has-error': customErrors.get('benefitType') }"
-          >
-            <ias-radio
-              v-model="model.idBenefitType"
-              name="1"
-              :key="1"
-              :value="1"
-              >E-commerce</ias-radio
-            >
-            <ias-radio
-              v-model="model.idBenefitType"
-              name="2"
-              :key="2"
-              :value="2"
-              >Varejo Local</ias-radio
-            >
-            <ias-radio
-              v-model="model.idBenefitType"
-              name="3"
-              :key="3"
-              :value="3"
-              >Cashback</ias-radio
-            >
+          <div class="ias-row" :class="{ 'ias-has-error': customErrors.get('benefitType') }">
+            <ias-radio v-model="model.idBenefitType" name="1" :key="1" :value="1">E-commerce</ias-radio>
+            <ias-radio v-model="model.idBenefitType" name="2" :key="2" :value="2">Varejo Local</ias-radio>
+            <ias-radio v-model="model.idBenefitType" name="3" :key="3" :value="3">Cashback</ias-radio>
             <label
               v-show="customErrors.get('benefitType')"
               class="ias-error ias-error-label"
-              >Campo obrigatório</label
-            >
+            >Campo obrigatório</label>
           </div>
-          <div
-            class="ias-row"
-            :class="{ 'ias-has-error': customErrors.get('integrationType') }"
-          >
-            <ias-radio
-              v-model="model.idIntegrationType"
-              name="1"
-              :key="1"
-              :value="1"
-              >Rebens</ias-radio
-            >
-            <ias-radio
-              v-model="model.idIntegrationType"
-              name="2"
-              :key="2"
-              :value="2"
-              >Zanox</ias-radio
-            >
+          <div class="ias-row" :class="{ 'ias-has-error': customErrors.get('integrationType') }">
+            <ias-radio v-model="model.idIntegrationType" name="1" :key="1" :value="1">Rebens</ias-radio>
+            <ias-radio v-model="model.idIntegrationType" name="2" :key="2" :value="2">Zanox</ias-radio>
             <label
               v-show="customErrors.get('integrationType')"
               class="ias-error ias-error-label"
-              >Campo obrigatório!</label
-            >
+            >Campo obrigatório!</label>
           </div>
           <div class="ias-row">
             <custom-input
@@ -266,9 +224,7 @@
               v-model="model.voucherText"
               placeholder="Texto do voucher"
             />
-            <label v-show="customErrors.get('voucherText')" class="ias-error"
-              >Campo obrigatório</label
-            >
+            <label v-show="customErrors.get('voucherText')" class="ias-error">Campo obrigatório</label>
           </div>
           <div class="ias-row" v-else>
             <custom-input
@@ -327,8 +283,7 @@
               <label
                 v-show="customErrors.get('homeHighlight')"
                 class="ias-error"
-                >{{ customErrors.get('homeHighlight') }}</label
-              >
+              >{{ customErrors.get('homeHighlight') }}</label>
             </div>
             <div class="select-holder">
               <v-select
@@ -346,8 +301,7 @@
               <label
                 v-show="customErrors.get('homeBenefitHighlight')"
                 class="ias-error"
-                >{{ customErrors.get('homeBenefitHighlight') }}</label
-              >
+              >{{ customErrors.get('homeBenefitHighlight') }}</label>
             </div>
           </div>
           <div class="ias-row" v-show="isRebens">
@@ -361,20 +315,17 @@
                 placeholder="Operação"
                 :disabled="!model.exclusive"
               ></v-select>
-              <label v-show="customErrors.get('operation')" class="ias-error"
-                >customErrors.get('operation')</label
-              >
+              <label
+                v-show="customErrors.get('operation')"
+                class="ias-error"
+              >customErrors.get('operation')</label>
             </div>
             <div class="div-spacer" v-show="!model.exclusive"></div>
           </div>
 
           <div class="ias-row">
             <div class="form-actions">
-              <button
-                class="bt bg-green c-white"
-                type="button"
-                @click.prevent="validate"
-              >
+              <button class="bt bg-green c-white" type="button" @click.prevent="validate">
                 <span v-if="viewAction === 'new'">Cadastrar</span>
                 <span v-else>Salvar</span>
               </button>
@@ -400,18 +351,16 @@
               multiple
               :class="{ 'has-error': customErrors.get('operations') }"
             ></v-select>
-            <label v-if="customErrors.get('operations')" class="ias-error">{{
+            <label v-if="customErrors.get('operations')" class="ias-error">
+              {{
               customErrors.get('operations')
-            }}</label>
+              }}
+            </label>
           </div>
         </div>
       </form>
     </div>
-    <success-modal
-      :isEdit="viewAction !== 'new'"
-      :show="showSuccessModal"
-      link="/benefits"
-    ></success-modal>
+    <success-modal :isEdit="viewAction !== 'new'" :show="showSuccessModal" link="/benefits"></success-modal>
   </div>
 </template>
 <script>

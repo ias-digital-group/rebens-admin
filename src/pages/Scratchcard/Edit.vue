@@ -601,12 +601,12 @@ export default {
           response => {
             self.model = response.data;
             for (const item of self.typeOptions) {
-              if (item.value == self.model.type) {
+              if (item.code == self.model.type) {
                 self.disabledType = item.label;
               }
             }
             for (const item of self.distributionTypeOptions) {
-              if (item.value == self.model.distributionType) {
+              if (item.code == self.model.distributionType) {
                 self.disabledDistributionType = item.label;
               }
             }

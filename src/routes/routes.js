@@ -1,16 +1,11 @@
 import MainLayout from 'src/pages/Layout/MainLayout.vue';
 import DashboardLayout from 'src/pages/Layout/DashboardLayout.vue';
 import AuthLayout from 'src/pages/Layout/AuthLayout.vue';
-// GeneralViews
 import NotFound from 'src/pages/GeneralViews/NotFoundPage.vue';
 import AccessDenied from 'src/pages/GeneralViews/AccessDenied.vue';
 import i18n from '../i18n';
 
-// Dashboard pages
 const Dashboard = () => import('src/pages/Dashboard/Dashboard.vue');
-
-// const Content = () =>
-//   import('src/pages/Layout/Content.vue');
 
 const CustomerList = () => import('src/pages/Customers/List.vue');
 const CustomerCreate = () => import('src/pages/Customers/Create.vue');
@@ -105,6 +100,10 @@ const PromoterReport = () => import('src/pages/Promoter/Report.vue');
 
 const ScratchcardList = () => import('src/pages/Scratchcard/List.vue');
 const ScratchcardEdit = () => import('src/pages/Scratchcard/Edit.vue');
+
+const BenefitValidation = () => import('src/pages/Benefits/Validation.vue');
+const OrderValidation = () => import('src/pages/Order/Validation.vue');
+const SubscriptionList = () => import('src/pages/Subscription/List.vue');
 
 let bannersPages = {
   path: '/banners',
@@ -591,6 +590,49 @@ let pagesPages = {
         ],
         title: i18n.t('pages.pages.title')
       }
+    },
+    {
+      path: 'validation',
+      name: 'validation',
+      props: true,
+      component: BenefitValidation,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'administratorRebens',
+          'administrator',
+          'couponChecker'
+        ],
+        title: 'Validação de Cupom'
+      }
+    }
+  ]
+};
+
+let orderPages = {
+  path: '/orders',
+  component: DashboardLayout,
+  meta: {
+    requiresAuth: true,
+    roles: ['master', 'administrator', 'administratorRebens', 'ticketChecker'],
+    title: 'Validação de Ingresso'
+  },
+  children: [
+    {
+      path: '',
+      name: 'orderValidation',
+      component: OrderValidation,
+      meta: {
+        requiresAuth: true,
+        roles: [
+          'master',
+          'administrator',
+          'administratorRebens',
+          'ticketChecker'
+        ],
+        title: 'Validação de Ingresso'
+      }
     }
   ]
 };
@@ -826,7 +868,9 @@ let accountPages = {
           'administratorRebens',
           'promoter',
           'partnerApprover',
-          'partnerAdministrator'
+          'partnerAdministrator',
+          'ticketChecker',
+          'couponChecker'
         ],
         title: i18n.t('pages.change-password.title')
       }
@@ -1551,6 +1595,28 @@ let scratchcardPages = {
   ]
 };
 
+let subscriptionPages = {
+  path: '/subscriptions',
+  component: DashboardLayout,
+  meta: {
+    requiresAuth: true,
+    roles: ['administrator', 'administratorRebens', 'master'],
+    title: 'Assinaturas'
+  },
+  children: [
+    {
+      path: '',
+      name: 'subscriptions',
+      component: SubscriptionList,
+      meta: {
+        requiresAuth: true,
+        roles: ['administrator', 'administratorRebens', 'master'],
+        title: 'Assinaturas'
+      }
+    }
+  ]
+};
+
 const routes = [
   {
     path: '/',
@@ -1668,7 +1734,9 @@ const routes = [
   courseRegulationPages,
   freeCoursePages,
   promoterPages,
-  scratchcardPages
+  scratchcardPages,
+  orderPages,
+  subscriptionPages
 ];
 
 export default routes;

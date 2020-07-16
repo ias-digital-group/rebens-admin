@@ -27,9 +27,7 @@
         </div>
         <button class="bg-green bt-modal" @click="validate">ENTRAR</button>
         <div class="text-center mt-8">
-          <base-link class="bt-link" to="/passwordRecovery"
-            >Esqueci minha senha</base-link
-          >
+          <base-link class="bt-link" to="/passwordRecovery">Esqueci minha senha</base-link>
         </div>
       </form>
     </div>
