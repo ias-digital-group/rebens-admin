@@ -18,8 +18,8 @@
         </base-link>
       </div>
     </div>
-    <div class="ias-card">
-      <form v-loading="formLoading" @submit.prevent>
+    <div class="ias-card" v-loading="formLoading">
+      <form @submit.prevent>
         <div class="form-left">
           <div class="ias-row">
             <custom-input
@@ -88,9 +88,9 @@
               >
                 <span slot="no-options">Nenhum papel encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('roles')" class="ias-error">
-                {{ customErrors.get('roles') }}
-              </label>
+              <label v-if="customErrors.get('roles')" class="ias-error">{{
+                customErrors.get('roles')
+              }}</label>
             </div>
           </div>
           <div class="ias-row">
@@ -106,9 +106,9 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">
-                {{ customErrors.get('operation') }}
-              </label>
+              <label v-if="customErrors.get('operation')" class="ias-error">{{
+                customErrors.get('operation')
+              }}</label>
             </div>
           </div>
           <div class="ias-row">
@@ -227,10 +227,7 @@ export default {
   },
   data() {
     return {
-      selectLoading: false,
       formLoading: false,
-      submitLoading: false,
-      sendingLoading: false,
       isMaster: false,
       isRebens: false,
       isPartnerUser: false,
@@ -329,11 +326,8 @@ export default {
                   self.operationPartners.push({ id: el.id, title: el.name });
                 }
               });
-              self.selectLoading = false;
             },
-            () => {
-              self.selectLoading = false;
-            }
+            () => {}
           );
       }
     },
@@ -385,7 +379,7 @@ export default {
         self.customErrors.set('operation', 'Campo obrigatório');
 
       if (self.customErrors.size === 0) {
-        self.submitLoading = true;
+        self.formLoading = true;
         if (self.image) {
           helperService.uploadImage(self.image).then(
             response => {
@@ -394,7 +388,7 @@ export default {
                   type: 'danger',
                   message: response.message
                 });
-                self.submitLoading = false;
+                self.formLoading = false;
                 return;
               }
               self.model.picture = response.data.url;
@@ -405,7 +399,7 @@ export default {
                 type: 'danger',
                 message: err.message
               });
-              self.submitLoading = false;
+              self.formLoading = false;
             }
           );
         } else {
@@ -415,17 +409,17 @@ export default {
     },
     resendValidation() {
       const self = this;
-      self.sendingLoading = true;
+      self.formLoading = true;
       userService.resendValidation(self.id).then(
         () => {
           self.$notify({
             type: 'success',
             message: 'E-mail reenviado com sucesso!'
           });
-          self.sendingLoading = false;
+          self.formLoading = false;
         },
         () => {
-          self.sendingLoading = false;
+          self.formLoading = false;
         }
       );
     },
@@ -441,7 +435,7 @@ export default {
       if (vm.viewAction == 'new') {
         userService.create(vm.model).then(
           () => {
-            vm.submitLoading = false;
+            vm.formLoading = false;
             vm.showSuccessModal = true;
           },
           err => {
@@ -456,13 +450,13 @@ export default {
                 message: err.message
               });
             }
-            vm.submitLoading = false;
+            vm.formLoading = false;
           }
         );
       } else {
         userService.update(vm.model).then(
           () => {
-            vm.submitLoading = false;
+            vm.formLoading = false;
             vm.showSuccessModal = true;
           },
           err => {
@@ -470,7 +464,7 @@ export default {
               type: 'danger',
               message: err.message
             });
-            vm.submitLoading = false;
+            vm.formLoading = false;
           }
         );
       }
@@ -520,7 +514,6 @@ export default {
         self.loadOperationPartner(self);
       }
 
-      this.selectLoading = true;
       operationService.findAll().then(
         response => {
           self.operations.push({ code: 0, label: 'selecione' });
@@ -529,11 +522,8 @@ export default {
               self.operations.push({ code: el.id, label: el.title });
             }
           });
-          self.selectLoading = false;
         },
-        () => {
-          self.selectLoading = false;
-        }
+        () => {}
       );
 
       this.loadPartners(self);

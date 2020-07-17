@@ -1,6 +1,6 @@
 <template>
   <div class="login-mask">
-    <div class="modal-login">
+    <div class="modal-login" v-loading="fullscreenLoading">
       <img src="img/logo-login.png" alt />
       <form @submit.prevent>
         <div class="mt-24">
@@ -65,7 +65,7 @@ export default {
         self.errorPassword = 'Campo obrigatório';
 
       if (self.errorEmail == '' && self.errorPassword == '') {
-        self.$data.fullscreenLoading = true;
+        self.fullscreenLoading = true;
         accountService
           .signin(self.$data.credentials.email, self.$data.credentials.password)
           .then(
@@ -86,7 +86,7 @@ export default {
                 }, 500);
                 return;
               } else {
-                self.$data.fullscreenLoading = false;
+                self.fullscreenLoading = false;
                 self.$notify({
                   type: 'warning',
                   message: response.message
@@ -108,7 +108,7 @@ export default {
                       : err.message
                 });
               }
-              self.$data.fullscreenLoading = false;
+              self.fullscreenLoading = false;
             }
           );
       }

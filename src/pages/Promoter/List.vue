@@ -43,8 +43,8 @@
         </v-select>
       </div>
     </div>
-    <div class="list-table">
-      <table v-loading="loading">
+    <div class="list-table" v-loading="loading">
+      <table>
         <thead>
           <tr>
             <th>Nome</th>
@@ -123,7 +123,6 @@ export default {
     return {
       internalName: 'Clientes',
       sortField: 'name',
-      formLoading: false,
       resendPassId: 0,
       showResendPassModal: false,
       statuses: [
@@ -137,21 +136,21 @@ export default {
     fetchData() {
       const self = this;
       const request = {
-        page: this.$data.pagination.currentPage - 1,
-        pageItems: this.$data.pagination.perPage,
-        searchWord: this.searchQuery,
-        sort: this.formatSortFieldParam,
-        status: this.filters.status
+        page: self.$data.pagination.currentPage - 1,
+        pageItems: self.$data.pagination.perPage,
+        searchWord: self.searchQuery,
+        sort: self.formatSortFieldParam,
+        status: self.filters.status
       };
-      this.$data.loading = true;
+      self.loading = true;
       promoterService.list(request).then(
         response => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
-          self.$data.loading = false;
+          self.loading = false;
         },
         () => {
-          self.$data.loading = false;
+          self.loading = false;
         }
       );
     },
@@ -161,7 +160,7 @@ export default {
     },
     confirmResendPassword() {
       const self = this;
-      self.$data.loading = true;
+      self.loading = true;
       self.showResendPassModal = false;
       promoterService.resendValidation(self.resendPassId).then(
         () => {
@@ -169,11 +168,11 @@ export default {
             type: 'success',
             message: 'E-mail reenviado com sucesso!'
           });
-          self.$data.loading = false;
+          self.loading = false;
           self.resendPassId = 0;
         },
         () => {
-          self.$data.loading = false;
+          self.loading = false;
         }
       );
     },

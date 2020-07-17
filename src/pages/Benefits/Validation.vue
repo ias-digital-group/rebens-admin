@@ -4,14 +4,22 @@
       <h2>Validação de Cupom</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Digite aqui o que deseja encontrar"
+          />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
+          <i
+            v-else
+            class="bt-clear-search icon-icon-times c-red"
+            @click="searchQuery = ''"
+          ></i>
         </div>
       </div>
     </div>
-    <div class="list-table">
-      <table v-loading="loading">
+    <div class="list-table" v-loading="loading">
+      <table>
         <thead>
           <tr>
             <th>Nome</th>
@@ -25,12 +33,12 @@
         </thead>
         <tbody>
           <tr v-for="item in tableData" :key="item.id">
-            <td>{{item.customerName}}</td>
-            <td>{{item.customerCpf}}</td>
+            <td>{{ item.customerName }}</td>
+            <td>{{ item.customerCpf }}</td>
             <td>{{ item.partnerName }}</td>
-            <td>{{item.benefitName}}</td>
-            <td>{{item.code}}</td>
-            <td>{{item.usedDate}}</td>
+            <td>{{ item.benefitName }}</td>
+            <td>{{ item.code }}</td>
+            <td>{{ item.usedDate }}</td>
             <td>
               <div class="actions">
                 <button
@@ -74,7 +82,8 @@ import paging from '../../mixins/paging';
 export default {
   mixins: [paging],
   components: {
-    Pagination
+    Pagination,
+    ConfirmModal
   },
   data() {
     return {

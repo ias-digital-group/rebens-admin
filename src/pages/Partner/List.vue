@@ -182,6 +182,7 @@ export default {
     },
     toggleActive(row) {
       const self = this;
+      self.loading = true;
       partnerService.toggleActive(row.id).then(data => {
         if (data.status === 'ok') {
           row.active = data.data;
@@ -193,17 +194,18 @@ export default {
           });
           self.fetchData();
         }
+        self.loading = false;
       });
     },
     fetchData() {
       const self = this;
       const request = {
-        page: this.$data.pagination.currentPage - 1,
-        pageItems: this.$data.pagination.perPage,
-        searchWord: this.searchQuery,
-        sort: this.formatSortFieldParam,
-        active: this.filters.active,
-        type: this.typeFilter,
+        page: self.$data.pagination.currentPage - 1,
+        pageItems: self.$data.pagination.perPage,
+        searchWord: self.searchQuery,
+        sort: self.formatSortFieldParam,
+        active: self.filters.active,
+        type: self.typeFilter,
         idParent: ''
       };
       if (
@@ -211,16 +213,16 @@ export default {
         self.filters.active != undefined &&
         self.filters.active != ''
       )
-        this.showFilters = true;
-      this.$data.loading = true;
+        self.showFilters = true;
+      self.loading = true;
       partnerService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
-          self.$data.loading = false;
+          self.loading = false;
         },
         () => {
-          self.$data.loading = false;
+          self.loading = false;
         }
       );
     },

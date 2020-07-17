@@ -70,8 +70,8 @@
         </v-select>
       </div>
     </div>
-    <div class="list-table">
-      <table v-loading="loading">
+    <div class="list-table" v-loading="loading">
+      <table>
         <thead>
           <tr>
             <th>Nome / E-mail</th>
@@ -227,6 +227,7 @@ export default {
     },
     toggleActive(row) {
       const self = this;
+      self.loading = true;
       customerService.toggleActive(row.id).then(data => {
         if (data.status === 'ok') {
           row.active = data.data;
@@ -237,11 +238,12 @@ export default {
             } com sucesso`
           });
         }
+        self.loading = false;
       });
     },
     confirmResendPassword() {
       const self = this;
-      self.$data.loading = true;
+      self.loading = true;
       self.showResendPassModal = false;
       customerService.resendValidation(self.resendPassId).then(
         () => {
@@ -249,11 +251,11 @@ export default {
             type: 'success',
             message: 'E-mail reenviado com sucesso!'
           });
-          self.$data.loading = false;
+          self.loading = false;
           self.resendPassId = 0;
         },
         () => {
-          self.$data.loading = false;
+          self.loading = false;
         }
       );
     },
@@ -277,15 +279,15 @@ export default {
         idOperation: self.filters.operation,
         idOperationPartner: self.filters.company
       };
-      this.$data.loading = true;
+      self.loading = true;
       customerService.findAll(request).then(
         response => {
-          self.$data.tableData = response.data;
+          self.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
-          self.$data.loading = false;
+          self.loading = false;
         },
         () => {
-          self.$data.loading = false;
+          self.loading = false;
         }
       );
       self.populateFilters(self);
@@ -316,9 +318,7 @@ export default {
               });
             });
           },
-          err => {
-            console.log('partners error', err);
-          }
+          () => {}
         );
     },
     handleDelete(item) {

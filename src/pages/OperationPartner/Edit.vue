@@ -14,8 +14,8 @@
         </base-link>
       </div>
     </div>
-    <div class="ias-card">
-      <form v-loading="formLoading" @submit.prevent>
+    <div class="ias-card" v-loading="formLoading">
+      <form @submit.prevent>
         <div class="form-left">
           <div
             class="ias-row"
@@ -35,9 +35,9 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">
-                {{ customErrors.get('operation') }}
-              </label>
+              <label v-if="customErrors.get('operation')" class="ias-error">{{
+                customErrors.get('operation')
+              }}</label>
             </div>
           </div>
           <div class="ias-row">
@@ -107,9 +107,6 @@ export default {
   },
   data() {
     return {
-      selectLoading: false,
-      formLoading: false,
-      submitLoading: false,
       idOperation: 0,
       operations: [],
       showOperations: false,
@@ -146,11 +143,11 @@ export default {
     },
     savePartner(vm) {
       vm = vm ? vm : this;
-      vm.submitLoading = true;
+      vm.formLoading = true;
       if (vm.model.id === 0) {
         operationPartnerService.create(vm.model).then(
           () => {
-            vm.submitLoading = false;
+            vm.formLoading = false;
             vm.showSuccessModal = true;
           },
           err => {
@@ -158,13 +155,13 @@ export default {
               type: 'primary',
               message: err.message
             });
-            vm.submitLoading = false;
+            vm.formLoading = false;
           }
         );
       } else {
         operationPartnerService.update(vm.model).then(
           () => {
-            vm.submitLoading = false;
+            vm.formLoading = false;
             vm.showSuccessModal = true;
           },
           err => {
@@ -172,7 +169,7 @@ export default {
               type: 'primary',
               message: err.message
             });
-            vm.submitLoading = false;
+            vm.formLoading = false;
           }
         );
       }

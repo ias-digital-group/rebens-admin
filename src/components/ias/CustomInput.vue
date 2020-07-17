@@ -18,6 +18,7 @@
           v-bind="$attrs"
           v-on="listeners"
           class="ias-input"
+          :masked="masked"
         />
       </template>
       <template v-else-if="isMoney">
@@ -111,6 +112,11 @@ export default {
     link: {
       type: String,
       description: 'is link'
+    },
+    masked: {
+      type: Boolean,
+      description: 'if should save with the mask',
+      default: false
     }
   },
   model: {

@@ -26,22 +26,6 @@
             ></custom-input>
           </div>
           <div class="ias-row">
-            <!--   <div class="select-holder">
-              <v-select
-                :options="types"
-                :reduce="op => op.code"
-                :key="model.type"
-                v-model="model.type"
-                placeholder="Tipo"
-                :disabled="viewAction === 'edit'"
-                :class="{ 'has-error': customErrors.get('type') }"
-              >
-                <span slot="no-options">Nenhum Tipo encontrado</span>
-              </v-select>
-              <label v-if="customErrors.get('type')" class="ias-error">{{
-                customErrors.get('type')
-              }}</label>
-            </div>-->
             <div class="opts-holder">
               <ias-radio
                 v-model="level"
@@ -72,9 +56,9 @@
               >
                 <span slot="no-options">Nenhuma Categoria encontrada</span>
               </v-select>
-              <label v-if="customErrors.get('idParent')" class="ias-error">
-                {{ customErrors.get('idParent') }}
-              </label>
+              <label v-if="customErrors.get('idParent')" class="ias-error">{{
+                customErrors.get('idParent')
+              }}</label>
             </div>
           </div>
 
@@ -121,9 +105,7 @@ export default {
   },
   data() {
     return {
-      selectLoading: false,
       formLoading: false,
-      submitLoading: false,
       customErrors: new Map(),
       parentList: [],
       showSuccessModal: false,
@@ -168,7 +150,7 @@ export default {
         self.customErrors.set('idParent', 'Campo obrigatório');
 
       if (self.customErrors.size === 0) {
-        self.submitLoading = true;
+        self.formLoading = true;
         self.saveCategory(self);
       }
     },
@@ -178,7 +160,7 @@ export default {
         categoryService.create(vm.model).then(
           res => {
             vm.id = res.id;
-            vm.submitLoading = false;
+            vm.formLoading = false;
             vm.showSuccessModal = true;
           },
           err => {
@@ -200,13 +182,13 @@ export default {
                 message: err.message
               });
             }
-            vm.submitLoading = false;
+            vm.formLoading = false;
           }
         );
       } else {
         categoryService.update(vm.model).then(
           () => {
-            vm.submitLoading = false;
+            vm.formLoading = false;
             vm.showSuccessModal = true;
           },
           err => {
@@ -215,7 +197,7 @@ export default {
               message: err.message,
               icon: 'tim-icons icon-bell-55'
             });
-            vm.submitLoading = false;
+            vm.formLoading = false;
           }
         );
       }
@@ -247,11 +229,8 @@ export default {
               self.parentList.push({ code: el.id, label: el.name });
             }
           });
-          self.selectLoading = false;
         },
-        () => {
-          self.selectLoading = false;
-        }
+        () => {}
       );
     }
   },

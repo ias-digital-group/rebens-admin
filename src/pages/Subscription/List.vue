@@ -5,14 +5,22 @@
 
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Digite aqui o que deseja encontrar"
+          />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
+          <i
+            v-else
+            class="bt-clear-search icon-icon-times c-red"
+            @click="searchQuery = ''"
+          ></i>
         </div>
       </div>
     </div>
-    <div class="list-table">
-      <table v-loading="loading">
+    <div class="list-table" v-loading="loading">
+      <table>
         <thead>
           <tr>
             <th>Código</th>
@@ -25,12 +33,12 @@
         </thead>
         <tbody>
           <tr v-for="item in tableData" :key="item.id">
-            <td>{{item.code}}</td>
-            <td>{{item.customer.name}}</td>
-            <td>{{item.planName}}</td>
+            <td>{{ item.code }}</td>
+            <td>{{ item.customer.name }}</td>
+            <td>{{ item.planName }}</td>
             <td>{{ item.amountString }}</td>
-            <td>{{item.nextInvoiceDateString}}</td>
-            <td>{{item.status}}</td>
+            <td>{{ item.nextInvoiceDateString }}</td>
+            <td>{{ item.status }}</td>
           </tr>
         </tbody>
       </table>
@@ -66,20 +74,20 @@ export default {
     fetchData() {
       const self = this;
       const request = {
-        page: this.$data.pagination.currentPage - 1,
-        pageItems: this.$data.pagination.perPage,
-        searchWord: this.searchQuery,
+        page: self.$data.pagination.currentPage - 1,
+        pageItems: self.$data.pagination.perPage,
+        searchWord: self.searchQuery,
         idOperation: ''
       };
-      this.$data.loading = true;
+      self.loading = true;
       wirecardService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems);
-          self.$data.loading = false;
+          self.loading = false;
         },
         () => {
-          self.$data.loading = false;
+          self.loading = false;
         }
       );
     }

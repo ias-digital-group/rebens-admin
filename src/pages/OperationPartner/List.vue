@@ -52,8 +52,8 @@
         </v-select>
       </div>
     </div>
-    <div class="list-table">
-      <table v-loading="loading">
+    <div class="list-table" v-loading="loading">
+      <table>
         <thead>
           <tr>
             <th>Nome</th>
@@ -152,7 +152,6 @@ export default {
     return {
       internalName: 'Parceiros',
       sortField: 'name',
-      formLoading: false,
       showFilters: false,
       statuses: [
         { code: true, label: 'Ativos' },
@@ -172,15 +171,15 @@ export default {
         active: self.filters.active,
         idOperation: self.filters.operation
       };
-      self.$data.loading = true;
+      self.loading = true;
       operationPartnerService.findAll(request).then(
         response => {
-          self.$data.tableData = response.data;
+          self.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
-          self.$data.loading = false;
+          self.loading = false;
         },
         () => {
-          self.$data.loading = false;
+          self.loading = false;
         }
       );
       if (
@@ -222,6 +221,7 @@ export default {
     },
     toggleActive(row) {
       const self = this;
+      self.loading = true;
       operationPartnerService.toggleActive(row.id).then(data => {
         if (data.status === 'ok') {
           row.active = data.data;
@@ -233,6 +233,7 @@ export default {
           });
           self.fetchData();
         }
+        self.loading = false;
       });
     },
     handleEdit(index, row) {

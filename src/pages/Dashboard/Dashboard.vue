@@ -210,11 +210,8 @@ export default {
               });
             }
           }
-          //          self.$data.loading = false;
         },
-        () => {
-          //        self.$data.loading = false;
-        }
+        () => {}
       );
     }
   },

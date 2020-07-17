@@ -37,8 +37,8 @@
         </v-select>
       </div>
     </div>
-    <div class="list-table">
-      <table v-loading="loading">
+    <div class="list-table" v-loading="loading">
+      <table>
         <thead>
           <tr>
             <th>Nome</th>
@@ -139,24 +139,26 @@ export default {
         status: self.filters.status,
         idOperationPartner: self.$store.getters.currentUser.idOperationPartner
       };
-      this.$data.loading = true;
+      self.loading = true;
       operationPartnerService.findAllCustomers(request).then(
         response => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems);
-          self.$data.loading = false;
+          self.loading = false;
         },
         () => {
-          self.$data.loading = false;
+          self.loading = false;
         }
       );
     },
     approve(row) {
       const self = this;
+      self.loading = true;
       operationPartnerService
         .changeCustomerStatus({ id: row.id, status: 2 })
         .then(
           () => {
+            self.loading = false;
             self.$notify({
               type: 'success',
               message: 'Cliente aprovado com sucesso!'
@@ -165,6 +167,7 @@ export default {
             row.statusName = 'aprovado';
           },
           err => {
+            self.loading = false;
             self.$notify({
               type: 'danger',
               message: err.message
@@ -174,10 +177,12 @@ export default {
     },
     disapprove(row) {
       const self = this;
+      self.loading = true;
       operationPartnerService
         .changeCustomerStatus({ id: row.id, status: 3 })
         .then(
           () => {
+            self.loading = false;
             self.$notify({
               type: 'primary',
               message: 'Cliente reprovado com sucesso!'
@@ -186,6 +191,7 @@ export default {
             row.statusName = 'reprovado';
           },
           err => {
+            self.loading = false;
             self.$notify({
               type: 'primary',
               message: err.message

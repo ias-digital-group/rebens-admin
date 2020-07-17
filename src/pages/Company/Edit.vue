@@ -11,8 +11,8 @@
         </base-link>
       </div>
     </div>
-    <div class="ias-card">
-      <form v-loading="submitLoading" @submit.prevent>
+    <div class="ias-card" v-loading="submitLoading">
+      <form @submit.prevent>
         <div class="form-left">
           <div class="ias-row">
             <div class="select-holder">
@@ -27,9 +27,9 @@
               >
                 <span slot="no-options">Nenhum Tipo encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('type')" class="ias-error">
-                {{ customErrors.get('type') }}
-              </label>
+              <label v-if="customErrors.get('type')" class="ias-error">{{
+                customErrors.get('type')
+              }}</label>
             </div>
           </div>
           <div class="ias-row" v-if="model.type === 22 && viewAction === 'new'">
@@ -44,9 +44,9 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('idItem')" class="ias-error">
-                {{ customErrors.get('idItem') }}
-              </label>
+              <label v-if="customErrors.get('idItem')" class="ias-error">{{
+                customErrors.get('idItem')
+              }}</label>
             </div>
           </div>
           <div class="ias-row" v-if="model.type === 23 && viewAction === 'new'">
@@ -61,9 +61,9 @@
               >
                 <span slot="no-options">Nenhum Parceiro encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('idItem')" class="ias-error">
-                {{ customErrors.get('idItem') }}
-              </label>
+              <label v-if="customErrors.get('idItem')" class="ias-error">{{
+                customErrors.get('idItem')
+              }}</label>
             </div>
           </div>
           <div class="ias-row">
@@ -276,7 +276,6 @@ export default {
   },
   data() {
     return {
-      selectLoading: false,
       submitLoading: false,
       customErrors: new Map(),
       showSuccessModal: false,
@@ -625,11 +624,8 @@ export default {
                 self.altImageRight = el.title;
               }
             });
-            self.selectLoading = false;
           },
-          () => {
-            self.selectLoading = false;
-          }
+          () => {}
         );
 
       partnerService
@@ -660,9 +656,7 @@ export default {
               }
             });
           },
-          () => {
-            self.$data.loading = false;
-          }
+          () => {}
         );
     }
   },

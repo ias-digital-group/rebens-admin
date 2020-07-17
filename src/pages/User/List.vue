@@ -65,8 +65,8 @@
         </v-select>
       </div>
     </div>
-    <div class="list-table">
-      <table v-loading="loading">
+    <div class="list-table" v-loading="loading">
+      <table>
         <thead>
           <tr>
             <th>Nome / E-mail</th>
@@ -211,6 +211,7 @@ export default {
     },
     toggleActive(row) {
       const self = this;
+      self.loading = true;
       userService.toggleActive(row.id).then(data => {
         if (data.status === 'ok') {
           row.active = data.data;
@@ -221,11 +222,12 @@ export default {
             } com sucesso`
           });
         }
+        self.loading = false;
       });
     },
     confirmResendPassword() {
       const self = this;
-      self.$data.loading = true;
+      self.loading = true;
       self.showResendPassModal = false;
       userService.resendValidation(self.resendPassId).then(
         () => {
@@ -233,11 +235,11 @@ export default {
             type: 'success',
             message: 'E-mail reenviado com sucesso!'
           });
-          self.$data.loading = false;
+          self.loading = false;
           self.resendPassId = 0;
         },
         () => {
-          self.$data.loading = false;
+          self.loading = false;
         }
       );
     },
@@ -261,15 +263,15 @@ export default {
         idOperation: self.filters.operation,
         idOperationPartner: self.filters.company
       };
-      this.$data.loading = true;
+      self.loading = true;
       userService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
-          self.$data.loading = false;
+          self.loading = false;
         },
         () => {
-          self.$data.loading = false;
+          self.loading = false;
         }
       );
       if (self.roles.length === 0) {
@@ -282,15 +284,18 @@ export default {
       this.modal.visible = true;
     },
     confirmDelete(val) {
-      const self = this;
       if (val) {
+        const self = this;
+        self.loading = true;
         userService.delete(self.modal.model.id).then(
           () => {
             self.resetModal();
             self.fetchData();
+            self.loading = false;
             self.showSuccess(true);
           },
           err => {
+            self.loading = false;
             self.$notify({
               type: 'danger',
               message: err.message
@@ -360,9 +365,7 @@ export default {
               });
             });
           },
-          err => {
-            console.log('partners error', err);
-          }
+          () => {}
         );
     }
   },

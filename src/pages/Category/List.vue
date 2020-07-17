@@ -32,15 +32,6 @@
         </base-link>
       </div>
       <div class="filters" v-show="showFilters">
-        <!-- <v-select
-          :options="types"
-          :reduce="op => op.code"
-          v-model="typeFilter"
-          class="no-margin"
-          placeholder="Filtre por tipo"
-        >
-          <span slot="no-options">Nenhum tipo encontrado</span>
-        </v-select>-->
         <v-select
           :options="statuses"
           :reduce="op => op.code"
@@ -60,8 +51,8 @@
         </v-select>
       </div>
     </div>
-    <div class="list-table">
-      <table v-loading="loading">
+    <div class="list-table" v-loading="loading">
+      <table>
         <thead>
           <tr>
             <th>Nome Categoria</th>
@@ -194,9 +185,11 @@ export default {
     },
     toggleActive(row) {
       const self = this;
+      self.loading = true;
       categoryService.toggleActive(row.id).then(data => {
         if (data.status === 'ok') {
           row.active = data.data;
+          self.loading = false;
           self.$notify({
             type: 'success',
             message: `Cateogria ${
@@ -224,15 +217,15 @@ export default {
         (this.filters.level != null && this.filters.level != '')
       )
         this.showFilters = true;
-      this.$data.loading = true;
+      this.loading = true;
       categoryService.findAll(request).then(
         response => {
-          self.$data.tableData = response.data;
+          self.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
-          self.$data.loading = false;
+          self.loading = false;
         },
         () => {
-          self.$data.loading = false;
+          self.loading = false;
         }
       );
     },

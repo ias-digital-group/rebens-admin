@@ -1,6 +1,6 @@
 <template>
   <div class="login-mask">
-    <div class="modal-login">
+    <div class="modal-login" v-loading="fullscreenLoading">
       <img src="img/logo-login.png" alt />
       <form @submit.prevent>
         <div class="mt-24">
@@ -27,8 +27,8 @@
         <div class="modal-container">
           <img src="/img/icon-success.png" alt="Sucesso" />
           <h5>
-            Enviamos um link com<br />
-            as instruções para definir<br />uma nova senha.
+            Enviamos um link com
+            <br />as instruções para definir <br />uma nova senha.
           </h5>
           <base-link class="bg-green bt-modal" to="/Login"
             >IR PARA o LOGIN</base-link
@@ -65,10 +65,10 @@ export default {
         self.errorEmail = 'Máximo 500 caracteres';
 
       if (self.errorEmail == '') {
-        self.$data.fullscreenLoading = true;
+        self.fullscreenLoading = true;
         accountService.rememberPassword(self.$data.credentials.email).then(
           () => {
-            self.$data.fullscreenLoading = false;
+            self.fullscreenLoading = false;
             self.show = true;
           },
           err => {
@@ -80,7 +80,7 @@ export default {
               type: 'danger',
               message: msg
             });
-            self.$data.fullscreenLoading = false;
+            self.fullscreenLoading = false;
           }
         );
       }

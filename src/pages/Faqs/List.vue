@@ -10,8 +10,8 @@
         </base-link>
       </div>
     </div>
-    <div class="ias-card">
-      <form v-loading="formLoading" @submit.prevent>
+    <div class="ias-card" v-loading="loading">
+      <form @submit.prevent>
         <div class="form-left">
           <div
             class="ias-row ias-questions"
@@ -139,9 +139,9 @@
                   v-model="editFaq.answer"
                   placeholder="Escreva aqui a resposta"
                 />
-                <label v-show="customErrors.get('answer')" class="ias-error">
-                  {{ customErrors.get('answer') }}
-                </label>
+                <label v-show="customErrors.get('answer')" class="ias-error">{{
+                  customErrors.get('answer')
+                }}</label>
               </div>
               <div class="ias-row">
                 <custom-input
@@ -200,7 +200,6 @@ export default {
   data() {
     return {
       internalName: 'pages.faqs.list',
-      formLoading: false,
       customErrors: new Map(),
       customToolbar: [],
       showSuccessModal: false,
@@ -235,7 +234,6 @@ export default {
     handleEdit(row) {
       this.editFaq = row;
       this.showEditModal = true;
-      // this.$router.push(`/faqs/${row.id}/edit/`);
     },
     fetchData() {
       const self = this;
@@ -247,22 +245,22 @@ export default {
         idOperation: self.id,
         searchWord: ''
       };
-      this.formLoading = true;
+      self.loading = true;
       faqService.findAll(request).then(
         response => {
           self.model.faqs = response.data;
           operationService.get(self.id).then(
             response => {
               self.model.operation = response.data;
-              self.formLoading = false;
+              self.loading = false;
             },
             () => {
-              self.formLoading = false;
+              self.loading = false;
             }
           );
         },
         () => {
-          self.formLoading = false;
+          self.loading = false;
         }
       );
     },

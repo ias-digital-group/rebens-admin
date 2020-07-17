@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="ias-card">
-      <form v-loading="formLoading" @submit.prevent>
+      <form v-loading="submitLoading" @submit.prevent>
         <div class="form-left">
           <div class="ias-row">
             <div class="select-holder">
@@ -26,9 +26,9 @@
               >
                 <span slot="no-options">Nenhum parceiro encontrado</span>
               </v-select>
-              <label v-show="customErrors.get('idPartner')" class="ias-error">
-                {{ customErrors.get('idPartner') }}
-              </label>
+              <label v-show="customErrors.get('idPartner')" class="ias-error">{{
+                customErrors.get('idPartner')
+              }}</label>
             </div>
           </div>
           <div class="ias-row">
@@ -73,9 +73,9 @@
               v-model="model.detail"
               placeholder="Detalhes"
             />
-            <label v-show="customErrors.get('detail')" class="ias-error">
-              {{ customErrors.get('detail') }}
-            </label>
+            <label v-show="customErrors.get('detail')" class="ias-error">{{
+              customErrors.get('detail')
+            }}</label>
           </div>
           <div
             class="ias-row-editor"
@@ -400,9 +400,9 @@
               multiple
               :class="{ 'has-error': customErrors.get('operations') }"
             ></v-select>
-            <label v-if="customErrors.get('operations')" class="ias-error">
-              {{ customErrors.get('operations') }}
-            </label>
+            <label v-if="customErrors.get('operations')" class="ias-error">{{
+              customErrors.get('operations')
+            }}</label>
           </div>
         </div>
       </form>
@@ -437,10 +437,7 @@ export default {
   data() {
     return {
       customToolbar: [],
-      formLoading: false,
       submitLoading: false,
-      benefitTypeLoading: false,
-      integrationTypeLoading: false,
       image: null,
       partnerList: [],
       operationList: [],
@@ -448,7 +445,6 @@ export default {
       operationKey: 0,
       isRebens: false,
       showSuccessModal: false,
-      selectLoading: false,
       highlights: [
         { code: -1, label: 'Sem Destaque' },
         { code: 0, label: 'Randomico' },
@@ -685,14 +681,14 @@ export default {
       const self = this;
       self.customToolbar = config.customToolbar;
       if (this.viewAction == 'edit') {
-        this.formLoading = true;
+        this.submitLoading = true;
         benefitService.get(self.id).then(
           response => {
             self.model = response.data;
-            self.formLoading = false;
+            self.submitLoading = false;
           },
           () => {
-            self.formLoading = false;
+            self.submitLoading = false;
           }
         );
       }

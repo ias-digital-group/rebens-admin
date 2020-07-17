@@ -1,27 +1,16 @@
-// Polyfills for js features used in the Dashboard but not supported in some browsers (mainly IE)
 import 'src/polyfills';
-// Notifications plugin. Used on Notifications page
 import Notifications from 'src/components/ias/NotificationPlugin';
-// Validation plugin used to validate forms
 import VeeValidate, { Validator } from 'vee-validate';
-// A plugin file where you could register global components used across the app
 import GlobalComponents from './globalComponents';
-// A plugin file where you could register global directives
 import GlobalDirectives from './globalDirectives';
-// Sidebar on the right. Used as a local plugin in DashboardLayout.vue
-import SideBar from 'src/components/SidebarPlugin';
 
-// element ui language configuration
 import lang from 'element-ui/lib/locale/lang/en';
 import locale from 'element-ui/lib/locale';
 locale.use(lang);
-
-// asset imports
 import 'src/assets/sass/black-dashboard-pro.scss';
 import 'src/assets/css/nucleo-icons.css';
 import 'src/assets/css/demo.css';
 import ptBr from 'vee-validate/dist/locale/pt_BR';
-// library auto imports
 import 'es6-promise/auto';
 import VueTheMask from 'vue-the-mask';
 
@@ -29,7 +18,6 @@ export default {
   install(Vue) {
     Vue.use(GlobalComponents);
     Vue.use(GlobalDirectives);
-    Vue.use(SideBar);
     Vue.use(Notifications);
     Vue.use(VueTheMask);
 

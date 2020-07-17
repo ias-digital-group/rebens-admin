@@ -5,6 +5,9 @@
 button {
   outline: none !important;
 }
+a {
+  text-decoration: none;
+}
 .wrapper {
   font-family: $font-family-base;
   font-size: $font-size-medium;
@@ -873,5 +876,28 @@ button {
     .ias-input-group {
       margin: 0;
     }
+  }
+}
+
+.ias-loading {
+  position: relative;
+  &::before {
+    content: ' ';
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.8);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 200;
+  }
+  &::after {
+    position: absolute;
+    content: url(../img/ajax-loader.gif);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: $dark-gray;
+    z-index: 220;
   }
 }

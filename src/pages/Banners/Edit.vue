@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="ias-card">
-      <form v-loading="formLoading" @submit.prevent>
+      <form @submit.prevent v-loading="submitLoading">
         <div class="form-left">
           <div class="ias-row">
             <custom-input
@@ -46,9 +46,9 @@
               v-show="model.idType == 3"
               >Home de benefícios</ias-checkbox
             >
-            <label v-if="customErrors.get('whereToShow')" class="ias-error">{{
-              customErrors.get('whereToShow')
-            }}</label>
+            <label v-if="customErrors.get('whereToShow')" class="ias-error">
+              {{ customErrors.get('whereToShow') }}
+            </label>
           </div>
           <div class="ias-row">
             <custom-input
@@ -104,9 +104,9 @@
                 :class="{ 'has-error': customErrors.get('order') }"
                 placeholder="Ordem"
               ></v-select>
-              <label v-show="customErrors.get('order')" class="ias-error">{{
-                customErrors.get('order')
-              }}</label>
+              <label v-show="customErrors.get('order')" class="ias-error">
+                {{ customErrors.get('order') }}
+              </label>
             </div>
           </div>
           <div class="ias-row">
@@ -141,9 +141,9 @@
               multiple
               :class="{ 'has-error': customErrors.get('operations') }"
             ></v-select>
-            <label v-if="customErrors.get('operations')" class="ias-error">{{
-              customErrors.get('operations')
-            }}</label>
+            <label v-if="customErrors.get('operations')" class="ias-error">
+              {{ customErrors.get('operations') }}
+            </label>
           </div>
         </div>
       </form>
@@ -177,8 +177,6 @@ export default {
   },
   data() {
     return {
-      selectLoading: false,
-      formLoading: false,
       submitLoading: false,
       image: null,
       operationKey: 0,
@@ -344,15 +342,15 @@ export default {
     },
     fetchData() {
       const self = this;
-      if (this.viewAction == 'edit') {
-        this.formLoading = true;
+      if (self.viewAction == 'edit') {
+        self.submitLoading = true;
         bannerService.get(self.id).then(
           response => {
             self.model = response.data;
-            self.formLoading = false;
+            self.submitLoading = false;
           },
           () => {
-            self.formLoading = false;
+            self.submitLoading = false;
           }
         );
       }
@@ -365,11 +363,8 @@ export default {
               self.operations.push({ code: el.id, label: el.title });
             }
           });
-          self.selectLoading = false;
         },
-        () => {
-          self.selectLoading = false;
-        }
+        () => {}
       );
     },
     onImageChange(file) {

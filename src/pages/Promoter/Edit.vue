@@ -8,8 +8,8 @@
         </base-link>
       </div>
     </div>
-    <div class="ias-card">
-      <form v-loading="formLoading" @submit.prevent>
+    <div class="ias-card" v-loading="formLoading">
+      <form @submit.prevent>
         <div class="form-left">
           <div class="ias-row">
             <custom-input
@@ -97,9 +97,7 @@ export default {
   },
   data() {
     return {
-      selectLoading: false,
       formLoading: false,
-      submitLoading: false,
       customErrors: new Map(),
       showSuccessModal: false,
       model: {
@@ -134,7 +132,7 @@ export default {
         self.customErrors.set('email', 'Máximo 150 caracteres');
 
       if (self.customErrors.size === 0) {
-        self.submitLoading = true;
+        self.formLoading = true;
         self.saveCustomer(self);
       }
     },
@@ -151,26 +149,26 @@ export default {
         response => {
           if (response.status === 'ok') {
             self.clearForm();
-            self.submitLoading = false;
+            self.formLoading = false;
             self.showSuccessModal = true;
           } else if (response.status === 'cpf-registered') {
             self.customErrors.set(
               'cpf',
               'Este cpf já está cadastrado em nossa base'
             );
-            self.submitLoading = false;
+            self.formLoading = false;
           } else if (response.status === 'email-registered') {
             self.customErrors.set(
               'email',
               'Este email já está cadastrado em nossa base'
             );
-            self.submitLoading = false;
+            self.formLoading = false;
           } else {
             self.$notify({
               type: 'warning',
               message: response.message
             });
-            self.submitLoading = false;
+            self.formLoading = false;
           }
         },
         err => {
@@ -178,7 +176,7 @@ export default {
             type: 'danger',
             message: err.message
           });
-          self.submitLoading = false;
+          self.formLoading = false;
         }
       );
     }

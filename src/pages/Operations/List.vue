@@ -43,8 +43,8 @@
         </v-select>
       </div>
     </div>
-    <div class="list-table">
-      <table v-loading="loading">
+    <div class="list-table" v-loading="loading">
+      <table>
         <thead>
           <tr>
             <th>Nome do clube</th>
@@ -185,23 +185,23 @@ export default {
     fetchData() {
       const self = this;
       const request = {
-        page: this.$data.pagination.currentPage - 1,
-        pageItems: this.$data.pagination.perPage,
-        searchWord: this.searchQuery,
-        sort: this.formatSortFieldParam,
-        active: this.filters.active
+        page: self.$data.pagination.currentPage - 1,
+        pageItems: self.$data.pagination.perPage,
+        searchWord: self.searchQuery,
+        sort: self.formatSortFieldParam,
+        active: self.filters.active
       };
-      if (this.filters.active != null && this.filters.active != '')
-        this.showFilters = true;
-      this.$data.loading = true;
+      if (self.filters.active != null && self.filters.active != '')
+        self.showFilters = true;
+      self.loading = true;
       operationService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
-          self.$data.loading = false;
+          self.loading = false;
         },
         () => {
-          self.$data.loading = false;
+          self.loading = false;
         }
       );
     },
@@ -244,11 +244,11 @@ export default {
     },
     confirmInacitve() {
       const self = this;
-      self.$data.loading = true;
+      self.loading = true;
       operationService.toggleActive(self.modal.item.id).then(data => {
         if (data.status === 'ok') {
           self.modal.item.active = data.data;
-          self.$data.loading = false;
+          self.loading = false;
           self.$notify({
             type: 'success',
             message: `Operação ${

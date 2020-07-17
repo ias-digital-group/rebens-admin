@@ -51,8 +51,8 @@
         </v-select>
       </div>
     </div>
-    <div class="list-table">
-      <table v-loading="loading">
+    <div class="list-table" v-loading="loading">
+      <table>
         <thead>
           <tr>
             <th>Responsável / E-mail</th>
@@ -202,6 +202,7 @@ export default {
     },
     toggleActive(row) {
       const self = this;
+      self.loading = true;
       contactService.toggleActive(row.id).then(data => {
         if (data.status === 'ok') {
           self.fetchData();
@@ -212,6 +213,7 @@ export default {
             } com sucesso`
           });
         }
+        self.loading = false;
       });
     },
     fetchData() {
@@ -225,12 +227,12 @@ export default {
         type: this.filters.type,
         idItem: ''
       };
-      this.$data.loading = true;
+      self.loading = true;
       contactService.findAll(request).then(
         response => {
-          self.$data.tableData = response.data;
+          self.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
-          self.$data.loading = false;
+          self.loading = false;
         },
         err => {
           if (err.response.status === 400 && err.response.data.message) {
@@ -244,7 +246,7 @@ export default {
               message: err.message
             });
           }
-          self.$data.loading = false;
+          self.loading = false;
         }
       );
     },

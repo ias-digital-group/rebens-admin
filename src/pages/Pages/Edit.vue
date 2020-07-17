@@ -10,8 +10,8 @@
         </base-link>
       </div>
     </div>
-    <div class="ias-card">
-      <form v-loading="formLoading" @submit.prevent>
+    <div class="ias-card" v-loading="formLoading">
+      <form @submit.prevent>
         <div class="form-left">
           <template v-for="(field, idx) in model.data.fields">
             <div class="ias-row" :key="idx" v-if="field.type == 'text'">
@@ -40,12 +40,13 @@
                 :placeholder="field.label"
                 :inputMask="['(##) ####-####', '(##) #####-####']"
                 maxlength="50"
+                :masked="true"
               ></custom-input>
             </div>
             <div class="ias-row" :key="idx" v-else-if="field.type == 'boolean'">
-              <ias-checkbox v-model="field.checked">
-                {{ field.label }}
-              </ias-checkbox>
+              <ias-checkbox v-model="field.checked">{{
+                field.label
+              }}</ias-checkbox>
             </div>
             <div
               class="ias-row-editor"
@@ -114,9 +115,7 @@ export default {
   data() {
     return {
       showSuccessModal: false,
-      selectLoading: false,
       formLoading: false,
-      submitLoading: false,
       customToolbar: [],
       model: {
         id: 0,
@@ -149,7 +148,7 @@ export default {
     },
     validateForm() {
       const self = this;
-      self.submitLoading = true;
+      self.formLoading = true;
       if (self.model.images && self.model.images.length > 0) {
         let promises = new Array();
         for (var i = 0; i <= self.model.images.length - 1; i++) {
@@ -170,7 +169,7 @@ export default {
               type: 'danger',
               message: reason.message
             });
-            self.submitLoading = false;
+            self.formLoading = false;
           });
       } else {
         self.saveStaticText(self);

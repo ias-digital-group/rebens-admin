@@ -1,5 +1,5 @@
 <template>
-  <div class="edit-box">
+  <div class="edit-box" v-loading="submitLoading">
     <div class="page-header">
       <h2>Alterar Senha</h2>
       <div class="box-actions">

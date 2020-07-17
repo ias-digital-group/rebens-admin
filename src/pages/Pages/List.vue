@@ -37,8 +37,8 @@
         </v-select>
       </div>
     </div>
-    <div class="list-table">
-      <table v-loading="loading">
+    <div class="list-table" v-loading="loading">
+      <table>
         <thead>
           <tr>
             <th>Operação</th>
@@ -139,14 +139,14 @@ export default {
     fetchData() {
       const self = this;
       const request = {
-        page: this.$data.pagination.currentPage - 1,
-        pageItems: this.$data.pagination.perPage,
-        searchWord: this.searchQuery,
-        sort: this.formatSortFieldParam,
+        page: self.$data.pagination.currentPage - 1,
+        pageItems: self.$data.pagination.perPage,
+        searchWord: self.searchQuery,
+        sort: self.formatSortFieldParam,
         idStaticTextType: 4,
-        idOperation: this.filters.operation
+        idOperation: self.filters.operation
       };
-      this.$data.loading = true;
+      self.loading = true;
       staticTextService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;

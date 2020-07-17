@@ -4,14 +4,22 @@
       <h2>Validação de Ingresso</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Digite aqui o que deseja encontrar"
+          />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
+          <i
+            v-else
+            class="bt-clear-search icon-icon-times c-red"
+            @click="searchQuery = ''"
+          ></i>
         </div>
       </div>
     </div>
-    <div class="list-table">
-      <table v-loading="loading">
+    <div class="list-table" v-loading="loading">
+      <table>
         <thead>
           <tr>
             <th>Nome</th>
@@ -24,11 +32,11 @@
         </thead>
         <tbody>
           <tr v-for="item in tableData" :key="item.id">
-            <td>{{item.customerName}}</td>
-            <td>{{item.customerCpf}}</td>
-            <td>{{item.itemName}}</td>
-            <td>{{item.voucher}}</td>
-            <td>{{item.usedDate}}</td>
+            <td>{{ item.customerName }}</td>
+            <td>{{ item.customerCpf }}</td>
+            <td>{{ item.itemName }}</td>
+            <td>{{ item.voucher }}</td>
+            <td>{{ item.usedDate }}</td>
             <td>
               <div class="actions">
                 <button
@@ -89,7 +97,7 @@ export default {
     },
     confirmValidate() {
       const self = this;
-      self.$data.loading = false;
+      self.loading = false;
       orderService.validate(self.validateId).then(
         response => {
           if (response.status === 'ok') {
@@ -103,10 +111,10 @@ export default {
               message: response.message
             });
           }
-          self.$data.loading = false;
+          self.loading = false;
         },
         () => {
-          self.$data.loading = false;
+          self.loading = false;
         }
       );
     },
@@ -118,15 +126,15 @@ export default {
         searchWord: this.searchQuery,
         idOperation: ''
       };
-      self.$data.loading = true;
+      self.loading = true;
       orderService.findAllToValidate(request).then(
         response => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems);
-          self.$data.loading = false;
+          self.loading = false;
         },
         () => {
-          self.$data.loading = false;
+          self.loading = false;
         }
       );
     }

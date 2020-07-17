@@ -11,8 +11,8 @@
         </base-link>
       </div>
     </div>
-    <div class="ias-card">
-      <form v-loading="submitLoading" @submit.prevent>
+    <div class="ias-card" v-loading="formLoading">
+      <form @submit.prevent>
         <div class="form-left">
           <div class="ias-row">
             <custom-input
@@ -62,9 +62,9 @@
               v-model="model.description"
               placeholder="Descrição"
             />
-            <label v-show="customErrors.get('description')" class="ias-error">
-              {{ customErrors.get('description') }}
-            </label>
+            <label v-show="customErrors.get('description')" class="ias-error">{{
+              customErrors.get('description')
+            }}</label>
           </div>
           <div class="ias-row">
             <custom-input
@@ -226,8 +226,7 @@ export default {
   },
   data() {
     return {
-      selectLoading: false,
-      submitLoading: false,
+      formLoading: false,
       customErrors: new Map(),
       customToolbar: [],
       showSuccessModal: false,
@@ -236,7 +235,7 @@ export default {
       level: 'root',
       modal: {
         visible: false,
-        submitLoading: false,
+        formLoading: false,
         name: '',
         modelValidations: {
           name: {
@@ -371,7 +370,7 @@ export default {
         );
 
       if (self.customErrors.size === 0) {
-        self.submitLoading = true;
+        self.formLoading = true;
         if (self.image) {
           self.uploadImage(self);
         } else if (self.model.logo) {
@@ -387,7 +386,7 @@ export default {
               type: 'warning',
               message: response.message
             });
-            self.submitLoading = false;
+            self.formLoading = false;
             return;
           }
           self.model.logo = response.data.url;
@@ -398,7 +397,7 @@ export default {
             type: 'danger',
             message: err.message
           });
-          self.submitLoading = false;
+          self.formLoading = false;
         }
       );
     },
@@ -414,7 +413,7 @@ export default {
                 await fileService.create(vm.files[i]);
               }
             }
-            vm.submitLoading = false;
+            vm.formLoading = false;
             vm.showSuccessModal = true;
           },
           err => {
@@ -422,7 +421,7 @@ export default {
               type: 'danger',
               message: err.message
             });
-            vm.submitLoading = false;
+            vm.formLoading = false;
           }
         );
       } else {
@@ -434,7 +433,7 @@ export default {
                 await fileService.create(newFiles[i]);
               }
             }
-            vm.submitLoading = false;
+            vm.formLoading = false;
             vm.showSuccessModal = true;
           },
           err => {
@@ -442,7 +441,7 @@ export default {
               type: 'danger',
               message: err.message
             });
-            vm.submitLoading = false;
+            vm.formLoading = false;
           }
         );
       }
@@ -450,8 +449,8 @@ export default {
     fetchData() {
       const self = this;
       self.customToolbar = config.customToolbar;
-      if (this.viewAction == 'edit') {
-        this.submitLoading = true;
+      if (self.viewAction == 'edit') {
+        self.formLoading = true;
         partnerService.get(self.id).then(
           response => {
             self.model = response.data;
@@ -485,10 +484,10 @@ export default {
                 longitude: null
               };
             }
-            self.submitLoading = false;
+            self.formLoading = false;
           },
           () => {
-            self.submitLoading = false;
+            self.formLoading = false;
           }
         );
       }
@@ -498,7 +497,7 @@ export default {
         return;
       }
       const self = this;
-      self.submitLoading = true;
+      self.formLoading = true;
       helperService.uploadFile(event.target.files[0], 'partnerFile').then(
         response => {
           if (response.status != 200) {
@@ -506,7 +505,7 @@ export default {
               type: 'warning',
               message: response.message
             });
-            self.submitLoading = false;
+            self.formLoading = false;
             return;
           }
           self.fileCounter++;
@@ -529,14 +528,14 @@ export default {
             createdUserName: ' - '
           });
           document.getElementById('fileInput').value = '';
-          self.submitLoading = false;
+          self.formLoading = false;
         },
         err => {
           self.$notify({
             type: 'danger',
             message: err.message
           });
-          self.submitLoading = false;
+          self.formLoading = false;
         }
       );
     },
@@ -553,27 +552,27 @@ export default {
           if (self.files[i].idx === item.idx) self.files.splice(i, 1);
         }
       } else {
-        self.submitLoading = true;
+        self.formLoading = true;
         fileService.delete(item.id).then(
           () => {
             for (let i = 0; i < self.files.length; i++) {
               if (self.files[i].id === item.id) self.files.splice(i, 1);
             }
-            self.submitLoading = false;
+            self.formLoading = false;
           },
           err => {
             self.$notify({
               type: 'danger',
               message: err.message
             });
-            self.submitLoading = false;
+            self.formLoading = false;
           }
         );
       }
     },
     loadFiles() {
       const self = this;
-      self.submitLoading = true;
+      self.formLoading = true;
       fileService.findAll(self.model.id, 23).then(
         response => {
           if (response && response.data) {
@@ -582,14 +581,14 @@ export default {
               self.files[0].idx = i + 1;
             }
           }
-          self.submitLoading = false;
+          self.formLoading = false;
         },
         err => {
           self.$notify({
             type: 'danger',
             message: err.message
           });
-          self.submitLoading = false;
+          self.formLoading = false;
         }
       );
     }

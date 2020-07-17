@@ -14,8 +14,8 @@
         </base-link>
       </div>
     </div>
-    <div class="ias-card">
-      <form v-loading="submitLoading" @submit.prevent>
+    <div class="ias-card" v-loading="formLoading">
+      <form @submit.prevent>
         <div class="form-left">
           <div class="ias-row">
             <custom-input
@@ -184,9 +184,9 @@
               ></custom-input>
             </div>
             <div class="ias-row" :key="idx" v-else-if="field.type == 'boolean'">
-              <ias-checkbox v-model="field.checked">
-                {{ field.label }}
-              </ias-checkbox>
+              <ias-checkbox v-model="field.checked">{{
+                field.label
+              }}</ias-checkbox>
             </div>
             <div
               class="ias-row-editor"
@@ -244,9 +244,9 @@
           </div>
           <div v-for="(arr, idx1) in modulesChunk" class="ias-row" :key="idx1">
             <template v-for="(mod, idx) in arr">
-              <ias-checkbox v-model="mod.checked" :key="idx">
-                {{ mod.title }}
-              </ias-checkbox>
+              <ias-checkbox v-model="mod.checked" :key="idx">{{
+                mod.title
+              }}</ias-checkbox>
             </template>
             <div class="div-spacer" v-show="arr.length === 1"></div>
             <div class="div-spacer" v-show="arr.length === 2"></div>
@@ -274,7 +274,7 @@
                 type="button"
                 @click.prevent="publishTemp"
                 :disabled="model.temporaryPublishStatus.includes('processando')"
-                :loading="publishTempLoading"
+                :loading="formLoading"
               >
                 {{ model.temporaryPublishStatus }}
               </button>
@@ -342,11 +342,7 @@ export default {
   data() {
     return {
       isPublish: false,
-      selectLoading: false,
       formLoading: false,
-      submitLoading: false,
-      publishLoading: false,
-      publishTempLoading: false,
       showTempPublishBtn: false,
       showSuccessModal: false,
       registerType: '',
@@ -462,13 +458,6 @@ export default {
     validate() {
       const self = this;
       self.customErrors = new Map();
-      // if (
-      //   !self.model.idOperationType ||
-      //   self.model.idOperationType === '' ||
-      //   self.model.idOperationType === 0
-      // ) {
-      //   self.customErrors.set('idOperationType', 'Campo obrigatório');
-      // }
 
       if (!self.model.title || self.model.title === '') {
         self.customErrors.set('title', 'Campo obrigatório');
@@ -586,7 +575,7 @@ export default {
           self.image ||
           (self.config.images && self.config.images.length > 0)
         ) {
-          self.submitLoading = true;
+          self.formLoading = true;
           let start = 0;
           let promises = new Array(
             (self.image ? 1 : 0) +
@@ -615,7 +604,7 @@ export default {
                 const fieldIndex = self.config.images[j - start].index;
                 self.config.data.fields[fieldIndex].data = values[j].data.url;
               }
-              self.submitLoading = false;
+              self.formLoading = false;
               self.checkStatus();
             })
             .catch(reason => {
@@ -623,7 +612,7 @@ export default {
                 type: 'danger',
                 message: reason.message
               });
-              self.submitLoading = false;
+              self.formLoading = false;
             });
         } else {
           self.checkStatus();
@@ -640,6 +629,7 @@ export default {
     },
     saveOperation() {
       const vw = this;
+      vw.formLoading = true;
       if (vw.viewAction == 'new') {
         operationService.create(vw.model).then(
           response => {
@@ -651,7 +641,7 @@ export default {
               type: 'primary',
               message: err.message
             });
-            vw.submitLoading = false;
+            vw.formLoading = false;
           }
         );
       } else {
@@ -664,7 +654,7 @@ export default {
               type: 'primary',
               message: err.message
             });
-            vw.submitLoading = false;
+            vw.formLoading = false;
           }
         );
       }
@@ -684,17 +674,18 @@ export default {
                   });
                   vw.model.temporaryPublishStatus = 'Processando';
                   vw.isPublish = false;
+                  vw.formLoading = false;
                 },
                 err => {
                   vw.$notify({
                     type: 'danger',
                     message: err.message
                   });
-                  vw.publishTempLoading = false;
+                  vw.formLoading = true;
                 }
               );
             } else {
-              vw.submitLoading = false;
+              vw.formLoading = false;
               vw.showSuccessModal = true;
             }
           },
@@ -705,7 +696,7 @@ export default {
     },
     publish() {
       const self = this;
-      self.publishLoading = true;
+      self.formLoading = true;
       operationService.publish(self.id).then(
         () => {
           self.$notify({
@@ -720,13 +711,13 @@ export default {
             type: 'danger',
             message: err.message
           });
-          self.publishLoading = false;
+          self.formLoading = false;
         }
       );
     },
     publishTemp() {
       const self = this;
-      self.publishTempLoading = true;
+      self.formLoading = true;
       self.isPublish = true;
       self.validate();
     },
@@ -738,9 +729,9 @@ export default {
           response => {
             self.model = response.data;
             self.actualStatus = self.model.active;
-            self.publishLoading = response.data.publishStatus === 'Processando';
+            self.formLoading = response.data.publishStatus === 'Processando';
             self.formLoading = false;
-            self.publishTempLoading =
+            self.formLoading =
               response.data.temporaryPublishStatus === 'Processando Temporário';
             self.showTempPublishBtn =
               response.data.temporaryPublishStatus !== 'Incompleto Temporário';

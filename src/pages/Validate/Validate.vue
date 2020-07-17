@@ -1,6 +1,6 @@
 <template>
   <div class="login-mask">
-    <div class="modal-login">
+    <div class="modal-login" v-loading="formLoading">
       <img src="img/logo-login.png" alt />
       <form @submit.prevent>
         <h5>
@@ -39,7 +39,7 @@ import accountService from '../../services/Account/accountService';
 export default {
   data() {
     return {
-      fullscreenLoading: false,
+      formLoading: false,
       credentials: {
         code: '',
         passwordConfirm: '',
@@ -68,7 +68,7 @@ export default {
           'A senha e a confirmação devem ser iguais';
 
       if (self.errorConfirm == '' && self.errorPassword == '') {
-        self.$data.fullscreenLoading = true;
+        self.$data.formLoading = true;
         accountService
           .validate(
             self.$data.credentials.code,
@@ -93,7 +93,7 @@ export default {
                 }, 500);
                 return;
               }
-              self.$data.fullscreenLoading = false;
+              self.$data.formLoading = false;
               self.$notify({
                 type: 'warning',
                 message: response.message
@@ -108,7 +108,7 @@ export default {
                 type: 'danger',
                 message: msg
               });
-              self.$data.fullscreenLoading = false;
+              self.$data.formLoading = false;
             }
           );
       }

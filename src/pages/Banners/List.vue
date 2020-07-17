@@ -69,8 +69,8 @@
         </v-select>
       </div>
     </div>
-    <div class="list-table">
-      <table v-loading="loading">
+    <div class="list-table" v-loading="loading">
+      <table>
         <thead>
           <tr>
             <th>Banner</th>
@@ -219,9 +219,11 @@ export default {
     },
     toggleActive(row) {
       const self = this;
+      self.loading = true;
       bannerService.toggleActive(row.id).then(data => {
         if (data.status === 'ok') {
           row.active = data.data;
+          self.loading = false;
           self.$notify({
             type: 'success',
             message: `Banner ${
@@ -233,6 +235,7 @@ export default {
     },
     fetchData() {
       const self = this;
+
       const request = {
         page: self.$data.pagination.currentPage - 1,
         pageItems: self.$data.pagination.perPage,
@@ -243,15 +246,15 @@ export default {
         idOperation: self.filters.operation,
         where: self.filters.place
       };
-      this.$data.loading = true;
+      self.loading = true;
       bannerService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
-          self.$data.loading = false;
+          self.loading = false;
         },
         () => {
-          self.$data.loading = false;
+          self.loading = false;
         }
       );
 

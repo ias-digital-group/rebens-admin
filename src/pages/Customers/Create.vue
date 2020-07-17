@@ -10,8 +10,8 @@
         </base-link>
       </div>
     </div>
-    <div class="ias-card">
-      <form v-loading="formLoading" @submit.prevent>
+    <div class="ias-card" v-loading="formLoading">
+      <form @submit.prevent>
         <div class="form-left">
           <div class="ias-row">
             <div class="select-holder">
@@ -26,9 +26,9 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">{{
-                customErrors.get('operation')
-              }}</label>
+              <label v-if="customErrors.get('operation')" class="ias-error">
+                {{ customErrors.get('operation') }}
+              </label>
             </div>
             <div class="select-holder">
               <v-select
@@ -158,9 +158,7 @@ export default {
   },
   data() {
     return {
-      selectLoading: false,
       formLoading: false,
-      submitLoading: false,
       showSuccessModal: false,
       customErrors: new Map(),
       emailConfirm: '',
@@ -218,7 +216,7 @@ export default {
         self.customErrors.set('operation', 'Campo obrigatório');
 
       if (self.customErrors.size === 0) {
-        self.submitLoading = true;
+        self.formLoading = true;
         self.saveCustomer(self);
       }
     },
@@ -226,7 +224,7 @@ export default {
       const self = this;
       customerService.create(self.model).then(
         () => {
-          self.submitLoading = false;
+          self.formLoading = false;
           self.showSuccessModal = true;
         },
         err => {
@@ -241,7 +239,7 @@ export default {
               message: err.message
             });
           }
-          self.submitLoading = false;
+          self.formLoading = false;
         }
       );
     },
@@ -257,11 +255,8 @@ export default {
               self.operations.push({ code: el.id, label: el.title });
             }
           });
-          self.selectLoading = false;
         },
-        () => {
-          self.selectLoading = false;
-        }
+        () => {}
       );
     },
     onOperationChange() {

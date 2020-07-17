@@ -51,8 +51,8 @@
         </v-select>
       </div>
     </div>
-    <div class="list-table">
-      <table v-loading="loading">
+    <div class="list-table" v-loading="loading">
+      <table>
         <thead>
           <tr>
             <th>Nome / Endereço</th>
@@ -84,15 +84,17 @@
             </td>
             <td>
               <div class="two-lines">
-                <span>{{
-                  formatPhone(
-                    item.contact.comercialPhone,
-                    item.contact.comercialPhoneBranch
-                  )
-                }}</span>
-                <span class="blue">{{
-                  formatPhone(item.contact.cellPhone)
-                }}</span>
+                <span>
+                  {{
+                    formatPhone(
+                      item.contact.comercialPhone,
+                      item.contact.comercialPhoneBranch
+                    )
+                  }}
+                </span>
+                <span class="blue">
+                  {{ formatPhone(item.contact.cellPhone) }}
+                </span>
               </div>
             </td>
             <td>
@@ -202,6 +204,7 @@ export default {
     },
     toggleActive(row) {
       const self = this;
+      self.loading = true;
       companyService.toggleActive(row.id).then(data => {
         if (data.status === 'ok') {
           self.fetchData();
@@ -212,6 +215,7 @@ export default {
             } com sucesso`
           });
         }
+        self.loading = false;
       });
     },
     fetchData() {
@@ -226,12 +230,12 @@ export default {
         idOperation: '',
         idPartner: ''
       };
-      this.$data.loading = true;
+      self.loading = true;
       companyService.findAll(request).then(
         response => {
-          self.$data.tableData = response.data;
+          self.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
-          self.$data.loading = false;
+          self.loading = false;
         },
         err => {
           if (err.response.status === 400 && err.response.data.message) {
@@ -245,7 +249,7 @@ export default {
               message: err.message
             });
           }
-          self.$data.loading = false;
+          self.loading = false;
         }
       );
     },
