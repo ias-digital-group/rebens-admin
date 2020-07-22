@@ -32,6 +32,7 @@
               v-model="model.companyDoc"
               type="text"
               name="companyDoc"
+              :inputMask="['##.###.###/####-##']"
               label="CNPJ"
               :error="customErrors.get('companyDoc')"
               maxlength="50"
@@ -184,9 +185,9 @@
               ></custom-input>
             </div>
             <div class="ias-row" :key="idx" v-else-if="field.type == 'boolean'">
-              <ias-checkbox v-model="field.checked">{{
-                field.label
-              }}</ias-checkbox>
+              <ias-checkbox v-model="field.checked">
+                {{ field.label }}
+              </ias-checkbox>
             </div>
             <div
               class="ias-row-editor"
@@ -244,9 +245,9 @@
           </div>
           <div v-for="(arr, idx1) in modulesChunk" class="ias-row" :key="idx1">
             <template v-for="(mod, idx) in arr">
-              <ias-checkbox v-model="mod.checked" :key="idx">{{
-                mod.title
-              }}</ias-checkbox>
+              <ias-checkbox v-model="mod.checked" :key="idx">
+                {{ mod.title }}
+              </ias-checkbox>
             </template>
             <div class="div-spacer" v-show="arr.length === 1"></div>
             <div class="div-spacer" v-show="arr.length === 2"></div>
@@ -742,19 +743,19 @@ export default {
         );
       }
       this.selectLoading = true;
-      // helperService.findAllOperationTypes().then(
-      //   response => {
-      //     _.each(response.data, function(el) {
-      //       self.operationTypeList.push({ code: el.id, label: el.name });
-      //       if (el.id === self.model.idOperationType)
-      //         self.selectedOperationType = el.name;
-      //     });
-      //     self.selectLoading = false;
-      //   },
-      //   () => {
-      //     self.selectLoading = false;
-      //   }
-      // );
+      helperService.findAllOperationTypes().then(
+        response => {
+          _.each(response.data, function(el) {
+            self.operationTypeList.push({ code: el.id, label: el.name });
+            if (el.id === self.model.idOperationType)
+              self.selectedOperationType = el.name;
+          });
+          self.selectLoading = false;
+        },
+        () => {
+          self.selectLoading = false;
+        }
+      );
       operationService.getConfiguration(self.id).then(
         response => {
           self.config.images = [];
