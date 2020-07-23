@@ -596,7 +596,7 @@ let pagesPages = {
 
 let orderPages = {
   path: '/orders',
-  component: DashboardLayout,
+  component: MainLayout,
   meta: {
     requiresAuth: true,
     roles: ['master', 'administrator', 'administratorRebens', 'ticketChecker'],
@@ -706,7 +706,7 @@ let benefitsPages = {
 
 let reportPages = {
   path: '/report',
-  component: DashboardLayout,
+  component: MainLayout,
   meta: {
     requiresAuth: true,
     roles: ['master', 'administrator', 'administratorRebens'],

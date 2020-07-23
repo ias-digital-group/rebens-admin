@@ -1,4 +1,4 @@
-POST http://rebens.iasdigitalgroup.com/api/Account/Login
+POST {{url}}/api/Account/Login
 Content-Type: application/json
 
 {
@@ -8,7 +8,7 @@ Content-Type: application/json
 
 ###
 
-POST http://rebens.iasdigitalgroup.com/api/Account/Validate
+POST {{url}}/api/Account/Validate
 Content-Type: application/json
 
 {
@@ -19,7 +19,7 @@ Content-Type: application/json
 
 ###
 
-POST http://rebens.iasdigitalgroup.com/api/Account/ChangePassword
+POST {{url}}/api/Account/ChangePassword
 Content-Type: application/json
 Authorization: Bearer 
 
@@ -31,5 +31,5 @@ Authorization: Bearer
 
 ###
 
-GET http://rebens.iasdigitalgroup.com/api/Account/RememberPassword?email=israel@iasdigitalgroup.com
+GET {{url}}/api/Account/RememberPassword?email=israel@iasdigitalgroup.com
 Content-Type: application/json
