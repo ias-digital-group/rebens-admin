@@ -26,9 +26,11 @@
               >
                 <span slot="no-options">Nenhum parceiro encontrado</span>
               </v-select>
-              <label v-show="customErrors.get('idPartner')" class="ias-error">{{
+              <label v-show="customErrors.get('idPartner')" class="ias-error">
+                {{
                 customErrors.get('idPartner')
-              }}</label>
+                }}
+              </label>
             </div>
           </div>
           <div class="ias-row">
@@ -64,86 +66,42 @@
               maxlength="200"
             ></custom-input>
           </div>
-          <div
-            class="ias-row-editor"
-            :class="{ 'has-error': customErrors.get('detail') }"
-          >
+          <div class="ias-row-editor" :class="{ 'has-error': customErrors.get('detail') }">
             <vue-editor
               :editorToolbar="customToolbar"
               v-model="model.detail"
               placeholder="Detalhes"
             />
-            <label v-show="customErrors.get('detail')" class="ias-error">{{
+            <label v-show="customErrors.get('detail')" class="ias-error">
+              {{
               customErrors.get('detail')
-            }}</label>
+              }}
+            </label>
           </div>
-          <div
-            class="ias-row-editor"
-            :class="{ 'has-error': customErrors.get('howToUse') }"
-          >
+          <div class="ias-row-editor" :class="{ 'has-error': customErrors.get('howToUse') }">
             <vue-editor
               :editorToolbar="customToolbar"
               v-model="model.howToUse"
               placeholder="Como usar"
             />
-            <label v-show="customErrors.get('howToUse')" class="ias-error"
-              >Campo obrigatório</label
-            >
+            <label v-show="customErrors.get('howToUse')" class="ias-error">Campo obrigatório</label>
           </div>
-          <div
-            class="ias-row"
-            :class="{ 'ias-has-error': customErrors.get('benefitType') }"
-          >
-            <ias-radio
-              v-model="model.idBenefitType"
-              name="1"
-              :key="1"
-              :value="1"
-              >E-commerce</ias-radio
-            >
-            <ias-radio
-              v-model="model.idBenefitType"
-              name="2"
-              :key="2"
-              :value="2"
-              >Varejo Local</ias-radio
-            >
-            <ias-radio
-              v-model="model.idBenefitType"
-              name="3"
-              :key="3"
-              :value="3"
-              >Cashback</ias-radio
-            >
+          <div class="ias-row" :class="{ 'ias-has-error': customErrors.get('benefitType') }">
+            <ias-radio v-model="model.idBenefitType" name="1" :key="1" :value="1">E-commerce</ias-radio>
+            <ias-radio v-model="model.idBenefitType" name="2" :key="2" :value="2">Varejo Local</ias-radio>
+            <ias-radio v-model="model.idBenefitType" name="3" :key="3" :value="3">Cashback</ias-radio>
             <label
               v-show="customErrors.get('benefitType')"
               class="ias-error ias-error-label"
-              >Campo obrigatório</label
-            >
+            >Campo obrigatório</label>
           </div>
-          <div
-            class="ias-row"
-            :class="{ 'ias-has-error': customErrors.get('integrationType') }"
-          >
-            <ias-radio
-              v-model="model.idIntegrationType"
-              name="1"
-              :key="1"
-              :value="1"
-              >Rebens</ias-radio
-            >
-            <ias-radio
-              v-model="model.idIntegrationType"
-              name="2"
-              :key="2"
-              :value="2"
-              >Zanox</ias-radio
-            >
+          <div class="ias-row" :class="{ 'ias-has-error': customErrors.get('integrationType') }">
+            <ias-radio v-model="model.idIntegrationType" name="1" :key="1" :value="1">Rebens</ias-radio>
+            <ias-radio v-model="model.idIntegrationType" name="2" :key="2" :value="2">Zanox</ias-radio>
             <label
               v-show="customErrors.get('integrationType')"
               class="ias-error ias-error-label"
-              >Campo obrigatório!</label
-            >
+            >Campo obrigatório!</label>
           </div>
           <div class="ias-row">
             <custom-input
@@ -266,9 +224,10 @@
               v-model="model.voucherText"
               placeholder="Texto do voucher"
             />
-            <label v-show="customErrors.get('voucherText')" class="ias-error"
-              >Campo obrigatório</label
-            >
+            <label
+              v-show="customErrors.get('voucherText')"
+              class="ias-error"
+            >{{customErrors.get('voucherText')}}</label>
           </div>
           <div class="ias-row" v-else>
             <custom-input
@@ -327,8 +286,7 @@
               <label
                 v-show="customErrors.get('homeHighlight')"
                 class="ias-error"
-                >{{ customErrors.get('homeHighlight') }}</label
-              >
+              >{{ customErrors.get('homeHighlight') }}</label>
             </div>
             <div class="select-holder">
               <v-select
@@ -346,8 +304,7 @@
               <label
                 v-show="customErrors.get('homeBenefitHighlight')"
                 class="ias-error"
-                >{{ customErrors.get('homeBenefitHighlight') }}</label
-              >
+              >{{ customErrors.get('homeBenefitHighlight') }}</label>
             </div>
           </div>
           <div class="ias-row" v-show="isRebens">
@@ -361,20 +318,17 @@
                 placeholder="Operação"
                 :disabled="!model.exclusive"
               ></v-select>
-              <label v-show="customErrors.get('operation')" class="ias-error"
-                >customErrors.get('operation')</label
-              >
+              <label
+                v-show="customErrors.get('operation')"
+                class="ias-error"
+              >customErrors.get('operation')</label>
             </div>
             <div class="div-spacer" v-show="!model.exclusive"></div>
           </div>
 
           <div class="ias-row">
             <div class="form-actions">
-              <button
-                class="bt bg-green c-white"
-                type="button"
-                @click.prevent="validate"
-              >
+              <button class="bt bg-green c-white" type="button" @click.prevent="validate">
                 <span v-if="viewAction === 'new'">Cadastrar</span>
                 <span v-else>Salvar</span>
               </button>
@@ -390,7 +344,7 @@
             :src="model.image"
             :error="customErrors.get('image')"
           />
-          <div class="select-holder-right" v-show="!model.exclusive">
+          <div class="select-holder-right" v-show="!model.exclusive" id="operationSelectBox">
             <v-select
               :options="operationList"
               :reduce="op => op.code"
@@ -400,18 +354,32 @@
               multiple
               :class="{ 'has-error': customErrors.get('operations') }"
             ></v-select>
-            <label v-if="customErrors.get('operations')" class="ias-error">{{
+            <label v-if="customErrors.get('operations')" class="ias-error">
+              {{
               customErrors.get('operations')
-            }}</label>
+              }}
+            </label>
+          </div>
+          <div class="select-holder-right">
+            <v-select
+              :options="categoriesList"
+              :reduce="op => op.code"
+              :key="model.categories"
+              v-model="model.categories"
+              placeholder="Selecione a Categoria"
+              multiple
+              :class="{ 'has-error': customErrors.get('categories') }"
+            ></v-select>
+            <label v-if="customErrors.get('categories')" class="ias-error">
+              {{
+              customErrors.get('categories')
+              }}
+            </label>
           </div>
         </div>
       </form>
     </div>
-    <success-modal
-      :isEdit="viewAction !== 'new'"
-      :show="showSuccessModal"
-      link="/benefits"
-    ></success-modal>
+    <success-modal :isEdit="viewAction !== 'new'" :show="showSuccessModal" link="/benefits"></success-modal>
   </div>
 </template>
 <script>
@@ -419,6 +387,7 @@ import { Select, Option, DatePicker } from 'element-ui';
 import benefitService from '../../services/Benefit/benefitService';
 import helperService from '../../services/Helper/helperService';
 import operationService from '../../services/Operation/operationService';
+import categoryService from '../../services/Category/categoryService';
 import partnerService from '../../services/Partner/partnerService';
 import _ from 'lodash';
 import { SuccessModal } from 'src/components';
@@ -429,10 +398,10 @@ export default {
     [Option.name]: Option,
     [Select.name]: Select,
     [DatePicker.name]: DatePicker,
-    SuccessModal
+    SuccessModal,
   },
   props: {
-    id: String
+    id: String,
   },
   data() {
     return {
@@ -441,6 +410,7 @@ export default {
       image: null,
       partnerList: [],
       operationList: [],
+      categoriesList: [],
       customErrors: new Map(),
       operationKey: 0,
       isRebens: false,
@@ -459,7 +429,7 @@ export default {
         { code: 9, label: 'Posição 9' },
         { code: 10, label: 'Posição 10' },
         { code: 11, label: 'Posição 11' },
-        { code: 12, label: 'Posição 12' }
+        { code: 12, label: 'Posição 12' },
       ],
       model: {
         name: '',
@@ -487,8 +457,9 @@ export default {
         active: false,
         homeHighlight: null,
         homeBenefitHighlight: null,
-        operations: []
-      }
+        operations: [],
+        categories: [],
+      },
     };
   },
   computed: {
@@ -530,7 +501,7 @@ export default {
       return this.$route.name == 'edit_benefit' ? 'edit' : 'new';
     },
     activeName: {
-      get: function() {
+      get: function () {
         if (this.$route.query && this.$route.query.tab)
           return this.$route.query.tab == 'op'
             ? this.isRebens
@@ -539,8 +510,8 @@ export default {
             : 'benefit';
         return 'benefit';
       },
-      set: function() {}
-    }
+      set: function () {},
+    },
   },
   methods: {
     validate() {
@@ -561,13 +532,8 @@ export default {
       if (!self.model.idBenefitType)
         self.customErrors.set('benefitType', 'Campo obrigatório');
       if (self.model.idBenefitType == 2) {
-        if (!self.model.voucherText)
+        if (!self.model.voucherText || self.model.voucherText === '')
           self.customErrors.set('voucherText', 'Campo obrigatório');
-        else if (self.model.voucherText.length > 500)
-          self.customErrors.set(
-            'voucherText',
-            'campo aceita no máximo 500 caracteres'
-          );
       } else {
         if (!self.model.link || self.model.link == '')
           self.customErrors.set('link', 'Campo obrigatório');
@@ -602,17 +568,19 @@ export default {
         (!self.model.operations || self.model.operations.length === 0)
       )
         self.customErrors.set('operations', 'Campo obrigatório');
+      if (!self.model.categories || self.model.categories.length === 0)
+        self.customErrors.set('categories', 'Campo obrigatório');
 
       if (self.customErrors.size === 0) {
         self.submitLoading = true;
         if (self.image) {
           helperService.uploadImage(self.image).then(
-            response => {
+            (response) => {
               if (response.status != 200) {
                 self.$notify({
                   type: 'primary',
                   message: response.message,
-                  icon: 'tim-icons icon-bell-55'
+                  icon: 'tim-icons icon-bell-55',
                 });
                 self.submitLoading = false;
                 return;
@@ -620,11 +588,11 @@ export default {
               self.model.image = response.data.url;
               self.saveBenefit(self);
             },
-            err => {
+            (err) => {
               self.$notify({
                 type: 'primary',
                 message: err.message,
-                icon: 'tim-icons icon-bell-55'
+                icon: 'tim-icons icon-bell-55',
               });
               self.submitLoading = false;
             }
@@ -646,16 +614,16 @@ export default {
             vw.submitLoading = false;
             vw.showSuccessModal = true;
           },
-          err => {
+          (err) => {
             if (err.response.status === 400) {
               vw.$notify({
                 type: 'danger',
-                message: err.response.data.message
+                message: err.response.data.message,
               });
             } else {
               vw.$notify({
                 type: 'danger',
-                message: err.message
+                message: err.message,
               });
             }
             vw.submitLoading = false;
@@ -667,10 +635,10 @@ export default {
             vw.submitLoading = false;
             vw.showSuccessModal = true;
           },
-          err => {
+          (err) => {
             vw.$notify({
               type: 'danger',
-              message: err.message
+              message: err.message,
             });
             vw.submitLoading = false;
           }
@@ -683,7 +651,7 @@ export default {
       if (this.viewAction == 'edit') {
         this.submitLoading = true;
         benefitService.get(self.id).then(
-          response => {
+          (response) => {
             self.model = response.data;
             self.submitLoading = false;
           },
@@ -692,16 +660,40 @@ export default {
           }
         );
       }
-      partnerService.listActive(4).then(response => {
-        _.each(response.data, function(el) {
+      partnerService.listActive(4).then((response) => {
+        _.each(response.data, function (el) {
           self.partnerList.push({ label: el.name, code: el.id });
         });
       });
-      operationService.findAll(null).then(response => {
-        _.each(response.data, function(el) {
-          self.operationList.push({ label: el.title, code: el.id });
+      operationService
+        .findAll({
+          page: 0,
+          pageItems: 1000,
+          searchWord: '',
+          sort: 'name ASC',
+          active: true,
+        })
+        .then((response) => {
+          _.each(response.data, function (el) {
+            self.operationList.push({ label: el.title, code: el.id });
+          });
         });
-      });
+      categoryService
+        .findAll({
+          page: 0,
+          pageItems: 1000,
+          searchWord: '',
+          sort: 'name ASC',
+          active: true,
+          idParent: '',
+          type: '',
+          level: '',
+        })
+        .then((response) => {
+          _.each(response.data, function (el) {
+            self.categoriesList.push({ label: el.name, code: el.id });
+          });
+        });
       if (!self.isRebens) {
         self.model.exclusive = true;
         self.model.idOperation = this.$store.getters.currentUser.idOperation;
@@ -712,13 +704,23 @@ export default {
       if (file == null) {
         this.model.image = file;
       }
-    }
+    },
+  },
+  watch: {
+    'model.operations'() {
+      let height = 56;
+      if (this.model.operations && this.model.operations.length > 0)
+        height = this.model.operations.length * 40 + 92;
+
+      document.getElementById('operationSelectBox').style.height =
+        height + 'px';
+    },
   },
   created() {
     this.isRebens =
       this.$store.getters.currentUser.role != 'administrator' &&
       this.$store.getters.currentUser.role != 'publisher';
     this.fetchData();
-  }
+  },
 };
 </script>

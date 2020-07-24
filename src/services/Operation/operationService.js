@@ -90,7 +90,7 @@ export default {
     let ret;
     switch (request.parent) {
       case 'banners':
-        ret = this.findAllBybanner(request.parentId);
+        ret = this.findAllByBanner(request.parentId);
         break;
       case 'benefits':
         ret = this.findAllByBenefit(request.parentId);
@@ -101,7 +101,7 @@ export default {
     }
     return ret;
   },
-  findAllBybanner: function(id) {
+  findAllByBanner: function(id) {
     return new Promise((resolve, reject) => {
       HTTP.get(config.apiEndpoints.bannerUri.concat(`${id}/operations`)).then(
         response => {
@@ -161,7 +161,7 @@ export default {
   },
   associateBanner: function(id, bannerId) {
     return new Promise((resolve, reject) => {
-      HTTP.post(config.apiEndpoints.bannerUri.concat('addoperation'), {
+      HTTP.post(config.apiEndpoints.bannerUri.concat('addOperation'), {
         idBanner: bannerId,
         idOperation: id
       }).then(
@@ -190,7 +190,7 @@ export default {
   },
   associateBenefit: function(id, benefitId, positionId) {
     return new Promise((resolve, reject) => {
-      HTTP.post(config.apiEndpoints.benefitUri.concat('addoperation'), {
+      HTTP.post(config.apiEndpoints.benefitUri.concat('addOperation'), {
         idBenefit: benefitId,
         idOperation: id,
         idPosition: positionId
