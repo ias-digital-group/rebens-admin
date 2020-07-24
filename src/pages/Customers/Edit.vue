@@ -18,15 +18,16 @@
                 :reduce="op => op.code"
                 :key="model.idOperation"
                 v-model="model.idOperation"
-                @change="onOperationChange"
                 :class="{ 'has-error': customErrors.get('operation') }"
                 placeholder="Clube"
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">{{
+              <label v-if="customErrors.get('operation')" class="ias-error">
+                {{
                 customErrors.get('operation')
-              }}</label>
+                }}
+              </label>
             </div>
             <div class="select-holder">
               <v-select
@@ -108,12 +109,8 @@
               ></el-date-picker>
             </custom-input>
             <div class="opts-holder">
-              <ias-radio v-model="model.gender" name="M" value="M"
-                >Masculino</ias-radio
-              >
-              <ias-radio v-model="model.gender" name="F" value="F"
-                >Feminino</ias-radio
-              >
+              <ias-radio v-model="model.gender" name="M" value="M">Masculino</ias-radio>
+              <ias-radio v-model="model.gender" name="F" value="F">Feminino</ias-radio>
             </div>
           </div>
           <div class="ias-row">
@@ -200,13 +197,7 @@
           </div>
           <div class="ias-row">
             <div class="form-actions">
-              <button
-                class="bt bg-green c-white"
-                type="button"
-                @click.prevent="validate"
-              >
-                Salvar
-              </button>
+              <button class="bt bg-green c-white" type="button" @click.prevent="validate">Salvar</button>
 
               <ias-checkbox v-model="model.active">Ativo</ias-checkbox>
             </div>
@@ -216,11 +207,7 @@
         <div class="form-right"></div>
       </form>
     </div>
-    <success-modal
-      :isEdit="true"
-      :show="showSuccessModal"
-      link="/customers"
-    ></success-modal>
+    <success-modal :isEdit="true" :show="showSuccessModal" link="/customers"></success-modal>
   </div>
 </template>
 <script>
@@ -230,26 +217,26 @@ import customerService from '../../services/Customer/customerService';
 import operationService from '../../services/Operation/operationService';
 import operationPartnerService from '../../services/OperationPartner/operationPartnerService';
 import { SuccessModal } from 'src/components';
+import validate from '../../validate';
 import _ from 'lodash';
 
 export default {
   components: {
     SuccessModal,
-    [DatePicker.name]: DatePicker
+    [DatePicker.name]: DatePicker,
   },
   props: {
     id: String,
     removeText: {
       type: String,
-      default: 'Remove'
-    }
+      default: 'Remove',
+    },
   },
   data() {
     return {
       formLoading: false,
       showSuccessModal: false,
       customErrors: new Map(),
-      reg: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
       model: {
         id: 0,
         name: '',
@@ -279,9 +266,9 @@ export default {
           country: 'Brasil',
           zipcode: '',
           latitude: null,
-          longitude: null
+          longitude: null,
         },
-        idOperationPartner: null
+        idOperationPartner: null,
       },
       operations: [],
       operationPartners: [],
@@ -312,16 +299,19 @@ export default {
         { code: 'SC', label: 'Santa Catarina' },
         { code: 'SP', label: 'São Paulo' },
         { code: 'SE', label: 'Sergipe' },
-        { code: 'TO', label: 'Tocantins' }
-      ]
+        { code: 'TO', label: 'Tocantins' },
+      ],
     };
   },
   watch: {
-    'model.address.zipcode': function(value) {
+    'model.address.zipcode': function (value) {
       if (value && value.length == 8) {
         this.getAddressData(value);
       }
-    }
+    },
+    'model.idOperation': function () {
+      this.loadOperationPartner();
+    },
   },
   methods: {
     validate() {
@@ -329,9 +319,11 @@ export default {
       self.customErrors = new Map();
 
       if (!self.model.cpf) self.customErrors.set('cpf', 'Campo obrigatório');
+      else if (!validate.validateCpf(self.model.cpf))
+        self.customErrors.set('cpf', 'CPF inválido!');
       if (!self.model.email)
         self.customErrors.set('email', 'Campo obrigatório');
-      else if (!self.reg.test(self.model.email))
+      else if (!validate.validateEmail(self.model.email))
         self.customErrors.set('email', 'E-mail inválido');
       else if (!self.model.email.length > 300)
         self.customErrors.set('email', 'Máximo 300 caracteres');
@@ -350,10 +342,10 @@ export default {
           self.formLoading = false;
           self.showSuccessModal = true;
         },
-        err => {
+        (err) => {
           self.$notify({
             type: 'danger',
-            message: err.message
+            message: err.message,
           });
           self.formLoading = false;
         }
@@ -363,7 +355,7 @@ export default {
       const self = this;
       self.formLoading = true;
       customerService.get(self.id).then(
-        response => {
+        (response) => {
           self.model = response.data;
           self.loadOperationPartner(self);
         },
@@ -374,9 +366,9 @@ export default {
 
       self.operations = [];
       operationService.findAll().then(
-        response => {
+        (response) => {
           self.operations.push({ code: 0, label: 'selecione' });
-          _.each(response.data, function(el) {
+          _.each(response.data, function (el) {
             if (el.id != self.id) {
               self.operations.push({ code: el.id, label: el.title });
             }
@@ -385,11 +377,8 @@ export default {
         () => {}
       );
     },
-    onOperationChange() {
+    loadOperationPartner() {
       const self = this;
-      self.loadOperationPartner(self);
-    },
-    loadOperationPartner(self) {
       self.formLoading = true;
       self.operationPartners = [];
       operationPartnerService
@@ -398,16 +387,16 @@ export default {
           pageItems: 1000,
           searchWord: '',
           sort: 'name ASC',
-          idOperation: self.model.idOperation
+          idOperation: self.model.idOperation,
         })
         .then(
-          response => {
+          (response) => {
             self.operationPartners.push({ code: 0, label: 'selecione' });
-            _.each(response.data, function(el) {
+            _.each(response.data, function (el) {
               if (el.id != self.id) {
                 self.operationPartners.push({
                   code: el.id,
-                  label: el.name
+                  label: el.name,
                 });
               }
             });
@@ -420,16 +409,16 @@ export default {
     },
     getAddressData(zipCode) {
       const self = this;
-      helperService.getAddressFromZipCode(zipCode).then(response => {
+      helperService.getAddressFromZipCode(zipCode).then((response) => {
         self.model.address.street = response.logradouro;
         self.model.address.neighborhood = response.bairro;
         self.model.address.city = response.localidade;
         self.model.address.state = response.uf;
       });
-    }
+    },
   },
   created() {
     this.fetchData();
-  }
+  },
 };
 </script>

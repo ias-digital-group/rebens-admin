@@ -20,15 +20,15 @@
                 :reduce="op => op.code"
                 :key="model.idOperation"
                 v-model="model.idOperation"
-                @change="onOperationChange"
                 :class="{ 'has-error': customErrors.get('operation') }"
                 placeholder="Clube"
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">
-                {{ customErrors.get('operation') }}
-              </label>
+              <label
+                v-if="customErrors.get('operation')"
+                class="ias-error"
+              >{{ customErrors.get('operation') }}</label>
             </div>
             <div class="select-holder">
               <v-select
@@ -117,11 +117,7 @@
           </div>
           <div class="ias-row">
             <div class="form-actions">
-              <button
-                class="bt bg-green c-white"
-                type="button"
-                @click.prevent="validate"
-              >
+              <button class="bt bg-green c-white" type="button" @click.prevent="validate">
                 <span>Cadastrar</span>
               </button>
 
@@ -133,11 +129,7 @@
         <div class="form-right"></div>
       </form>
     </div>
-    <success-modal
-      :isEdit="false"
-      :show="showSuccessModal"
-      link="/customers"
-    ></success-modal>
+    <success-modal :isEdit="false" :show="showSuccessModal" link="/customers"></success-modal>
   </div>
 </template>
 <script>
@@ -145,16 +137,17 @@ import customerService from '../../services/Customer/customerService';
 import operationService from '../../services/Operation/operationService';
 import operationPartnerService from '../../services/OperationPartner/operationPartnerService';
 import { SuccessModal } from 'src/components';
+import validate from '../../validate';
 import _ from 'lodash';
 export default {
   components: {
-    SuccessModal
+    SuccessModal,
   },
   props: {
     removeText: {
       type: String,
-      default: 'Remove'
-    }
+      default: 'Remove',
+    },
   },
   data() {
     return {
@@ -162,7 +155,6 @@ export default {
       showSuccessModal: false,
       customErrors: new Map(),
       emailConfirm: '',
-      reg: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
       model: {
         id: 0,
         name: '',
@@ -181,10 +173,10 @@ export default {
         status: 0,
         active: false,
         address: null,
-        idOperationPartner: null
+        idOperationPartner: null,
       },
       operations: [],
-      operationPartners: []
+      operationPartners: [],
     };
   },
   methods: {
@@ -193,11 +185,11 @@ export default {
       self.customErrors = new Map();
 
       if (!self.model.cpf) self.customErrors.set('cpf', 'Campo obrigatório');
-      else if (!self.validateCpf(self.model.cpf))
+      else if (!validate.validateCpf(self.model.cpf))
         self.customErrors.set('cpf', 'CPF inválido!');
       if (!self.model.email)
         self.customErrors.set('email', 'Campo obrigatório');
-      else if (!self.reg.test(self.model.email))
+      else if (!validate.validateEmail(self.model.email))
         self.customErrors.set('email', 'E-mail inválido');
       else if (!self.model.email.length > 300)
         self.customErrors.set('email', 'Máximo 300 caracteres');
@@ -227,16 +219,16 @@ export default {
           self.formLoading = false;
           self.showSuccessModal = true;
         },
-        err => {
+        (err) => {
           if (err.response.status == 400 && err.response.data) {
             self.$notify({
               type: 'danger',
-              message: err.response.data.message
+              message: err.response.data.message,
             });
           } else {
             self.$notify({
               type: 'danger',
-              message: err.message
+              message: err.message,
             });
           }
           self.formLoading = false;
@@ -248,9 +240,9 @@ export default {
 
       self.operations = [];
       operationService.findAll().then(
-        response => {
+        (response) => {
           self.operations.push({ code: 0, label: 'selecione' });
-          _.each(response.data, function(el) {
+          _.each(response.data, function (el) {
             if (el.id != self.id) {
               self.operations.push({ code: el.id, label: el.title });
             }
@@ -259,11 +251,8 @@ export default {
         () => {}
       );
     },
-    onOperationChange() {
+    loadOperationPartner() {
       const self = this;
-      self.loadOperationPartner(self);
-    },
-    loadOperationPartner(self) {
       self.formLoading = true;
       self.operationPartners = [];
       operationPartnerService
@@ -272,16 +261,16 @@ export default {
           pageItems: 1000,
           searchWord: '',
           sort: 'name ASC',
-          idOperation: self.model.idOperation
+          idOperation: self.model.idOperation,
         })
         .then(
-          response => {
+          (response) => {
             self.operationPartners.push({ code: 0, label: 'selecione' });
-            _.each(response.data, function(el) {
+            _.each(response.data, function (el) {
               if (el.id != self.id) {
                 self.operationPartners.push({
                   code: el.id,
-                  label: el.name
+                  label: el.name,
                 });
               }
             });
@@ -292,40 +281,14 @@ export default {
           }
         );
     },
-    validateCpf(c) {
-      if ((c = c.replace(/[^\d]/g, '')).length != 11) return false;
-      if (
-        c == '00000000000' ||
-        c == '11111111111' ||
-        c == '22222222222' ||
-        c == '33333333333' ||
-        c == '44444444444' ||
-        c == '55555555555' ||
-        c == '66666666666' ||
-        c == '77777777777' ||
-        c == '88888888888' ||
-        c == '99999999999'
-      )
-        return false;
-
-      let r;
-      let s = 0;
-      for (let i = 1; i <= 9; i++) s = s + parseInt(c[i - 1]) * (11 - i);
-      r = (s * 10) % 11;
-
-      if (r == 10 || r == 11) r = 0;
-      if (r != parseInt(c[9])) return false;
-      s = 0;
-
-      for (let i = 1; i <= 10; i++) s = s + parseInt(c[i - 1]) * (12 - i);
-      r = (s * 10) % 11;
-      if (r == 10 || r == 11) r = 0;
-      if (r != parseInt(c[10])) return false;
-      return true;
-    }
+  },
+  watch: {
+    'model.idOperation': function () {
+      this.loadOperationPartner();
+    },
   },
   created() {
     this.fetchData();
-  }
+  },
 };
 </script>
