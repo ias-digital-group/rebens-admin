@@ -24,19 +24,22 @@
           <tr>
             <th>Nome</th>
             <th>cpf</th>
-            <th>Parceiro</th>
-            <th>Benefício</th>
+            <th>Parceiro / Benefício</th>
             <th>Código</th>
             <th>Data de utilização</th>
-            <th style="width:144px;">Ações</th>
+            <th style="width:64px;">Ações</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="item in tableData" :key="item.id">
             <td>{{ item.customerName }}</td>
             <td>{{ item.customerCpf }}</td>
-            <td>{{ item.partnerName }}</td>
-            <td>{{ item.benefitName }}</td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.partnerName }}</span>
+                <span class="blue">{{ item.benefitName }}</span>
+              </div>
+            </td>
             <td>{{ item.code }}</td>
             <td>{{ item.usedDate }}</td>
             <td>
@@ -140,7 +143,7 @@ export default {
       benefitService.findAllToValidate(request).then(
         response => {
           self.$data.tableData = response.data;
-          self.savePageSettings(self, response.totalItems);
+          self.savePageSettings(self, response.totalItems, response.totalPages);
           self.$data.loading = false;
         },
         () => {

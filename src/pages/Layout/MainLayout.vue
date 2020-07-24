@@ -57,9 +57,9 @@
               >
               <ul class="sub-item">
                 <li v-for="(subitem, idx2) in item.subitens" :key="idx2">
-                  <router-link :to="subitem.path">{{
-                    subitem.name
-                  }}</router-link>
+                  <router-link :to="subitem.path">
+                    {{ subitem.name }}
+                  </router-link>
                 </li>
               </ul>
             </template>
@@ -94,6 +94,14 @@ export default {
       actualPath: '',
       menuItens: [
         {
+          name: 'Clientes',
+          path: '/promoter',
+          active: false,
+          roles: 'promoter',
+          needModule: '',
+          subitens: []
+        },
+        {
           name: 'Dashboard',
           path: '/dashboard',
           active: false,
@@ -103,19 +111,11 @@ export default {
           subitens: []
         },
         {
-          name: 'Clientes',
-          path: '/promoter',
-          active: false,
-          roles: 'promoter',
-          needModule: '',
-          subitens: []
-        },
-        {
-          name: 'Benefícios',
-          path: '/benefits',
+          name: 'Usuários',
+          path: '/users',
           active: false,
           roles:
-            'master,administratorRebens,publisherRebens,publisher,administrator',
+            'master,administratorRebens,publisherRebens,partnerAdministrator',
           needModule: '',
           subitens: []
         },
@@ -137,16 +137,17 @@ export default {
           subitens: []
         },
         {
-          name: 'Parceiros',
-          path: '/partner',
+          name: 'Benefícios',
+          path: '/benefits',
           active: false,
-          roles: 'master,administratorRebens,publisherRebens',
+          roles:
+            'master,administratorRebens,publisherRebens,publisher,administrator',
           needModule: '',
           subitens: []
         },
         {
-          name: 'Empresas',
-          path: '/company',
+          name: 'Parceiros',
+          path: '/partner',
           active: false,
           roles: 'master,administratorRebens,publisherRebens',
           needModule: '',
@@ -161,10 +162,10 @@ export default {
           subitens: []
         },
         {
-          name: 'Páginas',
-          path: '/pages',
+          name: 'Empresas',
+          path: '/company',
           active: false,
-          roles: 'administrator,publisher',
+          roles: 'master,administratorRebens,publisherRebens',
           needModule: '',
           subitens: []
         },
@@ -176,7 +177,7 @@ export default {
           needModule: '',
           subitens: [
             {
-              name: 'Operações',
+              name: 'Clubes',
               path: '/operations',
               active: false,
               roles: 'master,administratorRebens,publisherRebens'
@@ -198,18 +199,51 @@ export default {
         },
         {
           name: 'Clientes',
-          path: '/customers',
+          path: '#',
           active: false,
           roles:
             'master,administrator,administratorRebens,publisher,publisherRebens',
           needModule: '',
+          subitens: [
+            {
+              name: 'Clientes',
+              path: '/customers',
+              active: false,
+              roles:
+                'master,administrator,administratorRebens,publisher,publisherRebens'
+            },
+            {
+              name: 'Assinaturas',
+              path: '/subscriptions',
+              active: false,
+              roles: 'master,administrator,administratorRebens'
+            },
+            {
+              name: 'Cupom',
+              path: '/benefits/validation',
+              active: false,
+              roles: 'master,administrator,administratorRebens,couponChecker'
+            },
+            {
+              name: 'Ingresso',
+              path: '/orders',
+              active: false,
+              roles: 'master,administrator,administratorRebens'
+            }
+          ]
+        },
+        {
+          name: 'Promotores',
+          path: '/promoter/report',
+          active: false,
+          roles: 'master,administrator,administratorRebens',
           subitens: []
         },
         {
-          name: 'Assinaturas',
-          path: '/subscriptions',
+          name: 'Páginas',
+          path: '/pages',
           active: false,
-          roles: 'master,administrator,administratorRebens',
+          roles: 'administrator,publisher',
           needModule: '',
           subitens: []
         },
@@ -217,7 +251,7 @@ export default {
           name: 'Validação de Cupom',
           path: '/benefits/validation',
           active: false,
-          roles: 'master,administrator,administratorRebens,couponChecker',
+          roles: 'couponChecker',
           needModule: '',
           subitens: []
         },
@@ -225,24 +259,8 @@ export default {
           name: 'Validação de Ingresso',
           path: '/orders',
           active: false,
-          roles: 'master,administrator,administratorRebens,ticketChecker',
+          roles: 'ticketChecker',
           needModule: '',
-          subitens: []
-        },
-        {
-          name: 'Usuários',
-          path: '/users',
-          active: false,
-          roles:
-            'master,administratorRebens,publisherRebens,partnerAdministrator',
-          needModule: '',
-          subitens: []
-        },
-        {
-          name: 'Promotores',
-          path: '/promoter/report',
-          active: false,
-          roles: 'master,administrator,administratorRebens',
           subitens: []
         }
       ]
@@ -315,7 +333,8 @@ export default {
         if (
           item.path === self.actualPath ||
           (self.actualPath.startsWith(item.path) &&
-            self.actualPath.endsWith('edit/') &&
+            (self.actualPath.includes('edit') ||
+              self.actualPath.includes('new')) &&
             item.path != '/')
         ) {
           item.active = true;
@@ -325,7 +344,8 @@ export default {
               if (
                 sub.path === self.actualPath ||
                 (self.actualPath.startsWith(sub.path) &&
-                  self.actualPath.endsWith('edit/'))
+                  (self.actualPath.includes('edit') ||
+                    self.actualPath.includes('new')))
               ) {
                 sub.active = true;
                 item.active = true;

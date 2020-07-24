@@ -130,7 +130,7 @@ export default {
       orderService.findAllToValidate(request).then(
         response => {
           self.$data.tableData = response.data;
-          self.savePageSettings(self, response.totalItems);
+          self.savePageSettings(self, response.totalItems, response.totalPages);
           self.loading = false;
         },
         () => {

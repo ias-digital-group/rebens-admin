@@ -3,8 +3,8 @@
     <div class="page-header">
       <h2>Assinaturas</h2>
 
-      <div class="box-actions">
-        <div class="input-post-icon search">
+      <div class="box-actions" style="padding-top:8px">
+        <div class="input-post-icon search" style="margin-right:16px">
           <input
             type="text"
             v-model="searchQuery"
@@ -17,6 +17,13 @@
             @click="searchQuery = ''"
           ></i>
         </div>
+        <button
+          type="button"
+          @click="generateExcel"
+          class="bt bt-square bg-white-2 c-light-blue"
+        >
+          <i class="icon-icon-download"></i>
+        </button>
       </div>
     </div>
     <div class="list-table" v-loading="loading">
@@ -53,6 +60,7 @@
         @update-per-page="changePerPage"
       ></pagination>
     </div>
+    <a id="linkFile" :href="fileUrl" target="_blank"></a>
   </div>
 </template>
 <script>
@@ -67,7 +75,8 @@ export default {
   data() {
     return {
       internalName: 'subscriptions',
-      sortField: 'name'
+      sortField: 'name',
+      fileUrl: ''
     };
   },
   methods: {
@@ -84,6 +93,27 @@ export default {
         response => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems);
+          self.loading = false;
+        },
+        () => {
+          self.loading = false;
+        }
+      );
+    },
+    generateExcel() {
+      const self = this;
+      const request = {
+        searchWord: self.searchQuery,
+        idOperation: ''
+      };
+      self.loading = true;
+      wirecardService.generateExcel(request).then(
+        response => {
+          self.fileUrl = response.url;
+          setTimeout(() => {
+            document.getElementById('linkFile').click();
+          }, 500);
+
           self.loading = false;
         },
         () => {
