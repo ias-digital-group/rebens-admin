@@ -6,7 +6,10 @@
         <span v-else>Editar Parceiro</span>
       </h2>
       <div class="box-actions">
-        <base-link to="/operationPartner" class="bt bt-square bg-white-2 c-light-blue">
+        <base-link
+          to="/operationPartner"
+          class="bt bt-square bg-white-2 c-light-blue"
+        >
           <i class="icon-icon-arrow-left"></i>
         </base-link>
       </div>
@@ -33,9 +36,7 @@
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
               <label v-if="customErrors.get('operation')" class="ias-error">
-                {{
-                customErrors.get('operation')
-                }}
+                {{ customErrors.get('operation') }}
               </label>
             </div>
           </div>
@@ -64,7 +65,11 @@
           </div>
           <div class="ias-row">
             <div class="form-actions">
-              <button class="bt bg-green c-white" type="button" @click.prevent="validate">
+              <button
+                class="bt bg-green c-white"
+                type="button"
+                @click.prevent="validate"
+              >
                 <span v-if="viewAction === 'new'">Cadastrar</span>
                 <span v-else>Salvar</span>
               </button>
@@ -76,7 +81,11 @@
         <div class="form-right"></div>
       </form>
     </div>
-    <success-modal :isEdit="viewAction !== 'new'" :show="showSuccessModal" link="/operationPartner"></success-modal>
+    <success-modal
+      :isEdit="viewAction !== 'new'"
+      :show="showSuccessModal"
+      link="/operationPartner"
+    ></success-modal>
   </div>
 </template>
 <script>
@@ -87,14 +96,14 @@ import _ from 'lodash';
 
 export default {
   components: {
-    SuccessModal,
+    SuccessModal
   },
   props: {
     id: String,
     removeText: {
       type: String,
-      default: 'Remove',
-    },
+      default: 'Remove'
+    }
   },
   data() {
     return {
@@ -107,15 +116,15 @@ export default {
         name: '',
         idOperation: 0,
         active: true,
-        doc: '',
+        doc: ''
       },
-      customErrors: new Map(),
+      customErrors: new Map()
     };
   },
   computed: {
     viewAction() {
       return this.$route.name == 'edit_operationPartner' ? 'edit' : 'new';
-    },
+    }
   },
   methods: {
     validate() {
@@ -141,10 +150,10 @@ export default {
             vm.formLoading = false;
             vm.showSuccessModal = true;
           },
-          (err) => {
+          err => {
             vm.$notify({
               type: 'primary',
-              message: err.message,
+              message: err.message
             });
             vm.formLoading = false;
           }
@@ -155,10 +164,10 @@ export default {
             vm.formLoading = false;
             vm.showSuccessModal = true;
           },
-          (err) => {
+          err => {
             vm.$notify({
               type: 'primary',
-              message: err.message,
+              message: err.message
             });
             vm.formLoading = false;
           }
@@ -171,7 +180,7 @@ export default {
       if (self.viewAction == 'edit') {
         self.formLoading = true;
         operationPartnerService.get(self.id).then(
-          (response) => {
+          response => {
             self.model = response.data;
             self.formLoading = false;
           },
@@ -188,14 +197,14 @@ export default {
         self.populateOperations(self);
     },
     populateOperations(self) {
-      operationService.findAll().then((response) => {
-        _.each(response.data, function (el) {
+      operationService.findAll().then(response => {
+        _.each(response.data, function(el) {
           if (el.id != self.id) {
             self.operations.push({ code: el.id, label: el.title });
           }
         });
       });
-    },
+    }
   },
   created() {
     if (
@@ -204,6 +213,6 @@ export default {
     )
       this.model.idOperation = this.$store.getters.currentUser.idOperation;
     this.fetchData();
-  },
+  }
 };
 </script>
