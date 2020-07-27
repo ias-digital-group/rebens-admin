@@ -112,9 +112,21 @@
             </div>
           </div>
           <div class="ias-row">
-            <div class="select-holder">
+            <div class="select-holder" v-if="model.roles === 'couponChecker'">
               <v-select
-                :options="Companies"
+                :options="partners"
+                :reduce="op => op.code"
+                :key="model.idPartner"
+                v-model="model.idPartner"
+                :placeholder="blockOperationPartners ? 'Todas' : 'Empresa'"
+                :disabled="blockOperationPartners"
+              >
+                <span slot="no-options">Nenhuma empresa encontrada</span>
+              </v-select>
+            </div>
+            <div class="select-holder" v-else>
+              <v-select
+                :options="operationPartners"
                 :reduce="op => op.code"
                 :key="model.idOperationPartner"
                 v-model="model.idOperationPartner"
@@ -223,6 +235,17 @@ export default {
         this.model.idOperation = null;
         this.model.idOperationPartner = null;
       }
+    },
+    'model.idOperation': function() {
+      const self = this;
+      if (self.isRebens) {
+        if (self.model.roles === 'couponChecker') self.loadPartners(self);
+        else if (
+          self.model.roles === 'partnerAdministrator' ||
+          self.model.roles === 'partnerApprover'
+        )
+          self.loadOperationPartner(self);
+      }
     }
   },
   data() {
@@ -236,6 +259,7 @@ export default {
       roles: [],
       image: null,
       emailConfirm: '',
+      idCompany: 0,
       model: {
         id: 0,
         name: '',
@@ -248,6 +272,7 @@ export default {
         email: '',
         status: false,
         idOperation: null,
+        idPartner: null,
         idOperationPartner: null,
         roles: '',
         picture: ''
@@ -295,6 +320,7 @@ export default {
         this.model.roles == 'administrator' ||
         this.model.roles == 'administratorRebens' ||
         this.model.roles == 'promoter' ||
+        this.model.roles == 'ticketChecker' ||
         this.model.roles == 'master'
       );
     }
@@ -304,31 +330,6 @@ export default {
       this.image = file;
       if (file == null) {
         this.model.picture = file;
-      }
-    },
-    onOperationChange() {
-      const self = this;
-      if (self.isRebens) {
-        self.operationPartners = [];
-        operationPartnerService
-          .findAll({
-            page: 0,
-            pageItems: 1000,
-            searchWord: '',
-            sort: 'name ASC',
-            idOperation: self.model.idOperation
-          })
-          .then(
-            response => {
-              self.operationPartners.push({ id: null, title: 'selecione' });
-              _.each(response.data, function(el) {
-                if (el.id != self.id) {
-                  self.operationPartners.push({ id: el.id, title: el.name });
-                }
-              });
-            },
-            () => {}
-          );
       }
     },
     validate() {
@@ -530,47 +531,43 @@ export default {
     },
     loadOperationPartner(self) {
       self.formLoading = true;
-      if (!self.isPartnerUser) {
-        let operationId = 0;
-        if (self.isRebens) {
-          if (
-            self.model.roles == 'partnerAdministrator' ||
-            self.model.roles == 'partnerApprover'
-          ) {
-            operationId = self.model.idOperation;
-          }
-        } else {
-          operationId = self.$store.getters.currentUser.idOperation;
+      let operationId = 0;
+      if (self.isRebens) {
+        if (
+          self.model.roles == 'partnerAdministrator' ||
+          self.model.roles == 'partnerApprover'
+        ) {
+          operationId = self.model.idOperation;
         }
-        if (operationId > 0) {
-          operationPartnerService
-            .findAll({
-              page: 0,
-              pageItems: 1000,
-              searchWord: '',
-              sort: 'name ASC',
-              idOperation: operationId
-            })
-            .then(
-              response => {
-                self.operationPartners.push({ code: 0, label: 'selecione' });
-                _.each(response.data, function(el) {
-                  if (el.id != self.id) {
-                    self.operationPartners.push({
-                      code: el.id,
-                      label: el.name
-                    });
-                  }
-                });
-                self.formLoading = false;
-              },
-              () => {
-                self.formLoading = false;
-              }
-            );
-        } else {
-          self.formLoading = false;
-        }
+      } else {
+        operationId = self.$store.getters.currentUser.idOperation;
+      }
+      if (operationId > 0) {
+        operationPartnerService
+          .findAll({
+            page: 0,
+            pageItems: 1000,
+            searchWord: '',
+            sort: 'name ASC',
+            idOperation: operationId
+          })
+          .then(
+            response => {
+              self.operationPartners.push({ code: 0, label: 'selecione' });
+              _.each(response.data, function(el) {
+                if (el.id != self.id) {
+                  self.operationPartners.push({
+                    code: el.id,
+                    label: el.name
+                  });
+                }
+              });
+              self.formLoading = false;
+            },
+            () => {
+              self.formLoading = false;
+            }
+          );
       } else {
         self.formLoading = false;
       }

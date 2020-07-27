@@ -10,7 +10,7 @@
             <th>Nome</th>
             <th>E-mail / CPF</th>
             <th>Parceiro / Status</th>
-            <th style="width:144px;">Ações</th>
+            <th style="width:124px;">Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -32,22 +32,50 @@
               <div class="actions">
                 <button
                   type="button"
-                  :title="item.active ? 'Inativar' : 'Ativar'"
-                  class="bt c-green"
-                  v-show="item.status == 1 || item.status == 3"
-                  @click.native="approve(item)"
+                  title="Ativar"
+                  class="bt bt-check c-dark-gray"
+                  v-if="item.status == 1"
+                  @click="approve(item)"
                 >
-                  <i class="icon-icon-check"></i>
+                  <svg
+                    width="24"
+                    height="18"
+                    viewBox="0 0 24 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M23.9017 2.62515L9.02125 17.5056C8.89018 17.6367 8.67796 17.6367 8.5472 17.5056L0.0980729 9.05616C-0.032691 8.92571 -0.032691 8.71348 0.0980729 8.58241L2.1511 6.52939C2.28217 6.39863 2.49439 6.39863 2.62515 6.52939L8.78453 12.6885L21.3749 0.0980729C21.5063 -0.032691 21.7179 -0.032691 21.849 0.0980729L23.9017 2.1511C24.0328 2.28186 24.0328 2.49378 23.9017 2.62515Z"
+                      fill="currentColor"
+                    />
+                  </svg>
                 </button>
+                <span v-else class="c-green">
+                  <svg
+                    width="24"
+                    height="18"
+                    viewBox="0 0 24 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M23.9017 2.62515L9.02125 17.5056C8.89018 17.6367 8.67796 17.6367 8.5472 17.5056L0.0980729 9.05616C-0.032691 8.92571 -0.032691 8.71348 0.0980729 8.58241L2.1511 6.52939C2.28217 6.39863 2.49439 6.39863 2.62515 6.52939L8.78453 12.6885L21.3749 0.0980729C21.5063 -0.032691 21.7179 -0.032691 21.849 0.0980729L23.9017 2.1511C24.0328 2.28186 24.0328 2.49378 23.9017 2.62515Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
                 <button
-                  v-show="item.status == 1"
-                  @click.native="disapprove(item)"
+                  v-if="item.status == 1"
+                  @click="disapprove(item)"
                   type="button"
                   title="Editar"
-                  class="bt c-red"
+                  class="bt c-dark-gray"
                 >
                   <i class="icon-icon-times"></i>
                 </button>
+                <span v-else class="c-red">
+                  <i class="icon-icon-times"></i>
+                </span>
               </div>
             </td>
           </tr>
@@ -101,7 +129,7 @@ export default {
       operationPartnerService.findAllCustomers(request).then(
         response => {
           self.$data.tableData = response.data;
-          self.savePageSettings(self, response.totalItems);
+          self.savePageSettings(self, response.totalItems, response.totalPages);
           self.loading = false;
           self.showTable = response.totalItems > 0;
         },
