@@ -27,7 +27,7 @@
             <th>Parceiro / Benefício</th>
             <th>Código</th>
             <th>Data de utilização</th>
-            <th style="width:64px;">Ações</th>
+            <th style="width:80px;">Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -113,12 +113,14 @@ export default {
       benefitService.validate(self.validateId).then(
         response => {
           if (response.status === 'ok') {
+            self.closeValidateModal();
             self.$notify({
               type: 'success',
               message: 'Cupom validado com sucesso!'
             });
             self.fetchData();
           } else {
+            self.closeValidateModal();
             self.$notify({
               type: 'danger',
               message: response.message

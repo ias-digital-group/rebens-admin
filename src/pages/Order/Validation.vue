@@ -27,7 +27,7 @@
             <th>Produto</th>
             <th>Código</th>
             <th>Data utilização</th>
-            <th style="width:144px;">Ações</th>
+            <th style="width:64px;">Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -40,7 +40,7 @@
             <td>
               <div class="actions">
                 <button
-                  @click="validate(props.row)"
+                  @click="handleValidate(item)"
                   type="button"
                   title="Validar"
                   class="bt c-light-gray"
@@ -65,16 +65,23 @@
         @update-per-page="changePerPage"
       ></pagination>
     </div>
+    <confirm-modal
+      @closeModal="closeValidateModal"
+      :question="question"
+      :show="showValidateModal"
+      @confirm="confirmValidate"
+    ></confirm-modal>
   </div>
 </template>
 <script>
-import { Pagination } from 'src/components';
+import { Pagination, ConfirmModal } from 'src/components';
 import orderService from '../../services/Order/orderService';
 import paging from '../../mixins/paging';
 export default {
   mixins: [paging],
   components: {
-    Pagination
+    Pagination,
+    ConfirmModal
   },
   data() {
     return {
@@ -85,9 +92,9 @@ export default {
     };
   },
   methods: {
-    handleValidate(row) {
-      this.validateId = row.id;
-      this.question = `Tem certeza que deseja validar o ${row.benefitName}, código ${row.code} do cliente ${row.customerName}?`;
+    handleValidate(item) {
+      this.validateId = item.id;
+      this.question = `Tem certeza que deseja validar o ${item.itemName}, código ${item.voucher} do cliente ${item.customerName}?`;
       this.showValidateModal = true;
     },
     closeValidateModal() {
@@ -101,11 +108,13 @@ export default {
       orderService.validate(self.validateId).then(
         response => {
           if (response.status === 'ok') {
+            self.closeValidateModal();
             self.$notify({
               type: 'success',
               message: 'Ingresso validado com sucesso!'
             });
           } else {
+            self.closeValidateModal();
             self.$notify({
               type: 'danger',
               message: response.message

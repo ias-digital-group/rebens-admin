@@ -311,6 +311,9 @@ a {
           &:first-child {
             padding-left: 24px;
           }
+          &:last-child {
+            padding-right: 24px;
+          }
         }
       }
     }
@@ -326,7 +329,10 @@ a {
           color: $dark-gray;
           padding: 0;
           &:first-child {
-            padding-left: 16px;
+            padding-left: 24px;
+          }
+          &:last-child {
+            padding-right: 24px;
           }
           .two-lines {
             display: inline-flex;
@@ -389,7 +395,7 @@ a {
             .bt {
               height: 24px;
               width: 24px;
-              margin-right: 24px;
+              margin-left: 24px;
               padding: 0;
               background: transparent;
               cursor: pointer;
