@@ -52,7 +52,7 @@ export default {
   components: {
     BarChart,
     PieChart,
-    DashboardPieChart,
+    DashboardPieChart
   },
   data() {
     return {
@@ -62,14 +62,14 @@ export default {
         extraOptions: chartConfigs.barChartOptions,
         chartData: null,
         gradientColors: config.colors.primaryGradient,
-        gradientStops: [1, 0.4, 0],
+        gradientStops: [1, 0.4, 0]
       },
       benefitUseChart: {
         extraOptions: chartConfigs.barChartOptions,
         chartData: null,
         gradientColors: config.colors.primaryGradient,
-        gradientStops: [1, 0.4, 0],
-      },
+        gradientStops: [1, 0.4, 0]
+      }
     };
   },
   methods: {
@@ -77,8 +77,9 @@ export default {
       const self = this;
 
       reportService.loadDashboard().then(
-        (response) => {
+        response => {
           if (response.data) {
+            self.showDashboard = true;
             if (response.data.benefitUse) {
               self.benefitUseChart.chartData = {
                 labels: response.data.benefitUse.labels,
@@ -90,9 +91,9 @@ export default {
                     borderWidth: 2,
                     borderDash: [],
                     borderDashOffset: 0.0,
-                    data: response.data.benefitUse.data,
-                  },
-                ],
+                    data: response.data.benefitUse.data
+                  }
+                ]
               };
             }
             if (response.data.benefitView) {
@@ -106,17 +107,17 @@ export default {
                     borderWidth: 2,
                     borderDash: [],
                     borderDashOffset: 0.0,
-                    data: response.data.benefitView.data,
-                  },
-                ],
+                    data: response.data.benefitView.data
+                  }
+                ]
               };
             }
 
             if (response.data.operations) {
-              response.data.operations.forEach((element) => {
+              response.data.operations.forEach(element => {
                 let op = {
                   name: element.operation,
-                  charts: [],
+                  charts: []
                 };
                 if (element.users) {
                   let chart = {
@@ -131,12 +132,12 @@ export default {
                           borderWidth: 2,
                           borderDash: [],
                           borderDashOffset: 0.0,
-                          data: element.users.data,
-                        },
-                      ],
+                          data: element.users.data
+                        }
+                      ]
                     },
                     extraOptions: chartConfigs.pieChartOptions,
-                    gradientStops: [1, 0.4, 0],
+                    gradientStops: [1, 0.4, 0]
                   };
                   op.charts.push(chart);
                 }
@@ -153,12 +154,12 @@ export default {
                           borderWidth: 2,
                           borderDash: [],
                           borderDashOffset: 0.0,
-                          data: element.regionState.data,
-                        },
-                      ],
+                          data: element.regionState.data
+                        }
+                      ]
                     },
                     extraOptions: chartConfigs.pieChartOptions,
-                    gradientStops: [1, 0.4, 0],
+                    gradientStops: [1, 0.4, 0]
                   };
                   op.charts.push(chart);
                 }
@@ -175,12 +176,12 @@ export default {
                           borderWidth: 2,
                           borderDash: [],
                           borderDashOffset: 0.0,
-                          data: element.regionCity.data,
-                        },
-                      ],
+                          data: element.regionCity.data
+                        }
+                      ]
                     },
                     extraOptions: chartConfigs.pieChartOptions,
-                    gradientStops: [1, 0.4, 0],
+                    gradientStops: [1, 0.4, 0]
                   };
                   op.charts.push(chart);
                 }
@@ -197,12 +198,12 @@ export default {
                           borderWidth: 2,
                           borderDash: [],
                           borderDashOffset: 0.0,
-                          data: element.regionNeighborhood.data,
-                        },
-                      ],
+                          data: element.regionNeighborhood.data
+                        }
+                      ]
                     },
                     extraOptions: chartConfigs.pieChartOptions,
-                    gradientStops: [1, 0.4, 0],
+                    gradientStops: [1, 0.4, 0]
                   };
                   op.charts.push(chart);
                 }
@@ -214,7 +215,7 @@ export default {
         },
         () => {}
       );
-    },
+    }
   },
   mounted() {
     this.i18n = this.$i18n;
@@ -224,7 +225,7 @@ export default {
     } else if (this.$store.getters.currentUser.role === 'partnerApprover') {
       window.location = '/#/operationPartner/approve';
     }
-  },
+  }
 };
 </script>
 <style></style>

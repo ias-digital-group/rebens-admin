@@ -104,7 +104,7 @@ export default {
           path: '/users',
           active: false,
           roles:
-            'master,administratorRebens,publisherRebens,partnerAdministrator',
+            'master,administratorRebens,publisherRebens,partnerAdministrator,administrator',
           needModule: '',
           subitens: [],
         },
@@ -167,10 +167,18 @@ export default {
           subitens: [],
         },
         {
+          name: 'Páginas',
+          path: '/pages',
+          active: false,
+          roles: 'publisher',
+          needModule: '',
+          subitens: [],
+        },
+        {
           name: 'Operações',
           path: '#',
           active: false,
-          roles: 'master,administratorRebens,publisherRebens',
+          roles: 'master,administratorRebens,publisherRebens,administrator',
           needModule: '',
           subitens: [
             {
@@ -183,13 +191,13 @@ export default {
               name: 'Páginas',
               path: '/pages',
               active: false,
-              roles: 'master,administratorRebens,publisherRebens',
+              roles: 'master,administratorRebens,publisherRebens,administrator',
             },
             {
               name: 'Parceiros',
               path: '/operationPartner',
               active: false,
-              roles: 'master,administrator,administratorRebens',
+              roles: 'master,administrator,administratorRebens,administrator',
             },
           ],
         },
@@ -197,16 +205,14 @@ export default {
           name: 'Clientes',
           path: '#',
           active: false,
-          roles:
-            'master,administrator,administratorRebens,publisher,publisherRebens',
+          roles: 'master,administrator,administratorRebens,publisherRebens',
           needModule: '',
           subitens: [
             {
               name: 'Clientes',
               path: '/customers',
               active: false,
-              roles:
-                'master,administrator,administratorRebens,publisher,publisherRebens',
+              roles: 'master,administrator,administratorRebens,publisherRebens',
             },
             {
               name: 'Assinaturas',
@@ -233,14 +239,6 @@ export default {
           path: '/promoter/report',
           active: false,
           roles: 'master,administrator,administratorRebens',
-          subitens: [],
-        },
-        {
-          name: 'Páginas',
-          path: '/pages',
-          active: false,
-          roles: 'administrator,publisher',
-          needModule: '',
           subitens: [],
         },
         {

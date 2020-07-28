@@ -4,23 +4,12 @@
       <h2>{{ $t('pages.users.title') }}</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Digite aqui o que deseja encontrar"
-          />
+          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i
-            v-else
-            class="bt-clear-search icon-icon-times c-red"
-            @click="searchQuery = ''"
-          ></i>
+          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
         </div>
         <div class="filter" :class="{ active: showFilters }">
-          <a
-            class="bt bt-square bg-white-2 c-light-blue"
-            @click="showFilters = !showFilters"
-          >
+          <a class="bt bt-square bg-white-2 c-light-blue" @click="showFilters = !showFilters">
             <i class="icon-icon-filter"></i>
           </a>
         </div>
@@ -34,6 +23,7 @@
           :reduce="op => op.code"
           v-model="filters.operation"
           class="no-margin"
+          v-show="isRebens"
           placeholder="Filtre pelo Clube"
         >
           <span slot="no-options">Nenhum clube encontrado</span>
@@ -41,6 +31,7 @@
         <v-select
           :options="operationPartners"
           :reduce="op => op.code"
+          :class="{'no-margin': !isRebens}"
           v-model="filters.company"
           placeholder="Filtre por Empresa"
         >
@@ -50,7 +41,6 @@
           :options="roles"
           :reduce="op => op.code"
           v-model="filters.role"
-          v-show="isRebens"
           placeholder="Filtre pelo Papel"
         >
           <span slot="no-options">Nenhum papel encontrado</span>
@@ -130,12 +120,7 @@
                 >
                   <i class="icon-icon-edit"></i>
                 </button>
-                <button
-                  @click="handleDelete(item)"
-                  type="button"
-                  title="apagar"
-                  class="bt c-red"
-                >
+                <button @click="handleDelete(item)" type="button" title="apagar" class="bt c-red">
                   <i class="icon-icon-delete"></i>
                 </button>
               </div>
@@ -185,7 +170,7 @@ export default {
     [Select.name]: Select,
     [Option.name]: Option,
     DeleteModal,
-    ConfirmModal
+    ConfirmModal,
   },
   data() {
     return {
@@ -201,8 +186,8 @@ export default {
       showResendPassModal: false,
       statuses: [
         { code: true, label: 'Ativos' },
-        { code: false, label: 'Inativos' }
-      ]
+        { code: false, label: 'Inativos' },
+      ],
     };
   },
   methods: {
@@ -212,14 +197,14 @@ export default {
     toggleActive(row) {
       const self = this;
       self.loading = true;
-      userService.toggleActive(row.id).then(data => {
+      userService.toggleActive(row.id).then((data) => {
         if (data.status === 'ok') {
           row.active = data.data;
           self.$notify({
             type: 'success',
             message: `Usuário ${
               row.active ? 'ativado' : 'inativado'
-            } com sucesso`
+            } com sucesso`,
           });
         }
         self.loading = false;
@@ -233,7 +218,7 @@ export default {
         () => {
           self.$notify({
             type: 'success',
-            message: 'E-mail reenviado com sucesso!'
+            message: 'E-mail reenviado com sucesso!',
           });
           self.loading = false;
           self.resendPassId = 0;
@@ -261,11 +246,11 @@ export default {
         active: self.filters.active,
         role: self.filters.role,
         idOperation: self.filters.operation,
-        idOperationPartner: self.filters.company
+        idOperationPartner: self.filters.company,
       };
       self.loading = true;
       userService.findAll(request).then(
-        response => {
+        (response) => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
           self.loading = false;
@@ -294,11 +279,11 @@ export default {
             self.loading = false;
             self.showSuccess(true);
           },
-          err => {
+          (err) => {
             self.loading = false;
             self.$notify({
               type: 'danger',
-              message: err.message
+              message: err.message,
             });
           }
         );
@@ -315,6 +300,17 @@ export default {
         self.$store.getters.currentUser.role === 'administratorRebens' ||
         self.$store.getters.currentUser.role === 'master';
 
+      if (!self.isRebens) {
+        self.filters.operation = self.$store.getters.currentUser.idOperation;
+      } else {
+        operationService.findAll().then((response) => {
+          _.each(response.data, function (el) {
+            if (el.id != self.id) {
+              self.operations.push({ code: el.id, label: el.title });
+            }
+          });
+        });
+      }
       self.roles = [];
       if (self.isMaster) {
         self.roles.push({ code: 'master', label: 'Master' });
@@ -322,31 +318,25 @@ export default {
       if (!self.isPartnerUser) {
         self.roles.push({ code: 'publisher', label: 'Publicador' });
         self.roles.push({ code: 'administrator', label: 'Administrador' });
+        self.roles.push({ code: 'ticketChecker', label: 'Validador Ingresso' });
+        self.roles.push({ code: 'couponChecker', label: 'Validador Cupom' });
         if (self.isRebens) {
-          self.roles.push({
-            code: 'publisherRebens',
-            label: 'Publicador Rebens'
-          });
+          // self.roles.push({
+          //   code: 'publisherRebens',
+          //   label: 'Publicador Rebens'
+          // });
           self.roles.push({
             code: 'administratorRebens',
-            label: 'Administrador Rebens'
+            label: 'Administrador Rebens',
           });
         }
       }
       self.roles.push({
         code: 'partnerAdministrator',
-        label: 'Administrador Parceiro'
+        label: 'Administrador Parceiro',
       });
       self.roles.push({ code: 'partnerApprover', label: 'Aprovador Parceiro' });
       self.roles.push({ code: 'promoter', label: 'Promotor' });
-
-      operationService.findAll().then(response => {
-        _.each(response.data, function(el) {
-          if (el.id != self.id) {
-            self.operations.push({ code: el.id, label: el.title });
-          }
-        });
-      });
 
       operationPartnerService
         .findAll({
@@ -354,20 +344,20 @@ export default {
           pageItems: 1000,
           searchWord: '',
           sort: 'name ASC',
-          idOperation: ''
+          idOperation: self.filters.operation,
         })
         .then(
-          response => {
-            _.each(response.data, function(el) {
+          (response) => {
+            _.each(response.data, function (el) {
               self.operationPartners.push({
                 code: el.id,
-                label: el.name
+                label: el.name,
               });
             });
           },
           () => {}
         );
-    }
+    },
   },
   watch: {
     'filters.active'() {
@@ -385,8 +375,8 @@ export default {
     'filters.company'() {
       this.pagination.currentPage = 1;
       this.fetchData();
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

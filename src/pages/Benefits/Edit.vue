@@ -26,9 +26,9 @@
               >
                 <span slot="no-options">Nenhum parceiro encontrado</span>
               </v-select>
-              <label v-show="customErrors.get('idPartner')" class="ias-error">
-                {{ customErrors.get('idPartner') }}
-              </label>
+              <label v-show="customErrors.get('idPartner')" class="ias-error">{{
+                customErrors.get('idPartner')
+              }}</label>
             </div>
           </div>
           <div class="ias-row">
@@ -73,9 +73,9 @@
               v-model="model.detail"
               placeholder="Detalhes"
             />
-            <label v-show="customErrors.get('detail')" class="ias-error">
-              {{ customErrors.get('detail') }}
-            </label>
+            <label v-show="customErrors.get('detail')" class="ias-error">{{
+              customErrors.get('detail')
+            }}</label>
           </div>
           <div
             class="ias-row-editor"
@@ -266,9 +266,9 @@
               v-model="model.voucherText"
               placeholder="Texto do voucher"
             />
-            <label v-show="customErrors.get('voucherText')" class="ias-error">{{
-              customErrors.get('voucherText')
-            }}</label>
+            <label v-show="customErrors.get('voucherText')" class="ias-error">
+              {{ customErrors.get('voucherText') }}
+            </label>
           </div>
           <div class="ias-row" v-else>
             <custom-input
@@ -404,9 +404,9 @@
               multiple
               :class="{ 'has-error': customErrors.get('operations') }"
             ></v-select>
-            <label v-if="customErrors.get('operations')" class="ias-error">
-              {{ customErrors.get('operations') }}
-            </label>
+            <label v-if="customErrors.get('operations')" class="ias-error">{{
+              customErrors.get('operations')
+            }}</label>
           </div>
           <div class="select-holder-right">
             <v-select
@@ -418,9 +418,9 @@
               multiple
               :class="{ 'has-error': customErrors.get('categories') }"
             ></v-select>
-            <label v-if="customErrors.get('categories')" class="ias-error">
-              {{ customErrors.get('categories') }}
-            </label>
+            <label v-if="customErrors.get('categories')" class="ias-error">{{
+              customErrors.get('categories')
+            }}</label>
           </div>
         </div>
       </form>
@@ -728,22 +728,11 @@ export default {
             self.operationList.push({ label: el.title, code: el.id });
           });
         });
-      categoryService
-        .findAll({
-          page: 0,
-          pageItems: 1000,
-          searchWord: '',
-          sort: 'name ASC',
-          active: true,
-          idParent: '',
-          type: '',
-          level: ''
-        })
-        .then(response => {
-          _.each(response.data, function(el) {
-            self.categoriesList.push({ label: el.name, code: el.id });
-          });
+      categoryService.listAllActive(4).then(response => {
+        _.each(response.data, function(el) {
+          self.categoriesList.push({ label: el.name, code: el.id });
         });
+      });
       if (!self.isRebens) {
         self.model.exclusive = true;
         self.model.idOperation = this.$store.getters.currentUser.idOperation;

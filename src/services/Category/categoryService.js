@@ -118,5 +118,19 @@ export default {
         }
       );
     });
+  },
+  listAllActive: type => {
+    return new Promise((resolve, reject) => {
+      HTTP.get(
+        config.apiEndpoints.categoryUri.concat(`ListAll/?type=${type}`)
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
   }
 };

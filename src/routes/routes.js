@@ -177,7 +177,7 @@ let categoryPages = {
   component: MainLayout,
   meta: {
     requiresAuth: true,
-    roles: ['master', 'publisherRebens', 'administratorRebens'],
+    roles: ['master', 'publisherRebens', 'publisher', 'administratorRebens'],
     title: 'Categoria'
   },
   children: [
@@ -187,7 +187,12 @@ let categoryPages = {
       component: CategoriesList,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        roles: [
+          'master',
+          'publisherRebens',
+          'publisher',
+          'administratorRebens'
+        ],
         title: 'Categoria'
       }
     },
@@ -197,7 +202,12 @@ let categoryPages = {
       component: CategoriesEdit,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        roles: [
+          'master',
+          'publisherRebens',
+          'publisher',
+          'administratorRebens'
+        ],
         title: 'Categoria'
       }
     },
@@ -208,7 +218,12 @@ let categoryPages = {
       component: CategoriesEdit,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        roles: [
+          'master',
+          'publisherRebens',
+          'publisher',
+          'administratorRebens'
+        ],
         title: 'Categoria'
       }
     }
@@ -220,7 +235,7 @@ let partnerPages = {
   component: MainLayout,
   meta: {
     requiresAuth: true,
-    roles: ['master', 'publisherRebens', 'administratorRebens'],
+    roles: ['master', 'publisherRebens', 'publisher', 'administratorRebens'],
     title: 'Parceiro'
   },
   children: [
@@ -230,7 +245,12 @@ let partnerPages = {
       component: PartnersList,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        roles: [
+          'master',
+          'publisherRebens',
+          'publisher',
+          'administratorRebens'
+        ],
         title: 'Parceiro'
       }
     },
@@ -240,7 +260,12 @@ let partnerPages = {
       component: PartnersEdit,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        roles: [
+          'master',
+          'publisherRebens',
+          'publisher',
+          'administratorRebens'
+        ],
         title: 'Parceiro'
       }
     },
@@ -251,7 +276,12 @@ let partnerPages = {
       component: PartnersEdit,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        roles: [
+          'master',
+          'publisherRebens',
+          'publisher',
+          'administratorRebens'
+        ],
         title: 'Parceiro'
       }
     }
@@ -263,7 +293,7 @@ let companyPages = {
   component: MainLayout,
   meta: {
     requiresAuth: true,
-    roles: ['master', 'publisherRebens', 'administratorRebens'],
+    roles: ['master', 'publisherRebens', 'publisher', 'administratorRebens'],
     title: 'Empresa'
   },
   children: [
@@ -273,7 +303,12 @@ let companyPages = {
       component: CompanyList,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        roles: [
+          'master',
+          'publisherRebens',
+          'publisher',
+          'administratorRebens'
+        ],
         title: 'Empresa'
       }
     },
@@ -283,7 +318,12 @@ let companyPages = {
       component: CompanyEdit,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        roles: [
+          'master',
+          'publisherRebens',
+          'publisher',
+          'administratorRebens'
+        ],
         title: 'Empresa'
       }
     },
@@ -294,7 +334,12 @@ let companyPages = {
       component: CompanyEdit,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        roles: [
+          'master',
+          'publisherRebens',
+          'publisher',
+          'administratorRebens'
+        ],
         title: 'Empresa'
       }
     }
@@ -372,7 +417,7 @@ let contactPages = {
   component: MainLayout,
   meta: {
     requiresAuth: true,
-    roles: ['master', 'publisherRebens', 'administratorRebens'],
+    roles: ['master', 'publisherRebens', 'publisher', 'administratorRebens'],
     title: 'Contato'
   },
   children: [
@@ -382,7 +427,12 @@ let contactPages = {
       component: ContactList,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        roles: [
+          'master',
+          'publisher',
+          'publisherRebens',
+          'administratorRebens'
+        ],
         title: 'Contato'
       }
     },
@@ -392,7 +442,12 @@ let contactPages = {
       component: ContactEdit,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        roles: [
+          'master',
+          'publisherRebens',
+          'publisher',
+          'administratorRebens'
+        ],
         title: 'Contato'
       }
     },
@@ -403,7 +458,12 @@ let contactPages = {
       component: ContactEdit,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'publisherRebens', 'administratorRebens'],
+        roles: [
+          'master',
+          'publisherRebens',
+          'publisher',
+          'administratorRebens'
+        ],
         title: 'Contato'
       }
     }
@@ -458,7 +518,7 @@ let faqsPages = {
   component: MainLayout,
   meta: {
     requiresAuth: true,
-    roles: ['publisher', 'administrator', 'master'],
+    roles: ['publisher', 'administrator', 'publisher', 'master'],
     title: i18n.t('pages.faqs.title')
   },
   children: [
@@ -483,7 +543,7 @@ let customersPages = {
     requiresAuth: true,
     roles: [
       'publisherRebens',
-      'administradorRebens',
+      'administratorRebens',
       'publisher',
       'administrator',
       'master'
@@ -499,7 +559,7 @@ let customersPages = {
         requiresAuth: true,
         roles: [
           'publisherRebens',
-          'administradorRebens',
+          'administratorRebens',
           'publisher',
           'administrator',
           'master'
@@ -515,7 +575,7 @@ let customersPages = {
         requiresAuth: true,
         roles: [
           'publisherRebens',
-          'administradorRebens',
+          'administratorRebens',
           'publisher',
           'administrator',
           'master'
@@ -599,7 +659,13 @@ let orderPages = {
   component: MainLayout,
   meta: {
     requiresAuth: true,
-    roles: ['master', 'administrator', 'administratorRebens', 'ticketChecker'],
+    roles: [
+      'master',
+      'administrator',
+      'publisher',
+      'administratorRebens',
+      'ticketChecker'
+    ],
     title: 'Validação de Ingresso'
   },
   children: [
@@ -612,8 +678,10 @@ let orderPages = {
         roles: [
           'master',
           'administrator',
+
           'administratorRebens',
-          'ticketChecker'
+          'ticketChecker',
+          'publisher'
         ],
         title: 'Validação de Ingresso'
       }
@@ -709,7 +777,7 @@ let reportPages = {
   component: MainLayout,
   meta: {
     requiresAuth: true,
-    roles: ['master', 'administrator', 'administratorRebens'],
+    roles: ['master', 'administrator', 'publisher', 'administratorRebens'],
     title: i18n.t('pages.report.title')
   },
   children: [
@@ -719,7 +787,7 @@ let reportPages = {
       component: CustomerReport,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'administrator', 'administratorRebens'],
+        roles: ['master', 'administrator', 'publisher', 'administratorRebens'],
         title: i18n.t('pages.report.customer.title')
       }
     },
@@ -730,7 +798,7 @@ let reportPages = {
       component: BenefitUseReport,
       meta: {
         requiresAuth: true,
-        roles: ['master', 'administrator', 'administratorRebens'],
+        roles: ['master', 'administrator', 'publisher', 'administratorRebens'],
         title: i18n.t('pages.report.benefit-use.title')
       }
     }
@@ -747,6 +815,7 @@ let operationPartnerPages = {
       'administrator',
       'administratorRebens',
       'partnerAdministrator',
+      'publisher',
       'partnerApprover'
     ],
     title: 'Parceiros'
@@ -763,7 +832,8 @@ let operationPartnerPages = {
           'administrator',
           'administratorRebens',
           'partnerAdministrator',
-          'partnerApprover'
+          'partnerApprover',
+          'publisher'
         ],
         title: 'Parceiros'
       }
@@ -779,7 +849,8 @@ let operationPartnerPages = {
           'administrator',
           'administratorRebens',
           'partnerAdministrator',
-          'partnerApprover'
+          'partnerApprover',
+          'publisher'
         ],
         title: 'Parceiros'
       }
@@ -796,7 +867,8 @@ let operationPartnerPages = {
           'administrator',
           'administratorRebens',
           'partnerAdministrator',
-          'partnerApprover'
+          'partnerApprover',
+          'publisher'
         ],
         title: 'Parceiros'
       }
@@ -813,7 +885,8 @@ let operationPartnerPages = {
           'administrator',
           'administratorRebens',
           'partnerAdministrator',
-          'partnerApprover'
+          'partnerApprover',
+          'publisher'
         ],
         title: 'Aprovação de Clientes'
       }
@@ -830,7 +903,8 @@ let operationPartnerPages = {
           'administrator',
           'administratorRebens',
           'partnerAdministrator',
-          'partnerApprover'
+          'partnerApprover',
+          'publisher'
         ],
         title: 'Clientes'
       }
@@ -1497,7 +1571,7 @@ let promoterPages = {
   component: MainLayout,
   meta: {
     requiresAuth: true,
-    roles: ['promoter'],
+    roles: ['publisher', 'promoter'],
     title: i18n.t('pages.promoter.title')
   },
   children: [
@@ -1507,7 +1581,7 @@ let promoterPages = {
       component: PromoterList,
       meta: {
         requiresAuth: true,
-        roles: ['promoter'],
+        roles: ['promoter', 'publisher'],
         title: i18n.t('pages.promoter.title')
       }
     },
@@ -1517,7 +1591,7 @@ let promoterPages = {
       component: PromoterEdit,
       meta: {
         requiresAuth: true,
-        roles: ['promoter'],
+        roles: ['promoter', 'publisher'],
         title: i18n.t('pages.promoter.title')
       }
     },
@@ -1528,7 +1602,7 @@ let promoterPages = {
       component: PromoterEdit,
       meta: {
         requiresAuth: true,
-        roles: ['promoter'],
+        roles: ['promoter', 'publisher'],
         title: i18n.t('pages.promoter.title')
       }
     },
@@ -1600,7 +1674,7 @@ let subscriptionPages = {
   component: MainLayout,
   meta: {
     requiresAuth: true,
-    roles: ['administrator', 'administratorRebens', 'master'],
+    roles: ['administrator', 'publisher', 'administratorRebens', 'master'],
     title: 'Assinaturas'
   },
   children: [
@@ -1610,7 +1684,7 @@ let subscriptionPages = {
       component: SubscriptionList,
       meta: {
         requiresAuth: true,
-        roles: ['administrator', 'administratorRebens', 'master'],
+        roles: ['administrator', 'publisher', 'administratorRebens', 'master'],
         title: 'Assinaturas'
       }
     }

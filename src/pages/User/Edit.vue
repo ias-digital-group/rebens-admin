@@ -88,9 +88,9 @@
               >
                 <span slot="no-options">Nenhum papel encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('roles')" class="ias-error">{{
-                customErrors.get('roles')
-              }}</label>
+              <label v-if="customErrors.get('roles')" class="ias-error">
+                {{ customErrors.get('roles') }}
+              </label>
             </div>
           </div>
           <div class="ias-row">
@@ -106,9 +106,9 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">{{
-                customErrors.get('operation')
-              }}</label>
+              <label v-if="customErrors.get('operation')" class="ias-error">
+                {{ customErrors.get('operation') }}
+              </label>
             </div>
           </div>
           <div class="ias-row">
@@ -482,10 +482,10 @@ export default {
         self.roles.push({ code: 'ticketChecker', label: 'Validador Ingresso' });
         self.roles.push({ code: 'couponChecker', label: 'Validador Cupom' });
         if (self.isRebens) {
-          self.roles.push({
-            code: 'publisherRebens',
-            label: 'Publicador Rebens'
-          });
+          // self.roles.push({
+          //   code: 'publisherRebens',
+          //   label: 'Publicador Rebens'
+          // });
           self.roles.push({
             code: 'administratorRebens',
             label: 'Administrador Rebens'
