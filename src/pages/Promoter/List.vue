@@ -47,10 +47,10 @@
       <table>
         <thead>
           <tr>
-            <th>Nome</th>
+            <th>Nome / E-mail</th>
             <th>CPF</th>
-            <th>Email</th>
-            <th>Data Criação</th>
+            <th>Clube / Empresa</th>
+            <th>Telefone / Celular</th>
             <th>Status</th>
             <th style="width:64px;">Ações</th>
           </tr>
@@ -58,16 +58,25 @@
         <tbody>
           <tr v-for="item in tableData" :key="item.id">
             <td>
-              <span>{{ item.name }} {{ item.surname }}</span>
+              <div class="two-lines">
+                <span>{{ item.fullname }}</span>
+                <span class="blue">{{ item.email }}</span>
+              </div>
             </td>
             <td>
               <span>{{ item.cpf }}</span>
             </td>
             <td>
-              <span>{{ item.email }}</span>
+              <div class="two-lines">
+                <span>{{ item.operation }}</span>
+                <span class="blue">{{ item.operationPartner }}</span>
+              </div>
             </td>
             <td>
-              <span>{{ item.created }}</span>
+              <div class="two-lines">
+                <span>{{ item.phone }}</span>
+                <span class="blue">{{ item.cellphone }}</span>
+              </div>
             </td>
             <td>
               <span>{{ item.statusName }}</span>
