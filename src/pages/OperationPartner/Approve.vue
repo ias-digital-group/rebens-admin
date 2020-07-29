@@ -7,21 +7,21 @@
       <table>
         <thead>
           <tr>
-            <th>Nome</th>
-            <th>E-mail / CPF</th>
+            <th>Nome / E-mail</th>
+            <th>CPF</th>
             <th>Parceiro / Status</th>
             <th style="width:124px;">Ações</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="item in tableData" :key="item.id">
-            <td>{{ item.name }}</td>
             <td>
               <div class="two-lines">
-                <span>{{ item.email }}</span>
-                <span class="blue">{{ item.cpf }}</span>
+                <span>{{ item.name }}</span>
+                <span class="blue">{{ item.email }}</span>
               </div>
             </td>
+            <td>{{ item.cpf }}</td>
             <td>
               <div class="two-lines">
                 <span>{{ item.operationPartnerName }}</span>
@@ -104,13 +104,13 @@ export default {
   components: {
     Pagination,
     [Select.name]: Select,
-    [Option.name]: Option
+    [Option.name]: Option,
   },
   data() {
     return {
       internalName: 'Parceiros',
       sortField: 'name',
-      formLoading: false
+      formLoading: false,
     };
   },
   methods: {
@@ -123,11 +123,11 @@ export default {
         sort: self.formatSortFieldParam,
         idOperation: self.$store.getters.currentUser.idOperation,
         status: 1,
-        idOperationPartner: self.$store.getters.currentUser.idOperationPartner
+        idOperationPartner: self.$store.getters.currentUser.idOperationPartner,
       };
       self.loading = true;
       operationPartnerService.findAllCustomers(request).then(
-        response => {
+        (response) => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
           self.loading = false;
@@ -148,16 +148,16 @@ export default {
             self.loading = false;
             self.$notify({
               type: 'success',
-              message: 'Cliente aprovado com sucesso!'
+              message: 'Cliente aprovado com sucesso!',
             });
             row.status = 2;
             row.statusName = 'aprovado';
           },
-          err => {
+          (err) => {
             self.loading = false;
             self.$notify({
               type: 'danger',
-              message: err.message
+              message: err.message,
             });
           }
         );
@@ -172,21 +172,21 @@ export default {
             self.loading = false;
             self.$notify({
               type: 'success',
-              message: 'Cliente reprovado com sucesso!'
+              message: 'Cliente reprovado com sucesso!',
             });
             row.status = 3;
             row.statusName = 'reprovado';
           },
-          err => {
+          (err) => {
             self.loading = false;
             self.$notify({
               type: 'danger',
-              message: err.message
+              message: err.message,
             });
           }
         );
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

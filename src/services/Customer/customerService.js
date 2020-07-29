@@ -32,7 +32,11 @@ export default {
             request.status != null && request.status != undefined
               ? '&status=' + request.status
               : ''
-          }&active=${request.active}`
+          }&active=${
+            request.active != null && request.active != undefined
+              ? request.active
+              : ''
+          }`
         )
       ).then(
         response => {

@@ -404,7 +404,10 @@ let usersPages = {
           'partnerAdministrator',
           'publisher',
           'publisherRebens',
-          'promoter'
+          'promoter',
+          'partnerApprover',
+          'ticketChecker',
+          'couponChecker'
         ],
         title: i18n.t('pages.users.title')
       }

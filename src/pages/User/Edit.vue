@@ -6,11 +6,7 @@
         <span v-else>Editar Usuário</span>
       </h2>
       <div class="box-actions">
-        <button
-          @click="resendValidation"
-          type="button"
-          class="bt bt-square bg-white-2 c-orange"
-        >
+        <button @click="resendValidation" type="button" class="bt bt-square bg-white-2 c-orange">
           <i class="icon-icon-send"></i>
         </button>
         <base-link to="/users" class="bt bt-square bg-white-2 c-light-blue">
@@ -88,12 +84,13 @@
               >
                 <span slot="no-options">Nenhum papel encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('roles')" class="ias-error">
-                {{ customErrors.get('roles') }}
-              </label>
+              <label
+                v-if="customErrors.get('roles')"
+                class="ias-error"
+              >{{ customErrors.get('roles') }}</label>
             </div>
           </div>
-          <div class="ias-row">
+          <div class="ias-row" v-show="isRebens">
             <div class="select-holder">
               <v-select
                 :options="operations"
@@ -106,9 +103,10 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">
-                {{ customErrors.get('operation') }}
-              </label>
+              <label
+                v-if="customErrors.get('operation')"
+                class="ias-error"
+              >{{ customErrors.get('operation') }}</label>
             </div>
           </div>
           <div class="ias-row">
@@ -124,7 +122,7 @@
                 <span slot="no-options">Nenhuma empresa encontrada</span>
               </v-select>
             </div>
-            <div class="select-holder" v-else>
+            <div class="select-holder" v-else-if="showOperationPartners">
               <v-select
                 :options="operationPartners"
                 :reduce="op => op.code"
@@ -144,6 +142,15 @@
               maxlength="50"
               :inputMask="['(##) ####-####', '(##) #####-####']"
             ></custom-input>
+            <custom-input
+              v-model="model.phoneComercialMobile"
+              type="text"
+              name="phoneComercialMobile"
+              label="Celular Comercial"
+              maxlength="50"
+              v-show="!showOperationPartners"
+              :inputMask="['(##) ####-####', '(##) #####-####']"
+            ></custom-input>
           </div>
           <div class="ias-row">
             <custom-input
@@ -152,6 +159,7 @@
               name="phoneComercialMobile"
               label="Celular Comercial"
               maxlength="50"
+              v-show="showOperationPartners"
               :inputMask="['(##) ####-####', '(##) #####-####']"
             ></custom-input>
             <div class="phone-branch">
@@ -171,14 +179,11 @@
                 maxlength="50"
               ></custom-input>
             </div>
+            <div class="div-spacer" v-show="!showOperationPartners"></div>
           </div>
           <div class="ias-row">
             <div class="form-actions">
-              <button
-                class="bt bg-green c-white"
-                type="button"
-                @click.prevent="validate"
-              >
+              <button class="bt bg-green c-white" type="button" @click.prevent="validate">
                 <span v-if="viewAction === 'new'">Cadastrar</span>
                 <span v-else>Salvar</span>
               </button>
@@ -189,19 +194,11 @@
           </div>
         </div>
         <div class="form-right">
-          <ias-image-upload
-            @change="onImageChange"
-            img-size="(360x360)"
-            :src="model.picture"
-          />
+          <ias-image-upload @change="onImageChange" img-size="(360x360)" :src="model.picture" />
         </div>
       </form>
     </div>
-    <success-modal
-      :isEdit="viewAction !== 'new'"
-      :show="showSuccessModal"
-      link="/users"
-    ></success-modal>
+    <success-modal :isEdit="viewAction !== 'new'" :show="showSuccessModal" link="/users"></success-modal>
   </div>
 </template>
 <script>
@@ -216,17 +213,17 @@ import _ from 'lodash';
 
 export default {
   components: {
-    SuccessModal
+    SuccessModal,
   },
   props: {
     id: String,
     removeText: {
       type: String,
-      default: 'Remove'
-    }
+      default: 'Remove',
+    },
   },
   watch: {
-    'model.roles': function(value) {
+    'model.roles': function (value) {
       if (
         value === 'master' ||
         value === 'publisherRebens' ||
@@ -236,7 +233,7 @@ export default {
         this.model.idOperationPartner = null;
       }
     },
-    'model.idOperation': function() {
+    'model.idOperation': function () {
       const self = this;
       if (self.isRebens) {
         if (self.model.roles === 'couponChecker') self.loadPartners(self);
@@ -246,7 +243,7 @@ export default {
         )
           self.loadOperationPartner(self);
       }
-    }
+    },
   },
   data() {
     return {
@@ -256,6 +253,7 @@ export default {
       isPartnerUser: false,
       showSuccessModal: false,
       customErrors: new Map(),
+      showOperationPartners: true,
       roles: [],
       image: null,
       emailConfirm: '',
@@ -275,11 +273,11 @@ export default {
         idPartner: null,
         idOperationPartner: null,
         roles: '',
-        picture: ''
+        picture: '',
       },
       operations: [],
       operationPartners: [],
-      partners: []
+      partners: [],
     };
   },
   computed: {
@@ -296,14 +294,6 @@ export default {
           this.model.roles == 'ticketChecker') &&
         this.isRebens &&
         !this.isPartnerUser
-      );
-    },
-    showOperationPartners() {
-      return (
-        (this.model.roles == 'partnerAdministrator' ||
-          this.model.roles == 'partnerApprover') &&
-        !this.isPartnerUser &&
-        this.operationPartners.length > 1
       );
     },
     blockOperations() {
@@ -323,7 +313,7 @@ export default {
         this.model.roles == 'ticketChecker' ||
         this.model.roles == 'master'
       );
-    }
+    },
   },
   methods: {
     onImageChange(file) {
@@ -383,11 +373,11 @@ export default {
         self.formLoading = true;
         if (self.image) {
           helperService.uploadImage(self.image).then(
-            response => {
+            (response) => {
               if (response.status != 200) {
                 self.$notify({
                   type: 'danger',
-                  message: response.message
+                  message: response.message,
                 });
                 self.formLoading = false;
                 return;
@@ -395,10 +385,10 @@ export default {
               self.model.picture = response.data.url;
               self.saveUser(self);
             },
-            err => {
+            (err) => {
               self.$notify({
                 type: 'danger',
-                message: err.message
+                message: err.message,
               });
               self.formLoading = false;
             }
@@ -415,7 +405,7 @@ export default {
         () => {
           self.$notify({
             type: 'success',
-            message: 'E-mail reenviado com sucesso!'
+            message: 'E-mail reenviado com sucesso!',
           });
           self.formLoading = false;
         },
@@ -439,16 +429,16 @@ export default {
             vm.formLoading = false;
             vm.showSuccessModal = true;
           },
-          err => {
+          (err) => {
             if (err.response.status === 400 && err.response.data.message) {
               vm.$notify({
                 type: 'warning',
-                message: err.response.data.message
+                message: err.response.data.message,
               });
             } else {
               vm.$notify({
                 type: 'danger',
-                message: err.message
+                message: err.message,
               });
             }
             vm.formLoading = false;
@@ -460,10 +450,10 @@ export default {
             vm.formLoading = false;
             vm.showSuccessModal = true;
           },
-          err => {
+          (err) => {
             vm.$notify({
               type: 'danger',
-              message: err.message
+              message: err.message,
             });
             vm.formLoading = false;
           }
@@ -473,36 +463,92 @@ export default {
     fetchData() {
       const self = this;
 
-      if (self.isMaster) {
-        self.roles.push({ code: 'master', label: 'Master' });
-      }
-      if (!self.isPartnerUser) {
-        self.roles.push({ code: 'publisher', label: 'Publicador' });
-        self.roles.push({ code: 'administrator', label: 'Administrador' });
+      if (self.$store.getters.currentUser.role === 'ticketChecker')
         self.roles.push({ code: 'ticketChecker', label: 'Validador Ingresso' });
+      else if (self.$store.getters.currentUser.role === 'couponChecker')
         self.roles.push({ code: 'couponChecker', label: 'Validador Cupom' });
-        if (self.isRebens) {
-          // self.roles.push({
-          //   code: 'publisherRebens',
-          //   label: 'Publicador Rebens'
-          // });
-          self.roles.push({
-            code: 'administratorRebens',
-            label: 'Administrador Rebens'
-          });
+      else if (self.$store.getters.currentUser.role === 'promoter')
+        self.roles.push({ code: 'promoter', label: 'Promotor' });
+      else if (self.$store.getters.currentUser.role === 'partnerApprover')
+        self.roles.push({
+          code: 'partnerApprover',
+          label: 'Aprovador Parceiro',
+        });
+      else if (self.$store.getters.currentUser.role === 'publisher')
+        self.roles.push({ code: 'publisher', label: 'Publicador' });
+      else if (
+        self.$store.getters.currentUser.role === 'partnerAdministrator'
+      ) {
+        self.model.idOperation = self.$store.getters.currentUser.idOperation;
+        self.model.idPartner = self.$store.getters.currentUser.idPartner;
+        self.model.idOperationPartner =
+          self.$store.getters.currentUser.idOperationPartner;
+        self.showOperationPartners = false;
+        self.roles.push({
+          code: 'partnerAdministrator',
+          label: 'Administrador Parceiro',
+        });
+        self.roles.push({
+          code: 'partnerApprover',
+          label: 'Aprovador Parceiro',
+        });
+      } else {
+        if (self.isMaster) {
+          self.roles.push({ code: 'master', label: 'Master' });
         }
+        if (!self.isPartnerUser) {
+          self.roles.push({ code: 'publisher', label: 'Publicador' });
+          self.roles.push({ code: 'administrator', label: 'Administrador' });
+          self.roles.push({
+            code: 'ticketChecker',
+            label: 'Validador Ingresso',
+          });
+          self.roles.push({ code: 'couponChecker', label: 'Validador Cupom' });
+          if (self.isRebens) {
+            // self.roles.push({
+            //   code: 'publisherRebens',
+            //   label: 'Publicador Rebens'
+            // });
+            self.roles.push({
+              code: 'administratorRebens',
+              label: 'Administrador Rebens',
+            });
+          }
+        }
+        self.roles.push({
+          code: 'partnerAdministrator',
+          label: 'Administrador Parceiro',
+        });
+        self.roles.push({
+          code: 'partnerApprover',
+          label: 'Aprovador Parceiro',
+        });
+        if (
+          self.isRebens ||
+          (self.$store.getters.currentUser.modules &&
+            self.$store.getters.currentUser.modules.include('promoter'))
+        )
+          self.roles.push({ code: 'promoter', label: 'Promotor' });
+
+        operationService.findAll().then(
+          (response) => {
+            self.operations.push({ code: 0, label: 'selecione' });
+            _.each(response.data, function (el) {
+              if (el.id != self.id) {
+                self.operations.push({ code: el.id, label: el.title });
+              }
+            });
+          },
+          () => {}
+        );
+
+        this.loadPartners(self);
       }
-      self.roles.push({
-        code: 'partnerAdministrator',
-        label: 'Administrador Parceiro'
-      });
-      self.roles.push({ code: 'partnerApprover', label: 'Aprovador Parceiro' });
-      self.roles.push({ code: 'promoter', label: 'Promotor' });
 
       if (this.viewAction == 'edit') {
         this.formLoading = true;
         userService.get(self.id).then(
-          response => {
+          (response) => {
             self.model = response.data;
             self.loadOperationPartner(self);
           },
@@ -514,20 +560,6 @@ export default {
         self.model.idOperation = self.$store.getters.currentUser.idOperation;
         self.loadOperationPartner(self);
       }
-
-      operationService.findAll().then(
-        response => {
-          self.operations.push({ code: 0, label: 'selecione' });
-          _.each(response.data, function(el) {
-            if (el.id != self.id) {
-              self.operations.push({ code: el.id, label: el.title });
-            }
-          });
-        },
-        () => {}
-      );
-
-      this.loadPartners(self);
     },
     loadOperationPartner(self) {
       self.formLoading = true;
@@ -549,16 +581,16 @@ export default {
             pageItems: 1000,
             searchWord: '',
             sort: 'name ASC',
-            idOperation: operationId
+            idOperation: operationId,
           })
           .then(
-            response => {
+            (response) => {
               self.operationPartners.push({ code: 0, label: 'selecione' });
-              _.each(response.data, function(el) {
+              _.each(response.data, function (el) {
                 if (el.id != self.id) {
                   self.operationPartners.push({
                     code: el.id,
-                    label: el.name
+                    label: el.name,
                   });
                 }
               });
@@ -581,16 +613,16 @@ export default {
           searchWord: '',
           sort: 'name ASC',
           active: true,
-          type: 1
+          type: 1,
         })
         .then(
-          response => {
+          (response) => {
             self.partners.push({ code: 0, label: 'selecione' });
-            _.each(response.data, function(el) {
+            _.each(response.data, function (el) {
               if (el.id != self.id) {
                 self.partners.push({
                   code: el.id,
-                  label: el.name
+                  label: el.name,
                 });
               }
             });
@@ -600,7 +632,7 @@ export default {
             self.formLoading = false;
           }
         );
-    }
+    },
   },
   created() {
     this.isMaster = this.$store.getters.currentUser.role == 'master';
@@ -609,7 +641,8 @@ export default {
     this.isRebens =
       this.$store.getters.currentUser.role == 'administratorRebens' ||
       this.$store.getters.currentUser.role == 'master';
+
     this.fetchData();
-  }
+  },
 };
 </script>

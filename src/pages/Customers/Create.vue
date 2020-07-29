@@ -22,12 +22,15 @@
                 v-model="model.idOperation"
                 :class="{ 'has-error': customErrors.get('operation') }"
                 placeholder="Clube"
+                :disabled="!isRebens"
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">{{
+              <label v-if="customErrors.get('operation')" class="ias-error">
+                {{
                 customErrors.get('operation')
-              }}</label>
+                }}
+              </label>
             </div>
             <div class="select-holder">
               <v-select
@@ -116,11 +119,7 @@
           </div>
           <div class="ias-row">
             <div class="form-actions">
-              <button
-                class="bt bg-green c-white"
-                type="button"
-                @click.prevent="validate"
-              >
+              <button class="bt bg-green c-white" type="button" @click.prevent="validate">
                 <span>Cadastrar</span>
               </button>
 
@@ -132,11 +131,7 @@
         <div class="form-right"></div>
       </form>
     </div>
-    <success-modal
-      :isEdit="false"
-      :show="showSuccessModal"
-      link="/customers"
-    ></success-modal>
+    <success-modal :isEdit="false" :show="showSuccessModal" link="/customers"></success-modal>
   </div>
 </template>
 <script>
@@ -148,19 +143,20 @@ import validate from '../../validate';
 import _ from 'lodash';
 export default {
   components: {
-    SuccessModal
+    SuccessModal,
   },
   props: {
     removeText: {
       type: String,
-      default: 'Remove'
-    }
+      default: 'Remove',
+    },
   },
   data() {
     return {
       formLoading: false,
       showSuccessModal: false,
       customErrors: new Map(),
+      isRebens: false,
       emailConfirm: '',
       model: {
         id: 0,
@@ -180,10 +176,10 @@ export default {
         status: 0,
         active: false,
         address: null,
-        idOperationPartner: null
+        idOperationPartner: null,
       },
       operations: [],
-      operationPartners: []
+      operationPartners: [],
     };
   },
   methods: {
@@ -202,7 +198,7 @@ export default {
         self.customErrors.set('email', 'Máximo 300 caracteres');
       if (!self.emailConfirm)
         self.customErrors.set('email-confirm', 'Campo obrigatório');
-      else if (!self.reg.test(self.emailConfirm))
+      else if (!validate.validateEmail(self.emailConfirm))
         self.customErrors.set('email-confirm', 'E-mail inválido');
       else if (!self.emailConfirm.length > 300)
         self.customErrors.set('email-confirm', 'Máximo 300 caracteres');
@@ -226,16 +222,16 @@ export default {
           self.formLoading = false;
           self.showSuccessModal = true;
         },
-        err => {
+        (err) => {
           if (err.response.status == 400 && err.response.data) {
             self.$notify({
               type: 'danger',
-              message: err.response.data.message
+              message: err.response.data.message,
             });
           } else {
             self.$notify({
               type: 'danger',
-              message: err.message
+              message: err.message,
             });
           }
           self.formLoading = false;
@@ -244,19 +240,25 @@ export default {
     },
     fetchData() {
       const self = this;
+      self.isRebens =
+        self.$store.getters.currentUser.role === 'administratorRebens' ||
+        self.$store.getters.currentUser.role === 'master';
 
       self.operations = [];
-      operationService.findAll().then(
-        response => {
-          self.operations.push({ code: 0, label: 'selecione' });
-          _.each(response.data, function(el) {
-            if (el.id != self.id) {
-              self.operations.push({ code: el.id, label: el.title });
-            }
-          });
-        },
-        () => {}
-      );
+      operationService.findAll().then((response) => {
+        self.operations.push({ code: 0, label: 'selecione' });
+        _.each(response.data, function (el) {
+          if (el.id != self.id) {
+            self.operations.push({ code: el.id, label: el.title });
+          }
+        });
+
+        if (!self.isRebens)
+          self.model.idOperation = parseInt(
+            self.$store.getters.currentUser.idOperation
+          );
+        () => {};
+      });
     },
     loadOperationPartner() {
       const self = this;
@@ -268,16 +270,16 @@ export default {
           pageItems: 1000,
           searchWord: '',
           sort: 'name ASC',
-          idOperation: self.model.idOperation
+          idOperation: self.model.idOperation,
         })
         .then(
-          response => {
+          (response) => {
             self.operationPartners.push({ code: 0, label: 'selecione' });
-            _.each(response.data, function(el) {
+            _.each(response.data, function (el) {
               if (el.id != self.id) {
                 self.operationPartners.push({
                   code: el.id,
-                  label: el.name
+                  label: el.name,
                 });
               }
             });
@@ -287,15 +289,15 @@ export default {
             self.formLoading = false;
           }
         );
-    }
+    },
   },
   watch: {
-    'model.idOperation': function() {
+    'model.idOperation': function () {
       this.loadOperationPartner();
-    }
+    },
   },
   created() {
     this.fetchData();
-  }
+  },
 };
 </script>
