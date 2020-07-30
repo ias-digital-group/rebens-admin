@@ -2,19 +2,11 @@
   <div class="list-box">
     <div class="page-header">
       <h2>Promotores</h2>
-      <div class="box-actions">
+      <div class="box-actions" style="margin-top: 8px;">
         <div class="input-post-icon search">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Digite aqui o que deseja encontrar"
-          />
+          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i
-            v-else
-            class="bt-clear-search icon-icon-times c-red"
-            @click="searchQuery = ''"
-          ></i>
+          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
         </div>
       </div>
     </div>
@@ -91,12 +83,12 @@ export default {
   components: {
     Pagination,
     [Select.name]: Select,
-    [Option.name]: Option
+    [Option.name]: Option,
   },
   data() {
     return {
       internalName: 'Promotores',
-      formLoading: false
+      formLoading: false,
     };
   },
   methods: {
@@ -106,11 +98,11 @@ export default {
         page: self.$data.pagination.currentPage - 1,
         pageItems: self.$data.pagination.perPage,
         searchWord: self.searchQuery,
-        sort: self.formatSortFieldParam
+        sort: self.formatSortFieldParam,
       };
       self.loading = true;
       promoterService.report(request).then(
-        response => {
+        (response) => {
           self.$data.tableData = response.data;
           if (response.data) {
             self.showTable = response.data.length > 0;
@@ -124,8 +116,8 @@ export default {
           self.loading = false;
         }
       );
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

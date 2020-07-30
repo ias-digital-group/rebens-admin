@@ -4,27 +4,17 @@
       <h2>Páginas</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Digite aqui o que deseja encontrar"
-          />
+          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i
-            v-else
-            class="bt-clear-search icon-icon-times c-red"
-            @click="searchQuery = ''"
-          ></i>
+          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
         </div>
         <div
           v-show="enableFilters"
           class="filter"
           :class="{ active: showFilters }"
+          style="margin-right: 0;"
         >
-          <a
-            class="bt bt-square bg-white-2 c-light-blue"
-            @click="showFilters = !showFilters"
-          >
+          <a class="bt bt-square bg-white-2 c-light-blue" @click="showFilters = !showFilters">
             <i class="icon-icon-filter"></i>
           </a>
         </div>
@@ -122,7 +112,7 @@ export default {
     Modal,
     Pagination,
     [Select.name]: Select,
-    [Option.name]: Option
+    [Option.name]: Option,
   },
   data() {
     return {
@@ -130,7 +120,7 @@ export default {
       sortField: 'name',
       operations: [],
       enableFilters: true,
-      showFilters: false
+      showFilters: false,
     };
   },
   methods: {
@@ -155,11 +145,11 @@ export default {
         searchWord: self.searchQuery,
         sort: self.formatSortFieldParam,
         idStaticTextType: 4,
-        idOperation: self.filters.operation
+        idOperation: self.filters.operation,
       };
       self.loading = true;
       staticTextService.findAll(request).then(
-        response => {
+        (response) => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
           self.$data.loading = false;
@@ -173,25 +163,25 @@ export default {
       const self = this;
       if (!self.operations || self.operations.length === 0) {
         self.operations = [];
-        operationService.findAll().then(response => {
-          _.each(response.data, function(el) {
+        operationService.findAll().then((response) => {
+          _.each(response.data, function (el) {
             if (el.id != self.id) {
               self.operations.push({ code: el.id, label: el.title });
             }
           });
         });
       }
-    }
+    },
   },
   watch: {
     'filters.operation'() {
       this.pagination.currentPage = 1;
       this.fetchData();
-    }
+    },
   },
   created() {
     this.loadOperations();
-  }
+  },
 };
 </script>
 <style lang="scss" scoped>

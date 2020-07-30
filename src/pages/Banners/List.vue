@@ -4,30 +4,16 @@
       <h2>Banners</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Digite aqui o que deseja encontrar"
-          />
+          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i
-            v-else
-            class="bt-clear-search icon-icon-times c-red"
-            @click="searchQuery = ''"
-          ></i>
+          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
         </div>
         <div class="filter" :class="{ active: showFilters }">
-          <a
-            class="bt bt-square bg-white-2 c-light-blue"
-            @click="showFilters = !showFilters"
-          >
+          <a class="bt bt-square bg-white-2 c-light-blue" @click="showFilters = !showFilters">
             <i class="icon-icon-filter"></i>
           </a>
         </div>
-        <base-link
-          to="/banners/new"
-          class="bt bt-square bg-white-2 c-light-blue"
-        >
+        <base-link to="/banners/new" class="bt bt-square bg-white-2 c-light-blue">
           <i class="icon-icon-plus"></i>
         </base-link>
       </div>
@@ -85,13 +71,8 @@
         <tbody>
           <tr v-for="item in tableData" :key="item.id">
             <td>
-              <div class="img-holder">
-                <img
-                  :src="item.image"
-                  :alt="item.name"
-                  width="96"
-                  height="40"
-                />
+              <div class="img-holder" style="width:96px;">
+                <img :src="item.image" :alt="item.name" width="96" height="40" />
               </div>
             </td>
             <td>
@@ -143,12 +124,7 @@
                 >
                   <i class="icon-icon-edit"></i>
                 </button>
-                <button
-                  @click="handleDelete(item)"
-                  type="button"
-                  title="apagar"
-                  class="bt c-red"
-                >
+                <button @click="handleDelete(item)" type="button" title="apagar" class="bt c-red">
                   <i class="icon-icon-delete"></i>
                 </button>
               </div>
@@ -190,7 +166,7 @@ export default {
     DeleteModal,
     Pagination,
     [Select.name]: Select,
-    [Option.name]: Option
+    [Option.name]: Option,
   },
   data() {
     return {
@@ -201,16 +177,16 @@ export default {
       places: [
         { code: 'H', label: 'Home' },
         { code: 'HL', label: 'Home Logada' },
-        { code: 'HB', label: 'Home Benefícios' }
+        { code: 'HB', label: 'Home Benefícios' },
       ],
       statuses: [
         { code: true, label: 'Ativos' },
-        { code: false, label: 'Inativos' }
+        { code: false, label: 'Inativos' },
       ],
       types: [
         { code: 1, label: 'Banner Full' },
-        { code: 3, label: 'Imperdíveis' }
-      ]
+        { code: 3, label: 'Imperdíveis' },
+      ],
     };
   },
   methods: {
@@ -220,7 +196,7 @@ export default {
     toggleActive(row) {
       const self = this;
       self.loading = true;
-      bannerService.toggleActive(row.id).then(data => {
+      bannerService.toggleActive(row.id).then((data) => {
         if (data.status === 'ok') {
           row.active = data.data;
           self.loading = false;
@@ -228,7 +204,7 @@ export default {
             type: 'success',
             message: `Banner ${
               row.active ? 'ativado' : 'inativado'
-            } com sucesso`
+            } com sucesso`,
           });
         }
       });
@@ -244,11 +220,11 @@ export default {
         active: self.filters.active,
         type: self.filters.type,
         idOperation: self.filters.operation,
-        where: self.filters.place
+        where: self.filters.place,
       };
       self.loading = true;
       bannerService.findAll(request).then(
-        response => {
+        (response) => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
           self.loading = false;
@@ -264,8 +240,8 @@ export default {
       const self = this;
       if (!self.operations || self.operations.length === 0) {
         self.operations = [];
-        operationService.findAll().then(response => {
-          _.each(response.data, function(el) {
+        operationService.findAll().then((response) => {
+          _.each(response.data, function (el) {
             if (el.id != self.id) {
               self.operations.push({ code: el.id, label: el.title });
             }
@@ -281,7 +257,7 @@ export default {
     confirmDelete(val) {
       const self = this;
       if (val) {
-        this.$validator.validateAll().then(isValid => {
+        this.$validator.validateAll().then((isValid) => {
           if (isValid) {
             self.modal.formLoading = true;
             bannerService.delete(self.modal.model.id).then(
@@ -290,16 +266,16 @@ export default {
                 self.fetchData();
                 self.showSuccess(true);
               },
-              err => {
+              (err) => {
                 if (err.response.status === 400 && err.response.data.message) {
                   self.$notify({
                     type: 'warning',
-                    message: err.response.data.message
+                    message: err.response.data.message,
                   });
                 } else {
                   self.$notify({
                     type: 'danger',
-                    message: err.message
+                    message: err.message,
                   });
                 }
                 self.modal.formLoading = false;
@@ -313,7 +289,7 @@ export default {
     },
     closeDeleteSuccess() {
       this.showSuccess(false);
-    }
+    },
   },
   watch: {
     'filters.active'() {
@@ -331,13 +307,13 @@ export default {
     'filters.place'() {
       this.pagination.currentPage = 1;
       this.fetchData();
-    }
+    },
   },
   created() {
     this.isRebens =
       this.$store.getters.currentUser.role != 'administrator' &&
       this.$store.getters.currentUser.role != 'publisher';
-  }
+  },
 };
 </script>
 <style lang="scss" scoped>

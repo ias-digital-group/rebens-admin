@@ -4,30 +4,16 @@
       <h2>Clientes</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Digite aqui o que deseja encontrar"
-          />
+          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i
-            v-else
-            class="bt-clear-search icon-icon-times c-red"
-            @click="searchQuery = ''"
-          ></i>
+          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
         </div>
         <div class="filter" :class="{ active: showFilters }">
-          <a
-            class="bt bt-square bg-white-2 c-light-blue"
-            @click="showFilters = !showFilters"
-          >
+          <a class="bt bt-square bg-white-2 c-light-blue" @click="showFilters = !showFilters">
             <i class="icon-icon-filter"></i>
           </a>
         </div>
-        <base-link
-          to="/promoter/new"
-          class="bt bt-square bg-white-2 c-light-blue"
-        >
+        <base-link to="/promoter/new" class="bt bt-square bg-white-2 c-light-blue">
           <i class="icon-icon-plus"></i>
         </base-link>
       </div>
@@ -126,7 +112,7 @@ export default {
     Pagination,
     [Select.name]: Select,
     [Option.name]: Option,
-    ConfirmModal
+    ConfirmModal,
   },
   data() {
     return {
@@ -137,8 +123,8 @@ export default {
       statuses: [
         { code: 1, label: 'Completo' },
         { code: 3, label: 'Validação' },
-        { code: 5, label: 'Incompleto' }
-      ]
+        { code: 5, label: 'Incompleto' },
+      ],
     };
   },
   methods: {
@@ -149,11 +135,11 @@ export default {
         pageItems: self.$data.pagination.perPage,
         searchWord: self.searchQuery,
         sort: self.formatSortFieldParam,
-        status: self.filters.status
+        status: self.filters.status,
       };
       self.loading = true;
       promoterService.list(request).then(
-        response => {
+        (response) => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
           self.loading = false;
@@ -175,7 +161,7 @@ export default {
         () => {
           self.$notify({
             type: 'success',
-            message: 'E-mail reenviado com sucesso!'
+            message: 'E-mail reenviado com sucesso!',
           });
           self.loading = false;
           self.resendPassId = 0;
@@ -188,14 +174,14 @@ export default {
     resendValidation(id) {
       this.resendPassId = id;
       this.showResendPassModal = true;
-    }
+    },
   },
   watch: {
     'filters.status'() {
       this.pagination.currentPage = 1;
       this.fetchData();
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

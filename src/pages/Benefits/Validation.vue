@@ -2,7 +2,7 @@
   <div class="list-box">
     <div class="page-header">
       <h2>Validação de Cupom</h2>
-      <div class="box-actions">
+      <div class="box-actions" style="padding-top: 8px;">
         <div class="input-post-icon search">
           <input
             type="text"
