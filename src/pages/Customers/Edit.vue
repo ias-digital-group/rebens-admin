@@ -20,12 +20,13 @@
                 v-model="model.idOperation"
                 :class="{ 'has-error': customErrors.get('operation') }"
                 placeholder="Clube"
+                :disabled="!isRebens"
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">
-                {{ customErrors.get('operation') }}
-              </label>
+              <label v-if="customErrors.get('operation')" class="ias-error">{{
+                customErrors.get('operation')
+              }}</label>
             </div>
             <div class="select-holder">
               <v-select
@@ -249,6 +250,7 @@ export default {
       formLoading: false,
       showSuccessModal: false,
       customErrors: new Map(),
+      isRebens: false,
       model: {
         id: 0,
         name: '',
@@ -392,7 +394,7 @@ export default {
     loadOperationPartner() {
       const self = this;
       self.formLoading = true;
-      self.operationPartners = [];
+
       operationPartnerService
         .findAll({
           page: 0,
@@ -403,6 +405,7 @@ export default {
         })
         .then(
           response => {
+            self.operationPartners = [];
             self.operationPartners.push({ code: 0, label: 'selecione' });
             _.each(response.data, function(el) {
               if (el.id != self.id) {
@@ -430,6 +433,9 @@ export default {
     }
   },
   created() {
+    this.isRebens =
+      this.$store.getters.currentUser.role == 'administratorRebens' ||
+      this.$store.getters.currentUser.role == 'master';
     this.fetchData();
   }
 };

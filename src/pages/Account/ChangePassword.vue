@@ -2,11 +2,11 @@
   <div class="edit-box" v-loading="submitLoading">
     <div class="page-header">
       <h2>Alterar Senha</h2>
-      <div class="box-actions">
+      <!-- <div class="box-actions">
         <base-link to="/users" class="bt bt-square bg-white-2 c-light-blue">
           <i class="icon-icon-arrow-left"></i>
         </base-link>
-      </div>
+      </div>-->
     </div>
     <div class="ias-card">
       <form @submit.prevent>

@@ -2,7 +2,7 @@ POST {{url}}/api/Account/Login
 Content-Type: application/json
 
 {
-	"Email":"israel@iasdigitalgroup.com",
+	"Email":"admias@iasdigitalgroup.com",
 	"Password":"k4r0l1n4"
 }
 

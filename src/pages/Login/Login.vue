@@ -78,7 +78,10 @@ export default {
                 setTimeout(() => {
                   if (jwtData.role === 'promoter') {
                     self.$router.push(`/promoter`);
-                  } else if (jwtData.role == 'partnerApprover') {
+                  } else if (
+                    jwtData.role == 'partnerApprover' ||
+                    jwtData.role == 'partnerAdministrator'
+                  ) {
                     self.$router.push(`/operationPartner/approve`);
                   } else {
                     window.location = '/';

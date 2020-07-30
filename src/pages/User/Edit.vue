@@ -3,9 +3,10 @@
     <div class="page-header">
       <h2>
         <span v-if="viewAction === 'new'">Cadastro Usuário</span>
+        <span v-else-if="isProfileEdit">Editar Meu Perfil</span>
         <span v-else>Editar Usuário</span>
       </h2>
-      <div class="box-actions">
+      <div class="box-actions" v-show="!isProfileEdit">
         <button
           @click="resendValidation"
           type="button"
@@ -85,12 +86,13 @@
                 v-model="model.roles"
                 placeholder="Papel"
                 :class="{ 'has-error': customErrors.get('roles') }"
+                :disabled="blockRoles"
               >
                 <span slot="no-options">Nenhum papel encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('roles')" class="ias-error">{{
-                customErrors.get('roles')
-              }}</label>
+              <label v-if="customErrors.get('roles')" class="ias-error">
+                {{ customErrors.get('roles') }}
+              </label>
             </div>
           </div>
           <div class="ias-row" v-show="isRebens">
@@ -106,9 +108,9 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">{{
-                customErrors.get('operation')
-              }}</label>
+              <label v-if="customErrors.get('operation')" class="ias-error">
+                {{ customErrors.get('operation') }}
+              </label>
             </div>
           </div>
           <div class="ias-row">
@@ -268,10 +270,12 @@ export default {
       showSuccessModal: false,
       customErrors: new Map(),
       showOperationPartners: true,
+      isProfileEdit: false,
       roles: [],
       image: null,
       emailConfirm: '',
       idCompany: 0,
+      blockRoles: true,
       model: {
         id: 0,
         name: '',
@@ -483,12 +487,13 @@ export default {
         self.roles.push({ code: 'couponChecker', label: 'Validador Cupom' });
       else if (self.$store.getters.currentUser.role === 'promoter')
         self.roles.push({ code: 'promoter', label: 'Promotor' });
-      else if (self.$store.getters.currentUser.role === 'partnerApprover')
+      else if (self.$store.getters.currentUser.role === 'partnerApprover') {
         self.roles.push({
           code: 'partnerApprover',
           label: 'Aprovador Parceiro'
         });
-      else if (self.$store.getters.currentUser.role === 'publisher')
+        self.showOperationPartners = false;
+      } else if (self.$store.getters.currentUser.role === 'publisher')
         self.roles.push({ code: 'publisher', label: 'Publicador' });
       else if (
         self.$store.getters.currentUser.role === 'partnerAdministrator'
@@ -507,6 +512,7 @@ export default {
           label: 'Aprovador Parceiro'
         });
       } else {
+        self.blockRoles = false;
         if (self.isMaster) {
           self.roles.push({ code: 'master', label: 'Master' });
         }
@@ -540,7 +546,7 @@ export default {
         if (
           self.isRebens ||
           (self.$store.getters.currentUser.modules &&
-            self.$store.getters.currentUser.modules.include('promoter'))
+            self.$store.getters.currentUser.modules.includes('promoter'))
         )
           self.roles.push({ code: 'promoter', label: 'Promotor' });
 
@@ -564,6 +570,8 @@ export default {
         userService.get(self.id).then(
           response => {
             self.model = response.data;
+            self.isProfileEdit =
+              self.model.id == self.$store.getters.currentUser.id;
             self.loadOperationPartner(self);
           },
           () => {
