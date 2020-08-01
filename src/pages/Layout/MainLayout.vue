@@ -57,9 +57,9 @@
               >
               <ul class="sub-item">
                 <li v-for="(subitem, idx2) in item.subitens" :key="idx2">
-                  <router-link :to="subitem.path">
-                    {{ subitem.name }}
-                  </router-link>
+                  <router-link :to="subitem.path">{{
+                    subitem.name
+                  }}</router-link>
                 </li>
               </ul>
             </template>
@@ -229,18 +229,21 @@ export default {
               name: 'Assinaturas',
               path: '/subscriptions',
               active: false,
+              needModule: 'subscription',
               roles: 'master,administrator,administratorRebens'
             },
             {
               name: 'Cupom',
               path: '/benefits/validation',
               active: false,
+              needModule: 'coupon',
               roles: 'master,administrator,administratorRebens,couponChecker'
             },
             {
               name: 'Ingresso',
               path: '/orders',
               active: false,
+              needModule: 'ticket',
               roles: 'master,administrator,administratorRebens'
             }
           ]
@@ -257,7 +260,7 @@ export default {
           path: '/benefits/validation',
           active: false,
           roles: 'couponChecker',
-          needModule: '',
+          needModule: 'coupon',
           subitens: []
         },
         {
@@ -265,7 +268,7 @@ export default {
           path: '/orders',
           active: false,
           roles: 'ticketChecker',
-          needModule: '',
+          needModule: 'ticket',
           subitens: []
         }
       ]
@@ -302,10 +305,25 @@ export default {
             item.subitens = item.subitens.filter(sub => {
               if (sub.roles === '') {
                 return true;
-              } else {
-                return sub.roles
+              } else if (
+                sub.roles
                   .split(',')
-                  .includes(this.$store.getters.currentUser.role);
+                  .includes(this.$store.getters.currentUser.role)
+              ) {
+                if (!sub.needModule || sub.needModule === '') {
+                  return true;
+                } else if (
+                  sub.needModule === 'coupon' ||
+                  sub.needModule === 'ticket' ||
+                  sub.needModule === 'subscription'
+                ) {
+                  return (
+                    this.$store.getters.currentUser.idOperation == 73 ||
+                    this.$store.getters.currentUser.idOperation == 0
+                  );
+                }
+              } else {
+                return false;
               }
             });
           }

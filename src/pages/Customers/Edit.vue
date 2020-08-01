@@ -24,9 +24,9 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">{{
-                customErrors.get('operation')
-              }}</label>
+              <label v-if="customErrors.get('operation')" class="ias-error">
+                {{ customErrors.get('operation') }}
+              </label>
             </div>
             <div class="select-holder">
               <v-select
@@ -371,6 +371,22 @@ export default {
       customerService.get(self.id).then(
         response => {
           self.model = response.data;
+          if (!self.model.address) {
+            self.model.address = {
+              id: 0,
+              name: '',
+              street: '',
+              number: '',
+              complement: '',
+              neighborhood: '',
+              city: '',
+              state: '',
+              country: 'Brasil',
+              zipcode: '',
+              latitude: null,
+              longitude: null
+            };
+          }
           self.loadOperationPartner(self);
         },
         () => {

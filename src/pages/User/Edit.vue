@@ -11,6 +11,7 @@
           @click="resendValidation"
           type="button"
           class="bt bt-square bg-white-2 c-orange"
+          v-show="viewAction === 'new'"
         >
           <i class="icon-icon-send"></i>
         </button>
@@ -90,9 +91,9 @@
               >
                 <span slot="no-options">Nenhum papel encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('roles')" class="ias-error">
-                {{ customErrors.get('roles') }}
-              </label>
+              <label v-if="customErrors.get('roles')" class="ias-error">{{
+                customErrors.get('roles')
+              }}</label>
             </div>
           </div>
           <div class="ias-row" v-show="isRebens">
@@ -108,9 +109,9 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">
-                {{ customErrors.get('operation') }}
-              </label>
+              <label v-if="customErrors.get('operation')" class="ias-error">{{
+                customErrors.get('operation')
+              }}</label>
             </div>
           </div>
           <div class="ias-row">
