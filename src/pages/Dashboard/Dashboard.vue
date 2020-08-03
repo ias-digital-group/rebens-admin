@@ -1,45 +1,43 @@
 <template>
-  <div class="row">
-    <div class="col-lg-12">
-      <h2>Benefícios</h2>
+  <div class="edit-box" v-show="showDashboard">
+    <div class="page-header">
+      <h2>Dashboard</h2>
     </div>
-    <div class="col-lg-6">
-      <card type="chart">
-        <template slot="header">
-          <h3 class="card-title">Mais Vistos</h3>
-        </template>
-        <div class="chart-area">
-          <bar-chart
-            style="height: 100%"
-            :chart-data="benefitViewChart.chartData"
-            :gradient-stops="benefitViewChart.gradientStops"
-            :extra-options="benefitViewChart.extraOptions"
-          >
-          </bar-chart>
-        </div>
-      </card>
+    <div class="ias-card">
+      <div class="ias-dash-row">
+        <card type="chart" v-if="benefitViewChart.chartData">
+          <template slot="header">
+            <h3 class="card-title">Benefícios Mais Vistos</h3>
+          </template>
+          <div class="chart-area">
+            <bar-chart
+              style="height: 100%"
+              :chart-data="benefitViewChart.chartData"
+              :gradient-stops="benefitViewChart.gradientStops"
+              :extra-options="benefitViewChart.extraOptions"
+            ></bar-chart>
+          </div>
+        </card>
+        <card type="chart" v-if="benefitUseChart.chartData">
+          <template slot="header">
+            <h3 class="card-title">Benefícios Mais Utilizados</h3>
+          </template>
+          <div class="chart-area">
+            <bar-chart
+              style="height: 100%"
+              :chart-data="benefitUseChart.chartData"
+              :gradient-stops="benefitUseChart.gradientStops"
+              :extra-options="benefitUseChart.extraOptions"
+            ></bar-chart>
+          </div>
+        </card>
+      </div>
+      <dashboard-pie-chart
+        v-for="(operation, index) in operationsPieCharts"
+        :key="index"
+        v-bind:operation="operation"
+      ></dashboard-pie-chart>
     </div>
-    <div class="col-lg-6">
-      <card type="chart">
-        <template slot="header">
-          <h3 class="card-title">Mais Utilizados</h3>
-        </template>
-        <div class="chart-area">
-          <bar-chart
-            style="height: 100%"
-            :chart-data="benefitUseChart.chartData"
-            :gradient-stops="benefitUseChart.gradientStops"
-            :extra-options="benefitUseChart.extraOptions"
-          >
-          </bar-chart>
-        </div>
-      </card>
-    </div>
-    <dashboard-pie-chart
-      v-for="(operation, index) in operationsPieCharts"
-      :key="index"
-      v-bind:operation="operation"
-    ></dashboard-pie-chart>
   </div>
 </template>
 <script>
@@ -58,6 +56,7 @@ export default {
   },
   data() {
     return {
+      showDashboard: false,
       operationsPieCharts: [],
       benefitViewChart: {
         extraOptions: chartConfigs.barChartOptions,
@@ -80,6 +79,7 @@ export default {
       reportService.loadDashboard().then(
         response => {
           if (response.data) {
+            self.showDashboard = true;
             if (response.data.benefitUse) {
               self.benefitUseChart.chartData = {
                 labels: response.data.benefitUse.labels,
@@ -87,7 +87,7 @@ export default {
                   {
                     label: response.data.benefitUse.title,
                     fill: true,
-                    borderColor: config.colors.info,
+                    borderColor: '#fff',
                     borderWidth: 2,
                     borderDash: [],
                     borderDashOffset: 0.0,
@@ -103,7 +103,7 @@ export default {
                   {
                     label: response.data.benefitView.title,
                     fill: true,
-                    borderColor: config.colors.info,
+                    borderColor: '#fff',
                     borderWidth: 2,
                     borderDash: [],
                     borderDashOffset: 0.0,
@@ -128,7 +128,7 @@ export default {
                         {
                           label: element.users.title,
                           fill: true,
-                          borderColor: config.colors.info,
+                          borderColor: '#fff',
                           borderWidth: 2,
                           borderDash: [],
                           borderDashOffset: 0.0,
@@ -150,7 +150,7 @@ export default {
                         {
                           label: element.regionState.title,
                           fill: true,
-                          borderColor: config.colors.info,
+                          borderColor: '#fff',
                           borderWidth: 2,
                           borderDash: [],
                           borderDashOffset: 0.0,
@@ -172,7 +172,7 @@ export default {
                         {
                           label: element.regionCity.title,
                           fill: true,
-                          borderColor: config.colors.info,
+                          borderColor: '#fff',
                           borderWidth: 2,
                           borderDash: [],
                           borderDashOffset: 0.0,
@@ -194,7 +194,7 @@ export default {
                         {
                           label: element.regionNeighborhood.title,
                           fill: true,
-                          borderColor: config.colors.info,
+                          borderColor: '#fff',
                           borderWidth: 2,
                           borderDash: [],
                           borderDashOffset: 0.0,
@@ -212,11 +212,8 @@ export default {
               });
             }
           }
-          //          self.$data.loading = false;
         },
-        () => {
-          //        self.$data.loading = false;
-        }
+        () => {}
       );
     }
   },

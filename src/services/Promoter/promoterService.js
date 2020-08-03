@@ -15,7 +15,13 @@ export default {
           };
       HTTP.get(
         config.apiEndpoints.promoterUri.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}&status=${request.status}`
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
+            request.searchWord
+          }&sort=${request.sort}&status=${
+            request.status == undefined || request.status == null
+              ? ''
+              : request.status
+          }`
         )
       ).then(
         response => {

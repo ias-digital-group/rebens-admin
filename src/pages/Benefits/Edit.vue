@@ -1,538 +1,454 @@
 <template>
-  <div class="row">
-    <div class="col-md-12">
-      <card title="Benefícios">
-        <h4 slot="header" class="card-title">
-          {{ $t('pages.benefits.title') }}
-        </h4>
-        <el-tabs v-model="activeName">
-          <el-tab-pane label="Benefício" name="benefit">
-            <form
-              class="form-horizontal mt-3"
-              v-loading="formLoading"
-              @submit.prevent
-            >
-              <div class="row">
-                <label class="col-md-3 col-form-label">Nome *</label>
-                <div class="col-md-9">
-                  <base-input
-                    required
-                    v-model="model.name"
-                    type="text"
-                    name="name"
-                    placeholder="Nome"
-                    maxlength="300"
-                  ></base-input>
-                  <label
-                    v-show="customErrors.includes('name')"
-                    class="text-danger"
-                    >O campo Nome é obrigatório!</label
-                  >
-                </div>
-              </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label">Título *</label>
-                <div class="col-md-9">
-                  <base-input
-                    required
-                    v-model="model.title"
-                    type="text"
-                    name="titulo"
-                    placeholder="Título"
-                    maxlength="400"
-                  ></base-input>
-                  <label
-                    v-show="customErrors.includes('title')"
-                    class="text-danger"
-                    >O campo Título é obrigatório!</label
-                  >
-                </div>
-              </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label"
-                  >Chamada do benefício *</label
-                >
-                <div class="col-md-9">
-                  <base-input
-                    required
-                    v-model="model.benefitCall"
-                    type="text"
-                    name="benefitCall"
-                    placeholder="Chamada do benefício"
-                    maxlength="500"
-                  ></base-input>
-                  <label
-                    v-show="customErrors.includes('benefitCall')"
-                    class="text-danger"
-                    >O campo Chamada do Benefício é obrigatório!</label
-                  >
-                </div>
-              </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label">Detalhes *</label>
-                <div class="col-md-9">
-                  <vue-editor
-                    :editorToolbar="customToolbar"
-                    v-model="model.detail"
-                    placeholder="Detalhes"
-                  />
-                  <label
-                    v-show="customErrors.includes('detail')"
-                    class="text-danger"
-                    >O campo Detalhes é obrigatório!</label
-                  >
-                </div>
-              </div>
-              <div class="row m-b-20">
-                <label class="col-md-3 col-form-label">Como usar *</label>
-                <div class="col-md-9">
-                  <vue-editor
-                    :editorToolbar="customToolbar"
-                    v-model="model.howToUse"
-                    placeholder="Como usar"
-                  />
-                  <label
-                    v-show="customErrors.includes('howToUse')"
-                    class="text-danger"
-                    >O campo Como Usar é obrigatório</label
-                  >
-                </div>
-              </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label">Parceiro *</label>
-                <div class="col-md-4">
-                  <v-select
-                    :options="partnerList"
-                    :reduce="op => op.code"
-                    :key="model.idPartner"
-                    v-model="model.idPartner"
-                  >
-                  </v-select>
-                </div>
-                <div class="col-md-3">
-                  <label
-                    v-show="customErrors.includes('partner')"
-                    class="text-danger"
-                    >O campo Parceiro é obrigatório!</label
-                  >
-                </div>
-              </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label">Tipo *</label>
-                <div class="col-md-9">
-                  <div class="form-group">
-                    <base-radio
-                      v-model="model.idBenefitType"
-                      :name="1"
-                      :value="1"
-                      :inline="true"
-                      >E-commerce</base-radio
-                    >
-                    <base-radio
-                      v-model="model.idBenefitType"
-                      :name="2"
-                      :value="2"
-                      :inline="true"
-                      >Varejo Local</base-radio
-                    >
-                    <base-radio
-                      v-model="model.idBenefitType"
-                      :name="3"
-                      :value="3"
-                      :inline="true"
-                      >Cashback</base-radio
-                    >
-                    <label
-                      v-show="customErrors.includes('benefitType')"
-                      class="text-danger"
-                      >O campo Tipo é obrigatório</label
-                    >
-                  </div>
-                </div>
-              </div>
-              <div class="row" v-if="isRebens && model.idBenefitType != 3">
-                <label class="col-md-3 col-form-label">% Desconto *</label>
-                <div class="col-md-9 offset-md-3 offset-lg-0 col-lg-4">
-                  <base-input label="Mínimo *">
-                    <money
-                      class="form-control"
-                      v-model="model.minDiscountPercentage"
-                      v-bind="money"
-                    ></money>
-                  </base-input>
-                  <label
-                    v-show="customErrors.includes('minDiscount')"
-                    class="text-danger"
-                    >O campo Desconto Mínimo é obrigatório!</label
-                  >
-                </div>
-                <div class="col-md-9 col-lg-4">
-                  <base-input label="Máximo *">
-                    <money
-                      class="form-control"
-                      v-model="model.maxDiscountPercentage"
-                      v-bind="money"
-                    ></money>
-                  </base-input>
-                  <label
-                    v-show="customErrors.includes('maxDiscount')"
-                    class="text-danger"
-                    >O campo Desconto Máximo é obrigatório!</label
-                  >
-                </div>
-              </div>
-              <div class="row" v-if="isRebens && model.idBenefitType != 3">
-                <label class="col-md-3 col-form-label">CPV *</label>
-                <div class="col-md-9 col-lg-4">
-                  <base-input>
-                    <money
-                      class="form-control"
-                      v-model="model.cpvPercentage"
-                      v-bind="money"
-                    ></money>
-                  </base-input>
-                  <label
-                    v-show="customErrors.includes('cpv')"
-                    class="text-danger"
-                    >O campo CPV é obrigatório</label
-                  >
-                </div>
-              </div>
-              <div class="row" v-if="model.idBenefitType != 2">
-                <label class="col-md-3 col-form-label">Link *</label>
-                <div class="col-md-9">
-                  <base-input
-                    v-model="model.link"
-                    placeholder="Link"
-                    maxlength="500"
-                  ></base-input>
-                  <label
-                    v-show="customErrors.includes('link')"
-                    class="text-danger"
-                    >O campo Link é obrigatório!</label
-                  >
-                </div>
-              </div>
-              <div class="row" v-if="isRebens && model.idBenefitType == 3">
-                <label class="col-md-3 col-form-label"
-                  >Valor do cashback *</label
-                >
-                <div class="col-md-9">
-                  <base-input>
-                    <money
-                      class="form-control"
-                      v-model="model.cashbackAmount"
-                      v-bind="money"
-                    ></money>
-                  </base-input>
-                  <label
-                    v-show="customErrors.includes('cashbackAmount')"
-                    class="text-danger"
-                    >O campo Valor do cashback é obrigatório!</label
-                  >
-                </div>
-              </div>
-              <div class="row" v-if="model.idBenefitType == 2">
-                <label class="col-md-3 col-form-label"
-                  >Texto do voucher *</label
-                >
-                <div class="col-md-9">
-                  <vue-editor
-                    :editorToolbar="customToolbar"
-                    v-model="model.voucherText"
-                    placeholder="Texto do voucher"
-                  />
-                  <label
-                    v-show="customErrors.includes('voucherText')"
-                    class="text-danger"
-                    >O campo Texto do voucher é obrigatório!</label
-                  >
-                </div>
-              </div>
-              <div class="row" v-show="isRebens">
-                <label class="col-md-3 col-form-label">Integração *</label>
-                <div class="col-md-9">
-                  <div class="form-group">
-                    <base-radio
-                      v-model="model.idIntegrationType"
-                      :name="1"
-                      :value="1"
-                      :inline="true"
-                      >Rebens</base-radio
-                    >
-                    <base-radio
-                      v-model="model.idIntegrationType"
-                      :name="2"
-                      :value="2"
-                      :inline="true"
-                      >Zanox</base-radio
-                    >
-                    <label
-                      v-show="customErrors.includes('integrationType')"
-                      class="text-danger"
-                      >O campo Integração é obrigatório!</label
-                    >
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label"
-                  >Imagem * <br />(1200x500)</label
-                >
-                <div class="col-md-9">
-                  <template v-if="model.image">
-                    <div class="fileinput">
-                      <div class="thumbnail">
-                        <img :src="model.image" class="img-preview" />
-                      </div>
-                    </div>
-                    <div>
-                      <base-button
-                        @click="model.image = ''"
-                        class="btn-simple btn-file"
-                        type="danger"
-                      >
-                        <i class="fas fa-times"></i>
-                      </base-button>
-                    </div>
-                  </template>
-                  <template v-else>
-                    <image-upload
-                      @change="onImageChange"
-                      change-text="Alterar"
-                      remove-text="Remover"
-                      select-text="Selecione uma imagem"
-                    />
-                  </template>
-                  <br />
-                  <label v-show="customErrors.includes('image')" class="error"
-                    >O campo Imagem é obrigatório!</label
-                  >
-                </div>
-              </div>
-              <div class="row m-b-10">
-                <label class="col-md-3 col-form-label">Destaque Home?</label>
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <v-select
-                      :options="highlights.filter(item => item.code < 9)"
-                      :reduce="item => item.code"
-                      :key="model.homeHighlight"
-                      v-model="model.homeHighlight"
-                    >
-                    </v-select>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <label
-                    v-show="customErrors.includes('homeHighlight')"
-                    class="text-danger"
-                    >O campo Destaque Home? é obrigatório!</label
-                  >
-                </div>
-              </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label"
-                  >Destaque Home Benefício?</label
-                >
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <v-select
-                      :options="highlights"
-                      :reduce="item => item.code"
-                      :key="model.homeBenefitHighlight"
-                      v-model="model.homeBenefitHighlight"
-                    >
-                    </v-select>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <label
-                    v-show="customErrors.includes('homeBenefitHighlight')"
-                    class="text-danger"
-                    >O campo Destaque Home Benefício? é obrigatório!</label
-                  >
-                </div>
-              </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label">Validade *</label>
-                <div class="col-md-2">
-                  <base-input>
-                    <el-date-picker
-                      type="date"
-                      placeholder="Validade"
-                      v-model="model.dueDate"
-                    >
-                    </el-date-picker>
-                  </base-input>
-                </div>
-                <div class="col-md-7">
-                  <label
-                    v-show="customErrors.includes('dueDate')"
-                    class="text-danger"
-                    >O campo Validade é obrigatório!</label
-                  >
-                </div>
-              </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label">Data</label>
-                <div class="col-md-9 col-lg-4">
-                  <base-input label="Início">
-                    <el-date-picker
-                      type="date"
-                      placeholder="Início"
-                      v-model="model.start"
-                    >
-                    </el-date-picker>
-                  </base-input>
-                  <label
-                    v-show="customErrors.includes('start')"
-                    class="text-danger"
-                    >O campo Início é obrigatório!</label
-                  >
-                </div>
-                <div class="col-md-9 offset-md-3 offset-lg-0 col-lg-4">
-                  <base-input label="Fim">
-                    <el-date-picker
-                      type="date"
-                      placeholder="Fim"
-                      v-model="model.end"
-                    >
-                    </el-date-picker>
-                  </base-input>
-                  <label
-                    v-show="customErrors.includes('end')"
-                    class="text-danger"
-                    >O campo Fim é obrigatório!</label
-                  >
-                </div>
-              </div>
-              <div class="row" v-show="isRebens">
-                <label class="col-md-3 col-form-label">Exclusivo</label>
-                <div class="col-md-9">
-                  <div class="form-group">
-                    <base-checkbox v-model="model.exclusive"
-                      >&nbsp;</base-checkbox
-                    >
-                  </div>
-                </div>
-              </div>
-              <div class="row" v-show="model.exclusive && isRebens">
-                <label class="col-md-3 col-form-label">Operação</label>
-                <div class="col-md-4">
-                  <v-select
-                    :options="operationList"
-                    :reduce="op => op.code"
-                    :key="model.idOperation"
-                    v-model="model.idOperation"
-                  >
-                  </v-select>
-                </div>
-                <div class="col-md-3">
-                  <label
-                    v-show="customErrors.includes('operation')"
-                    class="text-danger"
-                    >O campo Operação é obrigatório!</label
-                  >
-                </div>
-              </div>
-              <div class="row">
-                <label class="col-md-3 col-form-label">Ativo</label>
-                <div class="col-md-9">
-                  <div class="form-group">
-                    <base-checkbox v-model="model.active">&nbsp;</base-checkbox>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <base-link
-                    class="btn btn-primary btn-simple mt-3"
-                    to="/benefits"
-                    >Voltar</base-link
-                  >
-                  <base-button
-                    class="mt-3 pull-right"
-                    native-type="submit"
-                    type="info"
-                    @click.native.prevent="validate"
-                    :loading="submitLoading"
-                  >
-                    Salvar
-                  </base-button>
-                </div>
-              </div>
-            </form>
-          </el-tab-pane>
-          <el-tab-pane
-            label="Operações"
-            v-if="isRebens"
-            name="operations"
-            :disabled="viewAction == 'new' ? true : false"
-          >
-            <operations
-              v-loading="formLoading"
-              parent="benefits"
-              :parentId="id"
-              :key="operationKey"
-            ></operations>
-          </el-tab-pane>
-          <el-tab-pane
-            label="Categorias"
-            name="categories"
-            :disabled="viewAction == 'new' ? true : false"
-          >
-            <categories
-              v-loading="formLoading"
-              :parentId="id"
-              :type="1"
-              :key="operationKey"
-            ></categories>
-          </el-tab-pane>
-          <el-tab-pane
-            label="Endereços"
-            name="addresses"
-            :disabled="viewAction == 'new' ? true : false"
-          >
-            <addresses
-              v-loading="formLoading"
-              parent="benefits"
-              :parentId="id"
-              ref="addresses"
-              :key="operationKey"
-            ></addresses>
-          </el-tab-pane>
-        </el-tabs>
-      </card>
+  <div class="edit-box">
+    <div class="page-header">
+      <h2>
+        <span v-if="viewAction === 'new'">Cadastro Benefício</span>
+        <span v-else>Editar Benefício</span>
+      </h2>
+      <div class="box-actions">
+        <base-link to="/benefits" class="bt bt-square bg-white-2 c-light-blue">
+          <i class="icon-icon-arrow-left"></i>
+        </base-link>
+      </div>
     </div>
+    <div class="ias-card">
+      <form v-loading="submitLoading" @submit.prevent>
+        <div class="form-left">
+          <div class="ias-row">
+            <div class="select-holder">
+              <v-select
+                :options="partnerList"
+                :reduce="op => op.code"
+                :key="model.idPartner"
+                v-model="model.idPartner"
+                placeholder="Parceiro"
+                :class="{ 'has-error': customErrors.get('idPartner') }"
+              >
+                <span slot="no-options">Nenhum parceiro encontrado</span>
+              </v-select>
+              <label v-show="customErrors.get('idPartner')" class="ias-error">{{
+                customErrors.get('idPartner')
+              }}</label>
+            </div>
+          </div>
+          <div class="ias-row">
+            <custom-input
+              :required="true"
+              v-model="model.name"
+              type="text"
+              name="name"
+              label="Nome"
+              :error="customErrors.get('name')"
+              maxlength="200"
+            ></custom-input>
+          </div>
+          <div class="ias-row">
+            <custom-input
+              :required="true"
+              v-model="model.title"
+              type="text"
+              name="title"
+              label="Título"
+              :error="customErrors.get('title')"
+              maxlength="200"
+            ></custom-input>
+          </div>
+          <div class="ias-row">
+            <custom-input
+              :required="true"
+              v-model="model.benefitCall"
+              type="text"
+              name="title"
+              label="Chamada do benefício *"
+              :error="customErrors.get('benefitCall')"
+              maxlength="200"
+            ></custom-input>
+          </div>
+          <div
+            class="ias-row-editor"
+            :class="{ 'has-error': customErrors.get('detail') }"
+          >
+            <vue-editor
+              :editorToolbar="customToolbar"
+              v-model="model.detail"
+              placeholder="Detalhes"
+            />
+            <label v-show="customErrors.get('detail')" class="ias-error">{{
+              customErrors.get('detail')
+            }}</label>
+          </div>
+          <div
+            class="ias-row-editor"
+            :class="{ 'has-error': customErrors.get('howToUse') }"
+          >
+            <vue-editor
+              :editorToolbar="customToolbar"
+              v-model="model.howToUse"
+              placeholder="Como usar"
+            />
+            <label v-show="customErrors.get('howToUse')" class="ias-error"
+              >Campo obrigatório</label
+            >
+          </div>
+          <div
+            class="ias-row"
+            :class="{ 'ias-has-error': customErrors.get('benefitType') }"
+          >
+            <ias-radio
+              v-model="model.idBenefitType"
+              name="1"
+              :key="1"
+              :value="1"
+              >E-commerce</ias-radio
+            >
+            <ias-radio
+              v-model="model.idBenefitType"
+              name="2"
+              :key="2"
+              :value="2"
+              >Varejo Local</ias-radio
+            >
+            <ias-radio
+              v-model="model.idBenefitType"
+              name="3"
+              :key="3"
+              :value="3"
+              >Cashback</ias-radio
+            >
+            <label
+              v-show="customErrors.get('benefitType')"
+              class="ias-error ias-error-label"
+              >Campo obrigatório</label
+            >
+          </div>
+          <div
+            class="ias-row"
+            :class="{ 'ias-has-error': customErrors.get('integrationType') }"
+          >
+            <ias-radio
+              v-model="model.idIntegrationType"
+              name="1"
+              :key="1"
+              :value="1"
+              >Rebens</ias-radio
+            >
+            <ias-radio
+              v-model="model.idIntegrationType"
+              name="2"
+              :key="2"
+              :value="2"
+              >Zanox</ias-radio
+            >
+            <label
+              v-show="customErrors.get('integrationType')"
+              class="ias-error ias-error-label"
+              >Campo obrigatório!</label
+            >
+          </div>
+          <div class="ias-row">
+            <custom-input
+              :required="true"
+              v-model="model.minDiscountPercentage"
+              type="text"
+              name="minDiscountPercentage"
+              :label="
+                model.idBenefitType == 3
+                  ? 'Porcentagem mínima'
+                  : 'Desconto mínimo'
+              "
+              :error="customErrors.get('minDiscount')"
+              :isMoney="true"
+            ></custom-input>
+            <custom-input
+              :required="true"
+              v-model="model.maxDiscountPercentage"
+              type="text"
+              name="maxDiscountPercentage"
+              :label="
+                model.idBenefitType == 3
+                  ? 'Porcentagem máxima'
+                  : 'Desconto máximo'
+              "
+              :error="customErrors.get('maxDiscount')"
+              :isMoney="true"
+            ></custom-input>
+          </div>
+          <div class="ias-row" v-if="model.idBenefitType == 3">
+            <custom-input
+              :required="true"
+              v-model="model.taxAmount"
+              type="text"
+              name="taxAmount"
+              label="Valor imposto (18,33%)"
+              :error="customErrors.get('taxAmount')"
+              :isMoney="true"
+            ></custom-input>
+            <custom-input
+              :required="true"
+              v-model="model.cashbackAmount"
+              type="text"
+              name="cashbackAmount"
+              label="Cashback para o cliente"
+              :error="customErrors.get('cashbackAmount')"
+              :isMoney="true"
+            ></custom-input>
+          </div>
+          <div class="ias-row" v-if="model.idBenefitType == 3">
+            <custom-input
+              v-model="cashbackMin"
+              type="text"
+              label="Cashback mínimo para o cliente"
+              disabled
+              readonly
+              :isMoney="true"
+            ></custom-input>
+            <custom-input
+              v-model="cashbackMax"
+              type="text"
+              label="Cashback máximo para o cliente"
+              disabled
+              readonly
+              :isMoney="true"
+            ></custom-input>
+          </div>
+          <div class="ias-row" v-if="model.idBenefitType == 3">
+            <custom-input
+              label="Validade (DD/MM/AAAA)"
+              :class="{
+                'ias-focus': model.dueDate != null && model.dueDate != ''
+              }"
+              :error="customErrors.get('dueDate')"
+            >
+              <el-date-picker
+                type="date"
+                required
+                name="dueDate"
+                data-vv-name="dueDate"
+                v-model="model.dueDate"
+                format="dd/MM/yyyy"
+              ></el-date-picker>
+            </custom-input>
+          </div>
+          <div v-else class="ias-row">
+            <custom-input
+              :required="true"
+              v-model="model.cpvPercentage"
+              type="text"
+              name="cpvPercentage"
+              label="CPV"
+              :isMoney="true"
+              :error="customErrors.get('cpvPercentage')"
+            ></custom-input>
+            <custom-input
+              label="Validade (DD/MM/AAAA)"
+              :class="{
+                'ias-focus': model.dueDate != null && model.dueDate != ''
+              }"
+              :error="customErrors.get('dueDate')"
+            >
+              <el-date-picker
+                type="date"
+                required
+                name="dueDate"
+                data-vv-name="dueDate"
+                v-model="model.dueDate"
+                format="dd/MM/yyyy"
+              ></el-date-picker>
+            </custom-input>
+          </div>
+          <div
+            class="ias-row-editor"
+            :class="{ 'has-error': customErrors.get('voucherText') }"
+            v-if="model.idBenefitType == 2"
+          >
+            <vue-editor
+              :editorToolbar="customToolbar"
+              v-model="model.voucherText"
+              placeholder="Texto do voucher"
+            />
+            <label v-show="customErrors.get('voucherText')" class="ias-error">
+              {{ customErrors.get('voucherText') }}
+            </label>
+          </div>
+          <div class="ias-row" v-else>
+            <custom-input
+              :required="true"
+              v-model="model.link"
+              type="text"
+              name="link"
+              label="Link"
+              :error="customErrors.get('link')"
+              maxlength="200"
+            ></custom-input>
+          </div>
+          <div class="ias-row">
+            <custom-input
+              label="Data início (DD/MM/AAAA)"
+              :class="{ 'ias-focus': model.start != null && model.start != '' }"
+              :error="customErrors.get('start')"
+            >
+              <el-date-picker
+                type="date"
+                required
+                name="start"
+                data-vv-name="start"
+                v-model="model.start"
+                format="dd/MM/yyyy"
+              ></el-date-picker>
+            </custom-input>
+            <custom-input
+              label="Data Fim (DD/MM/AAAA)"
+              :class="{ 'ias-focus': model.end != null && model.end != '' }"
+              :error="customErrors.get('end')"
+            >
+              <el-date-picker
+                type="date"
+                required
+                name="end"
+                data-vv-name="end"
+                v-model="model.end"
+                format="dd/MM/yyyy"
+              ></el-date-picker>
+            </custom-input>
+          </div>
+
+          <div class="ias-row">
+            <div class="select-holder">
+              <v-select
+                :options="highlights.filter(item => item.code < 9)"
+                :reduce="item => item.code"
+                :key="model.homeHighlight"
+                v-model="model.homeHighlight"
+                placeholder="Destaque home?"
+                :class="{ 'has-error': customErrors.get('homeHighlight') }"
+              >
+                <span slot="no-options">Nenhum destaque encontrado</span>
+              </v-select>
+              <label
+                v-show="customErrors.get('homeHighlight')"
+                class="ias-error"
+                >{{ customErrors.get('homeHighlight') }}</label
+              >
+            </div>
+            <div class="select-holder">
+              <v-select
+                :options="highlights"
+                :reduce="item => item.code"
+                :key="model.homeBenefitHighlight"
+                v-model="model.homeBenefitHighlight"
+                placeholder="Destaque home benefícios?"
+                :class="{
+                  'has-error': customErrors.get('homeBenefitHighlight')
+                }"
+              >
+                <span slot="no-options">Nenhum destaque encontrado</span>
+              </v-select>
+              <label
+                v-show="customErrors.get('homeBenefitHighlight')"
+                class="ias-error"
+                >{{ customErrors.get('homeBenefitHighlight') }}</label
+              >
+            </div>
+          </div>
+          <div class="ias-row" v-show="isRebens">
+            <ias-checkbox v-model="model.exclusive">Exclusivo</ias-checkbox>
+            <div class="select-holder" v-show="model.exclusive">
+              <v-select
+                :options="operationList"
+                :reduce="op => op.code"
+                :key="model.idOperation"
+                v-model="model.idOperation"
+                placeholder="Operação"
+                :disabled="!model.exclusive"
+              ></v-select>
+              <label v-show="customErrors.get('operation')" class="ias-error"
+                >customErrors.get('operation')</label
+              >
+            </div>
+            <div class="div-spacer" v-show="!model.exclusive"></div>
+          </div>
+
+          <div class="ias-row">
+            <div class="form-actions">
+              <button
+                class="bt bg-green c-white"
+                type="button"
+                @click.prevent="validate"
+              >
+                <span v-if="viewAction === 'new'">Cadastrar</span>
+                <span v-else>Salvar</span>
+              </button>
+              <ias-checkbox v-model="model.active">Ativo</ias-checkbox>
+            </div>
+            <div class="div-spacer"></div>
+          </div>
+        </div>
+        <div class="form-right">
+          <ias-image-upload
+            @change="onImageChange"
+            img-size="(1200x500)"
+            :src="model.image"
+            :error="customErrors.get('image')"
+          />
+          <div
+            class="select-holder-right"
+            v-show="!model.exclusive"
+            id="operationSelectBox"
+          >
+            <v-select
+              :options="operationList"
+              :reduce="op => op.code"
+              :key="model.operations"
+              v-model="model.operations"
+              placeholder="Selecione o Clube"
+              multiple
+              :class="{ 'has-error': customErrors.get('operations') }"
+            ></v-select>
+            <label v-if="customErrors.get('operations')" class="ias-error">{{
+              customErrors.get('operations')
+            }}</label>
+          </div>
+          <div class="select-holder-right">
+            <v-select
+              :options="categoriesList"
+              :reduce="op => op.code"
+              :key="model.categories"
+              v-model="model.categories"
+              placeholder="Selecione a Categoria"
+              multiple
+              :class="{ 'has-error': customErrors.get('categories') }"
+            ></v-select>
+            <label v-if="customErrors.get('categories')" class="ias-error">{{
+              customErrors.get('categories')
+            }}</label>
+          </div>
+        </div>
+      </form>
+    </div>
+    <success-modal
+      :isEdit="viewAction !== 'new'"
+      :show="showSuccessModal"
+      link="/benefits"
+    ></success-modal>
   </div>
 </template>
 <script>
-import { Select, Option, Tabs, TabPane, DatePicker } from 'element-ui';
-import Addresses from 'src/components/Addresses';
-import Categories from 'src/components/Categories';
-import Operations from 'src/components/Operations';
+import { Select, Option, DatePicker } from 'element-ui';
 import benefitService from '../../services/Benefit/benefitService';
 import helperService from '../../services/Helper/helperService';
 import operationService from '../../services/Operation/operationService';
+import categoryService from '../../services/Category/categoryService';
 import partnerService from '../../services/Partner/partnerService';
 import _ from 'lodash';
-import { ImageUpload } from 'src/components/index';
-import { Money } from 'v-money';
+import { SuccessModal } from 'src/components';
 import config from '../../config';
 
 export default {
   components: {
     [Option.name]: Option,
     [Select.name]: Select,
-    [Tabs.name]: Tabs,
-    [TabPane.name]: TabPane,
     [DatePicker.name]: DatePicker,
-    Addresses,
-    ImageUpload,
-    Money,
-    Operations,
-    Categories
+    SuccessModal
   },
   props: {
     id: String
@@ -540,17 +456,15 @@ export default {
   data() {
     return {
       customToolbar: [],
-      formLoading: false,
       submitLoading: false,
-      benefitTypeLoading: false,
-      integrationTypeLoading: false,
       image: null,
       partnerList: [],
       operationList: [],
-      customErrors: [],
+      categoriesList: [],
+      customErrors: new Map(),
       operationKey: 0,
       isRebens: false,
-      selectLoading: false,
+      showSuccessModal: false,
       highlights: [
         { code: -1, label: 'Sem Destaque' },
         { code: 0, label: 'Randomico' },
@@ -567,14 +481,6 @@ export default {
         { code: 11, label: 'Posição 11' },
         { code: 12, label: 'Posição 12' }
       ],
-      money: {
-        decimal: ',',
-        thousands: '.',
-        prefix: '',
-        suffix: '%',
-        precision: 2,
-        masked: false
-      },
       model: {
         name: '',
         title: '',
@@ -584,6 +490,8 @@ export default {
         maxDiscountPercentage: 0,
         cpvPercentage: 0,
         minDiscountPercentage: 0,
+        taxAmount: 0,
+        availableCashback: 0,
         cashbackAmount: 0,
         start: null,
         end: null,
@@ -598,11 +506,47 @@ export default {
         voucherText: '',
         active: false,
         homeHighlight: null,
-        homeBenefitHighlight: null
+        homeBenefitHighlight: null,
+        operations: [],
+        categories: []
       }
     };
   },
   computed: {
+    cashbackMax() {
+      if (
+        this.model.taxAmount &&
+        this.model.taxAmount > 0 &&
+        this.model.cashbackAmount &&
+        this.model.cashbackAmount > 0 &&
+        this.model.maxDiscountPercentage &&
+        this.model.maxDiscountPercentage > 0
+      ) {
+        return (
+          (this.model.maxDiscountPercentage -
+            (this.model.maxDiscountPercentage * this.model.taxAmount) / 100) *
+          (this.model.cashbackAmount / 100)
+        );
+      }
+      return '';
+    },
+    cashbackMin() {
+      if (
+        this.model.taxAmount &&
+        this.model.taxAmount > 0 &&
+        this.model.cashbackAmount &&
+        this.model.cashbackAmount > 0 &&
+        this.model.minDiscountPercentage &&
+        this.model.minDiscountPercentage > 0
+      ) {
+        return (
+          (this.model.minDiscountPercentage -
+            (this.model.minDiscountPercentage * this.model.taxAmount) / 100) *
+          (this.model.cashbackAmount / 100)
+        );
+      }
+      return '';
+    },
     viewAction() {
       return this.$route.name == 'edit_benefit' ? 'edit' : 'new';
     },
@@ -620,54 +564,67 @@ export default {
     }
   },
   methods: {
-    getError(fieldName) {
-      return this.errors.first(fieldName);
-    },
     validate() {
       const self = this;
-      self.customErrors = [];
+      self.customErrors = new Map();
 
-      if (!self.model.name) self.customErrors.push('name');
-      if (!self.model.title) self.customErrors.push('title');
-      if (!self.model.benefitCall) self.customErrors.push('benefitCall');
-      if (!self.model.detail) self.customErrors.push('detail');
-      if (!self.model.howToUse) self.customErrors.push('howToUse');
-      if (!self.model.idPartner) self.customErrors.push('partner');
-      if (!self.model.idBenefitType) self.customErrors.push('benefitType');
+      if (!self.model.name) self.customErrors.set('name', 'Campo obrigatório');
+      if (!self.model.title)
+        self.customErrors.set('title', 'Campo obrigatório');
+      if (!self.model.benefitCall)
+        self.customErrors.set('benefitCall', 'Campo obrigatório');
+      if (!self.model.detail)
+        self.customErrors.set('detail', 'Campo obrigatório');
+      if (!self.model.howToUse)
+        self.customErrors.set('howToUse', 'Campo obrigatório');
+      if (!self.model.idPartner)
+        self.customErrors.set('idPartner', 'Campo obrigatório');
+      if (!self.model.idBenefitType)
+        self.customErrors.set('benefitType', 'Campo obrigatório');
       if (self.model.idBenefitType == 2) {
-        if (!self.model.voucherText) self.customErrors.push('voucherText');
+        if (!self.model.voucherText || self.model.voucherText === '')
+          self.customErrors.set('voucherText', 'Campo obrigatório');
       } else {
         if (!self.model.link || self.model.link == '')
-          self.customErrors.push('link');
+          self.customErrors.set('link', 'Campo obrigatório');
       }
 
       if (self.isRebens && self.model.idBenefitType != 3) {
         if (!self.model.maxDiscountPercentage)
-          self.customErrors.push('maxDiscount');
+          self.customErrors.set('maxDiscount', 'Campo obrigatório');
         if (!self.model.minDiscountPercentage)
-          self.customErrors.push('minDiscount');
+          self.customErrors.set('minDiscount', 'Campo obrigatório');
       } else {
         if (self.isRebens && !self.model.cashbackAmount)
-          self.customErrors.push('cashbackAmount');
+          self.customErrors.set('cashbackAmount', 'Campo obrigatório');
       }
       if (self.isRebens && !self.model.idIntegrationType)
-        self.customErrors.push('integrationType');
-      if (!self.model.image && !self.image) self.customErrors.push('image');
-      if (!self.model.dueDate) self.customErrors.push('dueDate');
+        self.customErrors.set('integrationType', 'Campo obrigatório');
+      if (!self.model.image && !self.image)
+        self.customErrors.set('image', 'Campo obrigatório');
+      if (!self.model.dueDate)
+        self.customErrors.set('dueDate', 'Campo obrigatório');
       if (self.model.exclusive && !self.model.idOperation)
-        self.customErrors.push('operation');
+        self.customErrors.set('operation', 'Campo obrigatório');
       if (!self.model.homeHighlight && self.model.homeHighlight != 0)
-        self.customErrors.push('homeHighlight');
+        self.customErrors.set('homeHighlight', 'Campo obrigatório');
       if (
         !self.model.homeBenefitHighlight &&
         self.model.homeBenefitHighlight != 0
       )
-        self.customErrors.push('homeBenefitHighlight');
+        self.customErrors.set('homeBenefitHighlight', 'Campo obrigatório');
+      if (
+        !self.model.exclusive &&
+        (!self.model.operations || self.model.operations.length === 0)
+      )
+        self.customErrors.set('operations', 'Campo obrigatório');
+      if (!self.model.categories || self.model.categories.length === 0)
+        self.customErrors.set('categories', 'Campo obrigatório');
 
-      if (self.customErrors.length == 0) {
+      if (self.customErrors.size === 0) {
         self.submitLoading = true;
         if (self.image) {
-          helperService.uploadFile(self.image).then(
+          helperService.uploadImage(self.image).then(
             response => {
               if (response.status != 200) {
                 self.$notify({
@@ -703,45 +660,35 @@ export default {
       }
       if (vw.viewAction == 'new') {
         benefitService.create(vw.model).then(
-          response => {
-            vw.$notify({
-              type: 'primary',
-              message: 'Beneficio cadastrado com sucesso!',
-              icon: 'tim-icons icon-bell-55'
-            });
-            vw.$router.push({
-              path: `/benefits/${response.id}/edit/`,
-              query: { tab: 'op' }
-            });
-            vw.operationKey++;
-            vw.id = response.id;
+          () => {
             vw.submitLoading = false;
+            vw.showSuccessModal = true;
           },
           err => {
-            vw.$notify({
-              type: 'primary',
-              message: err.message,
-              icon: 'tim-icons icon-bell-55'
-            });
+            if (err.response.status === 400) {
+              vw.$notify({
+                type: 'danger',
+                message: err.response.data.message
+              });
+            } else {
+              vw.$notify({
+                type: 'danger',
+                message: err.message
+              });
+            }
             vw.submitLoading = false;
           }
         );
       } else {
         benefitService.update(vw.model).then(
-          response => {
-            vw.$notify({
-              type: 'primary',
-              message: response.message,
-              icon: 'tim-icons icon-bell-55'
-            });
-            vw.$router.push('/benefits');
+          () => {
             vw.submitLoading = false;
+            vw.showSuccessModal = true;
           },
           err => {
             vw.$notify({
-              type: 'primary',
-              message: err.message,
-              icon: 'tim-icons icon-bell-55'
+              type: 'danger',
+              message: err.message
             });
             vw.submitLoading = false;
           }
@@ -752,45 +699,67 @@ export default {
       const self = this;
       self.customToolbar = config.customToolbar;
       if (this.viewAction == 'edit') {
-        this.formLoading = true;
+        this.submitLoading = true;
         benefitService.get(self.id).then(
           response => {
             self.model = response.data;
-            self.formLoading = false;
+            self.submitLoading = false;
           },
           () => {
-            self.formLoading = false;
+            self.submitLoading = false;
           }
         );
       }
-      partnerService.listActive(1).then(response => {
+      partnerService.listActive(4).then(response => {
         _.each(response.data, function(el) {
           self.partnerList.push({ label: el.name, code: el.id });
         });
       });
-      operationService.findAll(null).then(response => {
+      operationService
+        .findAll({
+          page: 0,
+          pageItems: 1000,
+          searchWord: '',
+          sort: 'name ASC',
+          active: true
+        })
+        .then(response => {
+          _.each(response.data, function(el) {
+            self.operationList.push({ label: el.title, code: el.id });
+          });
+        });
+      categoryService.listAllActive(4).then(response => {
         _.each(response.data, function(el) {
-          self.operationList.push({ label: el.title, code: el.id });
+          self.categoriesList.push({ label: el.name, code: el.id });
         });
       });
+      if (!self.isRebens) {
+        self.model.exclusive = true;
+        self.model.idOperation = this.$store.getters.currentUser.idOperation;
+      }
     },
     onImageChange(file) {
       this.image = file;
-    }
-  },
-  watch: {
-    'model.idBenefitType': function() {
-      if (this.viewAction == 'new' && this.model.idBenefitType === 3) {
-        this.model.howToUse =
-          '<p>Realize suas compras, seu CASH BACK será ativado automaticamente.</p><br /><p><b>Regras Cash Back (Dinheiro Volta)</b></p><br /><ul><li>Em até 5 dias úteis o parceiro nos avisa da compra, seu Cash Back aparecerá no seu saldo como pendente;</li><li>Em até 120 dias este saldo será confirmado, caso não haja troca ou devolução.</li></ul><br /><p><b>Seu Cash Back pode ser invalidado nas seguintes situações:</b></p><br /><ul><li>Não concluiu o pagamento da compra Utilizou um código ou cupom indevido;&nbsp;</li><li>Uso de vale-presente, vale-compra;</li><li>Utilizar outros programas de fidelidade;</li><li>Comprar de listas de casamento;</li><li>Ser direcionado para a loja através de algum e-mail promocional enviado pela loja ou por outro site;</li><li>Alterar o pedido (devolver/trocar algum produto), alterar a forma de pagamento ou cancelar o pedido/compra;</li><li>Não cumulativo com Programas de Fidelidade</li></ul>';
+      if (file == null) {
+        this.model.image = file;
       }
     }
   },
+  watch: {
+    'model.operations'() {
+      let height = 56;
+      if (this.model.operations && this.model.operations.length > 0)
+        height = this.model.operations.length * 40 + 92;
+
+      document.getElementById('operationSelectBox').style.height =
+        height + 'px';
+    }
+  },
   created() {
-    this.fetchData();
     this.isRebens =
       this.$store.getters.currentUser.role != 'administrator' &&
       this.$store.getters.currentUser.role != 'publisher';
+    this.fetchData();
   }
 };
 </script>

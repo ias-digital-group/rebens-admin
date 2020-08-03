@@ -3,7 +3,7 @@
     class="form-group"
     :class="{
       'input-group': hasIcon,
-      'input-group-focus': focused,
+      'input-group-focus': hasFocus,
       'has-danger': error,
       'has-success': !error && touched,
       'has-label': label
@@ -95,6 +95,9 @@ export default {
     };
   },
   computed: {
+    hasFocus() {
+      return this.focused || this.floatLabel;
+    },
     hasIcon() {
       const { addonRight, addonLeft } = this.$slots;
       return (

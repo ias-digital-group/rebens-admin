@@ -1,0 +1,2 @@
+GET {{url}}/api/portal/gettext?page=home
+x-operation-code: D72FF003-D857-44A0-A529-742F55637194

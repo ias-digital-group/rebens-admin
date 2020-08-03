@@ -25,5 +25,27 @@ export default {
         }
       );
     });
+  },
+  generateExcel: request => {
+    return new Promise((resolve, reject) => {
+      request = request
+        ? request
+        : {
+            searchWord: '',
+            idOperation: ''
+          };
+      HTTP.get(
+        config.apiEndpoints.wirecardUri.concat(
+          `GenerateExcel?searchWord=${request.searchWord}&idOperation=${request.idOperation}`
+        )
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
   }
 };

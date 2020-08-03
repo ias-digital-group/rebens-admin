@@ -24,7 +24,7 @@
               size="sm"
               icon
             >
-              <i class="tim-icons icon-simple-remove"></i>
+              <i class="fas fa-times"></i>
             </base-button>
           </div>
         </el-table-column>

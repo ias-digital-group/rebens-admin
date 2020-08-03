@@ -31,7 +31,7 @@
         <sidebar-item
           :link="{
             name: $t('sidebar.dashboard'),
-            icon: 'tim-icons icon-chart-pie-36',
+            icon: 'fas fa-chart-pie',
             path: '/dashboard'
           }"
         ></sidebar-item>
@@ -39,7 +39,7 @@
           v-show="!isPartnerAdmin"
           :link="{
             name: $t('sidebar.benefits'),
-            icon: 'tim-icons icon-money-coins'
+            icon: 'fas fa-dollar-sign'
           }"
         >
           <sidebar-item
@@ -52,7 +52,6 @@
             v-show="isRebens"
             :link="{
               name: $t('sidebar.categories'),
-              icon: 'tim-icons icon-single-copy-04',
               path: '/benefits/categories'
             }"
           ></sidebar-item>
@@ -60,7 +59,6 @@
             v-show="isRebens"
             :link="{
               name: $t('sidebar.partners'),
-              icon: 'tim-icons icon-link-72',
               path: '/benefits/partner'
             }"
           ></sidebar-item>
@@ -77,7 +75,7 @@
           v-show="isRebens"
           :link="{
             name: $t('sidebar.operations'),
-            icon: 'tim-icons icon-bank',
+            icon: 'fas fa-university',
             path: '/operations'
           }"
         ></sidebar-item>
@@ -85,8 +83,8 @@
           v-show="!isPublisher && !isPartnerAdmin"
           :link="{
             name: $t('sidebar.customer'),
-            path: '/report/customer',
-            icon: 'tim-icons icon-single-02'
+            path: '/customers',
+            icon: 'fas fa-users'
           }"
         ></sidebar-item>
         <sidebar-item
@@ -94,7 +92,7 @@
           :link="{
             name: $t('sidebar.users'),
             path: '/users',
-            icon: 'tim-icons icon-single-02'
+            icon: 'fas fa-user'
           }"
         ></sidebar-item>
         <sidebar-item
@@ -148,14 +146,12 @@
           <sidebar-item
             :link="{
               name: $t('sidebar.categories'),
-              icon: 'tim-icons icon-single-copy-04',
               path: '/freeCourse/categories'
             }"
           ></sidebar-item>
           <sidebar-item
             :link="{
               name: $t('sidebar.partners'),
-              icon: 'tim-icons icon-link-72',
               path: '/freeCourse/partner'
             }"
           ></sidebar-item>
@@ -164,7 +160,7 @@
           v-show="!isRebens && !isPartnerAdmin"
           :link="{
             name: $t('sidebar.customers'),
-            icon: 'tim-icons icon-single-02',
+            icon: 'fas fa-users',
             path: '/customers'
           }"
         ></sidebar-item>
@@ -172,7 +168,7 @@
           v-show="!isRebens && !isPartnerAdmin"
           :link="{
             name: $t('sidebar.faqs'),
-            icon: 'tim-icons icon-bulb-63',
+            icon: 'fas fa-comments',
             path: '/faqs'
           }"
         ></sidebar-item>
@@ -180,7 +176,7 @@
           v-show="!isRebens && !isPartnerAdmin"
           :link="{
             name: $t('sidebar.pages'),
-            icon: 'tim-icons icon-paper',
+            icon: 'fas fa-file',
             path: '/pages'
           }"
         ></sidebar-item>
@@ -188,7 +184,7 @@
           v-show="showOperationPartner"
           :link="{
             name: $t('sidebar.partners'),
-            icon: 'tim-icons icon-link-72',
+            icon: 'fas fa-building',
             path: '/operationPartner'
           }"
         ></sidebar-item>
@@ -197,14 +193,14 @@
           :link="{
             name: $t('sidebar.partnersApprove'),
             path: '/operationPartner/approve',
-            icon: 'tim-icons icon-single-02'
+            icon: 'fas fa-user'
           }"
         ></sidebar-item>
         <sidebar-item
           v-show="isRebens"
           :link="{
             name: 'Raspadinhas',
-            icon: 'tim-icons icon-paper',
+            icon: 'fas fa-ticket-alt',
             path: '/scratchcard'
           }"
         ></sidebar-item>
@@ -234,17 +230,9 @@
         ></sidebar-item>
         <sidebar-item
           v-show="!isPublisher && !isPartnerAdmin"
-          :link="{ name: $t('sidebar.report'), icon: 'fas fa-chart-pie' }"
+          :link="{ name: $t('sidebar.report'), icon: 'fas fa-chart-bar' }"
         >
-          <!-- <sidebar-item
-            v-show="!isPublisher && !isPartnerAdmin"
-            :link="{
-              name: $t('sidebar.benefitUse'),
-              path: '/report/benefit-use'
-            }"
-          ></sidebar-item>-->
           <sidebar-item
-            v-show="!isPublisher && !isPartnerAdmin"
             :link="{
               name: $t('sidebar.promoterReport'),
               path: '/promoter/report'

@@ -1,179 +1,236 @@
 <template>
-  <div class="row">
-    <div class="col-md-12">
-      <card :title="$t('pages.users.title')">
-        <h4 slot="header" class="card-title">{{ $t('pages.users.title') }}</h4>
-        <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
-          <div class="row">
-            <label class="col-md-3 col-form-label">Nome</label>
-            <div class="col-md-9">
-              <base-input
-                required
-                v-model="model.name"
-                type="text"
-                name="name"
-                placeholder="Nome"
-                maxlength="300"
-              ></base-input>
-              <label v-show="customErrors.includes('name')" class="text-danger"
-                >Este campo é obrigatório</label
-              >
-              <label
-                v-show="customErrors.includes('name-length')"
-                class="text-danger"
-                >Este campo aceita no máximo 300 caracteres</label
-              >
-            </div>
-          </div>
-          <div class="row">
-            <label class="col-md-3 col-form-label">Email</label>
-            <div class="col-md-9">
-              <base-input
-                required
-                v-model="model.email"
-                type="email"
-                name="email"
-                placeholder="Email"
-                maxlength="300"
-              ></base-input>
-              <label v-show="customErrors.includes('email')" class="text-danger"
-                >Este campo é obrigatório</label
-              >
-              <label
-                v-show="customErrors.includes('email-length')"
-                class="text-danger"
-                >Este campo aceite no máximo 300 caracteres</label
-              >
-              <label
-                v-show="customErrors.includes('email-format')"
-                class="text-danger"
-                >O E-mail digitado não é válido</label
-              >
-            </div>
-          </div>
-          <div class="row">
-            <label class="col-md-3 col-form-label">Papel</label>
-            <div class="col-md-3">
-              <div class="form-group">
-                <v-select
-                  :options="roles"
-                  :reduce="op => op.code"
-                  :key="model.roles"
-                  v-model="model.roles"
-                ></v-select>
-                <label
-                  v-show="customErrors.includes('roles')"
-                  class="text-danger"
-                  >Este campo é obrigatório</label
-                >
-              </div>
-            </div>
-          </div>
-          <div class="row" v-if="showOperations">
-            <label class="col-md-3 col-form-label">Operação</label>
-            <div class="col-md-3">
-              <div class="form-group">
-                <v-select
-                  :options="operations"
-                  :reduce="op => op.code"
-                  :key="model.idOperation"
-                  v-model="model.idOperation"
-                ></v-select>
-                <label
-                  v-show="customErrors.includes('operation')"
-                  class="text-danger"
-                  >Este campo é obrigatório</label
-                >
-              </div>
-            </div>
-          </div>
-          <div class="row" v-if="showOperationPartners">
-            <label class="col-md-3 col-form-label">Parceiro da operação</label>
-            <div class="col-md-3">
-              <div class="form-group">
-                <v-select
-                  :options="operationPartners"
-                  :reduce="op => op.code"
-                  :key="model.idOperationPartner"
-                  v-model="model.idOperationPartner"
-                ></v-select>
-                <label
-                  v-show="customErrors.includes('operationPartner')"
-                  class="text-danger"
-                  >O campo Parceiro da Operação é obrigatório</label
-                >
-              </div>
-            </div>
-          </div>
-          <div class="row" v-if="showPartners">
-            <label class="col-md-3 col-form-label"
-              >Parceiro de Benefícios</label
-            >
-            <div class="col-md-3">
-              <div class="form-group">
-                <v-select
-                  :options="partners"
-                  :reduce="op => op.code"
-                  :key="model.idPartner"
-                  v-model="model.idPartner"
-                ></v-select>
-                <label
-                  v-show="customErrors.includes('partner')"
-                  class="text-danger"
-                  >O campo Parceiro de Benefícios é obrigatório</label
-                >
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <label class="col-md-3 col-form-label"></label>
-            <div class="col-md-9">
-              <div class="form-group">
-                <base-checkbox v-model="model.active">Ativo</base-checkbox>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div
-              class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
-            >
-              <base-link class="btn mt-3 btn-simple btn-primary" to="/users"
-                >Voltar</base-link
-              >
-              <base-button
-                class="mt-3"
-                native-type="button"
-                type="info"
-                @click="resendValidation"
-                :loading="sendingLoading"
-                >Reenviar o email de validação</base-button
-              >
-              <base-button
-                class="mt-3 pull-right"
-                native-type="submit"
-                type="info"
-                @click.native.prevent="validate"
-                :loading="submitLoading"
-                >Salvar</base-button
-              >
-            </div>
-          </div>
-        </form>
-      </card>
+  <div class="edit-box">
+    <div class="page-header">
+      <h2>
+        <span v-if="viewAction === 'new'">Cadastro Usuário</span>
+        <span v-else-if="isProfileEdit">Editar Meu Perfil</span>
+        <span v-else>Editar Usuário</span>
+      </h2>
+      <div class="box-actions" v-show="!isProfileEdit">
+        <button
+          @click="resendValidation"
+          type="button"
+          class="bt bt-square bg-white-2 c-orange"
+          v-show="viewAction === 'new'"
+        >
+          <i class="icon-icon-send"></i>
+        </button>
+        <base-link to="/users" class="bt bt-square bg-white-2 c-light-blue">
+          <i class="icon-icon-arrow-left"></i>
+        </base-link>
+      </div>
     </div>
+    <div class="ias-card" v-loading="formLoading">
+      <form @submit.prevent>
+        <div class="form-left">
+          <div class="ias-row">
+            <custom-input
+              :required="true"
+              v-model="model.name"
+              type="text"
+              name="name"
+              label="Nome"
+              :error="customErrors.get('name')"
+              maxlength="200"
+            ></custom-input>
+            <custom-input
+              :required="true"
+              v-model="model.surname"
+              type="text"
+              name="surname"
+              label="Sobrenome"
+              :error="customErrors.get('surname')"
+              maxlength="200"
+            ></custom-input>
+          </div>
+          <div class="ias-row">
+            <custom-input
+              :required="true"
+              v-model="model.email"
+              type="text"
+              name="email"
+              :error="customErrors.get('email')"
+              label="E-mail"
+              maxlength="500"
+              :disabled="viewAction !== 'new'"
+            ></custom-input>
+          </div>
+          <div class="ias-row" v-if="viewAction === 'new'">
+            <custom-input
+              :required="true"
+              v-model="emailConfirm"
+              type="text"
+              name="emailConfirm"
+              @paste.prevent
+              :error="customErrors.get('email-confirm')"
+              label="Confirmação E-mail"
+              maxlength="500"
+            ></custom-input>
+          </div>
+          <div class="ias-row">
+            <custom-input
+              :required="true"
+              v-model="model.doc"
+              type="text"
+              name="doc"
+              label="CPF"
+              :error="customErrors.get('doc')"
+              :inputMask="['###.###.###-##']"
+              maxlength="50"
+              :disabled="viewAction !== 'new'"
+            ></custom-input>
+            <div class="select-holder">
+              <v-select
+                :options="roles"
+                :reduce="op => op.code"
+                :key="model.roles"
+                v-model="model.roles"
+                placeholder="Papel"
+                :class="{ 'has-error': customErrors.get('roles') }"
+                :disabled="blockRoles"
+              >
+                <span slot="no-options">Nenhum papel encontrado</span>
+              </v-select>
+              <label v-if="customErrors.get('roles')" class="ias-error">{{
+                customErrors.get('roles')
+              }}</label>
+            </div>
+          </div>
+          <div class="ias-row" v-show="isRebens">
+            <div class="select-holder">
+              <v-select
+                :options="operations"
+                :reduce="op => op.code"
+                :key="model.idOperation"
+                v-model="model.idOperation"
+                :class="{ 'has-error': customErrors.get('operation') }"
+                :placeholder="blockOperations ? 'Todos' : 'Clube'"
+                :disabled="blockOperations"
+              >
+                <span slot="no-options">Nenhum Clube encontrado</span>
+              </v-select>
+              <label v-if="customErrors.get('operation')" class="ias-error">{{
+                customErrors.get('operation')
+              }}</label>
+            </div>
+          </div>
+          <div class="ias-row">
+            <div class="select-holder" v-if="model.roles === 'couponChecker'">
+              <v-select
+                :options="partners"
+                :reduce="op => op.code"
+                :key="model.idPartner"
+                v-model="model.idPartner"
+                :placeholder="blockOperationPartners ? 'Todas' : 'Empresa'"
+                :disabled="blockOperationPartners"
+              >
+                <span slot="no-options">Nenhuma empresa encontrada</span>
+              </v-select>
+            </div>
+            <div class="select-holder" v-else-if="showOperationPartners">
+              <v-select
+                :options="operationPartners"
+                :reduce="op => op.code"
+                :key="model.idOperationPartner"
+                v-model="model.idOperationPartner"
+                :placeholder="blockOperationPartners ? 'Todas' : 'Empresa'"
+                :disabled="blockOperationPartners"
+              >
+                <span slot="no-options">Nenhuma empresa encontrada</span>
+              </v-select>
+            </div>
+            <custom-input
+              v-model="model.phoneMobile"
+              type="text"
+              name="phoneMobile"
+              label="Telefone"
+              maxlength="50"
+              :inputMask="['(##) ####-####', '(##) #####-####']"
+            ></custom-input>
+            <custom-input
+              v-model="model.phoneComercialMobile"
+              type="text"
+              name="phoneComercialMobile"
+              label="Celular Comercial"
+              maxlength="50"
+              v-show="!showOperationPartners"
+              :inputMask="['(##) ####-####', '(##) #####-####']"
+            ></custom-input>
+          </div>
+          <div class="ias-row">
+            <custom-input
+              v-model="model.phoneComercialMobile"
+              type="text"
+              name="phoneComercialMobile"
+              label="Celular Comercial"
+              maxlength="50"
+              v-show="showOperationPartners"
+              :inputMask="['(##) ####-####', '(##) #####-####']"
+            ></custom-input>
+            <div class="phone-branch">
+              <custom-input
+                v-model="model.phoneComercial"
+                type="text"
+                name="phoneComercial"
+                label="Telefone Comercial"
+                maxlength="50"
+                :inputMask="['(##) ####-####']"
+              ></custom-input>
+              <custom-input
+                v-model="model.phoneComercialBranch"
+                type="text"
+                name="phone"
+                label="Ramal"
+                maxlength="50"
+              ></custom-input>
+            </div>
+            <div class="div-spacer" v-show="!showOperationPartners"></div>
+          </div>
+          <div class="ias-row">
+            <div class="form-actions">
+              <button
+                class="bt bg-green c-white"
+                type="button"
+                @click.prevent="validate"
+              >
+                <span v-if="viewAction === 'new'">Cadastrar</span>
+                <span v-else>Salvar</span>
+              </button>
+
+              <ias-checkbox v-model="model.active">Ativo</ias-checkbox>
+            </div>
+            <div class="div-spacer"></div>
+          </div>
+        </div>
+        <div class="form-right">
+          <ias-image-upload
+            @change="onImageChange"
+            img-size="(360x360)"
+            :src="model.picture"
+          />
+        </div>
+      </form>
+    </div>
+    <success-modal
+      :isEdit="viewAction !== 'new'"
+      :show="showSuccessModal"
+      link="/users"
+    ></success-modal>
   </div>
 </template>
 <script>
-import { Select, Option } from 'element-ui';
 import userService from '../../services/User/userService';
 import partnerService from '../../services/Partner/partnerService';
 import operationService from '../../services/Operation/operationService';
 import operationPartnerService from '../../services/OperationPartner/operationPartnerService';
+import helperService from '../../services/Helper/helperService';
+import { SuccessModal } from 'src/components';
+import validate from '../../validate';
 import _ from 'lodash';
+
 export default {
   components: {
-    [Option.name]: Option,
-    [Select.name]: Select
+    SuccessModal
   },
   props: {
     id: String,
@@ -182,39 +239,60 @@ export default {
       default: 'Remove'
     }
   },
+  watch: {
+    'model.roles': function(value) {
+      if (
+        value === 'master' ||
+        value === 'publisherRebens' ||
+        value === 'administratorRebens'
+      ) {
+        this.model.idOperation = null;
+        this.model.idOperationPartner = null;
+      }
+    },
+    'model.idOperation': function() {
+      const self = this;
+      if (self.isRebens) {
+        if (self.model.roles === 'couponChecker') self.loadPartners(self);
+        else if (
+          self.model.roles === 'partnerAdministrator' ||
+          self.model.roles === 'partnerApprover'
+        )
+          self.loadOperationPartner(self);
+      }
+    }
+  },
   data() {
     return {
-      selectLoading: false,
       formLoading: false,
-      submitLoading: false,
-      sendingLoading: false,
       isMaster: false,
       isRebens: false,
       isPartnerUser: false,
-      customErrors: [],
+      showSuccessModal: false,
+      customErrors: new Map(),
+      showOperationPartners: true,
+      isProfileEdit: false,
       roles: [],
-      reg: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
+      image: null,
+      emailConfirm: '',
+      idCompany: 0,
+      blockRoles: true,
       model: {
+        id: 0,
         name: '',
+        surname: '',
+        doc: '',
+        phoneComercial: '',
+        phoneComercialBranch: '',
+        phoneComercialMobile: '',
+        phoneMobile: '',
         email: '',
         status: false,
         idOperation: null,
-        idOperationPartner: null,
         idPartner: null,
-        roles: ''
-      },
-      modelValidations: {
-        name: {
-          required: true,
-          max: 300
-        },
-        email: {
-          required: true,
-          max: 300
-        },
-        roles: {
-          required: true
-        }
+        idOperationPartner: null,
+        roles: '',
+        picture: ''
       },
       operations: [],
       operationPartners: [],
@@ -237,67 +315,67 @@ export default {
         !this.isPartnerUser
       );
     },
-    showOperationPartners() {
+    blockOperations() {
       return (
-        (this.model.roles == 'partnerAdministrator' ||
-          this.model.roles == 'partnerApprover') &&
-        !this.isPartnerUser &&
-        this.operationPartners.length > 1
+        this.model.roles == 'publisherRebens' ||
+        this.model.roles == 'administratorRebens' ||
+        this.model.roles == 'master'
       );
     },
-    showPartners() {
+    blockOperationPartners() {
       return (
-        this.model.roles == 'couponChecker' &&
-        !this.isPartnerUser &&
-        this.partners.length > 1
+        this.model.roles == 'publisher' ||
+        this.model.roles == 'publisherRebens' ||
+        this.model.roles == 'administrator' ||
+        this.model.roles == 'administratorRebens' ||
+        this.model.roles == 'promoter' ||
+        this.model.roles == 'ticketChecker' ||
+        this.model.roles == 'master'
       );
     }
   },
   methods: {
-    onOperationChange() {
-      const self = this;
-      if (self.isRebens) {
-        self.operationPartners = [];
-        operationPartnerService
-          .findAll({
-            page: 0,
-            pageItems: 1000,
-            searchWord: '',
-            sort: 'name ASC',
-            idOperation: self.model.idOperation
-          })
-          .then(
-            response => {
-              self.operationPartners.push({ id: null, title: 'selecione' });
-              _.each(response.data, function(el) {
-                if (el.id != self.id) {
-                  self.operationPartners.push({ id: el.id, title: el.name });
-                }
-              });
-              self.selectLoading = false;
-            },
-            () => {
-              self.selectLoading = false;
-            }
-          );
+    onImageChange(file) {
+      this.image = file;
+      if (file == null) {
+        this.model.picture = file;
       }
-    },
-    getError(fieldName) {
-      return this.errors.first(fieldName);
     },
     validate() {
       const self = this;
-      self.customErrors = [];
+      self.customErrors = new Map();
 
-      if (!self.model.name) self.customErrors.push('name');
-      else if (!self.model.name.length > 300)
-        self.customErrors.push('name-length');
-      if (!self.model.email) self.customErrors.push('email');
-      else if (!self.reg.test(self.model.email))
-        self.customErrors.push('email-format');
+      if (!self.model.doc) self.customErrors.set('doc', 'Campo obrigatório');
+      else if (!validate.validateCpf(self.model.doc))
+        self.customErrors.set('doc', 'CPF inválido!');
+      if (!self.model.name) self.customErrors.set('name', 'Campo obrigatório');
+      else if (!self.model.name.length > 200)
+        self.customErrors.set('name', 'Máximo 200 caracteres');
+      if (!self.model.surname)
+        self.customErrors.set('surname', 'Campo obrigatório');
+      else if (!self.model.surname.length > 200)
+        self.customErrors.set('surname', 'Máximo 200 caracteres');
+      if (!self.model.email)
+        self.customErrors.set('email', 'Campo obrigatório');
+      else if (!validate.validateEmail(self.model.email))
+        self.customErrors.set('email', 'E-mail inválido');
       else if (!self.model.email.length > 300)
-        self.customErrors.push('email-length');
-      if (self.model.roles == '') self.customErrors.push('roles');
+        self.customErrors.set('email', 'Máximo 300 caracteres');
+      if (self.viewAction === 'new') {
+        if (!self.emailConfirm)
+          self.customErrors.set('email-confirm', 'Campo obrigatório');
+        else if (!validate.validateEmail(self.emailConfirm))
+          self.customErrors.set('email-confirm', 'E-mail inválido');
+        else if (!self.emailConfirm.length > 300)
+          self.customErrors.set('email-confirm', 'Máximo 300 caracteres');
+        else if (self.emailConfirm !== self.model.email)
+          self.customErrors.set(
+            'email-confirm',
+            'Este campo deve ser igual ao E-mail'
+          );
+      }
+      if (self.model.roles == null || self.model.roles === '')
+        self.customErrors.set('roles', 'Campo obrigatorio');
       if (
         self.isRebens &&
         (self.model.roles === 'publisher' ||
@@ -308,34 +386,50 @@ export default {
           self.model.roles == 'ticketChecker') &&
         self.model.idOperation == null
       )
-        self.customErrors.push('operation');
+        self.customErrors.set('operation', 'Campo obrigatório');
 
-      if (
-        self.isRebens &&
-        self.model.roles == 'couponChecker' &&
-        self.model.idPartner == null
-      )
-        self.customErrors.push('partner');
-
-      if (self.customErrors.length == 0) {
-        self.submitLoading = true;
-        self.saveUser(self);
+      if (self.customErrors.size === 0) {
+        self.formLoading = true;
+        if (self.image) {
+          helperService.uploadImage(self.image).then(
+            response => {
+              if (response.status != 200) {
+                self.$notify({
+                  type: 'danger',
+                  message: response.message
+                });
+                self.formLoading = false;
+                return;
+              }
+              self.model.picture = response.data.url;
+              self.saveUser(self);
+            },
+            err => {
+              self.$notify({
+                type: 'danger',
+                message: err.message
+              });
+              self.formLoading = false;
+            }
+          );
+        } else {
+          self.saveUser(self);
+        }
       }
     },
     resendValidation() {
       const self = this;
-      self.sendingLoading = true;
+      self.formLoading = true;
       userService.resendValidation(self.id).then(
         () => {
           self.$notify({
             type: 'success',
-            message: 'E-mail reenviado com sucesso!',
-            icon: 'tim-icons icon-bell-55'
+            message: 'E-mail reenviado com sucesso!'
           });
-          self.sendingLoading = false;
+          self.formLoading = false;
         },
         () => {
-          self.sendingLoading = false;
+          self.formLoading = false;
         }
       );
     },
@@ -351,37 +445,36 @@ export default {
       if (vm.viewAction == 'new') {
         userService.create(vm.model).then(
           () => {
-            vm.$notify({
-              type: 'success',
-              message: 'usuário cadastrado com sucesso!'
-            });
-            vm.$router.push('/users');
-            vm.submitLoading = false;
+            vm.formLoading = false;
+            vm.showSuccessModal = true;
           },
           err => {
-            vm.$notify({
-              type: 'danger',
-              message: err.message
-            });
-            vm.submitLoading = false;
+            if (err.response.status === 400 && err.response.data.message) {
+              vm.$notify({
+                type: 'warning',
+                message: err.response.data.message
+              });
+            } else {
+              vm.$notify({
+                type: 'danger',
+                message: err.message
+              });
+            }
+            vm.formLoading = false;
           }
         );
       } else {
         userService.update(vm.model).then(
-          response => {
-            vm.$notify({
-              type: 'primary',
-              message: response.message
-            });
-            vm.$router.push('/users');
-            vm.submitLoading = false;
+          () => {
+            vm.formLoading = false;
+            vm.showSuccessModal = true;
           },
           err => {
             vm.$notify({
               type: 'danger',
               message: err.message
             });
-            vm.submitLoading = false;
+            vm.formLoading = false;
           }
         );
       }
@@ -389,37 +482,97 @@ export default {
     fetchData() {
       const self = this;
 
-      if (self.isMaster) {
-        self.roles.push({ code: 'master', label: 'Master' });
-      }
-      if (!self.isPartnerUser) {
-        self.roles.push({ code: 'publisher', label: 'publisher' });
-        self.roles.push({ code: 'administrator', label: 'Administrador' });
+      if (self.$store.getters.currentUser.role === 'ticketChecker')
         self.roles.push({ code: 'ticketChecker', label: 'Validador Ingresso' });
+      else if (self.$store.getters.currentUser.role === 'couponChecker')
         self.roles.push({ code: 'couponChecker', label: 'Validador Cupom' });
-        if (self.isRebens) {
-          self.roles.push({
-            code: 'publisherRebens',
-            label: 'Publicador Rebens'
-          });
-          self.roles.push({
-            code: 'administratorRebens',
-            label: 'Administrador Rebens'
-          });
+      else if (self.$store.getters.currentUser.role === 'promoter')
+        self.roles.push({ code: 'promoter', label: 'Promotor' });
+      else if (self.$store.getters.currentUser.role === 'partnerApprover') {
+        self.roles.push({
+          code: 'partnerApprover',
+          label: 'Aprovador Parceiro'
+        });
+        self.showOperationPartners = false;
+      } else if (self.$store.getters.currentUser.role === 'publisher')
+        self.roles.push({ code: 'publisher', label: 'Publicador' });
+      else if (
+        self.$store.getters.currentUser.role === 'partnerAdministrator'
+      ) {
+        self.model.idOperation = self.$store.getters.currentUser.idOperation;
+        self.model.idPartner = self.$store.getters.currentUser.idPartner;
+        self.model.idOperationPartner =
+          self.$store.getters.currentUser.idOperationPartner;
+        self.showOperationPartners = false;
+        self.roles.push({
+          code: 'partnerAdministrator',
+          label: 'Administrador Parceiro'
+        });
+        self.roles.push({
+          code: 'partnerApprover',
+          label: 'Aprovador Parceiro'
+        });
+      } else {
+        self.blockRoles = false;
+        if (self.isMaster) {
+          self.roles.push({ code: 'master', label: 'Master' });
         }
+        if (!self.isPartnerUser) {
+          self.roles.push({ code: 'publisher', label: 'Publicador' });
+          self.roles.push({ code: 'administrator', label: 'Administrador' });
+          self.roles.push({
+            code: 'ticketChecker',
+            label: 'Validador Ingresso'
+          });
+          self.roles.push({ code: 'couponChecker', label: 'Validador Cupom' });
+          if (self.isRebens) {
+            // self.roles.push({
+            //   code: 'publisherRebens',
+            //   label: 'Publicador Rebens'
+            // });
+            self.roles.push({
+              code: 'administratorRebens',
+              label: 'Administrador Rebens'
+            });
+          }
+        }
+        self.roles.push({
+          code: 'partnerAdministrator',
+          label: 'Administrador Parceiro'
+        });
+        self.roles.push({
+          code: 'partnerApprover',
+          label: 'Aprovador Parceiro'
+        });
+        if (
+          self.isRebens ||
+          (self.$store.getters.currentUser.modules &&
+            self.$store.getters.currentUser.modules.includes('promoter'))
+        )
+          self.roles.push({ code: 'promoter', label: 'Promotor' });
+
+        operationService.findAll().then(
+          response => {
+            self.operations.push({ code: 0, label: 'selecione' });
+            _.each(response.data, function(el) {
+              if (el.id != self.id) {
+                self.operations.push({ code: el.id, label: el.title });
+              }
+            });
+          },
+          () => {}
+        );
+
+        this.loadPartners(self);
       }
-      self.roles.push({
-        code: 'partnerAdministrator',
-        label: 'Administrador Parceiro'
-      });
-      self.roles.push({ code: 'partnerApprover', label: 'Aprovador Parceiro' });
-      self.roles.push({ code: 'promoter', label: 'Promotor' });
 
       if (this.viewAction == 'edit') {
         this.formLoading = true;
         userService.get(self.id).then(
           response => {
             self.model = response.data;
+            self.isProfileEdit =
+              self.model.id == self.$store.getters.currentUser.id;
             self.loadOperationPartner(self);
           },
           () => {
@@ -430,68 +583,46 @@ export default {
         self.model.idOperation = self.$store.getters.currentUser.idOperation;
         self.loadOperationPartner(self);
       }
-
-      this.selectLoading = true;
-      operationService.findAll().then(
-        response => {
-          self.operations.push({ code: 0, label: 'selecione' });
-          _.each(response.data, function(el) {
-            if (el.id != self.id) {
-              self.operations.push({ code: el.id, label: el.title });
-            }
-          });
-          self.selectLoading = false;
-        },
-        () => {
-          self.selectLoading = false;
-        }
-      );
-
-      this.loadPartners(self);
     },
     loadOperationPartner(self) {
       self.formLoading = true;
-      if (!self.isPartnerUser) {
-        let operationId = 0;
-        if (self.isRebens) {
-          if (
-            self.model.roles == 'partnerAdministrator' ||
-            self.model.roles == 'partnerApprover'
-          ) {
-            operationId = self.model.idOperation;
-          }
-        } else {
-          operationId = self.$store.getters.currentUser.idOperation;
+      let operationId = 0;
+      if (self.isRebens) {
+        if (
+          self.model.roles == 'partnerAdministrator' ||
+          self.model.roles == 'partnerApprover'
+        ) {
+          operationId = self.model.idOperation;
         }
-        if (operationId > 0) {
-          operationPartnerService
-            .findAll({
-              page: 0,
-              pageItems: 1000,
-              searchWord: '',
-              sort: 'name ASC',
-              idOperation: operationId
-            })
-            .then(
-              response => {
-                self.operationPartners.push({ code: 0, label: 'selecione' });
-                _.each(response.data, function(el) {
-                  if (el.id != self.id) {
-                    self.operationPartners.push({
-                      code: el.id,
-                      label: el.name
-                    });
-                  }
-                });
-                self.formLoading = false;
-              },
-              () => {
-                self.formLoading = false;
-              }
-            );
-        } else {
-          self.formLoading = false;
-        }
+      } else {
+        operationId = self.$store.getters.currentUser.idOperation;
+      }
+      if (operationId > 0) {
+        operationPartnerService
+          .findAll({
+            page: 0,
+            pageItems: 1000,
+            searchWord: '',
+            sort: 'name ASC',
+            idOperation: operationId
+          })
+          .then(
+            response => {
+              self.operationPartners.push({ code: 0, label: 'selecione' });
+              _.each(response.data, function(el) {
+                if (el.id != self.id) {
+                  self.operationPartners.push({
+                    code: el.id,
+                    label: el.name
+                  });
+                }
+              });
+              self.formLoading = false;
+            },
+            () => {
+              self.formLoading = false;
+            }
+          );
       } else {
         self.formLoading = false;
       }
@@ -533,6 +664,7 @@ export default {
     this.isRebens =
       this.$store.getters.currentUser.role == 'administratorRebens' ||
       this.$store.getters.currentUser.role == 'master';
+
     this.fetchData();
   }
 };

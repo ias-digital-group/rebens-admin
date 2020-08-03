@@ -1,0 +1,174 @@
+<template>
+  <div
+    class="ias-input-group"
+    :class="{
+      'ias-has-icon': hasIcon,
+      'ias-focus': floatLabel,
+      'bg-red-20': error,
+      'ias-disabled': disabled
+    }"
+  >
+    <label class="ias-label">{{ label }}</label>
+    <slot>
+      <template v-if="inputMask && inputMask.length > 0">
+        <the-mask
+          :value="value"
+          ref="maskedInput"
+          :mask="inputMask"
+          v-bind="$attrs"
+          v-on="listeners"
+          class="ias-input"
+          :masked="masked"
+        />
+      </template>
+      <template v-else-if="isMoney">
+        <money
+          class="ias-input"
+          :value="value"
+          v-bind="money"
+          v-on="listeners"
+        ></money>
+      </template>
+      <template v-else>
+        <input
+          :value="value"
+          v-bind="$attrs"
+          v-on="listeners"
+          class="ias-input"
+        />
+      </template>
+    </slot>
+    <div v-if="hasIcon" class="ias-icon-holder">
+      <i :class="iconName"></i>
+    </div>
+    <template v-if="isLink">
+      <a
+        v-if="link && link != ''"
+        :href="'http://' + link"
+        target="_blank"
+        class="ias-icon-link c-light-blue"
+      >
+        <i class="icon-icon-view"></i>
+      </a>
+      <span v-else class="cursor-block ias-icon-link c-light-blue">
+        <i class="icon-icon-view"></i>
+      </span>
+    </template>
+
+    <label v-if="error" class="ias-error">{{ error }}</label>
+  </div>
+</template>
+<script>
+import { Money } from 'v-money';
+export default {
+  components: {
+    Money
+  },
+  inheritAttrs: false,
+  name: 'custom-input',
+  props: {
+    required: Boolean,
+    label: {
+      type: String,
+      description: 'Input label'
+    },
+    error: {
+      type: String,
+      description: 'Input error',
+      default: ''
+    },
+    value: {
+      type: [String, Number, Boolean],
+      description: 'Input value'
+    },
+    hasIcon: {
+      type: Boolean,
+      description: 'Has icon'
+    },
+    iconName: {
+      type: String,
+      description: 'Name of the icon'
+    },
+    inputMask: {
+      type: Array,
+      description: 'Input mask'
+    },
+    hasFocus: {
+      type: Boolean,
+      description: 'Input focus'
+    },
+    disabled: {
+      type: Boolean,
+      description: 'Input disabled'
+    },
+    isMoney: {
+      type: Boolean,
+      description: 'is currency'
+    },
+    isLink: {
+      type: Boolean,
+      description: 'is link'
+    },
+    link: {
+      type: String,
+      description: 'is link'
+    },
+    masked: {
+      type: Boolean,
+      description: 'if should save with the mask',
+      default: false
+    }
+  },
+  model: {
+    prop: 'value',
+    event: 'input'
+  },
+  data() {
+    return {
+      focused: false,
+      touched: false,
+      money: {
+        decimal: ',',
+        thousands: '.',
+        prefix: '',
+        suffix: '',
+        precision: 2,
+        masked: false
+      }
+    };
+  },
+  computed: {
+    listeners() {
+      return {
+        ...this.$listeners,
+        input: this.onInput,
+        blur: this.onBlur,
+        focus: this.onFocus
+      };
+    },
+    floatLabel() {
+      return this.focused || (this.value && this.value !== '') || this.hasFocus;
+    }
+  },
+  methods: {
+    onInput(evt) {
+      if (!this.touched) {
+        this.touched = true;
+      }
+      this.$emit('input', evt.target ? evt.target.value : evt);
+    },
+    onFocus() {
+      this.focused = true;
+    },
+    onBlur() {
+      this.focused = false;
+    },
+    clearValue() {
+      if (this.$refs.maskedInput) {
+        this.$refs.maskedInput.$data.lastValue = null;
+      }
+    }
+  }
+};
+</script>
+<style></style>

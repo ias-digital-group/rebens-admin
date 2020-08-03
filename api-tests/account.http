@@ -1,0 +1,35 @@
+POST {{url}}/api/Account/Login
+Content-Type: application/json
+
+{
+	"Email":"admias@iasdigitalgroup.com",
+	"Password":"k4r0l1n4"
+}
+
+###
+
+POST {{url}}/api/Account/Validate
+Content-Type: application/json
+
+{
+	"code":"ElBuWzy/8xZojFIQ8Zp8DAXeoG3BG5ZYyZP266DwKKM=",
+	"Password":"k4r0l1n4",
+	"PasswordConfirm":"k4r0l1n4"
+}
+
+###
+
+POST {{url}}/api/Account/ChangePassword
+Content-Type: application/json
+Authorization: Bearer 
+
+{
+	"oldPassword":"k4r0l1n4",
+	"newPassword":"anna1985",
+	"newPasswordConfirm":"anna1985"
+}
+
+###
+
+GET {{url}}/api/Account/RememberPassword?email=israel@iasdigitalgroup.com
+Content-Type: application/json

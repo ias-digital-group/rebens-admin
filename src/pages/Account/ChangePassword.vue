@@ -1,88 +1,64 @@
 <template>
-  <div class="row">
-    <div class="col-md-12">
-      <card :title="$t('pages.change-password.title')">
-        <h4 slot="header" class="card-title">
-          {{ $t('pages.change-password.title') }}
-        </h4>
-        <form class="form-horizontal" @submit.prevent>
-          <div class="row">
-            <label class="col-md-3 col-form-label">Senha atual</label>
-            <div class="col-md-9">
-              <base-input
-                required
-                v-model="model.oldPassword"
-                type="password"
-                :name="$t('pages.change-password.input-actual')"
-                :placeholder="$t('pages.change-password.input-actual')"
-                maxlength="50"
-              ></base-input>
-              <label
-                v-show="customErrors.includes('oldPassword')"
-                class="text-danger"
-                >Este campo é obrigatório!</label
-              >
-            </div>
+  <div class="edit-box" v-loading="submitLoading">
+    <div class="page-header">
+      <h2>Alterar Senha</h2>
+      <!-- <div class="box-actions">
+        <base-link to="/users" class="bt bt-square bg-white-2 c-light-blue">
+          <i class="icon-icon-arrow-left"></i>
+        </base-link>
+      </div>-->
+    </div>
+    <div class="ias-card">
+      <form @submit.prevent>
+        <div class="form-left">
+          <div class="ias-row">
+            <custom-input
+              :required="true"
+              v-model="model.oldPassword"
+              type="password"
+              name="password"
+              label="Senha Atual"
+              :error="customErrors.get('password')"
+              maxlength="50"
+            ></custom-input>
           </div>
-          <div class="row">
-            <label class="col-md-3 col-form-label">Nova senha</label>
-            <div class="col-md-9">
-              <base-input
-                required
-                v-model="model.newPassword"
-                type="password"
-                :name="$t('pages.change-password.input-password')"
-                :placeholder="$t('pages.change-password.input-password')"
-                maxlength="50"
-              ></base-input>
-              <label
-                v-show="customErrors.includes('newPassword')"
-                class="text-danger"
-                >Este campo é obrigatório!</label
-              >
-              <label
-                v-show="customErrors.includes('NotMatch')"
-                class="text-danger"
-                >A nova senha e a confirmação devem ser iguais!</label
-              >
-            </div>
+          <div class="ias-row">
+            <custom-input
+              :required="true"
+              v-model="model.newPassword"
+              type="password"
+              name="newPassword"
+              label="Nova Senha"
+              :error="customErrors.get('newPassword')"
+              maxlength="50"
+            ></custom-input>
           </div>
-          <div class="row">
-            <label class="col-md-3 col-form-label">Confirmação da senha</label>
-            <div class="col-md-9">
-              <base-input
-                required
-                v-model="model.newPasswordConfirm"
-                type="password"
-                :name="$t('pages.change-password.input-confirm')"
-                :placeholder="$t('pages.change-password.input-confirm')"
-                maxlength="50"
-              ></base-input>
-              <label
-                v-show="customErrors.includes('newPasswordConfirm')"
-                class="text-danger"
-                >Este campo é obrigatório!</label
-              >
-            </div>
+          <div class="ias-row">
+            <custom-input
+              :required="true"
+              v-model="model.newPasswordConfirm"
+              type="password"
+              name="newPasswordConfirm"
+              label="Confirmação Senha"
+              :error="customErrors.get('confirm')"
+              maxlength="50"
+            ></custom-input>
           </div>
-
-          <div class="row">
-            <div class="col-md-12">
-              <base-link class="btn mt-3 btn-simple btn-primary" :to="backUrl"
-                >Voltar</base-link
+          <div class="ias-row">
+            <div class="form-actions">
+              <button
+                class="bt bg-green c-white"
+                type="button"
+                @click.prevent="validate"
               >
-              <base-button
-                class="mt-3 pull-right"
-                native-type="submit"
-                type="info"
-                @click.native.prevent="validate"
-                :loading="submitLoading"
-                >Salvar</base-button
-              >
+                Salvar
+              </button>
             </div>
+            <div class="div-spacer"></div>
           </div>
-        </form>
-      </card>
+        </div>
+        <div class="form-right"></div>
+      </form>
     </div>
   </div>
 </template>
@@ -93,7 +69,7 @@ export default {
   data() {
     return {
       submitLoading: false,
-      customErrors: [],
+      customErrors: new Map(),
       model: {
         oldPassword: '',
         newPassword: '',
@@ -117,24 +93,30 @@ export default {
     }
   },
   methods: {
-    getError(fieldName) {
-      return this.errors.first(fieldName);
-    },
     validate() {
       const self = this;
-      self.customErrors = [];
+      self.customErrors = new Map();
 
-      if (self.model.oldPassword === '') self.customErrors.push('oldPassword');
-      if (self.model.newPassword === '') self.customErrors.push('newPassword');
+      if (self.model.oldPassword === '')
+        self.customErrors.set('password', 'Campo obrigatório');
+      if (self.model.newPassword === '')
+        self.customErrors.set('newPassword', 'Campo obrigatório');
       if (self.model.newPasswordConfirm === '')
-        self.customErrors.push('newPasswordConfirm');
+        self.customErrors.set('confirm', 'Campo obrigatório');
       if (
         self.model.newPassword !== '' &&
         self.model.newPasswordConfirm !== self.model.newPassword
-      )
-        self.customErrors.push('NotMatch');
-
-      if (self.customErrors.length === 0) {
+      ) {
+        self.customErrors.set(
+          'newPassword',
+          'A nova senha e a confirmação devem ser iguais.'
+        );
+        self.customErrors.set(
+          'confirm',
+          'A nova senha e a confirmação devem ser iguais.'
+        );
+      }
+      if (self.customErrors.size === 0) {
         self.submitLoading = true;
         self.changePass(self);
       }
@@ -144,9 +126,8 @@ export default {
       accountService.changePassword(vm.model).then(
         () => {
           vm.$notify({
-            type: 'primary',
-            message: 'Senha alterada com sucesso!',
-            icon: 'tim-icons icon-bell-55'
+            type: 'success',
+            message: 'Senha alterada com sucesso!'
           });
           vm.submitLoading = false;
         },
@@ -156,8 +137,7 @@ export default {
             message:
               err.response && err.response.data
                 ? err.response.data.message
-                : err.message,
-            icon: 'tim-icons icon-bell-55'
+                : err.message
           });
           vm.submitLoading = false;
         }

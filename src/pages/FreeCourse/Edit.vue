@@ -56,8 +56,7 @@
                     :reduce="op => op.code"
                     :key="model.idOperation"
                     v-model="model.idOperation"
-                  >
-                  </v-select>
+                  ></v-select>
                   <label
                     v-show="customErros.includes('idOperation')"
                     class="text-danger"
@@ -73,8 +72,7 @@
                     :reduce="op => op.code"
                     :key="model.idPartner"
                     v-model="model.idPartner"
-                  >
-                  </v-select>
+                  ></v-select>
                   <label
                     v-show="customErros.includes('idPartner')"
                     class="text-danger"
@@ -85,7 +83,7 @@
               <div class="row">
                 <label class="col-md-3 col-form-label">Preço</label>
                 <div class="col-md-9 offset-md-3 offset-lg-0 col-lg-3">
-                  <base-input label="">
+                  <base-input label>
                     <money
                       class="form-control"
                       v-model="model.price"
@@ -258,9 +256,8 @@
                     type="info"
                     @click.native.prevent="validateCourse"
                     :loading="submitLoading"
+                    >Salvar</base-button
                   >
-                    Salvar
-                  </base-button>
                 </div>
               </div>
             </form>
@@ -389,7 +386,7 @@ export default {
 
         if (self.image) {
           imgCounter++;
-          helperService.uploadFile(self.image).then(
+          helperService.uploadImage(self.image).then(
             response => {
               if (response.status != 200) {
                 self.$notify({
@@ -417,7 +414,7 @@ export default {
 
         if (self.listImage) {
           imgCounter++;
-          helperService.uploadFile(self.listImage).then(
+          helperService.uploadImage(self.listImage).then(
             response => {
               if (response.status != 200) {
                 self.$notify({

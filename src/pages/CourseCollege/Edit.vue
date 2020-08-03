@@ -77,8 +77,7 @@
                       :reduce="op => op.code"
                       :key="model.idOperation"
                       v-model="model.idOperation"
-                    >
-                    </v-select>
+                    ></v-select>
                     <label
                       v-show="customErros.includes('operation')"
                       class="text-danger"
@@ -139,9 +138,8 @@
                     type="info"
                     @click.native.prevent="validateCollege"
                     :loading="submitLoading"
+                    >Salvar</base-button
                   >
-                    Salvar
-                  </base-button>
                 </div>
               </div>
             </form>
@@ -230,7 +228,7 @@ export default {
       if (self.customErros.length === 0) {
         self.submitLoading = true;
         if (self.image) {
-          helperService.uploadFile(self.image).then(
+          helperService.uploadImage(self.image).then(
             response => {
               if (response.status != 200) {
                 self.$notify({

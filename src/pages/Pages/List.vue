@@ -1,152 +1,197 @@
 <template>
-  <div class="row">
-    <div class="col-12">
-      <card card-body-classes="table-full-width">
-        <template slot="header">
-          <h4 class="card-title">{{ $t('pages.pages.title') }}</h4>
-        </template>
-        <div>
-          <div
-            class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
-          >
-            <el-select
-              class="select-primary mb-3 pagination-select"
-              v-model="pagination.perPage"
-              :placeholder="$t('pages.banners.perpage-placeholder')"
-              v-if="!loading"
-            >
-              <el-option
-                class="select-primary"
-                v-for="item in pagination.perPageOptions"
-                :key="item"
-                :label="item"
-                :value="item"
-              >
-              </el-option>
-            </el-select>
-            <base-input>
-              <el-input
-                type="search"
-                class="mb-3 search-input"
-                style="width:300px"
-                clearable
-                prefix-icon="el-icon-search"
-                placeholder="Procurar Página"
-                aria-controls="datatables"
-                v-model="searchQuery"
-              >
-              </el-input>
-            </base-input>
-          </div>
-          <el-table
-            ref="table"
-            :data="tableData"
-            v-loading="loading"
-            :empty-text="$t('pages.banners.emptytext')"
-            @sort-change="onSortChanged"
-            :default-sort="{ prop: sortField, order: sortOrder }"
-          >
-            <el-table-column
-              v-for="column in tableColumns"
-              :key="column.label"
-              :min-width="column.minWidth"
-              :prop="column.prop"
-              :label="column.label"
-              sortable="custom"
-            >
-            </el-table-column>
-            <el-table-column
-              :min-width="135"
-              align="right"
-              :label="$t('pages.banners.grid.actions')"
-            >
-              <div slot-scope="props">
-                <base-button
-                  @click.native="handleEdit(props.$index, props.row)"
-                  class="edit btn-link"
-                  type="info"
-                  size="sm"
-                  icon
-                >
-                  <i class="tim-icons icon-pencil"></i>
-                </base-button>
-              </div>
-            </el-table-column>
-          </el-table>
+  <div class="list-box">
+    <div class="page-header">
+      <h2>Páginas</h2>
+      <div class="box-actions">
+        <div class="input-post-icon search">
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Digite aqui o que deseja encontrar"
+          />
+          <i v-if="searchQuery === ''" class="icon-icon-search"></i>
+          <i
+            v-else
+            class="bt-clear-search icon-icon-times c-red"
+            @click="searchQuery = ''"
+          ></i>
         </div>
         <div
-          slot="footer"
-          class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
+          v-show="enableFilters"
+          class="filter"
+          :class="{ active: showFilters }"
+          style="margin-right: 0;"
         >
-          <div>
-            <p class="card-category"></p>
-          </div>
-          <base-pagination
-            class="pagination-no-border"
-            v-model="pagination.currentPage"
-            :per-page="pagination.perPage"
-            :total="total"
-            v-on:input="onPageChanged"
+          <a
+            class="bt bt-square bg-white-2 c-light-blue"
+            @click="showFilters = !showFilters"
           >
-          </base-pagination>
+            <i class="icon-icon-filter"></i>
+          </a>
         </div>
-      </card>
+      </div>
+      <div class="filters" v-show="showFilters">
+        <v-select
+          :options="operations"
+          :reduce="op => op.code"
+          v-model="filters.operation"
+          class="no-margin"
+          placeholder="Filtre pelo Clube"
+        >
+          <span slot="no-options">Nenhum clube encontrado</span>
+        </v-select>
+      </div>
+    </div>
+    <div class="list-table" v-loading="loading">
+      <table>
+        <thead>
+          <tr>
+            <th>Operação</th>
+            <th>Nome</th>
+            <th>Usuário/Criação</th>
+            <th>Usuário/Atualização</th>
+            <th style="width:80px;">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in tableData" :key="item.id">
+            <td class="td-flex">
+              <div class="img-holder">
+                <img
+                  v-if="item.operationLogo && item.operationLogo !== ''"
+                  :src="item.operationLogo"
+                  :alt="item.operationName"
+                />
+                <span v-else>{{ item.operationName[0] }}</span>
+              </div>
+              <span>{{ item.operationName }}</span>
+            </td>
+            <td>
+              <span>{{ item.title }}</span>
+            </td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.createdUserName }}</span>
+                <span class="blue">{{ item.created }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.modifiedUserName }}</span>
+                <span class="blue">{{ item.modified }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="actions">
+                <button
+                  @click="handleEdit(item)"
+                  type="button"
+                  title="Editar"
+                  class="bt c-light-blue"
+                >
+                  <i class="icon-icon-edit"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <pagination
+        class="box-pagination"
+        v-model="pagination.currentPage"
+        :per-page="pagination.perPage"
+        :total-items="pagination.totalItems"
+        :total-pages="pagination.totalPages"
+        :current-page="pagination.currentPage"
+        v-on:input="onPageChanged"
+        @update-per-page="changePerPage"
+      ></pagination>
     </div>
   </div>
 </template>
 <script>
-import { Table, TableColumn, Select, Option } from 'element-ui';
-import { BasePagination, Modal } from 'src/components';
+import { Select, Option } from 'element-ui';
+import { Pagination, Modal } from 'src/components';
+import operationService from '../../services/Operation/operationService';
 import staticTextService from '../../services/StaticText/staticTextService';
-import listPage from '../../mixins/listPage';
+import paging from '../../mixins/paging';
+import _ from 'lodash';
+
 export default {
-  mixins: [listPage],
+  mixins: [paging],
   components: {
     Modal,
-    BasePagination,
+    Pagination,
     [Select.name]: Select,
-    [Option.name]: Option,
-    [Table.name]: Table,
-    [TableColumn.name]: TableColumn
+    [Option.name]: Option
   },
   data() {
     return {
       internalName: 'pages.pages.list',
       sortField: 'name',
-      tableColumns: [
-        {
-          prop: 'name',
-          label: 'Nome',
-          minWidth: 200
-        }
-      ]
+      operations: [],
+      enableFilters: true,
+      showFilters: false
     };
   },
   methods: {
-    handleEdit(index, row) {
-      this.$router.push(`/pages/${row.id}/edit/`);
+    handleEdit(row) {
+      if (row.url === 'faq') {
+        this.$router.push(`/faqs/${row.idOperation}`);
+      } else {
+        this.$router.push(`/pages/${row.id}/edit/`);
+      }
     },
     fetchData() {
       const self = this;
+      if (
+        self.$store.getters.currentUser.role === 'publisher' ||
+        self.$store.getters.currentUser.role === 'administrator'
+      ) {
+        self.enableFilters = false;
+      }
       const request = {
-        page: this.$data.pagination.currentPage - 1,
-        pageItems: this.$data.pagination.perPage,
-        searchWord: this.searchQuery,
-        sort: this.formatSortFieldParam,
-        idStaticTextType: 4
+        page: self.$data.pagination.currentPage - 1,
+        pageItems: self.$data.pagination.perPage,
+        searchWord: self.searchQuery,
+        sort: self.formatSortFieldParam,
+        idStaticTextType: 4,
+        idOperation: self.filters.operation
       };
-      this.$data.loading = true;
+      self.loading = true;
       staticTextService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;
-          self.savePageSettings(self, response.totalItems);
+          self.savePageSettings(self, response.totalItems, response.totalPages);
           self.$data.loading = false;
         },
         () => {
           self.$data.loading = false;
         }
       );
+    },
+    loadOperations() {
+      const self = this;
+      if (!self.operations || self.operations.length === 0) {
+        self.operations = [];
+        operationService.findAll().then(response => {
+          _.each(response.data, function(el) {
+            if (el.id != self.id) {
+              self.operations.push({ code: el.id, label: el.title });
+            }
+          });
+        });
+      }
     }
+  },
+  watch: {
+    'filters.operation'() {
+      this.pagination.currentPage = 1;
+      this.fetchData();
+    }
+  },
+  created() {
+    this.loadOperations();
   }
 };
 </script>
@@ -155,5 +200,8 @@ export default {
   .has-label::after {
     top: 43px !important;
   }
+}
+.list-box table tbody tr td .actions {
+  justify-content: flex-end;
 }
 </style>
