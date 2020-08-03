@@ -7,16 +7,24 @@ export default {
         ? request
         : {
             page: 0,
-            pageItems: 30,
+            pageItems: 10,
             searchWord: '',
             sort: 'name ASC',
             active: '',
             type: '',
-            idOperation: ''
+            idOperation: '',
+            where: ''
           };
+      if (request.active == null || request.active == undefined)
+        request.active = '';
+      if (request.type == null || request.type == undefined) request.type = '';
+      if (request.idOperation == null || request.idOperation == undefined)
+        request.idOperation = '';
+      if (request.where == null || request.where == undefined)
+        request.where = '';
       HTTP.get(
         config.apiEndpoints.bannerUri.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}&active=${request.active}&type=${request.type}&idOperation=${request.idOperation}`
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}&active=${request.active}&type=${request.type}&idOperation=${request.idOperation}&where=${request.where}`
         )
       ).then(
         response => {
@@ -67,6 +75,20 @@ export default {
   delete: id => {
     return new Promise((resolve, reject) => {
       HTTP.delete(config.apiEndpoints.bannerUri.concat(id)).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  toggleActive: id => {
+    return new Promise((resolve, reject) => {
+      HTTP.post(
+        config.apiEndpoints.bannerUri.concat(`${id}/ToggleActive`)
+      ).then(
         response => {
           resolve(response.data);
         },

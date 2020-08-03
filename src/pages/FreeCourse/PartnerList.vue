@@ -8,7 +8,7 @@
             <base-link
               to="/freeCourse/partner/new"
               class="btn btn-icon btn-simple btn-twitter btn-sm"
-              ><i class="tim-icons icon-simple-add"></i
+              ><i class="fas fa-plus"></i
             ></base-link>
           </h4>
         </template>
@@ -96,7 +96,7 @@
                   size="sm"
                   icon
                 >
-                  <i class="tim-icons icon-pencil"></i>
+                  <i class="fas fa-edit"></i>
                 </base-button>
                 <base-button
                   @click.native="handleDelete(props.$index, props.row)"
@@ -105,7 +105,7 @@
                   size="sm"
                   icon
                 >
-                  <i class="tim-icons icon-simple-remove"></i>
+                  <i class="fas fa-times"></i>
                 </base-button>
               </div>
             </el-table-column>

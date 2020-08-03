@@ -1,293 +1,390 @@
 <template>
-  <div class="row">
-    <div class="col-12">
-      <card card-body-classes="table-full-width">
-        <template slot="header">
-          <h4 class="card-title">
-            Pré-cadastro
-            <base-link
-              to="/customers/new"
-              class="btn btn-icon btn-simple btn-twitter btn-sm"
-              ><i class="tim-icons icon-simple-add"></i
-            ></base-link>
-          </h4>
-        </template>
-        <div>
-          <div
-            class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
-          >
-            <el-select
-              class="select-primary mb-3 pagination-select"
-              v-model="pagination.perPage"
-              :placeholder="$t('pages.banners.perpage-placeholder')"
-              v-if="!loading"
-            >
-              <el-option
-                class="select-primary"
-                v-for="item in pagination.perPageOptions"
-                :key="item"
-                :label="item"
-                :value="item"
-              >
-              </el-option>
-            </el-select>
-            <base-input>
-              <el-input
-                type="search"
-                class="mb-3 search-input"
-                style="width:300px"
-                clearable
-                prefix-icon="el-icon-search"
-                placeholder="Procurar pré-cadastro"
-                aria-controls="datatables"
-                v-model="searchQuery"
-              >
-              </el-input>
-            </base-input>
-          </div>
-          <el-table
-            ref="table"
-            :data="tableData"
-            v-loading="loading"
-            :empty-text="$t('pages.banners.emptytext')"
-            @sort-change="onSortChanged"
-            :default-sort="{ prop: sortField, order: sortOrder }"
-          >
-            <el-table-column
-              v-for="column in tableColumns"
-              :key="column.label"
-              :min-width="column.minWidth"
-              :prop="column.prop"
-              :label="column.label"
-              sortable="custom"
-            >
-            </el-table-column>
-            <el-table-column :min-width="135" align="right" label="Ações">
-              <div slot-scope="props">
-                <base-button
-                  @click.native="handleDelete(props.$index, props.row)"
-                  class="remove btn-link"
-                  type="danger"
-                  size="sm"
-                  icon
-                >
-                  <i class="tim-icons icon-simple-remove"></i>
-                </base-button>
-              </div>
-            </el-table-column>
-          </el-table>
+  <div class="list-box">
+    <div class="page-header">
+      <h2>Clientes</h2>
+      <div class="box-actions">
+        <div class="input-post-icon search">
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Digite aqui o que deseja encontrar"
+          />
+          <i v-if="searchQuery === ''" class="icon-icon-search"></i>
+          <i
+            v-else
+            class="bt-clear-search icon-icon-times c-red"
+            @click="searchQuery = ''"
+          ></i>
         </div>
-        <div
-          slot="footer"
-          class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
-        >
-          <span
-            class="btn btn-info mt-3 btn-simple btn-file"
-            :loading="formLoading"
-          >
-            <span class="fileinput-new">Subir Lista</span>
-            <input type="hidden" value="" name="" />
-            <input
-              accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-              @change="uploadFile"
-              type="file"
-              name="..."
-              class="valid"
-              :multiple="false"
-              aria-invalid="false"
-              ref="file"
-            />
-          </span>
+        <div class="filter" :class="{ active: showFilters }">
           <a
-            href="/Exemplo-lista-clientes.xlsx"
-            class="btn mt-3 btn-info btn-simple"
-            >Exemplo arquivo excel</a
+            class="bt bt-square bg-white-2 c-light-blue"
+            @click="showFilters = !showFilters"
           >
-          <base-pagination
-            class="pagination-no-border mt-3"
-            v-model="pagination.currentPage"
-            :per-page="pagination.perPage"
-            :total="total"
-            v-on:input="onPageChanged"
-          >
-          </base-pagination>
+            <i class="icon-icon-filter"></i>
+          </a>
         </div>
-      </card>
+        <base-link
+          to="/customers/new"
+          class="bt bt-square bg-white-2 c-light-blue"
+        >
+          <i class="icon-icon-plus"></i>
+        </base-link>
+      </div>
+      <div class="filters" v-show="showFilters">
+        <v-select
+          v-show="isRebens"
+          :options="operations"
+          :reduce="op => op.code"
+          v-model="filters.operation"
+          class="no-margin"
+          placeholder="Filtre pelo Clube"
+        >
+          <span slot="no-options">Nenhum clube encontrado</span>
+        </v-select>
+        <v-select
+          v-show="isRebens"
+          :options="operationPartners"
+          :reduce="op => op.code"
+          v-model="filters.company"
+          placeholder="Filtre por empresa"
+        >
+          <span slot="no-options">Nenhuma empresa encontrada</span>
+        </v-select>
+        <v-select
+          :options="statuses"
+          :reduce="op => op.code"
+          v-model="filters.status"
+          :class="{ 'no-margin': !isRebens }"
+          placeholder="Filtre pelo Status de cadastro"
+        >
+          <span slot="no-options">Nenhum status de cadastro encontrado</span>
+        </v-select>
+        <v-select
+          :options="activeOpts"
+          :reduce="op => op.code"
+          v-model="filters.active"
+          placeholder="Filtre pelo Status"
+        >
+          <span slot="no-options">Nenhum status encontrado</span>
+        </v-select>
+      </div>
     </div>
-    <!-- Classic Modal -->
-    <modal :show.sync="modal.visible" headerClasses="justify-content-center">
-      <h4 slot="header" class="title title-up">Remover Pré-cadastro</h4>
-      <form
-        class="modal-form"
-        ref="modalForm"
-        @submit.prevent
-        v-loading="modal.formLoading"
-      >
-        <input type="hidden" name="nome" value="DELETE" ref="nome" />
-        <base-input
-          required
-          v-model="modal.nameConfirmation"
-          label="Digite DELETE para confirmar"
-          placeholder="Digite DELETE para confirmar"
-          :error="getError('confirmação')"
-          type="text"
-          v-validate="modal.modelValidations.name_confirm"
-          name="confirmação"
-        >
-        </base-input>
-      </form>
-      <template slot="footer">
-        <base-button @click.native.prevent="validateModal" type="danger"
-          >Remover</base-button
-        >
-        <base-button type="info" @click.native="modal.visible = false"
-          >Fechar</base-button
-        >
-      </template>
-    </modal>
+    <div class="list-table" v-loading="loading">
+      <table>
+        <thead>
+          <tr>
+            <th>Nome / E-mail</th>
+            <th>CPF</th>
+            <th>Clube / Empresa</th>
+            <th>Telefone / Celular</th>
+            <th>Status</th>
+            <th style="width:192px;">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in tableData" :key="item.id">
+            <td>
+              <div class="two-lines">
+                <span>{{ item.fullname }}</span>
+                <span class="blue">{{ item.email }}</span>
+              </div>
+            </td>
+            <td>
+              <span>{{ item.cpf }}</span>
+            </td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.operation }}</span>
+                <span class="blue">{{ item.operationPartner }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.phone }}</span>
+                <span class="blue">{{ item.cellphone }}</span>
+              </div>
+            </td>
+            <td>
+              <span>{{ item.statusName }}</span>
+            </td>
+            <td>
+              <div class="actions">
+                <button
+                  @click="toggleActive(item)"
+                  type="button"
+                  :title="item.active ? 'Inativar' : 'Ativar'"
+                  class="bt"
+                  :class="{
+                    'c-green': item.active,
+                    'c-light-gray': !item.active
+                  }"
+                >
+                  <i class="icon-icon-check"></i>
+                </button>
+                <button
+                  @click="handleResendPassword(item)"
+                  type="button"
+                  title="Reenviar validação"
+                  class="bt c-orange"
+                >
+                  <i class="icon-icon-send"></i>
+                </button>
+                <button
+                  @click="handleEdit(item)"
+                  type="button"
+                  title="Editar"
+                  class="bt c-light-blue"
+                >
+                  <i class="icon-icon-edit"></i>
+                </button>
+                <button
+                  @click="handleDelete(item)"
+                  type="button"
+                  title="apagar"
+                  class="bt c-red"
+                >
+                  <i class="icon-icon-delete"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <pagination
+        class="box-pagination"
+        v-model="pagination.currentPage"
+        :per-page="pagination.perPage"
+        :total-items="pagination.totalItems"
+        :total-pages="pagination.totalPages"
+        :current-page="pagination.currentPage"
+        v-on:input="onPageChanged"
+        @update-per-page="changePerPage"
+      ></pagination>
+    </div>
+    <delete-modal
+      @confirmDelete="confirmDelete"
+      :itemName="modal.itemName"
+      :show="modal.visible"
+      :showSuccess="modal.showSuccess"
+      @closeDeleteSuccess="closeDeleteSuccess"
+    ></delete-modal>
+    <confirm-modal
+      @closeModal="closeResendPassword"
+      question="Deseja reenviar o e-mail de validação?"
+      :show="showResendPassModal"
+      @confirm="confirmResendPassword"
+    ></confirm-modal>
   </div>
 </template>
 <script>
-import { Table, TableColumn, Select, Option } from 'element-ui';
-import { BasePagination, Modal } from 'src/components';
+import { Select, Option } from 'element-ui';
+import { Pagination, DeleteModal, ConfirmModal } from 'src/components';
+import customerService from '../../services/Customer/customerService';
 import operationService from '../../services/Operation/operationService';
-import listPage from '../../mixins/listPage';
+import operationPartnerService from '../../services/OperationPartner/operationPartnerService';
+import paging from '../../mixins/paging';
+import _ from 'lodash';
+
 export default {
-  mixins: [listPage],
+  mixins: [paging],
   components: {
-    Modal,
-    BasePagination,
+    DeleteModal,
+    Pagination,
     [Select.name]: Select,
     [Option.name]: Option,
-    [Table.name]: Table,
-    [TableColumn.name]: TableColumn
+    ConfirmModal
   },
   data() {
     return {
-      internalName: 'Pré-cadastro',
+      internalName: 'Clientes',
       sortField: 'name',
-      formLoading: false,
-      tableColumns: [
-        {
-          prop: 'name',
-          label: 'Nome'
-        },
-        {
-          prop: 'cpf',
-          label: 'CPF'
-        },
-        {
-          prop: 'phone',
-          label: 'Telefone'
-        },
-        {
-          prop: 'cellphone',
-          label: 'Celular'
-        },
-        {
-          prop: 'email1',
-          label: 'E-mail 1'
-        },
-        {
-          prop: 'email2',
-          label: 'E-mail 2'
-        }
-      ]
+      operationFilter: '',
+      operationPartnerFilter: '',
+      showFilters: false,
+      activeFilter: '',
+      statusFilter: '',
+      resendPassId: 0,
+      showResendPassModal: false,
+      operations: [],
+      operationPartners: [],
+      statuses: [
+        { code: 1, label: 'Completo' },
+        { code: 3, label: 'Validação' },
+        { code: 5, label: 'Incompleto' },
+        { code: 6, label: 'Pré-cadastro' }
+      ],
+      activeOpts: [
+        { code: true, label: 'Ativos' },
+        { code: false, label: 'Inativos' }
+      ],
+      formLoading: false
     };
   },
   methods: {
-    fetchData() {
+    handleEdit(row) {
+      this.$router.push(`/customers/${row.id}/edit/`);
+    },
+    toggleActive(row) {
       const self = this;
-      const request = {
-        page: this.$data.pagination.currentPage - 1,
-        pageItems: this.$data.pagination.perPage,
-        searchWord: this.searchQuery,
-        sort: this.formatSortFieldParam,
-        parentId: this.$store.getters.currentUser.idOperation
-      };
-      this.$data.loading = true;
-      operationService.findAllCustomers(request).then(
-        response => {
-          self.$data.tableData = response.data;
-          if (response.data) {
-            self.showForm = false;
-            self.showTable = response.data.length > 0;
-          } else {
-            self.showForm = false;
-            self.showTable = false;
-          }
-          self.savePageSettings(self, response.totalItems);
-          self.$data.loading = false;
+      self.loading = true;
+      customerService.toggleActive(row.id).then(data => {
+        if (data.status === 'ok') {
+          row.active = data.data;
+          self.$notify({
+            type: 'success',
+            message: `Cliente ${
+              row.active ? 'ativado' : 'inativado'
+            } com sucesso`
+          });
+        }
+        self.loading = false;
+      });
+    },
+    confirmResendPassword() {
+      const self = this;
+      self.loading = true;
+      self.showResendPassModal = false;
+      customerService.resendValidation(self.resendPassId).then(
+        () => {
+          self.$notify({
+            type: 'success',
+            message: 'E-mail reenviado com sucesso!'
+          });
+          self.loading = false;
+          self.resendPassId = 0;
         },
         () => {
-          self.$data.loading = false;
+          self.loading = false;
         }
       );
     },
-    validateModal() {
+    handleResendPassword(row) {
+      this.resendPassId = row.id;
+      this.showResendPassModal = true;
+    },
+    closeResendPassword() {
+      this.resendPassId = 0;
+      this.showResendPassModal = false;
+    },
+    fetchData() {
       const self = this;
-      this.$validator.validateAll('modalScope').then(isValid => {
-        if (isValid) {
-          self.modal.formLoading = true;
-          operationService
-            .deleteCustomer(
-              self.$store.getters.currentUser.idOperation,
-              self.modal.model.id
-            )
-            .then(
-              response => {
-                self.$notify({
-                  type: 'primary',
-                  message: response.message,
-                  icon: 'tim-icons icon-bell-55'
-                });
+      const request = {
+        page: self.$data.pagination.currentPage - 1,
+        pageItems: self.$data.pagination.perPage,
+        searchWord: self.searchQuery,
+        sort: self.formatSortFieldParam,
+        status: self.filters.status,
+        active: self.filters.active,
+        idOperation: self.filters.operation,
+        idOperationPartner: self.filters.company
+      };
+      self.loading = true;
+      customerService.findAll(request).then(
+        response => {
+          self.tableData = response.data;
+          self.savePageSettings(self, response.totalItems, response.totalPages);
+          self.loading = false;
+        },
+        () => {
+          self.loading = false;
+        }
+      );
+      self.populateFilters(self);
+    },
+    populateFilters(self) {
+      operationService.findAll().then(response => {
+        _.each(response.data, function(el) {
+          if (el.id != self.id) {
+            self.operations.push({ code: el.id, label: el.title });
+          }
+        });
+      });
+
+      operationPartnerService
+        .findAll({
+          page: 0,
+          pageItems: 1000,
+          searchWord: '',
+          sort: 'name ASC',
+          idOperation: ''
+        })
+        .then(
+          response => {
+            _.each(response.data, function(el) {
+              self.operationPartners.push({
+                code: el.id,
+                label: el.name
+              });
+            });
+          },
+          () => {}
+        );
+    },
+    handleDelete(item) {
+      this.modal.model = item;
+      this.modal.itemName = item.email;
+      this.modal.visible = true;
+    },
+    confirmDelete(val) {
+      const self = this;
+      if (val) {
+        this.$validator.validateAll('modalScope').then(isValid => {
+          if (isValid) {
+            self.modal.formLoading = true;
+            customerService.delete(self.modal.model.id).then(
+              () => {
                 self.resetModal();
-                self.pagination.currentPage = 1;
                 self.fetchData();
+                self.showSuccess(true);
               },
               err => {
-                self.$notify({
-                  type: 'primary',
-                  message: err.message,
-                  icon: 'tim-icons icon-bell-55'
-                });
+                if (err.response.status === 400 && err.response.data.message) {
+                  self.$notify({
+                    type: 'warning',
+                    message: err.response.data.message
+                  });
+                } else {
+                  self.$notify({
+                    type: 'danger',
+                    message: err.message
+                  });
+                }
                 self.modal.formLoading = false;
               }
             );
-        }
-      });
-    },
-    uploadFile(event) {
-      if (event.target.files.length == 0) {
-        return;
-      }
-      const self = this;
-      self.formLoading = true;
-      let file = event.target.files[0];
-      operationService
-        .uploadCustomerList(self.$store.getters.currentUser.idOperation, file)
-        .then(
-          response => {
-            self.$notify({
-              type: 'primary',
-              message: response.message,
-              icon: 'tim-icons icon-bell-55'
-            });
-            self.resetModal();
-            self.pagination.currentPage = 1;
-            self.fetchData();
-            self.formLoading = false;
-          },
-          err => {
-            self.$notify({
-              type: 'primary',
-              message: err.message,
-              icon: 'tim-icons icon-bell-55'
-            });
-            self.formLoading = false;
           }
-        );
+        });
+      } else {
+        self.resetModal();
+      }
+    },
+    closeDeleteSuccess() {
+      this.showSuccess(false);
     }
+  },
+  watch: {
+    'filters.active'() {
+      this.pagination.currentPage = 1;
+      this.fetchData();
+    },
+    'filters.status'() {
+      this.pagination.currentPage = 1;
+      this.fetchData();
+    },
+    'filters.operation'() {
+      this.pagination.currentPage = 1;
+      this.fetchData();
+    },
+    'filters.company'() {
+      this.pagination.currentPage = 1;
+      this.fetchData();
+    }
+  },
+  created() {
+    this.isRebens =
+      this.$store.getters.currentUser.role != 'administrator' &&
+      this.$store.getters.currentUser.role != 'publisher';
   }
 };
 </script>

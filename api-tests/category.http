@@ -1,0 +1,2 @@
+GET {{url}}/api/category/listall/?type=4
+Content-Type: application/json

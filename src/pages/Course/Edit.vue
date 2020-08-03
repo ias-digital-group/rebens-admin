@@ -4,7 +4,7 @@
       <card title="Curso">
         <h4 slot="header" class="card-title">Curso</h4>
         <!-- <el-tabs>
-          <el-tab-pane label="Cadastro"> -->
+        <el-tab-pane label="Cadastro">-->
         <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
           <div class="row">
             <label class="col-md-3 col-form-label">Nome</label>
@@ -51,8 +51,7 @@
                   :key="model.idOperation"
                   v-model="model.idOperation"
                   @input="onOperationChange"
-                >
-                </v-select>
+                ></v-select>
                 <base-input
                   v-model="operation"
                   type="text"
@@ -77,8 +76,7 @@
                   :reduce="op => op.code"
                   :key="model.idCollege"
                   v-model="model.idCollege"
-                >
-                </v-select>
+                ></v-select>
                 <label
                   v-show="customErros.includes('idCollege')"
                   class="text-danger"
@@ -96,8 +94,7 @@
                   :reduce="op => op.code"
                   :key="model.idGraduationType"
                   v-model="model.idGraduationType"
-                >
-                </v-select>
+                ></v-select>
                 <label
                   v-show="customErros.includes('idGraduationType')"
                   class="text-danger"
@@ -115,8 +112,7 @@
                   :reduce="op => op.code"
                   :key="model.idModality"
                   v-model="model.idModality"
-                >
-                </v-select>
+                ></v-select>
                 <label
                   v-show="customErros.includes('idModality')"
                   class="text-danger"
@@ -135,8 +131,7 @@
                   :key="model.periodIds"
                   v-model="model.periodIds"
                   :multiple="true"
-                >
-                </v-select>
+                ></v-select>
                 <label
                   v-show="customErros.includes('period')"
                   class="text-danger"
@@ -154,8 +149,7 @@
                   :reduce="op => op.code"
                   :key="model.idFaq"
                   v-model="model.idFaq"
-                >
-                </v-select>
+                ></v-select>
               </div>
             </div>
           </div>
@@ -168,8 +162,7 @@
                   :reduce="op => op.code"
                   :key="model.idRegulation"
                   v-model="model.idRegulation"
-                >
-                </v-select>
+                ></v-select>
               </div>
             </div>
           </div>
@@ -501,9 +494,8 @@
                 type="info"
                 @click.native.prevent="validateCourse"
                 :loading="submitLoading"
+                >Salvar</base-button
               >
-                Salvar
-              </base-button>
             </div>
           </div>
         </form>
@@ -673,7 +665,7 @@ export default {
 
         if (self.image) {
           imgCounter++;
-          helperService.uploadFile(self.image).then(
+          helperService.uploadImage(self.image).then(
             response => {
               if (response.status != 200) {
                 self.$notify({
@@ -701,7 +693,7 @@ export default {
 
         if (self.listImage) {
           imgCounter++;
-          helperService.uploadFile(self.listImage).then(
+          helperService.uploadImage(self.listImage).then(
             response => {
               if (response.status != 200) {
                 self.$notify({

@@ -32,7 +32,6 @@ import Slider from './Slider.vue';
 import SimpleWizard from './Wizard/Wizard.vue';
 import WizardTab from './Wizard/WizardTab.vue';
 import LoadingPanel from './LoadingPanel.vue';
-//import AsyncWorldMap from './WorldMap/AsyncWorldMap.vue';
 
 import BasePagination from './BasePagination.vue';
 
@@ -43,7 +42,29 @@ import AnimatedNumber from './AnimatedNumber';
 import AddressForm from './AddressForm.vue';
 import Contacts from './Contacts.vue';
 import Addresses from './Addresses.vue';
+
+import Address from './ias/Address.vue';
+import CustomCheckbox from './ias/CustomCheckbox.vue';
+import CustomImageUpload from './ias/CustomImageUpload.vue';
+import CustomInput from './ias/CustomInput.vue';
+import CustomRadio from './ias/CustomRadio.vue';
+import DeleteModal from './ias/DeleteModal.vue';
+import Pagination from './ias/Pagination.vue';
+import SuccessModal from './ias/SuccessModal.vue';
+import ConfirmModal from './ias/ConfirmModal.vue';
+import InactivateOperationModal from './ias/InactivateOperationModal.vue';
+
 export {
+  Address,
+  CustomCheckbox,
+  CustomImageUpload,
+  CustomInput,
+  CustomRadio,
+  DeleteModal,
+  Pagination,
+  SuccessModal,
+  ConfirmModal,
+  InactivateOperationModal,
   BaseCheckbox,
   IconCheckbox,
   BaseSwitch,
@@ -82,5 +103,4 @@ export {
   AddressForm,
   Contacts,
   Addresses
-  // AsyncWorldMap
 };

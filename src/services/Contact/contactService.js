@@ -6,10 +6,28 @@ export default {
     return new Promise((resolve, reject) => {
       request = request
         ? request
-        : { page: 0, pageItems: 30, searchWord: '', sort: 'name ASC' };
+        : {
+            page: 0,
+            pageItems: 30,
+            searchWord: '',
+            sort: 'name ASC',
+            type: '',
+            idItem: '',
+            active: ''
+          };
       HTTP.get(
         config.apiEndpoints.contactUri.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}`
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
+            request.searchWord
+          }&sort=${request.sort}&active=${
+            request.active === undefined || request.active === null
+              ? ''
+              : request.active
+          }&type=${
+            request.type === undefined || request.type === null
+              ? ''
+              : request.type
+          }&idItem=${request.idItem === null ? '' : request.idItem}`
         )
       ).then(
         response => {
@@ -144,6 +162,20 @@ export default {
   delete: id => {
     return new Promise((resolve, reject) => {
       HTTP.delete(config.apiEndpoints.contactUri.concat(id)).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  toggleActive: id => {
+    return new Promise((resolve, reject) => {
+      HTTP.post(
+        config.apiEndpoints.contactUri.concat(`${id}/ToggleActive`)
+      ).then(
         response => {
           resolve(response.data);
         },

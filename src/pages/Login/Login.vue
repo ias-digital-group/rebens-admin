@@ -1,55 +1,43 @@
 <template>
-  <div class="container">
-    <div class="col-lg-4 col-md-6 ml-auto mr-auto">
+  <div class="login-mask">
+    <div class="modal-login" v-loading="fullscreenLoading">
+      <img src="img/logo-login.png" alt />
       <form @submit.prevent>
-        <card class="card-login card-white">
-          <template slot="header">
-            <img src="img/logo-login.png" alt />
-          </template>
-
-          <div>
-            <base-input
-              required
-              v-model="credentials.email"
-              v-validate="modelValidations.email"
-              :error="getError($t('pages.login.input-email'))"
-              :name="$t('pages.login.input-email')"
-              type="email"
-              :placeholder="$t('pages.login.input-email')"
-            ></base-input>
-            <base-input
-              :placeholder="$t('pages.login.input-password')"
-              required
-              :name="$t('pages.login.input-password')"
-              v-model="credentials.password"
-              v-validate="modelValidations.password"
-              :error="getError($t('pages.login.input-password'))"
-              type="password"
-            ></base-input>
-          </div>
-
-          <div slot="footer">
-            <base-button
-              type="info"
-              class="mb-3"
-              size="lg"
-              native-type="submit"
-              @click.native.prevent="validate"
-              :loading="fullscreenLoading"
-              block
-              >{{ $t('pages.login.signin-button') }}</base-button
-            >
-          </div>
-          <base-link class="mt-3" to="/passwordRecovery"
-            >esqueci minha senha</base-link
+        <div class="mt-24">
+          <custom-input
+            :required="true"
+            v-model="credentials.email"
+            type="text"
+            name="email"
+            label="Digite seu e-mail"
+            maxlength="500"
+            :error="errorEmail"
+          ></custom-input>
+        </div>
+        <div class="mt-24">
+          <custom-input
+            :required="true"
+            v-model="credentials.password"
+            type="password"
+            name="password"
+            label="Digite sua senha"
+            maxlength="50"
+            :error="errorPassword"
+          ></custom-input>
+        </div>
+        <button class="bg-green bt-modal" @click="validate">ENTRAR</button>
+        <div class="text-center mt-8">
+          <base-link class="bt-link" to="/passwordRecovery"
+            >Esqueci minha senha</base-link
           >
-        </card>
+        </div>
       </form>
     </div>
   </div>
 </template>
 <script>
 import accountService from '../../services/Account/accountService';
+import validate from '../../validate';
 export default {
   data() {
     return {
@@ -58,74 +46,75 @@ export default {
         email: '',
         password: ''
       },
-      modelValidations: {
-        email: {
-          required: true,
-          email: true
-        },
-        password: {
-          required: true,
-          min: 8
-        }
-      }
+      errorEmail: '',
+      errorPassword: ''
     };
   },
   methods: {
-    getError(fieldName) {
-      return this.errors.first(fieldName);
-    },
     validate() {
       const self = this;
-      this.$data.fullscreenLoading = true;
-      this.$validator.validateAll().then(isValid => {
-        //R3bens#123
-        if (isValid) {
-          accountService
-            .signin(
-              self.$data.credentials.email,
-              self.$data.credentials.password
-            )
-            .then(
-              response => {
-                if (response && response.authenticated) {
-                  self.$store.dispatch('setUser', response);
-                  // const jwtData = JSON.parse(
-                  //   atob(response.accessToken.split('.')[1])
-                  // );
-                  // console.log(jwtData);
-                  // let url = '/';
-                  // if (jwtData.role === 'promoter') {
-                  //   url += '#/promoter';
-                  // } else if (jwtData.role == 'partnerApprover') {
-                  //   url += '#/operationPartner/approve';
-                  // } else if (jwtData.role == 'ticketChecker') {
-                  //   url += '#/orders';
-                  // } else if (jwtData.role == 'couponChecker') {
-                  //   url += '#/benefits/validation';
-                  // }
-                  window.location = '/';
+      self.errorEmail = '';
+      self.errorPassword = '';
+      if (!self.credentials.email || self.credentials.email === '')
+        self.errorEmail = 'Campo obrigatório';
+      else if (!validate.validateEmail(self.credentials.email))
+        self.errorEmail = 'E-mail inválido';
+      else if (!self.credentials.email.length > 500)
+        self.errorEmail = 'Máximo 500 caracteres';
+      if (!self.credentials.password || self.credentials.password === '')
+        self.errorPassword = 'Campo obrigatório';
 
-                  return;
-                }
-                self.$data.fullscreenLoading = false;
-              },
-              err => {
-                const msg =
-                  err.response.status == 404
-                    ? err.response.data.message
-                    : err.message;
+      if (self.errorEmail == '' && self.errorPassword == '') {
+        self.fullscreenLoading = true;
+        accountService
+          .signin(self.$data.credentials.email, self.$data.credentials.password)
+          .then(
+            response => {
+              if (response && response.authenticated) {
+                self.$store.dispatch('setUser', response);
+                const jwtData = JSON.parse(
+                  atob(response.accessToken.split('.')[1])
+                );
+                setTimeout(() => {
+                  if (jwtData.role === 'promoter') {
+                    self.$router.push(`/promoter`);
+                  } else if (
+                    jwtData.role == 'partnerApprover' ||
+                    jwtData.role == 'partnerAdministrator'
+                  ) {
+                    self.$router.push(`/operationPartner/approve`);
+                  } else {
+                    window.location = '/';
+                  }
+                }, 500);
+                return;
+              } else {
+                self.fullscreenLoading = false;
                 self.$notify({
-                  type: 'primary',
-                  message: msg,
-                  icon: 'tim-icons icon-bell-55'
+                  type: 'warning',
+                  message: response.message
                 });
-                self.$data.fullscreenLoading = false;
               }
-            );
-        } else {
-          this.$data.fullscreenLoading = false;
-        }
-      });
+            },
+            err => {
+              if (err.response.status === 400 && err.response.data.message) {
+                self.$notify({
+                  type: 'warning',
+                  message: err.response.data.message
+                });
+              } else {
+                self.$notify({
+                  type: 'danger',
+                  message:
+                    err.response.status == 404
+                      ? err.response.data.message
+                      : err.message
+                });
+              }
+              self.fullscreenLoading = false;
+            }
+          );
+      }
     }
   }
 };

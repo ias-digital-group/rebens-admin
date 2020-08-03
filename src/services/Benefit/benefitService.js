@@ -18,7 +18,21 @@ export default {
           };
       HTTP.get(
         config.apiEndpoints.benefitUri.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}&active=${request.active}&type=${request.type}&idOperation=${request.idOperation}`
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
+            request.searchWord
+          }&sort=${request.sort}&active=${
+            request.active != null && request.active != undefined
+              ? request.active
+              : ''
+          }&type=${
+            request.type != null && request.type != undefined
+              ? request.type
+              : ''
+          }&idOperation=${
+            request.idOperation != null && request != undefined
+              ? request.idOperation
+              : ''
+          }`
         )
       ).then(
         response => {
@@ -151,10 +165,10 @@ export default {
       );
     });
   },
-  changeActive: function(id, active) {
+  toggleActive: function(id) {
     return new Promise((resolve, reject) => {
       HTTP.post(
-        config.apiEndpoints.benefitUri.concat(`changeActive/${id}/${active}`)
+        config.apiEndpoints.benefitUri.concat(`toggleActive/${id}`)
       ).then(
         response => {
           resolve(response.data);

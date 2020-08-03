@@ -7,17 +7,31 @@ export default {
         ? request
         : {
             page: 0,
-            pageItems: 30,
+            pageItems: 10,
             searchWord: '',
             sort: 'name ASC',
             active: '',
             idParent: '',
-            type: 1
+            type: '',
+            level: ''
           };
       HTTP.get(
         config.apiEndpoints.categoryUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}` +
-            `&sort=${request.sort}&active=${request.active}&idParent=${request.idParent}&type=${request.type}`
+            `&sort=${request.sort}&active=${
+              request.active == null || request.active == undefined
+                ? ''
+                : request.active
+            }&idParent=${request.idParent}&type=${
+              request.type == null || request.type == undefined
+                ? ''
+                : request.type
+            }` +
+            `&level=${
+              request.level == null || request.level == undefined
+                ? ''
+                : request.level
+            }`
         )
       ).then(
         response => {
@@ -82,6 +96,34 @@ export default {
   delete: id => {
     return new Promise((resolve, reject) => {
       HTTP.delete(config.apiEndpoints.categoryUri.concat(id)).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  toggleActive: id => {
+    return new Promise((resolve, reject) => {
+      HTTP.post(
+        config.apiEndpoints.categoryUri.concat(`${id}/ToggleActive`)
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  listAllActive: type => {
+    return new Promise((resolve, reject) => {
+      HTTP.get(
+        config.apiEndpoints.categoryUri.concat(`ListAll/?type=${type}`)
+      ).then(
         response => {
           resolve(response.data);
         },

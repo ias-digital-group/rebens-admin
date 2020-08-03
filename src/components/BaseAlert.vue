@@ -15,7 +15,7 @@
             aria-label="Close"
             @click="dismissAlert"
           >
-            <i class="tim-icons icon-simple-remove"></i>
+            <i class="fas fa-times"></i>
           </button>
         </slot>
 

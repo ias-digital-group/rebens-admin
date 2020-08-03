@@ -1,70 +1,102 @@
 <template>
-  <div class="row">
-    <div class="col-md-12">
-      <card title="Pré-cadastro">
-        <h4 slot="header" class="card-title">Parceiro</h4>
-        <form class="form-horizontal" v-loading="formLoading" @submit.prevent>
-          <div class="row">
-            <label class="col-md-3 col-form-label">Nome</label>
-            <div class="col-md-9">
-              <base-input
-                required
-                v-model="model.name"
-                type="text"
-                name="nome"
-                placeholder="Nome"
-                maxlength="300"
-              ></base-input>
-              <label v-show="customErrors.includes('name')" class="text-danger"
-                >Este campo é obrigatório.</label
-              >
-              <label
-                v-show="customErrors.includes('nameLength')"
-                class="text-danger"
-                >Este campo aceita no máximo 300 caracteres.</label
-              >
-            </div>
-          </div>
-
-          <div class="row">
-            <label class="col-md-3 col-form-label">Ativo</label>
-            <div class="col-md-9">
-              <div class="form-group">
-                <base-checkbox v-model="model.active">&nbsp;</base-checkbox>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <base-link
-                class="btn mt-3 btn-simple btn-primary"
-                to="/operationPartner"
-                >Voltar</base-link
-              >
-              <base-button
-                class="mt-3 pull-right"
-                native-type="submit"
-                type="info"
-                @click.native.prevent="validatePartner"
-                :loading="submitLoading"
-              >
-                Salvar
-              </base-button>
-            </div>
-          </div>
-        </form>
-      </card>
+  <div class="edit-box">
+    <div class="page-header">
+      <h2>
+        <span v-if="viewAction === 'new'">Cadastro Parceiro</span>
+        <span v-else>Editar Parceiro</span>
+      </h2>
+      <div class="box-actions">
+        <base-link
+          to="/operationPartner"
+          class="bt bt-square bg-white-2 c-light-blue"
+        >
+          <i class="icon-icon-arrow-left"></i>
+        </base-link>
+      </div>
     </div>
+    <div class="ias-card" v-loading="formLoading">
+      <form @submit.prevent>
+        <div class="form-left">
+          <div
+            class="ias-row"
+            v-show="
+              $store.getters.currentUser.role === 'master' ||
+                $store.getters.currentUser.role === 'administratorRebens'
+            "
+          >
+            <div class="select-holder">
+              <v-select
+                :options="operations"
+                :reduce="op => op.code"
+                :key="model.idOperation"
+                v-model="model.idOperation"
+                placeholder="Clube"
+                :class="{ 'has-error': customErrors.get('operation') }"
+              >
+                <span slot="no-options">Nenhum Clube encontrado</span>
+              </v-select>
+              <label v-if="customErrors.get('operation')" class="ias-error">
+                {{ customErrors.get('operation') }}
+              </label>
+            </div>
+          </div>
+          <div class="ias-row">
+            <custom-input
+              :required="true"
+              v-model="model.name"
+              type="text"
+              name="name"
+              label="Nome"
+              :error="customErrors.get('name')"
+              maxlength="200"
+            ></custom-input>
+          </div>
+          <div class="ias-row">
+            <custom-input
+              :required="true"
+              v-model="model.doc"
+              type="text"
+              name="doc"
+              label="CNPJ"
+              :inputMask="['##.###.###/####-##']"
+              :error="customErrors.get('doc')"
+              maxlength="50"
+            ></custom-input>
+          </div>
+          <div class="ias-row">
+            <div class="form-actions">
+              <button
+                class="bt bg-green c-white"
+                type="button"
+                @click.prevent="validate"
+              >
+                <span v-if="viewAction === 'new'">Cadastrar</span>
+                <span v-else>Salvar</span>
+              </button>
+              <ias-checkbox v-model="model.active">Ativo</ias-checkbox>
+            </div>
+            <div class="div-spacer"></div>
+          </div>
+        </div>
+        <div class="form-right"></div>
+      </form>
+    </div>
+    <success-modal
+      :isEdit="viewAction !== 'new'"
+      :show="showSuccessModal"
+      link="/operationPartner"
+    ></success-modal>
   </div>
 </template>
 <script>
-import { Select, Option } from 'element-ui';
+import { SuccessModal } from 'src/components';
 import operationPartnerService from '../../services/OperationPartner/operationPartnerService';
+import operationService from '../../services/Operation/operationService';
+import _ from 'lodash';
 
 export default {
   components: {
-    [Option.name]: Option,
-    [Select.name]: Select
+    SuccessModal
   },
   props: {
     id: String,
@@ -75,17 +107,18 @@ export default {
   },
   data() {
     return {
-      selectLoading: false,
-      formLoading: false,
-      submitLoading: false,
       idOperation: 0,
+      operations: [],
+      showOperations: false,
+      showSuccessModal: false,
       model: {
         id: 0,
         name: '',
         idOperation: 0,
-        active: true
+        active: true,
+        doc: ''
       },
-      customErrors: []
+      customErrors: new Map()
     };
   },
   computed: {
@@ -94,22 +127,15 @@ export default {
     }
   },
   methods: {
-    getError(fieldName) {
-      return this.errors.first(fieldName);
-    },
-    validatePartner() {
+    validate() {
       const self = this;
-      self.customErrors = [];
-      if (!self.model.name || self.model.name === '') {
-        self.customErrors.push('name');
-      } else if (self.model.name.length > 300) {
-        self.customErrors.push('nameLength');
-      }
-
-      if (self.customErrors.length === 0) {
-        self.submitLoading = true;
-        self.savePartner(self);
-      }
+      self.customErrors = new Map();
+      if (!self.model.name || self.model.name === '')
+        self.customErrors.set('name', 'Campo obrigatório');
+      if (self.model.idOperation === 0)
+        self.customErrors.set('operation', 'Campo obrigatório');
+      if (self.model.doc != '' && self)
+        if (self.customErrors.size === 0) self.savePartner(self);
     },
     clearForm() {
       const self = this;
@@ -117,45 +143,33 @@ export default {
     },
     savePartner(vm) {
       vm = vm ? vm : this;
-      vm.model.idOperation = vm.idOperation;
+      vm.formLoading = true;
       if (vm.model.id === 0) {
         operationPartnerService.create(vm.model).then(
           () => {
-            vm.$notify({
-              type: 'success',
-              message: 'Parceiro com sucesso!',
-              icon: 'tim-icons icon-bell-55'
-            });
-            vm.clearForm();
-            vm.$router.push('/operationPartner');
+            vm.formLoading = false;
+            vm.showSuccessModal = true;
           },
           err => {
             vm.$notify({
               type: 'primary',
-              message: err.message,
-              icon: 'tim-icons icon-bell-55'
+              message: err.message
             });
-            vm.submitLoading = false;
+            vm.formLoading = false;
           }
         );
       } else {
         operationPartnerService.update(vm.model).then(
-          response => {
-            vm.$notify({
-              type: 'primary',
-              message: response.message,
-              icon: 'tim-icons icon-bell-55'
-            });
-            vm.clearForm();
-            vm.$router.push('/operationPartner');
+          () => {
+            vm.formLoading = false;
+            vm.showSuccessModal = true;
           },
           err => {
             vm.$notify({
               type: 'primary',
-              message: err.message,
-              icon: 'tim-icons icon-bell-55'
+              message: err.message
             });
-            vm.submitLoading = false;
+            vm.formLoading = false;
           }
         );
       }
@@ -175,10 +189,29 @@ export default {
           }
         );
       }
+
+      if (
+        self.$store.getters.currentUser.role === 'master' ||
+        self.$store.getters.currentUser.role === 'administratorRebens'
+      )
+        self.populateOperations(self);
+    },
+    populateOperations(self) {
+      operationService.findAll().then(response => {
+        _.each(response.data, function(el) {
+          if (el.id != self.id) {
+            self.operations.push({ code: el.id, label: el.title });
+          }
+        });
+      });
     }
   },
   created() {
-    this.idOperation = this.$store.getters.currentUser.idOperation;
+    if (
+      this.$store.getters.currentUser.role != 'master' &&
+      this.$store.getters.currentUser.role != 'administratorRebens'
+    )
+      this.model.idOperation = this.$store.getters.currentUser.idOperation;
     this.fetchData();
   }
 };

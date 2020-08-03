@@ -12,12 +12,20 @@ export default {
             searchWord: '',
             sort: 'name ASC',
             active: '',
-            type: 1
+            type: ''
           };
       HTTP.get(
         config.apiEndpoints.partnerUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}` +
-            `&sort=${request.sort}&active=${request.active}&type=${request.type}`
+            `&sort=${request.sort}&active=${
+              request.active == null || request.active == undefined
+                ? ''
+                : request.active
+            }&type=${
+              request.type == null || request.type == undefined
+                ? ''
+                : request.type
+            }`
         )
       ).then(
         response => {
@@ -107,6 +115,20 @@ export default {
   delete: id => {
     return new Promise((resolve, reject) => {
       HTTP.delete(config.apiEndpoints.partnerUri.concat(id)).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  toggleActive: id => {
+    return new Promise((resolve, reject) => {
+      HTTP.post(
+        config.apiEndpoints.partnerUri.concat(`${id}/ToggleActive`)
+      ).then(
         response => {
           resolve(response.data);
         },

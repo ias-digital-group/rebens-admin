@@ -9,7 +9,7 @@ export default {
         ? request
         : {
             page: 0,
-            pageItems: 30,
+            pageItems: 10,
             searchWord: '',
             sort: 'Name ASC',
             active: '',
@@ -18,7 +18,21 @@ export default {
           };
       HTTP.get(
         config.apiEndpoints.userUri.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}&active=${request.active}&role=${request.role}&idOperation=${request.idOperation}`
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
+            request.searchWord
+          }&sort=${request.sort}&active=${
+            request.active != null && request.active != undefined
+              ? request.active
+              : ''
+          }&role=${
+            request.role != null && request.role != undefined
+              ? request.role
+              : ''
+          }&idOperation=${
+            request.idOperation != null && request.idOperation != undefined
+              ? request.idOperation
+              : ''
+          }`
         )
       ).then(
         response => {
@@ -86,6 +100,18 @@ export default {
       HTTP.get(
         config.apiEndpoints.userUri.concat(`ResendValidation/${id}`)
       ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
+  toggleActive: id => {
+    return new Promise((resolve, reject) => {
+      HTTP.post(config.apiEndpoints.userUri.concat(`${id}/ToggleActive`)).then(
         response => {
           resolve(response.data);
         },
