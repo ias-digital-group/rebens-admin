@@ -12,11 +12,18 @@ export default {
             pageItems: 30,
             searchWord: '',
             sort: 'name ASC',
-            idOperation: 0
+            idOperation: 0,
+            active: ''
           };
       HTTP.get(
         config.apiEndpoints.operationPartnerUri.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}&idOperation=${request.idOperation}`
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
+            request.searchWord
+          }&sort=${request.sort}&idOperation=${request.idOperation}&active=${
+            request.active != null && request.active != undefined
+              ? request.active
+              : ''
+          }`
         )
       ).then(
         response => {

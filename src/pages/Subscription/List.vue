@@ -41,7 +41,7 @@
         <tbody>
           <tr v-for="item in tableData" :key="item.id">
             <td>{{ item.code }}</td>
-            <td>{{ item.customer.name }}</td>
+            <td>{{ item.customer.name }} {{ item.customer.surname }}</td>
             <td>{{ item.planName }}</td>
             <td>{{ item.amountString }}</td>
             <td>{{ item.nextInvoiceDateString }}</td>
@@ -92,7 +92,7 @@ export default {
       wirecardService.findAll(request).then(
         response => {
           self.$data.tableData = response.data;
-          self.savePageSettings(self, response.totalItems);
+          self.savePageSettings(self, response.totalItems, response.totalPages);
           self.loading = false;
         },
         () => {

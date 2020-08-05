@@ -57,9 +57,9 @@
               >
               <ul class="sub-item">
                 <li v-for="(subitem, idx2) in item.subitens" :key="idx2">
-                  <router-link :to="subitem.path">{{
-                    subitem.name
-                  }}</router-link>
+                  <router-link :to="subitem.path">
+                    {{ subitem.name }}
+                  </router-link>
                 </li>
               </ul>
             </template>
@@ -207,6 +207,7 @@ export default {
             {
               name: 'Parceiros',
               path: '/operationPartner',
+              needModule: 'closed-partner',
               active: false,
               roles: 'master,administrator,administratorRebens,administrator'
             }
@@ -229,21 +230,21 @@ export default {
               name: 'Assinaturas',
               path: '/subscriptions',
               active: false,
-              needModule: 'subscription',
+              needModule: 'signature',
               roles: 'master,administrator,administratorRebens'
             },
             {
               name: 'Cupom',
               path: '/benefits/validation',
               active: false,
-              needModule: 'coupon',
+              needModule: 'couponChecker',
               roles: 'master,administrator,administratorRebens,couponChecker'
             },
             {
               name: 'Ingresso',
               path: '/orders',
               active: false,
-              needModule: 'ticket',
+              needModule: 'ticketChecker',
               roles: 'master,administrator,administratorRebens'
             }
           ]
@@ -253,6 +254,7 @@ export default {
           path: '/promoter/report',
           active: false,
           roles: 'master,administrator,administratorRebens',
+          needModule: 'promoter',
           subitens: []
         },
         {
@@ -260,7 +262,7 @@ export default {
           path: '/benefits/validation',
           active: false,
           roles: 'couponChecker',
-          needModule: 'coupon',
+          needModule: 'couponChecker',
           subitens: []
         },
         {
@@ -268,7 +270,7 @@ export default {
           path: '/orders',
           active: false,
           roles: 'ticketChecker',
-          needModule: 'ticket',
+          needModule: 'ticketChecker',
           subitens: []
         }
       ]
@@ -301,33 +303,33 @@ export default {
         } else if (
           item.roles.split(',').includes(this.$store.getters.currentUser.role)
         ) {
-          if (item.subitens) {
-            item.subitens = item.subitens.filter(sub => {
-              if (sub.roles === '') {
-                return true;
-              } else if (
-                sub.roles
-                  .split(',')
-                  .includes(this.$store.getters.currentUser.role)
-              ) {
-                if (!sub.needModule || sub.needModule === '') {
+          if (
+            item.needModule === '' ||
+            this.$store.getters.currentUser.modules.includes(item.needModule)
+          ) {
+            if (item.subitens) {
+              item.subitens = item.subitens.filter(sub => {
+                if (sub.roles === '') {
                   return true;
                 } else if (
-                  sub.needModule === 'coupon' ||
-                  sub.needModule === 'ticket' ||
-                  sub.needModule === 'subscription'
+                  sub.roles
+                    .split(',')
+                    .includes(this.$store.getters.currentUser.role)
                 ) {
-                  return (
-                    this.$store.getters.currentUser.idOperation == 73 ||
-                    this.$store.getters.currentUser.idOperation == 0
-                  );
+                  if (!sub.needModule || sub.needModule === '') {
+                    return true;
+                  } else {
+                    return this.$store.getters.currentUser.modules.includes(
+                      sub.needModule
+                    );
+                  }
+                } else {
+                  return false;
                 }
-              } else {
-                return false;
-              }
-            });
+              });
+            }
+            return true;
           }
-          return true;
         }
         return false;
       });

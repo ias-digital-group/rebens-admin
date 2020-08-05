@@ -12,7 +12,8 @@
           <br />COM SUCESSO!
         </p>
         <button class="bg-green bt-modal mt-24" @click="backToList">
-          IR PARA LISTAGEM
+          <span v-if="stayInPage">OK</span>
+          <span v-else>IR PARA LISTAGEM</span>
         </button>
       </div>
     </div>
@@ -33,11 +34,16 @@ export default {
     isEdit: {
       type: Boolean,
       default: false
+    },
+    stayInPage: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
     backToList() {
-      this.$router.push(this.link);
+      if (this.stayInPage) this.show = false;
+      else this.$router.push(this.link);
     }
   }
 };

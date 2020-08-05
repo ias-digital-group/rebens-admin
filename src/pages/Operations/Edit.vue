@@ -185,9 +185,9 @@
               ></custom-input>
             </div>
             <div class="ias-row" :key="idx" v-else-if="field.type == 'boolean'">
-              <ias-checkbox v-model="field.checked">
-                {{ field.label }}
-              </ias-checkbox>
+              <ias-checkbox v-model="field.checked">{{
+                field.label
+              }}</ias-checkbox>
             </div>
             <div
               class="ias-row-editor"
@@ -245,12 +245,11 @@
           </div>
           <div v-for="(arr, idx1) in modulesChunk" class="ias-row" :key="idx1">
             <template v-for="(mod, idx) in arr">
-              <ias-checkbox v-model="mod.checked" :key="idx">
-                {{ mod.title }}
-              </ias-checkbox>
+              <ias-checkbox v-model="mod.checked" :key="idx">{{
+                mod.title
+              }}</ias-checkbox>
             </template>
             <div class="div-spacer" v-show="arr.length === 1"></div>
-            <div class="div-spacer" v-show="arr.length === 2"></div>
           </div>
           <div class="ias-row">
             <div class="form-actions">
@@ -450,8 +449,8 @@ export default {
     },
     modulesChunk() {
       var R = [];
-      for (var i = 0; i < this.modules.length; i += 3)
-        R.push(this.modules.slice(i, i + 3));
+      for (var i = 0; i < this.modules.length; i += 2)
+        R.push(this.modules.slice(i, i + 2));
       return R;
     }
   },

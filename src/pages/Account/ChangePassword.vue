@@ -129,6 +129,9 @@ export default {
             type: 'success',
             message: 'Senha alterada com sucesso!'
           });
+          vm.model.oldPassword = '';
+          vm.model.newPassword = '';
+          vm.model.newPasswordConfirm = '';
           vm.submitLoading = false;
         },
         err => {

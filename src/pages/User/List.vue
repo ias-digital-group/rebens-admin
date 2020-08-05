@@ -51,7 +51,7 @@
         </v-select>
         <v-select
           :options="roles"
-          :class="{ 'no-margin': !showPartners }"
+          :class="{ 'no-margin': !showPartners && !isRebens }"
           :reduce="op => op.code"
           v-model="filters.role"
           placeholder="Filtre pelo Papel"
@@ -179,6 +179,7 @@ import userService from '../../services/User/userService';
 import operationService from '../../services/Operation/operationService';
 import operationPartnerService from '../../services/OperationPartner/operationPartnerService';
 import paging from '../../mixins/paging';
+import config from '../../config';
 import _ from 'lodash';
 
 export default {
@@ -195,11 +196,11 @@ export default {
       internalName: 'pages.users.list',
       sortField: 'name',
       isMaster: false,
-      isRebens: false,
       showFilters: false,
       operations: [],
       operationPartners: [],
       roles: [],
+      isRebens: false,
       showPartners: true,
       resendPassId: 0,
       showResendPassModal: false,
@@ -257,6 +258,7 @@ export default {
     },
     fetchData() {
       const self = this;
+      self.isRebens = self.$store.getters.currentUser.isRebens;
       const request = {
         page: self.$data.pagination.currentPage - 1,
         pageItems: self.$data.pagination.perPage,
@@ -315,71 +317,12 @@ export default {
     },
     populateFilters(self) {
       self.isMaster = self.$store.getters.currentUser.role === 'master';
-      self.isRebens =
-        self.$store.getters.currentUser.role === 'administratorRebens' ||
-        self.$store.getters.currentUser.role === 'master';
+      self.showPartners = self.$store.getters.currentUser.modules.includes(
+        'closed-partner'
+      );
+      self.roles = config.getRoles(self.$store.getters.currentUser);
 
-      self.roles = [];
-      if (self.$store.getters.currentUser.role === 'partnerAdministrator') {
-        self.showPartners = false;
-        self.roles.push({
-          code: 'partnerAdministrator',
-          label: 'Administrador Parceiro'
-        });
-        self.roles.push({
-          code: 'partnerApprover',
-          label: 'Aprovador Parceiro'
-        });
-      } else {
-        if (!self.isRebens) {
-          self.filters.operation = self.$store.getters.currentUser.idOperation;
-        } else {
-          operationService.findAll().then(response => {
-            _.each(response.data, function(el) {
-              if (el.id != self.id) {
-                self.operations.push({ code: el.id, label: el.title });
-              }
-            });
-          });
-        }
-
-        if (self.isMaster) {
-          self.roles.push({ code: 'master', label: 'Master' });
-        }
-        if (!self.isPartnerUser) {
-          self.roles.push({ code: 'publisher', label: 'Publicador' });
-          self.roles.push({ code: 'administrator', label: 'Administrador' });
-          self.roles.push({
-            code: 'ticketChecker',
-            label: 'Validador Ingresso'
-          });
-          self.roles.push({ code: 'couponChecker', label: 'Validador Cupom' });
-          if (self.isRebens) {
-            // self.roles.push({
-            //   code: 'publisherRebens',
-            //   label: 'Publicador Rebens'
-            // });
-            self.roles.push({
-              code: 'administratorRebens',
-              label: 'Administrador Rebens'
-            });
-          }
-        }
-        self.roles.push({
-          code: 'partnerAdministrator',
-          label: 'Administrador Parceiro'
-        });
-        self.roles.push({
-          code: 'partnerApprover',
-          label: 'Aprovador Parceiro'
-        });
-        if (
-          self.isRebens ||
-          (self.$store.getters.currentUser.modules &&
-            self.$store.getters.currentUser.modules.includes('promoter'))
-        )
-          self.roles.push({ code: 'promoter', label: 'Promotor' });
-
+      if (self.showPartners || self.isRebens) {
         operationPartnerService
           .findAll({
             page: 0,
@@ -399,6 +342,18 @@ export default {
             },
             () => {}
           );
+      }
+
+      if (!self.isRebens) {
+        self.filters.operation = self.$store.getters.currentUser.idOperation;
+      } else {
+        operationService.findAll().then(response => {
+          _.each(response.data, function(el) {
+            if (el.id != self.id) {
+              self.operations.push({ code: el.id, label: el.title });
+            }
+          });
+        });
       }
     }
   },

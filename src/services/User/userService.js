@@ -14,7 +14,8 @@ export default {
             sort: 'Name ASC',
             active: '',
             role: '',
-            idOperation: ''
+            idOperation: '',
+            idOperationPartner: ''
           };
       HTTP.get(
         config.apiEndpoints.userUri.concat(
@@ -31,6 +32,11 @@ export default {
           }&idOperation=${
             request.idOperation != null && request.idOperation != undefined
               ? request.idOperation
+              : ''
+          }&idOperationPartner=${
+            request.idOperationPartner != null &&
+            request.idOperationPartner != undefined
+              ? request.idOperationPartner
               : ''
           }`
         )

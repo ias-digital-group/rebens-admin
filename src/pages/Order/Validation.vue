@@ -137,6 +137,7 @@ export default {
               type: 'success',
               message: 'Ingresso validado com sucesso!'
             });
+            self.fetchData();
           } else {
             self.closeValidateModal();
             self.$notify({

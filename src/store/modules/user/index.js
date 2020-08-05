@@ -71,7 +71,11 @@ const actions = {
       initials: jwtData.initials,
       idOperation: jwtData.operationId,
       idOperationPartner: jwtData.operationPartnerId,
-      modules: jwtData.modules != '' ? jwtData.modules.split('|') : ''
+      modules: jwtData.modules != '' ? jwtData.modules.split('|') : '',
+      isRebens:
+        jwtData.role === 'master' ||
+        jwtData.role === 'administratorRebens' ||
+        jwtData.role === 'publisherRebens'
     };
     commit(types.SAVE_AUTH_DATA, {
       user: user,

@@ -86,5 +86,56 @@ export default {
     { code: 'SP', label: 'São Paulo' },
     { code: 'SE', label: 'Sergipe' },
     { code: 'TO', label: 'Tocantins' }
-  ]
+  ],
+  getRoles: user => {
+    var roles = [];
+    if (user.role === 'ticketChecker')
+      roles.push({ code: 'ticketChecker', label: 'Validador Ingresso' });
+    else if (user.role === 'couponChecker')
+      roles.push({ code: 'couponChecker', label: 'Validador Cupom' });
+    else if (user.role === 'promoter')
+      roles.push({ code: 'promoter', label: 'Promotor' });
+    else if (user.role === 'partnerApprover')
+      roles.push({ code: 'partnerApprover', label: 'Aprovador Parceiro' });
+    else if (user.role === 'publisher')
+      roles.push({ code: 'publisher', label: 'Publicador' });
+    else if (user.role === 'publisherRebens')
+      roles.push({ code: 'publisherRebens', label: 'Publicador Rebens' });
+    else if (user.role === 'partnerAdministrator') {
+      roles.push({
+        code: 'partnerAdministrator',
+        label: 'Administrador Parceiro'
+      });
+      roles.push({ code: 'partnerApprover', label: 'Aprovador Parceiro' });
+    } else if (user.role === 'master' || user.role === 'administratorRebens') {
+      roles.push({ code: 'administrator', label: 'Administrador' });
+      roles.push({ code: 'partnerAdministrator', label: 'Admin Parceiro' });
+      roles.push({
+        code: 'administratorRebens',
+        label: 'Administrador Rebens'
+      });
+      roles.push({ code: 'partnerApprover', label: 'Aprovador Parceiro' });
+      if (user.role === 'master')
+        roles.push({ code: 'master', label: 'Master' });
+      roles.push({ code: 'promoter', label: 'Promotor' });
+      roles.push({ code: 'publisher', label: 'Publicador' });
+      roles.push({ code: 'publisherRebens', label: 'Publicador Rebens' });
+      roles.push({ code: 'couponChecker', label: 'Validador Cupom' });
+      roles.push({ code: 'ticketChecker', label: 'Validador Ingresso' });
+    } else {
+      roles.push({ code: 'administrator', label: 'Administrador' });
+      if (user.modules.includes('closed-partner')) {
+        roles.push({ code: 'partnerAdministrator', label: 'Admin Parceiro' });
+        roles.push({ code: 'partnerApprover', label: 'Aprovador Parceiro' });
+      }
+      if (user.modules.includes('promoter'))
+        roles.push({ code: 'promoter', label: 'Promotor' });
+      roles.push({ code: 'publisher', label: 'Publicador' });
+      if (user.modules.includes('couponChecker'))
+        roles.push({ code: 'couponChecker', label: 'Validador Cupom' });
+      if (user.modules.includes('ticketChecker'))
+        roles.push({ code: 'ticketChecker', label: 'Validador Ingresso' });
+    }
+    return roles;
+  }
 };

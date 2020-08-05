@@ -11,7 +11,7 @@
           @click="resendValidation"
           type="button"
           class="bt bt-square bg-white-2 c-orange"
-          v-show="viewAction === 'new'"
+          v-show="viewAction !== 'new'"
         >
           <i class="icon-icon-send"></i>
         </button>
@@ -91,12 +91,12 @@
               >
                 <span slot="no-options">Nenhum papel encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('roles')" class="ias-error">{{
-                customErrors.get('roles')
-              }}</label>
+              <label v-if="customErrors.get('roles')" class="ias-error">
+                {{ customErrors.get('roles') }}
+              </label>
             </div>
           </div>
-          <div class="ias-row" v-show="isRebens">
+          <div class="ias-row" v-show="$store.getters.currentUser.isRebens">
             <div class="select-holder">
               <v-select
                 :options="operations"
@@ -109,13 +109,19 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">{{
-                customErrors.get('operation')
-              }}</label>
+              <label v-if="customErrors.get('operation')" class="ias-error">
+                {{ customErrors.get('operation') }}
+              </label>
             </div>
           </div>
           <div class="ias-row">
-            <div class="select-holder" v-if="model.roles === 'couponChecker'">
+            <div
+              class="select-holder"
+              v-if="
+                model.roles === 'couponChecker' &&
+                  $store.getters.currentUser.role != 'couponChecker'
+              "
+            >
               <v-select
                 :options="partners"
                 :reduce="op => op.code"
@@ -196,7 +202,6 @@
                 <span v-if="viewAction === 'new'">Cadastrar</span>
                 <span v-else>Salvar</span>
               </button>
-
               <ias-checkbox v-model="model.active">Ativo</ias-checkbox>
             </div>
             <div class="div-spacer"></div>
@@ -215,6 +220,7 @@
       :isEdit="viewAction !== 'new'"
       :show="showSuccessModal"
       link="/users"
+      :stayInPage="isProfileEdit"
     ></success-modal>
   </div>
 </template>
@@ -226,6 +232,7 @@ import operationPartnerService from '../../services/OperationPartner/operationPa
 import helperService from '../../services/Helper/helperService';
 import { SuccessModal } from 'src/components';
 import validate from '../../validate';
+import config from '../../config';
 import _ from 'lodash';
 
 export default {
@@ -252,7 +259,7 @@ export default {
     },
     'model.idOperation': function() {
       const self = this;
-      if (self.isRebens) {
+      if (self.$store.getters.currentUser.isRebens) {
         if (self.model.roles === 'couponChecker') self.loadPartners(self);
         else if (
           self.model.roles === 'partnerAdministrator' ||
@@ -266,7 +273,6 @@ export default {
     return {
       formLoading: false,
       isMaster: false,
-      isRebens: false,
       isPartnerUser: false,
       showSuccessModal: false,
       customErrors: new Map(),
@@ -276,7 +282,6 @@ export default {
       image: null,
       emailConfirm: '',
       idCompany: 0,
-      blockRoles: true,
       model: {
         id: 0,
         name: '',
@@ -311,7 +316,7 @@ export default {
           this.model.roles == 'partnerAdministrator' ||
           this.model.roles == 'partnerApprover' ||
           this.model.roles == 'ticketChecker') &&
-        this.isRebens &&
+        this.$store.getters.currentUser.isRebens &&
         !this.isPartnerUser
       );
     },
@@ -331,6 +336,16 @@ export default {
         this.model.roles == 'promoter' ||
         this.model.roles == 'ticketChecker' ||
         this.model.roles == 'master'
+      );
+    },
+    blockRoles() {
+      return (
+        this.$store.getters.currentUser.role == 'partnerApprover' ||
+        this.$store.getters.currentUser.role == 'promoter' ||
+        this.$store.getters.currentUser.role == 'publisher' ||
+        this.$store.getters.currentUser.role == 'publisherRebens' ||
+        this.$store.getters.currentUser.role == 'ticketChecker' ||
+        this.$store.getters.currentUser.role == 'couponChecker'
       );
     }
   },
@@ -377,7 +392,7 @@ export default {
       if (self.model.roles == null || self.model.roles === '')
         self.customErrors.set('roles', 'Campo obrigatorio');
       if (
-        self.isRebens &&
+        self.$store.getters.currentUser.isRebens &&
         (self.model.roles === 'publisher' ||
           self.model.roles === 'administrator' ||
           self.model.roles == 'promoter' ||
@@ -435,7 +450,7 @@ export default {
     },
     saveUser(vm) {
       vm = vm ? vm : this;
-      if (!vm.isRebens) {
+      if (!vm.$store.getters.currentUser.isRebens) {
         vm.model.idOperation = vm.$store.getters.currentUser.idOperation;
       }
       if (vm.isPartnerUser) {
@@ -481,76 +496,9 @@ export default {
     },
     fetchData() {
       const self = this;
+      self.roles = config.getRoles(self.$store.getters.currentUser);
 
-      if (self.$store.getters.currentUser.role === 'ticketChecker')
-        self.roles.push({ code: 'ticketChecker', label: 'Validador Ingresso' });
-      else if (self.$store.getters.currentUser.role === 'couponChecker')
-        self.roles.push({ code: 'couponChecker', label: 'Validador Cupom' });
-      else if (self.$store.getters.currentUser.role === 'promoter')
-        self.roles.push({ code: 'promoter', label: 'Promotor' });
-      else if (self.$store.getters.currentUser.role === 'partnerApprover') {
-        self.roles.push({
-          code: 'partnerApprover',
-          label: 'Aprovador Parceiro'
-        });
-        self.showOperationPartners = false;
-      } else if (self.$store.getters.currentUser.role === 'publisher')
-        self.roles.push({ code: 'publisher', label: 'Publicador' });
-      else if (
-        self.$store.getters.currentUser.role === 'partnerAdministrator'
-      ) {
-        self.model.idOperation = self.$store.getters.currentUser.idOperation;
-        self.model.idPartner = self.$store.getters.currentUser.idPartner;
-        self.model.idOperationPartner =
-          self.$store.getters.currentUser.idOperationPartner;
-        self.showOperationPartners = false;
-        self.roles.push({
-          code: 'partnerAdministrator',
-          label: 'Administrador Parceiro'
-        });
-        self.roles.push({
-          code: 'partnerApprover',
-          label: 'Aprovador Parceiro'
-        });
-      } else {
-        self.blockRoles = false;
-        if (self.isMaster) {
-          self.roles.push({ code: 'master', label: 'Master' });
-        }
-        if (!self.isPartnerUser) {
-          self.roles.push({ code: 'publisher', label: 'Publicador' });
-          self.roles.push({ code: 'administrator', label: 'Administrador' });
-          self.roles.push({
-            code: 'ticketChecker',
-            label: 'Validador Ingresso'
-          });
-          self.roles.push({ code: 'couponChecker', label: 'Validador Cupom' });
-          if (self.isRebens) {
-            // self.roles.push({
-            //   code: 'publisherRebens',
-            //   label: 'Publicador Rebens'
-            // });
-            self.roles.push({
-              code: 'administratorRebens',
-              label: 'Administrador Rebens'
-            });
-          }
-        }
-        self.roles.push({
-          code: 'partnerAdministrator',
-          label: 'Administrador Parceiro'
-        });
-        self.roles.push({
-          code: 'partnerApprover',
-          label: 'Aprovador Parceiro'
-        });
-        if (
-          self.isRebens ||
-          (self.$store.getters.currentUser.modules &&
-            self.$store.getters.currentUser.modules.includes('promoter'))
-        )
-          self.roles.push({ code: 'promoter', label: 'Promotor' });
-
+      if (self.$store.getters.currentUser.isRebens) {
         operationService.findAll().then(
           response => {
             self.operations.push({ code: 0, label: 'selecione' });
@@ -563,7 +511,7 @@ export default {
           () => {}
         );
 
-        this.loadPartners(self);
+        self.loadPartners(self);
       }
 
       if (this.viewAction == 'edit') {
@@ -586,25 +534,26 @@ export default {
     },
     loadOperationPartner(self) {
       self.formLoading = true;
-      let operationId = 0;
-      if (self.isRebens) {
-        if (
-          self.model.roles == 'partnerAdministrator' ||
-          self.model.roles == 'partnerApprover'
-        ) {
-          operationId = self.model.idOperation;
-        }
-      } else {
-        operationId = self.$store.getters.currentUser.idOperation;
-      }
-      if (operationId > 0) {
+
+      if (
+        self.$store.getters.currentUser.role == 'partnerAdministrator' ||
+        self.$store.getters.currentUser.role == 'couponChecker' ||
+        self.$store.getters.currentUser.role == 'ticketChecker' ||
+        self.$store.getters.currentUser.role == 'partnerApprover'
+      ) {
+        self.model.idOperation = self.$store.getters.currentUser.idOperation;
+        self.model.idOperationPartner =
+          self.$store.getters.currentUser.idOperationPartner;
+        self.showOperationPartners = false;
+        self.formLoading = false;
+      } else if (!self.$store.getters.currentUser.isRebens) {
         operationPartnerService
           .findAll({
             page: 0,
             pageItems: 1000,
             searchWord: '',
             sort: 'name ASC',
-            idOperation: operationId
+            idOperation: self.$store.getters.currentUser.idOperation
           })
           .then(
             response => {
@@ -623,8 +572,6 @@ export default {
               self.formLoading = false;
             }
           );
-      } else {
-        self.formLoading = false;
       }
     },
     loadPartners(self) {
@@ -661,9 +608,6 @@ export default {
     this.isMaster = this.$store.getters.currentUser.role == 'master';
     this.isPartnerUser =
       this.$store.getters.currentUser.role == 'partnerAdministrator';
-    this.isRebens =
-      this.$store.getters.currentUser.role == 'administratorRebens' ||
-      this.$store.getters.currentUser.role == 'master';
 
     this.fetchData();
   }

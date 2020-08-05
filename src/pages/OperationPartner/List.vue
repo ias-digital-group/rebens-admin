@@ -1,7 +1,7 @@
 <template>
   <div class="list-box">
     <div class="page-header">
-      <h2>Operações</h2>
+      <h2>Parceiros</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
           <input
@@ -103,7 +103,7 @@
                   @click="handleDelete(item)"
                   type="button"
                   title="Apagar"
-                  class="bt c-light-blue"
+                  class="bt c-red"
                 >
                   <i class="icon-icon-delete"></i>
                 </button>
@@ -152,7 +152,6 @@ export default {
     return {
       internalName: 'Parceiros',
       sortField: 'name',
-      showFilters: false,
       statuses: [
         { code: true, label: 'Ativos' },
         { code: false, label: 'Inativos' }
