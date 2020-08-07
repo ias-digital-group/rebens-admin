@@ -57,9 +57,9 @@
               >
               <ul class="sub-item">
                 <li v-for="(subitem, idx2) in item.subitens" :key="idx2">
-                  <router-link :to="subitem.path">
-                    {{ subitem.name }}
-                  </router-link>
+                  <router-link :to="subitem.path">{{
+                    subitem.name
+                  }}</router-link>
                 </li>
               </ul>
             </template>
@@ -82,16 +82,9 @@ import 'src/assets/sass/patterns/icons.css';
 export default {
   data() {
     return {
-      isPromoter: false,
-      isRebens: false,
-      isPublisher: false,
-      isPartnerApprover: false,
-      isPartnerAdmin: false,
-      showCourses: true,
-      showFreeCourses: true,
-      showOperationPartner: false,
       showMenu: false,
       actualPath: '',
+      filteredMenu: [],
       menuItens: [
         {
           name: 'Clientes',
@@ -296,43 +289,12 @@ export default {
     initials() {
       return this.$store.getters.currentUser.initials;
     },
-    filteredMenu() {
-      return this.menuItens.filter(item => {
-        if (item.roles === '') {
-          return true;
-        } else if (
-          item.roles.split(',').includes(this.$store.getters.currentUser.role)
-        ) {
-          if (
-            item.needModule === '' ||
-            this.$store.getters.currentUser.modules.includes(item.needModule)
-          ) {
-            if (item.subitens) {
-              item.subitens = item.subitens.filter(sub => {
-                if (sub.roles === '') {
-                  return true;
-                } else if (
-                  sub.roles
-                    .split(',')
-                    .includes(this.$store.getters.currentUser.role)
-                ) {
-                  if (!sub.needModule || sub.needModule === '') {
-                    return true;
-                  } else {
-                    return this.$store.getters.currentUser.modules.includes(
-                      sub.needModule
-                    );
-                  }
-                } else {
-                  return false;
-                }
-              });
-            }
-            return true;
-          }
-        }
-        return false;
-      });
+    isRebens() {
+      return (
+        this.$store.getters.currentUser.role === 'master' ||
+        this.$store.getters.currentUser.role === 'administratorRebens' ||
+        this.$store.getters.currentUser.role === 'publisherRebens'
+      );
     }
   },
   methods: {
@@ -379,6 +341,56 @@ export default {
           }
         }
       });
+    },
+    filterMenu() {
+      const self = this;
+      self.filteredMenu = [];
+      self.menuItens.forEach(item => {
+        if (item.roles === '') {
+          self.filteredMenu.push(item);
+        } else if (
+          item.roles.split(',').includes(self.$store.getters.currentUser.role)
+        ) {
+          if (
+            item.needModule === '' ||
+            self.$store.getters.currentUser.modules.includes(item.needModule) ||
+            self.isRebens
+          ) {
+            if (item.subitens && item.subitens.length > 0) {
+              item.subitens = item.subitens.filter(sub => {
+                if (sub.roles === '') {
+                  return true;
+                } else if (
+                  sub.roles
+                    .split(',')
+                    .includes(self.$store.getters.currentUser.role)
+                ) {
+                  if (!sub.needModule || sub.needModule === '') {
+                    return true;
+                  } else {
+                    return (
+                      self.$store.getters.currentUser.modules.includes(
+                        sub.needModule
+                      ) || self.isRebens
+                    );
+                  }
+                } else {
+                  return false;
+                }
+              });
+
+              if (item.subitens.length === 1) {
+                item.subitens[0].subitens = [];
+                self.filteredMenu.push(item.subitens[0]);
+              } else if (item.subitens.length > 1) {
+                self.filteredMenu.push(item);
+              }
+            } else {
+              self.filteredMenu.push(item);
+            }
+          }
+        }
+      });
     }
   },
   mounted() {
@@ -389,6 +401,9 @@ export default {
       this.clearMenu();
       this.selectMenu();
     }
+  },
+  created() {
+    this.filterMenu();
   }
 };
 </script>

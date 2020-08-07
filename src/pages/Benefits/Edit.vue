@@ -26,9 +26,9 @@
               >
                 <span slot="no-options">Nenhum parceiro encontrado</span>
               </v-select>
-              <label v-show="customErrors.get('idPartner')" class="ias-error">{{
-                customErrors.get('idPartner')
-              }}</label>
+              <label v-show="customErrors.get('idPartner')" class="ias-error">
+                {{ customErrors.get('idPartner') }}
+              </label>
             </div>
           </div>
           <div class="ias-row">
@@ -73,9 +73,9 @@
               v-model="model.detail"
               placeholder="Detalhes"
             />
-            <label v-show="customErrors.get('detail')" class="ias-error">{{
-              customErrors.get('detail')
-            }}</label>
+            <label v-show="customErrors.get('detail')" class="ias-error">
+              {{ customErrors.get('detail') }}
+            </label>
           </div>
           <div
             class="ias-row-editor"
@@ -266,9 +266,9 @@
               v-model="model.voucherText"
               placeholder="Texto do voucher"
             />
-            <label v-show="customErrors.get('voucherText')" class="ias-error">
-              {{ customErrors.get('voucherText') }}
-            </label>
+            <label v-show="customErrors.get('voucherText')" class="ias-error">{{
+              customErrors.get('voucherText')
+            }}</label>
           </div>
           <div class="ias-row" v-else>
             <custom-input
@@ -404,9 +404,9 @@
               multiple
               :class="{ 'has-error': customErrors.get('operations') }"
             ></v-select>
-            <label v-if="customErrors.get('operations')" class="ias-error">{{
-              customErrors.get('operations')
-            }}</label>
+            <label v-if="customErrors.get('operations')" class="ias-error">
+              {{ customErrors.get('operations') }}
+            </label>
           </div>
           <div class="select-holder-right">
             <v-select
@@ -418,15 +418,19 @@
               multiple
               :class="{ 'has-error': customErrors.get('categories') }"
             ></v-select>
-            <label v-if="customErrors.get('categories')" class="ias-error">{{
-              customErrors.get('categories')
-            }}</label>
+            <label v-if="customErrors.get('categories')" class="ias-error">
+              {{ customErrors.get('categories') }}
+            </label>
           </div>
         </div>
       </form>
     </div>
     <success-modal
-      :isEdit="viewAction !== 'new'"
+      :boxMessage="
+        `CADASTRO ${
+          viewAction !== 'new' ? 'REALIZADO' : 'SALVO'
+        } <br />COM SUCESSO!`
+      "
       :show="showSuccessModal"
       link="/benefits"
     ></success-modal>

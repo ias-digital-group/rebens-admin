@@ -72,20 +72,8 @@ export default {
             response => {
               if (response && response.authenticated) {
                 self.$store.dispatch('setUser', response);
-                const jwtData = JSON.parse(
-                  atob(response.accessToken.split('.')[1])
-                );
                 setTimeout(() => {
-                  if (jwtData.role === 'promoter') {
-                    self.$router.push(`/promoter`);
-                  } else if (
-                    jwtData.role == 'partnerApprover' ||
-                    jwtData.role == 'partnerAdministrator'
-                  ) {
-                    self.$router.push(`/operationPartner/approve`);
-                  } else {
-                    window.location = '/';
-                  }
+                  window.location = '/';
                 }, 500);
                 return;
               } else {

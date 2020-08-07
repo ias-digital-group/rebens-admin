@@ -1,9 +1,9 @@
 <template>
-  <div class="edit-box" v-show="showDashboard">
+  <div class="edit-box">
     <div class="page-header">
       <h2>Dashboard</h2>
     </div>
-    <div class="ias-card">
+    <div class="ias-card" v-loading="boardLoading">
       <div class="ias-dash-row">
         <card type="chart" v-if="benefitViewChart.chartData">
           <template slot="header">
@@ -56,7 +56,7 @@ export default {
   },
   data() {
     return {
-      showDashboard: false,
+      boardLoading: true,
       operationsPieCharts: [],
       benefitViewChart: {
         extraOptions: chartConfigs.barChartOptions,
@@ -79,7 +79,6 @@ export default {
       reportService.loadDashboard().then(
         response => {
           if (response.data) {
-            self.showDashboard = true;
             if (response.data.benefitUse) {
               self.benefitUseChart.chartData = {
                 labels: response.data.benefitUse.labels,
@@ -211,6 +210,7 @@ export default {
                 self.operationsPieCharts.push(op);
               });
             }
+            self.boardLoading = false;
           }
         },
         () => {}
@@ -219,11 +219,19 @@ export default {
   },
   mounted() {
     this.i18n = this.$i18n;
-    this.fetchData();
     if (this.$store.getters.currentUser.role === 'promoter') {
       this.$router.push('/promoter');
-    } else if (this.$store.getters.currentUser.role === 'partnerApprover') {
-      window.location = '/#/operationPartner/approve';
+    } else if (
+      this.$store.getters.currentUser.role === 'partnerApprover' ||
+      this.$store.getters.currentUser.role === 'partnerAdministrator'
+    ) {
+      this.$router.push('/operationPartner/approve');
+    } else if (this.$store.getters.currentUser.role === 'ticketChecker') {
+      this.$router.push('/orders');
+    } else if (this.$store.getters.currentUser.role === 'couponChecker') {
+      this.$router.push('/benefits/validation');
+    } else {
+      this.fetchData();
     }
   }
 };

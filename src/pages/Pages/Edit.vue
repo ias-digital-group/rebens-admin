@@ -44,9 +44,9 @@
               ></custom-input>
             </div>
             <div class="ias-row" :key="idx" v-else-if="field.type == 'boolean'">
-              <ias-checkbox v-model="field.checked">{{
-                field.label
-              }}</ias-checkbox>
+              <ias-checkbox v-model="field.checked">
+                {{ field.label }}
+              </ias-checkbox>
             </div>
             <div
               class="ias-row-editor"
@@ -88,7 +88,7 @@
       </form>
     </div>
     <success-modal
-      :isEdit="true"
+      boxMessage="CADASTRO SALVO<br />COM SUCESSO!"
       :show="showSuccessModal"
       link="/pages"
     ></success-modal>

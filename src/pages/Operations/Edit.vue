@@ -2,14 +2,11 @@
   <div class="edit-box">
     <div class="page-header">
       <h2>
-        <span v-if="viewAction === 'new'">Cadastro Operação</span>
-        <span v-else>Edição Operação</span>
+        <span v-if="viewAction === 'new'">Cadastrar Clube</span>
+        <span v-else>Editar Clube</span>
       </h2>
       <div class="box-actions">
-        <base-link
-          to="/operations"
-          class="bt bt-square bg-white-2 c-light-blue"
-        >
+        <base-link to="/operations" class="bt bt-square bg-white-2 c-light-blue">
           <i class="icon-icon-arrow-left"></i>
         </base-link>
       </div>
@@ -185,15 +182,9 @@
               ></custom-input>
             </div>
             <div class="ias-row" :key="idx" v-else-if="field.type == 'boolean'">
-              <ias-checkbox v-model="field.checked">{{
-                field.label
-              }}</ias-checkbox>
+              <ias-checkbox v-model="field.checked">{{ field.label }}</ias-checkbox>
             </div>
-            <div
-              class="ias-row-editor"
-              :key="idx"
-              v-else-if="field.type == 'html'"
-            >
+            <div class="ias-row-editor" :key="idx" v-else-if="field.type == 'html'">
               <vue-editor
                 :editorToolbar="customToolbar"
                 v-model="field.data"
@@ -214,13 +205,11 @@
                 :key="index"
                 :name="t.value"
                 v-model="field.data"
-                >{{ t.name }}</ias-radio
-              >
+              >{{ t.name }}</ias-radio>
               <label
                 v-if="customErrors.get(`config.${field.name}`)"
                 class="ias-error"
-                >{{ customErrors.get(`config.${field.name}`) }}</label
-              >
+              >{{ customErrors.get(`config.${field.name}`) }}</label>
             </div>
           </template>
           <div class="ias-row" v-show="showWirecard">
@@ -245,29 +234,18 @@
           </div>
           <div v-for="(arr, idx1) in modulesChunk" class="ias-row" :key="idx1">
             <template v-for="(mod, idx) in arr">
-              <ias-checkbox v-model="mod.checked" :key="idx">{{
-                mod.title
-              }}</ias-checkbox>
+              <ias-checkbox v-model="mod.checked" :key="idx">{{ mod.title }}</ias-checkbox>
             </template>
             <div class="div-spacer" v-show="arr.length === 1"></div>
           </div>
           <div class="ias-row">
             <div class="form-actions">
-              <button
-                class="bt bg-green c-white"
-                type="button"
-                @click.prevent="validate"
-              >
-                Salvar
-              </button>
+              <button class="bt bg-green c-white" type="button" @click.prevent="validate">Salvar</button>
               <ias-checkbox v-model="model.active">Ativo</ias-checkbox>
             </div>
             <div class="div-spacer"></div>
           </div>
-          <div
-            class="ias-row"
-            v-if="showTempPublishBtn && isMaster && !model.isCustom"
-          >
+          <div class="ias-row" v-if="showTempPublishBtn && isMaster && !model.isCustom">
             <div class="form-actions">
               <button
                 class="bt bg-orange c-white bt-full"
@@ -275,9 +253,7 @@
                 @click.prevent="publishTemp"
                 :disabled="model.temporaryPublishStatus.includes('processando')"
                 :loading="formLoading"
-              >
-                {{ model.temporaryPublishStatus }}
-              </button>
+              >{{ model.temporaryPublishStatus }}</button>
             </div>
             <div class="div-spacer"></div>
           </div>
@@ -305,7 +281,11 @@
       </form>
     </div>
     <success-modal
-      :isEdit="viewAction !== 'new'"
+      :boxMessage="
+        `CADASTRO ${
+          viewAction !== 'new' ? 'REALIZADO' : 'SALVO'
+        } <br />COM SUCESSO!`
+      "
       :show="showSuccessModal"
       link="/operations"
     ></success-modal>
@@ -322,7 +302,7 @@ import {
   SuccessModal,
   Address,
   Modal,
-  InactivateOperationModal
+  InactivateOperationModal,
 } from 'src/components';
 import operationService from '../../services/Operation/operationService';
 import helperService from '../../services/Helper/helperService';
@@ -334,10 +314,10 @@ export default {
     SuccessModal,
     [Address.name]: Address,
     Modal,
-    InactivateOperationModal
+    InactivateOperationModal,
   },
   props: {
-    id: String
+    id: String,
   },
   data() {
     return {
@@ -355,7 +335,7 @@ export default {
       actualStatus: false,
       wirecard: {
         token: '',
-        jsToken: ''
+        jsToken: '',
       },
       config: {
         id: 0,
@@ -364,7 +344,7 @@ export default {
         data: {},
         idOperation: 0,
         active: true,
-        images: []
+        images: [],
       },
       model: {
         id: 0,
@@ -392,7 +372,7 @@ export default {
           phone: null,
           cellPhone: null,
           comercialPhone: null,
-          comercialPhoneBranch: null
+          comercialPhoneBranch: null,
         },
         mainAddress: {
           id: 0,
@@ -406,19 +386,19 @@ export default {
           country: 'Brasil',
           zipcode: '',
           latitude: null,
-          longitude: null
-        }
+          longitude: null,
+        },
       },
       operationTypeList: [],
       modal: {
         itemName: '',
         visible: false,
-        item: {}
-      }
+        item: {},
+      },
     };
   },
   computed: {
-    showWirecard: function() {
+    showWirecard: function () {
       const self = this;
       let ret = false;
       if (self.config.data) {
@@ -452,7 +432,7 @@ export default {
       for (var i = 0; i < this.modules.length; i += 2)
         R.push(this.modules.slice(i, i + 2));
       return R;
-    }
+    },
   },
   methods: {
     validate() {
@@ -594,7 +574,7 @@ export default {
             }
           }
           Promise.all(promises)
-            .then(values => {
+            .then((values) => {
               let start = 0;
               if (self.image) {
                 self.model.logo = values[0].data.url;
@@ -607,10 +587,10 @@ export default {
               self.formLoading = false;
               self.checkStatus();
             })
-            .catch(reason => {
+            .catch((reason) => {
               self.$notify({
                 type: 'danger',
-                message: reason.message
+                message: reason.message,
               });
               self.formLoading = false;
             });
@@ -632,14 +612,14 @@ export default {
       vw.formLoading = true;
       if (vw.viewAction == 'new') {
         operationService.create(vw.model).then(
-          response => {
+          (response) => {
             vw.model.id = response.id;
             vw.saveConfiguration(vw);
           },
-          err => {
+          (err) => {
             vw.$notify({
               type: 'primary',
-              message: err.message
+              message: err.message,
             });
             vw.formLoading = false;
           }
@@ -649,10 +629,10 @@ export default {
           () => {
             vw.saveConfiguration(vw);
           },
-          err => {
+          (err) => {
             vw.$notify({
               type: 'primary',
-              message: err.message
+              message: err.message,
             });
             vw.formLoading = false;
           }
@@ -670,16 +650,16 @@ export default {
                   vw.$notify({
                     type: 'success',
                     message:
-                      'A operação está sendo publicada, e assim que estiver concluído você verá aqui.'
+                      'A operação está sendo publicada, e assim que estiver concluído você verá aqui.',
                   });
                   vw.model.temporaryPublishStatus = 'Processando';
                   vw.isPublish = false;
                   vw.formLoading = false;
                 },
-                err => {
+                (err) => {
                   vw.$notify({
                     type: 'danger',
-                    message: err.message
+                    message: err.message,
                   });
                   vw.formLoading = true;
                 }
@@ -702,14 +682,14 @@ export default {
           self.$notify({
             type: 'success',
             message:
-              'A operação está sendo publicada, e assim que estiver concluído você verá aqui.'
+              'A operação está sendo publicada, e assim que estiver concluído você verá aqui.',
           });
           self.model.publishStatus = 'Processando';
         },
-        err => {
+        (err) => {
           self.$notify({
             type: 'danger',
-            message: err.message
+            message: err.message,
           });
           self.formLoading = false;
         }
@@ -726,7 +706,7 @@ export default {
       if (this.viewAction == 'edit') {
         this.formLoading = true;
         operationService.get(self.id).then(
-          response => {
+          (response) => {
             self.model = response.data;
             self.actualStatus = self.model.active;
             self.formLoading = response.data.publishStatus === 'Processando';
@@ -743,8 +723,8 @@ export default {
       }
       this.selectLoading = true;
       helperService.findAllOperationTypes().then(
-        response => {
-          _.each(response.data, function(el) {
+        (response) => {
+          _.each(response.data, function (el) {
             self.operationTypeList.push({ code: el.id, label: el.name });
             if (el.id === self.model.idOperationType)
               self.selectedOperationType = el.name;
@@ -756,7 +736,7 @@ export default {
         }
       );
       operationService.getConfiguration(self.id).then(
-        response => {
+        (response) => {
           self.config.images = [];
           self.config.data = response.data;
           self.wirecard = response.data.wirecard;
@@ -773,7 +753,7 @@ export default {
           self.$data.loading = false;
         }
       );
-      operationService.listModules(self.id).then(response => {
+      operationService.listModules(self.id).then((response) => {
         self.modules = response;
       });
     },
@@ -792,7 +772,7 @@ export default {
         element.img = file;
         self.config.images.push(element);
       } else {
-        _.forEach(self.config.images, el => {
+        _.forEach(self.config.images, (el) => {
           if (el.index == element.index) {
             el.img = file;
           }
@@ -800,7 +780,7 @@ export default {
       }
 
       if (file === null) {
-        _.forEach(this.config.data.fields, el => {
+        _.forEach(this.config.data.fields, (el) => {
           if (el.type == 'image' && el.name == element.field.name) {
             el.data = file;
           }
@@ -818,12 +798,12 @@ export default {
       this.modal.visible = false;
       this.modal.item = {};
       this.modal.itemName = '';
-    }
+    },
   },
   created() {
     this.isMaster = this.$store.getters.currentUser.role == 'master';
     this.fetchData();
-  }
+  },
 };
 </script>
 <style>

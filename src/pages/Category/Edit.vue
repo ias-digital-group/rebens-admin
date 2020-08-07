@@ -81,7 +81,11 @@
       </form>
     </div>
     <success-modal
-      :isEdit="viewAction !== 'new'"
+      :boxMessage="
+        `CADASTRO ${
+          viewAction !== 'new' ? 'REALIZADO' : 'SALVO'
+        } <br />COM SUCESSO!`
+      "
       :show="showSuccessModal"
       link="/category"
     ></success-modal>
@@ -131,9 +135,6 @@ export default {
     }
   },
   watch: {
-    'model.type': function() {
-      this.loadParents();
-    },
     level: function() {
       if (this.level === 'root') this.model.idParent = null;
     }
@@ -204,12 +205,11 @@ export default {
     },
     fetchData() {
       const self = this;
-      if (this.viewAction == 'edit') {
-        this.formLoading = true;
+      if (self.viewAction == 'edit') {
+        self.formLoading = true;
         categoryService.get(self.id).then(
           response => {
             self.level = response.data.idParent ? 'sub' : 'root';
-            if (self.level === 'root') self.loadParents();
             self.model = response.data;
             self.formLoading = false;
           },
@@ -218,6 +218,7 @@ export default {
           }
         );
       }
+      self.loadParents();
     },
     loadParents() {
       const self = this;

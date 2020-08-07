@@ -46,9 +46,9 @@
               v-show="model.idType == 3"
               >Home de benefícios</ias-checkbox
             >
-            <label v-if="customErrors.get('whereToShow')" class="ias-error">
-              {{ customErrors.get('whereToShow') }}
-            </label>
+            <label v-if="customErrors.get('whereToShow')" class="ias-error">{{
+              customErrors.get('whereToShow')
+            }}</label>
           </div>
           <div class="ias-row">
             <custom-input
@@ -104,9 +104,9 @@
                 :class="{ 'has-error': customErrors.get('order') }"
                 placeholder="Ordem"
               ></v-select>
-              <label v-show="customErrors.get('order')" class="ias-error">
-                {{ customErrors.get('order') }}
-              </label>
+              <label v-show="customErrors.get('order')" class="ias-error">{{
+                customErrors.get('order')
+              }}</label>
             </div>
           </div>
           <div class="ias-row">
@@ -141,15 +141,19 @@
               multiple
               :class="{ 'has-error': customErrors.get('operations') }"
             ></v-select>
-            <label v-if="customErrors.get('operations')" class="ias-error">
-              {{ customErrors.get('operations') }}
-            </label>
+            <label v-if="customErrors.get('operations')" class="ias-error">{{
+              customErrors.get('operations')
+            }}</label>
           </div>
         </div>
       </form>
     </div>
     <success-modal
-      :isEdit="viewAction !== 'new'"
+      :boxMessage="
+        `CADASTRO ${
+          viewAction !== 'new' ? 'REALIZADO' : 'SALVO'
+        } <br />COM SUCESSO!`
+      "
       :show="showSuccessModal"
       link="/banners"
     ></success-modal>

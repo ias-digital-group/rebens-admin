@@ -62,9 +62,9 @@
               v-model="model.description"
               placeholder="Descrição"
             />
-            <label v-show="customErrors.get('description')" class="ias-error">{{
-              customErrors.get('description')
-            }}</label>
+            <label v-show="customErrors.get('description')" class="ias-error">
+              {{ customErrors.get('description') }}
+            </label>
           </div>
           <div class="ias-row">
             <custom-input
@@ -197,7 +197,11 @@
       </form>
     </div>
     <success-modal
-      :isEdit="viewAction !== 'new'"
+      :boxMessage="
+        `CADASTRO ${
+          viewAction !== 'new' ? 'REALIZADO' : 'SALVO'
+        } <br />COM SUCESSO!`
+      "
       :show="showSuccessModal"
       link="/partner"
     ></success-modal>

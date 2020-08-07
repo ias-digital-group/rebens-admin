@@ -27,9 +27,9 @@
               >
                 <span slot="no-options">Nenhum Tipo encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('type')" class="ias-error">{{
-                customErrors.get('type')
-              }}</label>
+              <label v-if="customErrors.get('type')" class="ias-error">
+                {{ customErrors.get('type') }}
+              </label>
             </div>
           </div>
           <div class="ias-row" v-if="model.type === 22 && viewAction === 'new'">
@@ -44,9 +44,9 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('idItem')" class="ias-error">{{
-                customErrors.get('idItem')
-              }}</label>
+              <label v-if="customErrors.get('idItem')" class="ias-error">
+                {{ customErrors.get('idItem') }}
+              </label>
             </div>
           </div>
           <div class="ias-row" v-if="model.type === 23 && viewAction === 'new'">
@@ -61,9 +61,9 @@
               >
                 <span slot="no-options">Nenhum Parceiro encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('idItem')" class="ias-error">{{
-                customErrors.get('idItem')
-              }}</label>
+              <label v-if="customErrors.get('idItem')" class="ias-error">
+                {{ customErrors.get('idItem') }}
+              </label>
             </div>
           </div>
           <div class="ias-row">
@@ -222,7 +222,11 @@
       </form>
     </div>
     <success-modal
-      :isEdit="viewAction !== 'new'"
+      :boxMessage="
+        `CADASTRO ${
+          viewAction !== 'new' ? 'REALIZADO' : 'SALVO'
+        } <br />COM SUCESSO!`
+      "
       :show="showSuccessModal"
       link="/company"
     ></success-modal>

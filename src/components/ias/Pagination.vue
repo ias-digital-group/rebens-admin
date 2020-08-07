@@ -92,6 +92,7 @@
           v-model="currentPage"
           :class="{ disabled: totalPages === 1 }"
         />
+
         <span>/ {{ totalPages }}</span>
         <i
           @click="goToPage"

@@ -26,9 +26,9 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">
-                {{ customErrors.get('operation') }}
-              </label>
+              <label v-if="customErrors.get('operation')" class="ias-error">{{
+                customErrors.get('operation')
+              }}</label>
             </div>
             <div class="select-holder">
               <v-select
@@ -134,7 +134,7 @@
       </form>
     </div>
     <success-modal
-      :isEdit="false"
+      boxMessage="CADASTRO REALIZADO <br />COM SUCESSO!"
       :show="showSuccessModal"
       link="/customers"
     ></success-modal>

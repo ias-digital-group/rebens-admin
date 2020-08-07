@@ -498,7 +498,7 @@ a {
       }
       .change-page {
         border: 1px solid $light-gray;
-        width: 168px;
+        min-width: 148px;
         height: 48px;
         border-radius: 5px;
         display: flex;
@@ -523,7 +523,7 @@ a {
           font-size: $font-size-medium;
           font-weight: $font-weight-black;
           line-height: 46px;
-          width: 68px;
+          min-width: 48px;
         }
         i {
           width: 48px;

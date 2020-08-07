@@ -4,29 +4,19 @@
       <h2>Operações</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Digite aqui o que deseja encontrar"
-          />
+          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i
-            v-else
-            class="bt-clear-search icon-icon-times c-red"
-            @click="searchQuery = ''"
-          ></i>
+          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
         </div>
         <div class="filter" :class="{ active: showFilters }">
-          <a
-            class="bt bt-square bg-white-2 c-light-blue"
-            @click="toogleFilters"
-          >
+          <a class="bt bt-square bg-white-2 c-light-blue" @click="toogleFilters">
             <i class="icon-icon-filter"></i>
           </a>
         </div>
         <base-link
           to="/operations/new"
           class="bt bt-square bg-white-2 c-light-blue"
+          v-show="isMaster"
         >
           <i class="icon-icon-plus"></i>
         </base-link>
@@ -58,11 +48,7 @@
           <tr v-for="item in tableData" :key="item.id">
             <td class="td-flex">
               <div class="img-holder">
-                <img
-                  v-if="item.image && item.image !== ''"
-                  :src="item.image"
-                  :alt="item.title"
-                />
+                <img v-if="item.image && item.image !== ''" :src="item.image" :alt="item.title" />
                 <span v-else>{{ item.title[0] }}</span>
               </div>
               <span>{{ item.title }}</span>
@@ -117,11 +103,7 @@
                 >
                   <i class="icon-icon-view"></i>
                 </a>
-                <span
-                  v-else
-                  class="bt c-orange cursor-block"
-                  title="visualizar"
-                >
+                <span v-else class="bt c-orange cursor-block" title="visualizar">
                   <i class="icon-icon-view"></i>
                 </span>
               </div>
@@ -160,7 +142,7 @@ export default {
     InactivateOperationModal,
     Pagination,
     [Select.name]: Select,
-    [Option.name]: Option
+    [Option.name]: Option,
   },
   data() {
     return {
@@ -169,13 +151,13 @@ export default {
       isMaster: false,
       statuses: [
         { code: true, label: 'Ativos' },
-        { code: false, label: 'Inativos' }
+        { code: false, label: 'Inativos' },
       ],
       modal: {
         itemName: '',
         visible: false,
-        item: {}
-      }
+        item: {},
+      },
     };
   },
   methods: {
@@ -189,13 +171,13 @@ export default {
         pageItems: self.$data.pagination.perPage,
         searchWord: self.searchQuery,
         sort: self.formatSortFieldParam,
-        active: self.filters.active
+        active: self.filters.active,
       };
       if (self.filters.active != null && self.filters.active != '')
         self.showFilters = true;
       self.loading = true;
       operationService.findAll(request).then(
-        response => {
+        (response) => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
           self.loading = false;
@@ -207,25 +189,25 @@ export default {
     },
     validateModal() {
       const self = this;
-      this.$validator.validateAll().then(isValid => {
+      this.$validator.validateAll().then((isValid) => {
         if (isValid) {
           self.modal.formLoading = true;
           operationService.delete(self.modal.model.id).then(
-            response => {
+            (response) => {
               self.$notify({
                 type: 'primary',
                 message: response.message,
-                icon: 'tim-icons icon-bell-55'
+                icon: 'tim-icons icon-bell-55',
               });
               self.resetModal();
               self.pagination.currentPage = 1;
               self.fetchData();
             },
-            err => {
+            (err) => {
               self.$notify({
                 type: 'primary',
                 message: err.message,
-                icon: 'tim-icons icon-bell-55'
+                icon: 'tim-icons icon-bell-55',
               });
               self.modal.formLoading = false;
             }
@@ -245,7 +227,7 @@ export default {
     confirmInacitve() {
       const self = this;
       self.loading = true;
-      operationService.toggleActive(self.modal.item.id).then(data => {
+      operationService.toggleActive(self.modal.item.id).then((data) => {
         if (data.status === 'ok') {
           self.modal.item.active = data.data;
           self.loading = false;
@@ -253,7 +235,7 @@ export default {
             type: 'success',
             message: `Operação ${
               self.modal.item.active ? 'ativada' : 'inativada'
-            } com sucesso`
+            } com sucesso`,
           });
           self.closeInactivateModal();
         }
@@ -263,7 +245,7 @@ export default {
       this.modal.visible = false;
       this.modal.item = {};
       this.modal.itemName = '';
-    }
+    },
   },
   created() {
     this.isMaster = this.$store.getters.currentUser.role == 'master';
@@ -273,8 +255,8 @@ export default {
     'filters.active'() {
       this.pagination.currentPage = 1;
       this.fetchData();
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

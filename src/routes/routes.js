@@ -1710,12 +1710,14 @@ const routes = [
           roles: [
             'master',
             'administrator',
-            'publisher',
-            'publisherRebens',
             'administratorRebens',
             'partnerAdministrator',
+            'publisher',
+            'publisherRebens',
+            'promoter',
             'partnerApprover',
-            'promoter'
+            'ticketChecker',
+            'couponChecker'
           ],
           title: i18n.t('pages.dashboard.title')
         }

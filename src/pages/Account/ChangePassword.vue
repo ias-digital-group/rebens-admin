@@ -60,16 +60,27 @@
         <div class="form-right"></div>
       </form>
     </div>
+    <success-modal
+      boxMessage="SENHA ALTERADA <br />COM SUCESSO!"
+      :show="showSuccessModal"
+      link
+      :isProfileEdit="true"
+    ></success-modal>
   </div>
 </template>
 <script>
 import accountService from '../../services/Account/accountService';
+import { SuccessModal } from 'src/components';
 
 export default {
+  components: {
+    SuccessModal
+  },
   data() {
     return {
       submitLoading: false,
       customErrors: new Map(),
+      showSuccessModal: false,
       model: {
         oldPassword: '',
         newPassword: '',
@@ -125,10 +136,7 @@ export default {
       vm = vm ? vm : this;
       accountService.changePassword(vm.model).then(
         () => {
-          vm.$notify({
-            type: 'success',
-            message: 'Senha alterada com sucesso!'
-          });
+          vm.showSuccessModal = true;
           vm.model.oldPassword = '';
           vm.model.newPassword = '';
           vm.model.newPasswordConfirm = '';
@@ -136,7 +144,7 @@ export default {
         },
         err => {
           vm.$notify({
-            type: 'primary',
+            type: 'danger',
             message:
               err.response && err.response.data
                 ? err.response.data.message

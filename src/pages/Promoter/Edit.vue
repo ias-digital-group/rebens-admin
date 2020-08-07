@@ -71,7 +71,7 @@
       </form>
     </div>
     <success-modal
-      :isEdit="false"
+      boxMessage="CADASTRO REALIZADO<br />COM SUCESSO!"
       :show="showSuccessModal"
       link="/promoter"
     ></success-modal>

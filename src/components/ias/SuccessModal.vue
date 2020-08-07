@@ -3,16 +3,9 @@
     <div class="modal-mask" v-show="show">
       <div class="modal-container">
         <img src="/img/icon-success.png" alt="Sucesso" />
-        <p v-if="isEdit">
-          CADASTRO SALVO
-          <br />COM SUCESSO!
-        </p>
-        <p v-else>
-          CADASTRO REALIZADO
-          <br />COM SUCESSO!
-        </p>
+        <p v-html="boxMessage"></p>
         <button class="bg-green bt-modal mt-24" @click="backToList">
-          <span v-if="stayInPage">OK</span>
+          <span v-if="isProfileEdit">OK</span>
           <span v-else>IR PARA LISTAGEM</span>
         </button>
       </div>
@@ -31,18 +24,18 @@ export default {
       type: String,
       default: ''
     },
-    isEdit: {
-      type: Boolean,
-      default: false
+    boxMessage: {
+      type: String,
+      default: 'CADASTRO REALIZADO<br />COM SUCESSO!'
     },
-    stayInPage: {
+    isProfileEdit: {
       type: Boolean,
       default: false
     }
   },
   methods: {
     backToList() {
-      if (this.stayInPage) this.show = false;
+      if (this.isProfileEdit) this.$router.push('/');
       else this.$router.push(this.link);
     }
   }

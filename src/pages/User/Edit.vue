@@ -91,9 +91,9 @@
               >
                 <span slot="no-options">Nenhum papel encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('roles')" class="ias-error">
-                {{ customErrors.get('roles') }}
-              </label>
+              <label v-if="customErrors.get('roles')" class="ias-error">{{
+                customErrors.get('roles')
+              }}</label>
             </div>
           </div>
           <div class="ias-row" v-show="$store.getters.currentUser.isRebens">
@@ -109,9 +109,9 @@
               >
                 <span slot="no-options">Nenhum Clube encontrado</span>
               </v-select>
-              <label v-if="customErrors.get('operation')" class="ias-error">
-                {{ customErrors.get('operation') }}
-              </label>
+              <label v-if="customErrors.get('operation')" class="ias-error">{{
+                customErrors.get('operation')
+              }}</label>
             </div>
           </div>
           <div class="ias-row">
@@ -217,10 +217,14 @@
       </form>
     </div>
     <success-modal
-      :isEdit="viewAction !== 'new'"
+      :boxMessage="
+        `CADASTRO ${
+          viewAction !== 'new' ? 'REALIZADO' : 'SALVO'
+        } <br />COM SUCESSO!`
+      "
       :show="showSuccessModal"
       link="/users"
-      :stayInPage="isProfileEdit"
+      :isProfileEdit="isProfileEdit"
     ></success-modal>
   </div>
 </template>
