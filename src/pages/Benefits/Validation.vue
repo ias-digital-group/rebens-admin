@@ -22,26 +22,39 @@
       <table>
         <thead>
           <tr>
-            <th>Nome</th>
-            <th>cpf</th>
-            <th>Parceiro / Benefício</th>
-            <th>Código</th>
-            <th>Data de utilização</th>
+            <th>Cliente / CPF</th>
+            <th>Produto / Empresa</th>
+            <th>Código / Geração</th>
+            <th>Aprovador / Utilização</th>
             <th style="width:80px;">Ações</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="item in tableData" :key="item.id">
-            <td>{{ item.customerName }}</td>
-            <td>{{ item.customerCpf }}</td>
             <td>
               <div class="two-lines">
-                <span>{{ item.partnerName }}</span>
-                <span class="blue">{{ item.benefitName }}</span>
+                <span>{{ item.customerName }}</span>
+                <span class="blue">{{ item.customerCpf }}</span>
               </div>
             </td>
-            <td>{{ item.code }}</td>
-            <td>{{ item.usedDate }}</td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.benefitName }}</span>
+                <span class="blue">{{ item.partnerName }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.code }}</span>
+                <span class="blue">{{ item.created }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.ApproverName }}</span>
+                <span class="blue">{{ item.usedDate }}</span>
+              </div>
+            </td>
             <td>
               <div class="actions">
                 <button

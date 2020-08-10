@@ -9,7 +9,8 @@
           <tr>
             <th>Nome / E-mail</th>
             <th>CPF</th>
-            <th>Parceiro / Status</th>
+            <th>Clube / Empresa</th>
+            <th>Telefone / Celular</th>
             <th style="width:124px;">Ações</th>
           </tr>
         </thead>
@@ -25,7 +26,13 @@
             <td>
               <div class="two-lines">
                 <span>{{ item.operationPartnerName }}</span>
-                <span class="blue">{{ item.statusName }}</span>
+                <span class="blue">{{ item.operationName }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.phone }}</span>
+                <span class="blue">{{ item.cellphone }}</span>
               </div>
             </td>
             <td>

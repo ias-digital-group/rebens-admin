@@ -30,21 +30,38 @@
       <table>
         <thead>
           <tr>
-            <th>Código</th>
-            <th>Nome</th>
-            <th>Plano</th>
-            <th>Valor</th>
+            <th>Cliente / CPF</th>
+            <th>Plano / Clube</th>
+            <th>Forma de pagamento / Data</th>
             <th>Próxima cobrança</th>
+            <th>Valor</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="item in tableData" :key="item.id">
-            <td>{{ item.code }}</td>
-            <td>{{ item.customer.name }} {{ item.customer.surname }}</td>
-            <td>{{ item.planName }}</td>
-            <td>{{ item.amountString }}</td>
+            <td>
+              <div class="two-lines">
+                <span
+                  >{{ item.customer.name }} {{ item.customer.surname }}</span
+                >
+                <span class="blue">{{ item.customer.cpf }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.planName }}</span>
+                <span class="blue">{{ item.customer.cpf }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.paymentMethod }}</span>
+                <span class="blue">{{ item.creationDateString }}</span>
+              </div>
+            </td>
             <td>{{ item.nextInvoiceDateString }}</td>
+            <td>{{ item.amountString }}</td>
             <td>{{ item.status }}</td>
           </tr>
         </tbody>
