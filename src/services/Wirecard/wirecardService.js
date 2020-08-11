@@ -10,11 +10,25 @@ export default {
             page: 0,
             pageItems: 30,
             searchWord: '',
-            idOperation: ''
+            idOperation: '',
+            plan: '',
+            status: ''
           };
       HTTP.get(
         config.apiEndpoints.wirecardUri.concat(
-          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&idOperation=${request.idOperation}`
+          `?page=${request.page}&pageItems=${request.pageItems}
+            &searchWord=${request.searchWord}
+            &idOperation=${request.idOperation}
+            &plan=${
+              request.plan == null || request.plan == undefined
+                ? ''
+                : request.plan
+            }
+            &status=${
+              request.status == null || request.status == undefined
+                ? ''
+                : request.status
+            }`
         )
       ).then(
         response => {
@@ -36,7 +50,19 @@ export default {
           };
       HTTP.get(
         config.apiEndpoints.wirecardUri.concat(
-          `GenerateExcel?searchWord=${request.searchWord}&idOperation=${request.idOperation}`
+          `GenerateExcel?searchWord=${request.searchWord}&idOperation=${
+            request.idOperation
+          }
+          &plan=${
+            request.plan == null || request.plan == undefined
+              ? ''
+              : request.plan
+          }
+          &status=${
+            request.status == null || request.status == undefined
+              ? ''
+              : request.status
+          }`
         )
       ).then(
         response => {
