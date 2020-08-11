@@ -4,15 +4,30 @@
       <h2>Assinaturas</h2>
       <div class="box-actions" style="padding-top:8px">
         <div class="input-post-icon search" style="margin-right:16px">
-          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Digite aqui o que deseja encontrar"
+          />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
+          <i
+            v-else
+            class="bt-clear-search icon-icon-times c-red"
+            @click="searchQuery = ''"
+          ></i>
         </div>
-        <button type="button" @click="generateExcel" class="bt bt-square bg-white-2 c-light-blue">
+        <button
+          type="button"
+          @click="generateExcel"
+          class="bt bt-square bg-white-2 c-light-blue"
+        >
           <i class="icon-icon-download"></i>
         </button>
         <div class="filter" :class="{ active: showFilters }">
-          <a class="bt bt-square bg-white-2 c-light-blue" @click="showFilters = !showFilters">
+          <a
+            class="bt bt-square bg-white-2 c-light-blue"
+            @click="showFilters = !showFilters"
+          >
             <i class="icon-icon-filter"></i>
           </a>
         </div>
@@ -53,7 +68,9 @@
           <tr v-for="item in tableData" :key="item.id">
             <td>
               <div class="two-lines">
-                <span>{{ item.customer.name }} {{ item.customer.surname }}</span>
+                <span
+                  >{{ item.customer.name }} {{ item.customer.surname }}</span
+                >
                 <span class="blue">{{ item.customer.cpf }}</span>
               </div>
             </td>
@@ -96,7 +113,7 @@ import paging from '../../mixins/paging';
 export default {
   mixins: [paging],
   components: {
-    Pagination,
+    Pagination
   },
   data() {
     return {
@@ -109,14 +126,14 @@ export default {
         { code: 'EXPIRED', label: 'Expirada' },
         { code: 'OVERDUE', label: 'Atrasada' },
         { code: 'CANCELED', label: 'Cancelada' },
-        { code: 'TRIAL', label: 'Teste' },
+        { code: 'TRIAL', label: 'Teste' }
       ],
       plans: [
         { code: 'MENSAL', label: 'Mensal' },
         { code: 'XPTOA', label: 'Anual' },
         { code: 'XPTOM', label: 'Mensal antigo' },
-        { code: 'XPTOT1', label: 'Trimestral' },
-      ],
+        { code: 'XPTOT1', label: 'Trimestral' }
+      ]
     };
   },
   methods: {
@@ -128,11 +145,11 @@ export default {
         searchWord: self.searchQuery,
         idOperation: '',
         plan: self.filters.plan,
-        status: self.filters.status,
+        status: self.filters.status
       };
       self.loading = true;
       ~wirecardService.findAll(request).then(
-        (response) => {
+        response => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
           self.loading = false;
@@ -146,11 +163,11 @@ export default {
       const self = this;
       const request = {
         searchWord: self.searchQuery,
-        idOperation: '',
+        idOperation: ''
       };
       self.loading = true;
       wirecardService.generateExcel(request).then(
-        (response) => {
+        response => {
           self.fileUrl = response.url;
           setTimeout(() => {
             document.getElementById('linkFile').click();
@@ -162,7 +179,7 @@ export default {
           self.loading = false;
         }
       );
-    },
+    }
   },
   watch: {
     'filters.plan'() {
@@ -172,7 +189,7 @@ export default {
     'filters.status'() {
       this.pagination.currentPage = 1;
       this.fetchData();
-    },
-  },
+    }
+  }
 };
 </script>
