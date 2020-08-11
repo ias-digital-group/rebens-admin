@@ -163,7 +163,9 @@ export default {
       const self = this;
       const request = {
         searchWord: self.searchQuery,
-        idOperation: ''
+        idOperation: '',
+        plan: self.filters.plan,
+        status: self.filters.status
       };
       self.loading = true;
       wirecardService.generateExcel(request).then(

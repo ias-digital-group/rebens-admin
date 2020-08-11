@@ -52,13 +52,11 @@ export default {
         config.apiEndpoints.wirecardUri.concat(
           `GenerateExcel?searchWord=${request.searchWord}&idOperation=${
             request.idOperation
-          }
-          &plan=${
+          }&plan=${
             request.plan == null || request.plan == undefined
               ? ''
               : request.plan
-          }
-          &status=${
+          }&status=${
             request.status == null || request.status == undefined
               ? ''
               : request.status
