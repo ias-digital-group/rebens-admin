@@ -104,6 +104,7 @@ const ScratchcardEdit = () => import('src/pages/Scratchcard/Edit.vue');
 const BenefitValidation = () => import('src/pages/Benefits/Validation.vue');
 const OrderValidation = () => import('src/pages/Order/Validation.vue');
 const SubscriptionList = () => import('src/pages/Subscription/List.vue');
+const ZanoxList = () => import('src/pages/Zanox/List.vue');
 
 let bannersPages = {
   path: '/banners',
@@ -1789,6 +1790,28 @@ const routes = [
       requiresAuth: false,
       title: i18n.t('pages.access-denied.title')
     }
+  },
+  {
+    path: '/',
+    component: MainLayout,
+    name: 'Zanox',
+    meta: {
+      requiresAuth: false,
+      title: 'Zanox',
+      roles: ['administratorRebens', 'master']
+    },
+    children: [
+      {
+        path: '/zanox',
+        name: 'Zanox',
+        component: ZanoxList,
+        meta: {
+          requiresAuth: false,
+          title: 'Zanox',
+          roles: ['administratorRebens', 'master']
+        }
+      }
+    ]
   },
   bannersPages,
   categoryPages,
