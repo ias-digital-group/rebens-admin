@@ -49,6 +49,7 @@ export default {
     scratchcardPrizeUri: process.env.VUE_APP_API_URI.concat(
       'scratchcardPrize/'
     ),
+    zanoxUri: process.env.VUE_APP_API_URI.concat('ZanoxProgram/'),
     viaCepUri: process.env.VUE_APP_VIACEP_URI
   },
   customToolbar: [
