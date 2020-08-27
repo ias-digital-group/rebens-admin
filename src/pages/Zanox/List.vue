@@ -1,12 +1,20 @@
 <template>
   <div class="list-box">
     <div class="page-header">
-      <h2>Zanox</h2>
+      <h2>Cupons Zanox</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Digite aqui o que deseja encontrar"
+          />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
+          <i
+            v-else
+            class="bt-clear-search icon-icon-times c-red"
+            @click="searchQuery = ''"
+          ></i>
         </div>
       </div>
     </div>
@@ -18,14 +26,19 @@
             <th>Programa</th>
             <th>Inicio</th>
             <th>Status / Rank</th>
-            <th style="width:84px;">Ações</th>
+            <th style="width:64px;">Ações</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in items" :key="item.id">
+          <tr v-for="item in tableData" :key="item.id">
             <td>
-              <div class="img-holder" style="width:96px;">
-                <img :src="item.image" :alt="item.name" width="96" height="40" />
+              <div class="img-holder-square">
+                <img
+                  :src="item.image"
+                  :alt="item.name"
+                  width="96"
+                  height="40"
+                />
               </div>
             </td>
             <td>
@@ -84,16 +97,15 @@
 import zanoxService from '../../services/Zanox/zanoxService';
 import { Pagination } from 'src/components';
 import paging from '../../mixins/paging';
-import _ from 'lodash';
 
 export default {
   mixins: [paging],
   components: {
-    Pagination,
+    Pagination
   },
   data() {
     return {
-      internalName: 'pages.zanoxProgram.list',
+      internalName: 'pages.zanoxProgram.list'
     };
   },
   methods: {
@@ -103,15 +115,15 @@ export default {
     togglePublish(row) {
       const self = this;
       self.loading = true;
-      zanoxService.togglePublish(row.id).then((data) => {
+      zanoxService.togglePublish(row.id).then(data => {
         if (data.status === 'ok') {
           row.published = data.data;
           self.loading = false;
           self.$notify({
             type: 'success',
             message: `Programa ${
-              row.active ? 'publicado' : 'inativado'
-            } com sucesso`,
+              row.published ? 'publicado' : 'inativado'
+            } com sucesso`
           });
         }
       });
@@ -121,11 +133,11 @@ export default {
       const request = {
         page: self.$data.pagination.currentPage - 1,
         pageItems: self.$data.pagination.perPage,
-        searchWord: self.searchQuery,
+        searchWord: self.searchQuery
       };
       self.loading = true;
-      zanoxService.getIncentives().then(
-        (response) => {
+      zanoxService.findAll(request).then(
+        response => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
           self.loading = false;
@@ -134,11 +146,11 @@ export default {
           self.loading = false;
         }
       );
-    },
+    }
   },
   created() {
     this.fetchData();
-  },
+  }
 };
 </script>
 <style scoped>

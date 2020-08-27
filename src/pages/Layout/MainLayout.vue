@@ -57,9 +57,9 @@
               >
               <ul class="sub-item">
                 <li v-for="(subitem, idx2) in item.subitens" :key="idx2">
-                  <router-link :to="subitem.path">{{
-                    subitem.name
-                  }}</router-link>
+                  <router-link :to="subitem.path">
+                    {{ subitem.name }}
+                  </router-link>
                 </li>
               </ul>
             </template>
@@ -248,6 +248,14 @@ export default {
           active: false,
           roles: 'master,administrator,administratorRebens',
           needModule: 'promoter',
+          subitens: []
+        },
+        {
+          name: 'Cupons Zanox',
+          path: '/zanox',
+          active: false,
+          roles: 'master,administratorRebens',
+          needModule: '',
           subitens: []
         },
         {
