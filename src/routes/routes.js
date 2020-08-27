@@ -105,6 +105,7 @@ const BenefitValidation = () => import('src/pages/Benefits/Validation.vue');
 const OrderValidation = () => import('src/pages/Order/Validation.vue');
 const SubscriptionList = () => import('src/pages/Subscription/List.vue');
 const ZanoxList = () => import('src/pages/Zanox/List.vue');
+const ZanoxEdit = () => import('src/pages/Zanox/Edit.vue');
 
 let bannersPages = {
   path: '/banners',
@@ -1792,23 +1793,34 @@ const routes = [
     }
   },
   {
-    path: '/',
+    path: '/zanox',
     component: MainLayout,
     name: 'Zanox',
     meta: {
-      requiresAuth: false,
+      requiresAuth: true,
       title: 'Zanox',
       roles: ['administratorRebens', 'master']
     },
     children: [
       {
-        path: '/zanox',
-        name: 'Zanox',
+        path: '',
+        name: 'zanox_list',
         component: ZanoxList,
         meta: {
-          requiresAuth: false,
-          title: 'Zanox',
+          requiresAuth: true,
+          title: 'Cupons Zanox',
           roles: ['administratorRebens', 'master']
+        }
+      },
+      {
+        path: ':id/edit',
+        name: 'edit_program',
+        props: true,
+        component: ZanoxEdit,
+        meta: {
+          requiresAuth: true,
+          roles: ['master', 'administratorRebens'],
+          title: 'Cupons Zanox'
         }
       }
     ]
