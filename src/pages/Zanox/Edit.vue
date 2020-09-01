@@ -3,7 +3,10 @@
     <div class="page-header">
       <h2>Editar Parceiro Zanox</h2>
       <div class="box-actions">
-        <base-link to="/zanox" class="bt bt-square bg-white-2 c-light-blue">
+        <base-link
+          to="/zanox/programs"
+          class="bt bt-square bg-white-2 c-light-blue"
+        >
           <i class="icon-icon-arrow-left"></i>
         </base-link>
       </div>
@@ -46,9 +49,9 @@
               v-model="model.terms"
               placeholder="Termos"
             />
-            <label v-show="customErrors.get('terms')" class="ias-error">
-              {{ customErrors.get('terms') }}
-            </label>
+            <label v-show="customErrors.get('terms')" class="ias-error">{{
+              customErrors.get('terms')
+            }}</label>
           </div>
 
           <div class="ias-row">

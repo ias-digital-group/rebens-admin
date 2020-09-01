@@ -1804,7 +1804,7 @@ const routes = [
     },
     children: [
       {
-        path: '',
+        path: 'programs',
         name: 'zanox_list',
         component: ZanoxList,
         meta: {
@@ -1814,7 +1814,7 @@ const routes = [
         }
       },
       {
-        path: ':id/edit',
+        path: 'programs/:id/edit',
         name: 'edit_program',
         props: true,
         component: ZanoxEdit,

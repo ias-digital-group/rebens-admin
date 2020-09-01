@@ -46,11 +46,12 @@
             <th>Inicio / Fim</th>
             <th>Valor / Código</th>
             <th>Status</th>
+            <th style="width:30px;"></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="item in tableData" :key="item.id">
-            <td>
+            <td class="td-flex">
               <div class="img-holder-square">
                 <img
                   :src="item.programImage"
@@ -59,6 +60,7 @@
                   height="40"
                 />
               </div>
+              <span>{{ item.programName }}</span>
             </td>
             <td>
               <span>{{ item.name }}</span>
@@ -76,6 +78,27 @@
               </div>
             </td>
             <td>{{ item.active ? 'Ativo' : 'Inativo' }}</td>
+            <td>
+              <a
+                type="button"
+                title="visualizar"
+                class="bt c-orange"
+                target="_blank"
+                v-if="item.url !== ''"
+                :href="item.url"
+                style="padding:0;"
+              >
+                <i class="icon-icon-view"></i>
+              </a>
+              <span
+                v-else
+                class="bt c-orange cursor-block"
+                title="visualizar"
+                style="padding:0;"
+              >
+                <i class="icon-icon-view"></i>
+              </span>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -108,7 +131,7 @@ export default {
   },
   data() {
     return {
-      internalName: 'pages.zanoxProgram.list',
+      internalName: 'pages.zanoxProgram.incentives',
       programs: []
     };
   },
@@ -161,9 +184,3 @@ export default {
   }
 };
 </script>
-<style scoped>
-table tr td,
-table tr th {
-  padding: 0 5px !important;
-}
-</style>

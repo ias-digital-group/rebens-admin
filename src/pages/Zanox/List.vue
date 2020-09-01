@@ -110,7 +110,7 @@ export default {
   },
   methods: {
     handleEdit(row) {
-      this.$router.push(`/zanox/${row.id}/edit/`);
+      this.$router.push(`/zanox/programs/${row.id}/edit/`);
     },
     togglePublish(row) {
       const self = this;
@@ -153,9 +153,3 @@ export default {
   }
 };
 </script>
-<style scoped>
-table tr td,
-table tr th {
-  padding: 0 5px !important;
-}
-</style>
