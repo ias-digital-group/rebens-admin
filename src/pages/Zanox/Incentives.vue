@@ -1,69 +1,65 @@
 <template>
   <div class="list-box">
     <div class="page-header">
-      <h2>Parceiros Zanox</h2>
+      <h2>Cupons Zanox</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
           <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
           <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
         </div>
+        <div class="filter" :class="{ active: showFilters }">
+          <a class="bt bt-square bg-white-2 c-light-blue" @click="showFilters = !showFilters">
+            <i class="icon-icon-filter"></i>
+          </a>
+        </div>
+      </div>
+      <div class="filters" v-show="showFilters">
+        <v-select
+          :options="programs"
+          :reduce="op => op.code"
+          v-model="filters.program"
+          class="no-margin"
+          placeholder="Filtre pelo parceiro"
+        >
+          <span slot="no-options">Nenhum parceiro encontrado</span>
+        </v-select>
       </div>
     </div>
     <div class="list-table" v-loading="loading">
       <table>
         <thead>
           <tr>
-            <th>Logo</th>
             <th>Programa</th>
-            <th>Inicio</th>
-            <th>Status / Rank</th>
-            <th style="width:64px;">Ações</th>
+            <th>Nome</th>
+            <th>Inicio / Fim</th>
+            <th>Valor / Código</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="item in tableData" :key="item.id">
             <td>
               <div class="img-holder-square">
-                <img :src="item.image" :alt="item.name" width="96" height="40" />
+                <img :src="item.programImage" :alt="item.programName" width="96" height="40" />
               </div>
             </td>
             <td>
               <span>{{ item.name }}</span>
             </td>
             <td>
-              <span>{{ item.startDate }}</span>
+              <div class="two-lines">
+                <span>{{ item.start }}</span>
+                <span class="blue">{{ item.end }}</span>
+              </div>
             </td>
             <td>
               <div class="two-lines">
-                <span>{{ item.status }}</span>
-                <span class="blue">{{ item.adRank }}</span>
+                <span>{{ item.amount }}</span>
+                <span class="blue">{{ item.code }}</span>
               </div>
             </td>
-            <td>
-              <div class="actions">
-                <button
-                  @click="togglePublish(item)"
-                  type="button"
-                  :title="item.published ? 'Inativar' : 'Ativar'"
-                  class="bt"
-                  :class="{
-                    'c-green': item.published,
-                    'c-light-gray': !item.published
-                  }"
-                >
-                  <i class="icon-icon-check"></i>
-                </button>
-                <button
-                  @click="handleEdit(item)"
-                  type="button"
-                  title="Editar"
-                  class="bt c-light-blue"
-                >
-                  <i class="icon-icon-edit"></i>
-                </button>
-              </div>
-            </td>
+            <td>{{ item.active ? 'Ativo' : 'Inativo'}}</td>
           </tr>
         </tbody>
       </table>
@@ -82,48 +78,35 @@
 </template>
 <script>
 import zanoxService from '../../services/Zanox/zanoxService';
+import { Select, Option } from 'element-ui';
 import { Pagination } from 'src/components';
 import paging from '../../mixins/paging';
+import _ from 'lodash';
 
 export default {
   mixins: [paging],
   components: {
     Pagination,
+    [Select.name]: Select,
+    [Option.name]: Option,
   },
   data() {
     return {
       internalName: 'pages.zanoxProgram.list',
+      programs: [],
     };
   },
   methods: {
-    handleEdit(row) {
-      this.$router.push(`/zanox/${row.id}/edit/`);
-    },
-    togglePublish(row) {
-      const self = this;
-      self.loading = true;
-      zanoxService.togglePublish(row.id).then((data) => {
-        if (data.status === 'ok') {
-          row.published = data.data;
-          self.loading = false;
-          self.$notify({
-            type: 'success',
-            message: `Programa ${
-              row.published ? 'publicado' : 'inativado'
-            } com sucesso`,
-          });
-        }
-      });
-    },
     fetchData() {
       const self = this;
       const request = {
         page: self.$data.pagination.currentPage - 1,
         pageItems: self.$data.pagination.perPage,
         searchWord: self.searchQuery,
+        program: self.filters.program,
       };
       self.loading = true;
-      zanoxService.findAll(request).then(
+      zanoxService.findAllIncentives(request).then(
         (response) => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
@@ -134,9 +117,31 @@ export default {
         }
       );
     },
+    loadPrograms() {
+      const self = this;
+      self.programs = [];
+      zanoxService.findAll({ page: 0, pageItems: 99999, searchWord: '' }).then(
+        (response) => {
+          _.each(response.data, function (el) {
+            if (el.id != self.id) {
+              self.programs.push({ code: el.id, label: el.name });
+            }
+          });
+        },
+        () => {
+          self.loading = false;
+        }
+      );
+    },
+  },
+  watch: {
+    'filters.program'() {
+      this.pagination.currentPage = 1;
+      this.fetchData();
+    },
   },
   created() {
-    this.fetchData();
+    this.loadPrograms();
   },
 };
 </script>

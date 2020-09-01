@@ -1,7 +1,7 @@
 <template>
   <div class="edit-box">
     <div class="page-header">
-      <h2>Editar Parceiro Cupom</h2>
+      <h2>Editar Parceiro Zanox</h2>
       <div class="box-actions">
         <base-link to="/zanox" class="bt bt-square bg-white-2 c-light-blue">
           <i class="icon-icon-arrow-left"></i>
@@ -34,30 +34,20 @@
             <label
               v-show="customErrors.get('localDescription')"
               class="ias-error"
-              >{{ customErrors.get('localDescription') }}</label
-            >
+            >{{ customErrors.get('localDescription') }}</label>
           </div>
-          <div
-            class="ias-row-editor"
-            :class="{ 'has-error': customErrors.get('terms') }"
-          >
-            <vue-editor
-              :editorToolbar="customToolbar"
-              v-model="model.terms"
-              placeholder="Termos"
-            />
-            <label v-show="customErrors.get('terms')" class="ias-error">{{
+          <div class="ias-row-editor" :class="{ 'has-error': customErrors.get('terms') }">
+            <vue-editor :editorToolbar="customToolbar" v-model="model.terms" placeholder="Termos" />
+            <label v-show="customErrors.get('terms')" class="ias-error">
+              {{
               customErrors.get('terms')
-            }}</label>
+              }}
+            </label>
           </div>
 
           <div class="ias-row">
             <div class="form-actions">
-              <button
-                class="bt bg-green c-white"
-                type="button"
-                @click.prevent="validate"
-              >
+              <button class="bt bg-green c-white" type="button" @click.prevent="validate">
                 <span>Salvar</span>
               </button>
               <ias-checkbox v-model="model.published">Publicado</ias-checkbox>
@@ -90,14 +80,14 @@ import config from '../../config';
 
 export default {
   components: {
-    SuccessModal
+    SuccessModal,
   },
   props: {
     id: String,
     removeText: {
       type: String,
-      default: 'Remove'
-    }
+      default: 'Remove',
+    },
   },
   data() {
     return {
@@ -112,8 +102,8 @@ export default {
         image: '',
         localDescription: '',
         terms: '',
-        published: false
-      }
+        published: false,
+      },
     };
   },
   methods: {
@@ -131,11 +121,11 @@ export default {
         self.submitLoading = true;
         if (self.image) {
           helperService.uploadImage(self.image).then(
-            response => {
+            (response) => {
               if (response.status != 200) {
                 self.$notify({
                   type: 'warning',
-                  message: response.message
+                  message: response.message,
                 });
                 self.submitLoading = false;
                 return;
@@ -143,10 +133,10 @@ export default {
               self.model.image = response.data.url;
               self.saveProgram(self);
             },
-            err => {
+            (err) => {
               self.$notify({
                 type: 'danger',
-                message: err.message
+                message: err.message,
               });
               self.submitLoading = false;
             }
@@ -163,16 +153,16 @@ export default {
           vm.submitLoading = false;
           vm.showSuccessModal = true;
         },
-        err => {
+        (err) => {
           if (err.response.status === 400 && err.response.data.message) {
             vm.$notify({
               type: 'warning',
-              message: err.response.data.message
+              message: err.response.data.message,
             });
           } else {
             vm.$notify({
               type: 'danger',
-              message: err.message
+              message: err.message,
             });
           }
           vm.submitLoading = false;
@@ -185,7 +175,7 @@ export default {
 
       self.submitLoading = true;
       zanoxService.get(self.id).then(
-        response => {
+        (response) => {
           self.model = response.data;
           self.submitLoading = false;
         },
@@ -199,10 +189,10 @@ export default {
       if (file == null) {
         this.model.image = file;
       }
-    }
+    },
   },
   created() {
     this.fetchData();
-  }
+  },
 };
 </script>

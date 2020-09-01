@@ -62,5 +62,35 @@ export default {
         }
       );
     });
+  },
+  findAllIncentives: request => {
+    return new Promise((resolve, reject) => {
+      request = request
+        ? request
+        : {
+            page: 0,
+            pageItems: 10,
+            searchWord: '',
+            program: null
+          };
+      HTTP.get(
+        config.apiEndpoints.zanoxUri.concat(
+          `incentives?page=${request.page}&pageItems=${
+            request.pageItems
+          }&searchWord=${request.searchWord}&idZanoxProgram=${
+            request.program == null || request.program == undefined
+              ? ''
+              : request.program
+          }`
+        )
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
   }
 };

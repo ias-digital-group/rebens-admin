@@ -106,6 +106,7 @@ const OrderValidation = () => import('src/pages/Order/Validation.vue');
 const SubscriptionList = () => import('src/pages/Subscription/List.vue');
 const ZanoxList = () => import('src/pages/Zanox/List.vue');
 const ZanoxEdit = () => import('src/pages/Zanox/Edit.vue');
+const ZanoxIncentives = () => import('src/pages/Zanox/Incentives.vue');
 
 let bannersPages = {
   path: '/banners',
@@ -1808,7 +1809,7 @@ const routes = [
         component: ZanoxList,
         meta: {
           requiresAuth: true,
-          title: 'Cupons Zanox',
+          title: 'Parceiros Zanox',
           roles: ['administratorRebens', 'master']
         }
       },
@@ -1817,6 +1818,17 @@ const routes = [
         name: 'edit_program',
         props: true,
         component: ZanoxEdit,
+        meta: {
+          requiresAuth: true,
+          roles: ['master', 'administratorRebens'],
+          title: 'Parceiro Zanox'
+        }
+      },
+      {
+        path: 'incentives',
+        name: 'incentives',
+        props: true,
+        component: ZanoxIncentives,
         meta: {
           requiresAuth: true,
           roles: ['master', 'administratorRebens'],
