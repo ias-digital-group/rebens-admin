@@ -4,9 +4,17 @@
       <h2>Parceiros Zanox</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Digite aqui o que deseja encontrar"
+          />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
+          <i
+            v-else
+            class="bt-clear-search icon-icon-times c-red"
+            @click="searchQuery = ''"
+          ></i>
         </div>
       </div>
     </div>
@@ -25,7 +33,12 @@
           <tr v-for="item in tableData" :key="item.id">
             <td>
               <div class="img-holder-square">
-                <img :src="item.image" :alt="item.name" width="96" height="40" />
+                <img
+                  :src="item.image"
+                  :alt="item.name"
+                  width="96"
+                  height="40"
+                />
               </div>
             </td>
             <td>
@@ -88,11 +101,11 @@ import paging from '../../mixins/paging';
 export default {
   mixins: [paging],
   components: {
-    Pagination,
+    Pagination
   },
   data() {
     return {
-      internalName: 'pages.zanoxProgram.list',
+      internalName: 'pages.zanoxProgram.list'
     };
   },
   methods: {
@@ -102,7 +115,7 @@ export default {
     togglePublish(row) {
       const self = this;
       self.loading = true;
-      zanoxService.togglePublish(row.id).then((data) => {
+      zanoxService.togglePublish(row.id).then(data => {
         if (data.status === 'ok') {
           row.published = data.data;
           self.loading = false;
@@ -110,7 +123,7 @@ export default {
             type: 'success',
             message: `Programa ${
               row.published ? 'publicado' : 'inativado'
-            } com sucesso`,
+            } com sucesso`
           });
         }
       });
@@ -120,11 +133,11 @@ export default {
       const request = {
         page: self.$data.pagination.currentPage - 1,
         pageItems: self.$data.pagination.perPage,
-        searchWord: self.searchQuery,
+        searchWord: self.searchQuery
       };
       self.loading = true;
       zanoxService.findAll(request).then(
-        (response) => {
+        response => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
           self.loading = false;
@@ -133,11 +146,11 @@ export default {
           self.loading = false;
         }
       );
-    },
+    }
   },
   created() {
     this.fetchData();
-  },
+  }
 };
 </script>
 <style scoped>

@@ -4,12 +4,23 @@
       <h2>Cupons Zanox</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Digite aqui o que deseja encontrar"
+          />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
+          <i
+            v-else
+            class="bt-clear-search icon-icon-times c-red"
+            @click="searchQuery = ''"
+          ></i>
         </div>
         <div class="filter" :class="{ active: showFilters }">
-          <a class="bt bt-square bg-white-2 c-light-blue" @click="showFilters = !showFilters">
+          <a
+            class="bt bt-square bg-white-2 c-light-blue"
+            @click="showFilters = !showFilters"
+          >
             <i class="icon-icon-filter"></i>
           </a>
         </div>
@@ -41,7 +52,12 @@
           <tr v-for="item in tableData" :key="item.id">
             <td>
               <div class="img-holder-square">
-                <img :src="item.programImage" :alt="item.programName" width="96" height="40" />
+                <img
+                  :src="item.programImage"
+                  :alt="item.programName"
+                  width="96"
+                  height="40"
+                />
               </div>
             </td>
             <td>
@@ -59,7 +75,7 @@
                 <span class="blue">{{ item.code }}</span>
               </div>
             </td>
-            <td>{{ item.active ? 'Ativo' : 'Inativo'}}</td>
+            <td>{{ item.active ? 'Ativo' : 'Inativo' }}</td>
           </tr>
         </tbody>
       </table>
@@ -88,12 +104,12 @@ export default {
   components: {
     Pagination,
     [Select.name]: Select,
-    [Option.name]: Option,
+    [Option.name]: Option
   },
   data() {
     return {
       internalName: 'pages.zanoxProgram.list',
-      programs: [],
+      programs: []
     };
   },
   methods: {
@@ -103,11 +119,11 @@ export default {
         page: self.$data.pagination.currentPage - 1,
         pageItems: self.$data.pagination.perPage,
         searchWord: self.searchQuery,
-        program: self.filters.program,
+        program: self.filters.program
       };
       self.loading = true;
       zanoxService.findAllIncentives(request).then(
-        (response) => {
+        response => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems, response.totalPages);
           self.loading = false;
@@ -121,8 +137,8 @@ export default {
       const self = this;
       self.programs = [];
       zanoxService.findAll({ page: 0, pageItems: 99999, searchWord: '' }).then(
-        (response) => {
-          _.each(response.data, function (el) {
+        response => {
+          _.each(response.data, function(el) {
             if (el.id != self.id) {
               self.programs.push({ code: el.id, label: el.name });
             }
@@ -132,17 +148,17 @@ export default {
           self.loading = false;
         }
       );
-    },
+    }
   },
   watch: {
     'filters.program'() {
       this.pagination.currentPage = 1;
       this.fetchData();
-    },
+    }
   },
   created() {
     this.loadPrograms();
-  },
+  }
 };
 </script>
 <style scoped>
