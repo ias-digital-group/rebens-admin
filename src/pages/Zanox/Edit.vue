@@ -49,9 +49,9 @@
               v-model="model.terms"
               placeholder="Termos"
             />
-            <label v-show="customErrors.get('terms')" class="ias-error">{{
-              customErrors.get('terms')
-            }}</label>
+            <label v-show="customErrors.get('terms')" class="ias-error">
+              {{ customErrors.get('terms') }}
+            </label>
           </div>
 
           <div class="ias-row">
@@ -81,7 +81,7 @@
     <success-modal
       :boxMessage="`CADASTRO SALVO <br />COM SUCESSO!`"
       :show="showSuccessModal"
-      link="/zanox"
+      link="/zanox/programs"
     ></success-modal>
   </div>
 </template>
