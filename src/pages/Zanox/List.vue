@@ -26,6 +26,8 @@
             <th>Programa</th>
             <th>Inicio</th>
             <th>Status / Rank</th>
+            <th>Integração / Atualização</th>
+            <th>Usuário / Atualização</th>
             <th style="width:64px;">Ações</th>
           </tr>
         </thead>
@@ -33,16 +35,14 @@
           <tr v-for="item in tableData" :key="item.id">
             <td>
               <div class="img-holder-square">
-                <img
-                  :src="item.image"
-                  :alt="item.name"
-                  width="96"
-                  height="40"
-                />
+                <img :src="item.logo" :alt="item.name" width="96" height="40" />
               </div>
             </td>
             <td>
-              <span>{{ item.name }}</span>
+              <div class="two-lines">
+                <span>{{ item.name }}</span>
+                <span class="blue">{{ item.platform }}</span>
+              </div>
             </td>
             <td>
               <span>{{ item.startDate }}</span>
@@ -50,7 +50,19 @@
             <td>
               <div class="two-lines">
                 <span>{{ item.status }}</span>
-                <span class="blue">{{ item.adRank }}</span>
+                <span class="blue">{{ item.rank }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.created }}</span>
+                <span class="blue">{{ item.lastIntegrationDate }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.modifiedBy }}</span>
+                <span class="blue">{{ item.modified }}</span>
               </div>
             </td>
             <td>

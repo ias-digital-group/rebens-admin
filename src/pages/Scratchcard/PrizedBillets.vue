@@ -1,7 +1,7 @@
 <template>
   <div class="list-box">
     <div class="page-header">
-      <h2>Campanhas</h2>
+      <h2>Raspadinhas</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
           <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
@@ -13,9 +13,6 @@
             <i class="icon-icon-filter"></i>
           </a>
         </div>
-        <base-link to="/scratchcard/campaigns/new" class="bt bt-square bg-white-2 c-light-blue">
-          <i class="icon-icon-plus"></i>
-        </base-link>
       </div>
       <div class="filters" v-show="showFilters">
         <v-select
@@ -28,12 +25,12 @@
           <span slot="no-options">Nenhum clube encontrado</span>
         </v-select>
         <v-select
-          :options="statuses"
+          :options="campaigns"
           :reduce="op => op.code"
           v-model="filters.status"
-          placeholder="Filtre pelo Status"
+          placeholder="Filtre pela Campanha"
         >
-          <span slot="no-options">Nenhum status encontrado</span>
+          <span slot="no-options">Nenhuma campanha encontrada</span>
         </v-select>
       </div>
     </div>
@@ -42,52 +39,32 @@
         <thead>
           <tr>
             <th>Campanha / Clube</th>
-            <th>Quantidade / Modelo</th>
-            <th>Usuário / Criação</th>
-            <th>Início / Fim</th>
-            <th>Status</th>
-            <th style="width:144px;">Ações</th>
+            <th>Cliente / Geração</th>
+            <th>Código / Validação</th>
+            <th>Prêmio</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="item in tableData" :key="item.id">
             <td>
               <div class="two-lines">
-                <span>{{ item.name }}</span>
+                <span>{{ item.campaignName }}</span>
                 <span class="blue">{{ item.operationName }}</span>
               </div>
             </td>
             <td>
               <div class="two-lines">
-                <span>{{ item.quantity }}</span>
-                <span class="blue">{{ item.type }}</span>
+                <span>{{ item.customerName }}</span>
+                <span class="blue">{{ item.date }}</span>
               </div>
             </td>
             <td>
               <div class="two-lines">
-                <span>{{ item.createdBy }}</span>
-                <span class="blue">{{ item.created }}</span>
+                <span>{{ item.validationCode }}</span>
+                <span class="blue">{{ item.validationDate }}</span>
               </div>
             </td>
-            <td>
-              <div class="two-lines">
-                <span>{{ item.start }}</span>
-                <span class="blue">{{ item.end }}</span>
-              </div>
-            </td>
-            <td>{{item.statusName}}</td>
-            <td>
-              <div class="actions">
-                <button
-                  @click="handleEdit(item)"
-                  type="button"
-                  title="Editar"
-                  class="bt c-light-blue"
-                >
-                  <i class="icon-icon-edit"></i>
-                </button>
-              </div>
-            </td>
+            <td>{{item.Prize}}</td>
           </tr>
         </tbody>
       </table>
@@ -109,6 +86,7 @@ import { Select, Option } from 'element-ui';
 import { Pagination } from 'src/components';
 import operationService from '../../services/Operation/operationService';
 import scratchcardService from '../../services/Scratchcard/scratchcardService';
+import scratchcardDrawService from '../../services/Scratchcard/scratchcardDrawService';
 import paging from '../../mixins/paging';
 import _ from 'lodash';
 
@@ -121,34 +99,25 @@ export default {
   },
   data() {
     return {
-      internalName: 'campaigns',
+      internalName: 'billets',
       sortField: 'name',
       operations: [],
       showFilters: false,
-      statuses: [
-        { code: '1', label: 'Rascunho' },
-        { code: '2', label: 'Gerado' },
-        { code: '3', label: 'Ativo' },
-        { code: '4', label: 'Inativo' },
-        { code: '5', label: 'Processando' },
-      ],
+      campaigns: [],
     };
   },
   methods: {
-    handleEdit(index, row) {
-      this.$router.push(`/scratchcard/campaigns/${row.id}/edit/`);
-    },
     fetchData() {
-        const self = this;
+      const self = this;
       const request = {
         page: self.$data.pagination.currentPage - 1,
         pageItems: self.$data.pagination.perPage,
         searchWord: self.searchQuery,
-        status: self.filters.status,
         idOperation: self.filters.operation,
+        idScratchcard: self.filters.scratchcard,
       };
       this.$data.loading = true;
-      scratchcardService.list(request).then(
+      scratchcardDrawService.list(request).then(
         (response) => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems);
@@ -158,9 +127,8 @@ export default {
           self.$data.loading = false;
         }
       );
-
-      if(self.operations.length <= 0 )
-        self.loadOperations();
+      if (self.operations.length <= 0) self.loadOperations();
+      if (self.campaigns.length <= 0) self.loadCampaigns();
     },
     loadOperations() {
       const self = this;
@@ -175,14 +143,35 @@ export default {
         });
       }
     },
+    loadCampaigns() {
+      const self = this;
+      if (!self.campaigns || self.campaigns.length === 0) {
+        self.campaigns = [];
+        const request = {
+          page: 0,
+          pageItems: 999,
+          searchWord: '',
+          status: null,
+          idOperation: self.filters.operation,
+        };
+        scratchcardService.findAll().then((response) => {
+          _.each(response.data, function (el) {
+            if (el.id != self.id) {
+              self.campaigns.push({ code: el.id, label: el.name });
+            }
+          });
+        });
+      }
+    },
   },
   watch: {
-    'filters.status'() {
+    'filters.campaign'() {
       this.pagination.currentPage = 1;
       this.fetchData();
     },
     'filters.operation'() {
       this.pagination.currentPage = 1;
+      this.campaigns = [];
       this.fetchData();
     },
   },

@@ -1633,8 +1633,8 @@ let promoterPages = {
 };
 
 let scratchcardPages = {
-  path: '/scratchcard',
-  component: DashboardLayout,
+  path: '/scratchcard/campaigns',
+  component: MainLayout,
   meta: {
     requiresAuth: true,
     roles: ['publisherRebens', 'administratorRebens', 'master'],

@@ -24,14 +24,10 @@
         <div class="user-menu">
           <ul>
             <li>
-              <router-link :to="`/users/${userId}/edit/`"
-                >Editar Meu perfil</router-link
-              >
+              <router-link :to="`/users/${userId}/edit/`">Editar Meu perfil</router-link>
             </li>
             <li>
-              <router-link to="/account/changePassword"
-                >Alterar Senha</router-link
-              >
+              <router-link to="/account/changePassword">Alterar Senha</router-link>
             </li>
             <li>
               <a href="javascript:void(0)" @click="signout">Sair</a>
@@ -43,22 +39,19 @@
     <div class="main-content">
       <div class="side-menu">
         <ul>
-          <li
-            v-for="(item, idx) in filteredMenu"
-            :key="idx"
-            :class="{ active: item.active }"
-          >
+          <li v-for="(item, idx) in filteredMenu" :key="idx" :class="{ active: item.active }">
             <template v-if="item.subitens.length > 0">
               <a
                 href="javascript:void(0)"
                 @click.prevent="item.active = !item.active"
                 class="parent"
-                >{{ item.name }}</a
-              >
+              >{{ item.name }}</a>
               <ul class="sub-item">
                 <li v-for="(subitem, idx2) in item.subitens" :key="idx2">
                   <router-link :to="subitem.path">
-                    {{ subitem.name }}
+                    {{
+                    subitem.name
+                    }}
                   </router-link>
                 </li>
               </ul>
@@ -92,7 +85,7 @@ export default {
           active: false,
           roles: 'promoter',
           needModule: '',
-          subitens: []
+          subitens: [],
         },
         {
           name: 'Dashboard',
@@ -101,7 +94,7 @@ export default {
           roles:
             'master,administratorRebens,publisherRebens,publisher,administrator',
           needModule: '',
-          subitens: []
+          subitens: [],
         },
         {
           name: 'Usuários',
@@ -110,7 +103,7 @@ export default {
           roles:
             'master,administratorRebens,publisherRebens,partnerAdministrator,administrator',
           needModule: '',
-          subitens: []
+          subitens: [],
         },
         {
           name: 'Banners',
@@ -119,7 +112,7 @@ export default {
           roles:
             'master,administrator,administratorRebens,publisherRebens,publisher',
           needModule: '',
-          subitens: []
+          subitens: [],
         },
         {
           name: 'Categorias',
@@ -127,7 +120,7 @@ export default {
           active: false,
           roles: 'master,administratorRebens,publisherRebens',
           needModule: '',
-          subitens: []
+          subitens: [],
         },
         {
           name: 'Benefícios',
@@ -136,7 +129,7 @@ export default {
           roles:
             'master,administratorRebens,publisherRebens,publisher,administrator',
           needModule: '',
-          subitens: []
+          subitens: [],
         },
         {
           name: 'Parceiros',
@@ -144,7 +137,7 @@ export default {
           active: false,
           roles: 'master,administratorRebens,publisherRebens',
           needModule: '',
-          subitens: []
+          subitens: [],
         },
         {
           name: 'Contatos',
@@ -152,7 +145,7 @@ export default {
           active: false,
           roles: 'master,administratorRebens,publisherRebens',
           needModule: '',
-          subitens: []
+          subitens: [],
         },
         {
           name: 'Empresas',
@@ -160,7 +153,7 @@ export default {
           active: false,
           roles: 'master,administratorRebens,publisherRebens',
           needModule: '',
-          subitens: []
+          subitens: [],
         },
         {
           name: 'Clientes',
@@ -168,7 +161,7 @@ export default {
           active: false,
           roles: 'partnerAdministrator,partnerApprover',
           needModule: '',
-          subitens: []
+          subitens: [],
         },
         {
           name: 'Páginas',
@@ -176,7 +169,7 @@ export default {
           active: false,
           roles: 'publisher',
           needModule: '',
-          subitens: []
+          subitens: [],
         },
         {
           name: 'Operações',
@@ -189,22 +182,22 @@ export default {
               name: 'Clubes',
               path: '/operations',
               active: false,
-              roles: 'master,administratorRebens,publisherRebens'
+              roles: 'master,administratorRebens,publisherRebens',
             },
             {
               name: 'Páginas',
               path: '/pages',
               active: false,
-              roles: 'master,administratorRebens,publisherRebens,administrator'
+              roles: 'master,administratorRebens,publisherRebens,administrator',
             },
             {
               name: 'Parceiros',
               path: '/operationPartner',
               needModule: 'closed-partner',
               active: false,
-              roles: 'master,administrator,administratorRebens,administrator'
-            }
-          ]
+              roles: 'master,administrator,administratorRebens,administrator',
+            },
+          ],
         },
         {
           name: 'Clientes',
@@ -217,30 +210,30 @@ export default {
               name: 'Clientes',
               path: '/customers',
               active: false,
-              roles: 'master,administrator,administratorRebens,publisherRebens'
+              roles: 'master,administrator,administratorRebens,publisherRebens',
             },
             {
               name: 'Assinaturas',
               path: '/subscriptions',
               active: false,
               needModule: 'signature',
-              roles: 'master,administrator,administratorRebens'
+              roles: 'master,administrator,administratorRebens',
             },
             {
               name: 'Cupom',
               path: '/benefits/validation',
               active: false,
               needModule: 'couponChecker',
-              roles: 'master,administrator,administratorRebens,couponChecker'
+              roles: 'master,administrator,administratorRebens,couponChecker',
             },
             {
               name: 'Ingresso',
               path: '/orders',
               active: false,
               needModule: 'ticketChecker',
-              roles: 'master,administrator,administratorRebens'
-            }
-          ]
+              roles: 'master,administrator,administratorRebens',
+            },
+          ],
         },
         {
           name: 'Promotores',
@@ -248,7 +241,7 @@ export default {
           active: false,
           roles: 'master,administrator,administratorRebens',
           needModule: 'promoter',
-          subitens: []
+          subitens: [],
         },
         {
           name: 'Cupons',
@@ -261,15 +254,49 @@ export default {
               name: 'Cupons Zanox',
               path: '/zanox/incentives',
               active: false,
-              roles: 'master,administratorRebens'
+              roles: 'master,administratorRebens',
             },
             {
               name: 'Parceiros Zanox',
               path: '/zanox/programs',
               active: false,
-              roles: 'master,administratorRebens'
-            }
-          ]
+              roles: 'master,administratorRebens',
+            },
+          ],
+        },
+        {
+          name: 'Premiação',
+          path: '#',
+          active: false,
+          roles: 'master,administratorRebens,publisherRebens',
+          needModule: '',
+          subitens: [
+            {
+              name: 'Campanhas',
+              path: '/scratchcard/campaigns',
+              active: false,
+              roles: 'master,administratorRebens,publisherRebens',
+            },
+            {
+              name: 'Raspadinhas',
+              path: '/zanox/programs',
+              active: false,
+              roles: 'master,administratorRebens,publisherRebens',
+            },
+            {
+              name: 'Premiadas',
+              path: '/zanox/programs',
+              active: false,
+              roles: 'master,administratorRebens,publisherRebens',
+            },
+
+            {
+              name: 'Prêmios',
+              path: '/zanox/programs',
+              active: false,
+              roles: 'master,administratorRebens,publisherRebens',
+            },
+          ],
         },
         {
           name: 'Validação de Cupom',
@@ -277,7 +304,7 @@ export default {
           active: false,
           roles: 'couponChecker',
           needModule: 'couponChecker',
-          subitens: []
+          subitens: [],
         },
         {
           name: 'Validação de Ingresso',
@@ -285,9 +312,9 @@ export default {
           active: false,
           roles: 'ticketChecker',
           needModule: 'ticketChecker',
-          subitens: []
-        }
-      ]
+          subitens: [],
+        },
+      ],
     };
   },
   computed: {
@@ -316,7 +343,7 @@ export default {
         this.$store.getters.currentUser.role === 'administratorRebens' ||
         this.$store.getters.currentUser.role === 'publisherRebens'
       );
-    }
+    },
   },
   methods: {
     signout() {
@@ -325,10 +352,10 @@ export default {
     },
     clearMenu() {
       const self = this;
-      self.menuItens.forEach(item => {
+      self.menuItens.forEach((item) => {
         item.active = false;
         if (item.subitens) {
-          item.subitens.forEach(sub => {
+          item.subitens.forEach((sub) => {
             sub.active = false;
           });
         }
@@ -337,7 +364,7 @@ export default {
     selectMenu() {
       const self = this;
       self.actualPath = self.$router.currentRoute.path;
-      self.menuItens.forEach(item => {
+      self.menuItens.forEach((item) => {
         if (
           item.path === self.actualPath ||
           (self.actualPath.startsWith(item.path) &&
@@ -348,7 +375,7 @@ export default {
           item.active = true;
         } else {
           if (item.subitens) {
-            item.subitens.forEach(sub => {
+            item.subitens.forEach((sub) => {
               if (
                 sub.path === self.actualPath ||
                 (self.actualPath.startsWith(sub.path) &&
@@ -366,7 +393,7 @@ export default {
     filterMenu() {
       const self = this;
       self.filteredMenu = [];
-      self.menuItens.forEach(item => {
+      self.menuItens.forEach((item) => {
         if (item.roles === '') {
           self.filteredMenu.push(item);
         } else if (
@@ -378,7 +405,7 @@ export default {
             self.isRebens
           ) {
             if (item.subitens && item.subitens.length > 0) {
-              item.subitens = item.subitens.filter(sub => {
+              item.subitens = item.subitens.filter((sub) => {
                 if (sub.roles === '') {
                   return true;
                 } else if (
@@ -412,7 +439,7 @@ export default {
           }
         }
       });
-    }
+    },
   },
   mounted() {
     this.selectMenu();
@@ -425,6 +452,6 @@ export default {
   },
   created() {
     this.filterMenu();
-  }
+  },
 };
 </script>
