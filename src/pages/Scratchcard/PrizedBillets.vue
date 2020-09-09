@@ -4,12 +4,23 @@
       <h2>Raspadinhas</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Digite aqui o que deseja encontrar"
+          />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
+          <i
+            v-else
+            class="bt-clear-search icon-icon-times c-red"
+            @click="searchQuery = ''"
+          ></i>
         </div>
         <div class="filter" :class="{ active: showFilters }">
-          <a class="bt bt-square bg-white-2 c-light-blue" @click="showFilters = !showFilters">
+          <a
+            class="bt bt-square bg-white-2 c-light-blue"
+            @click="showFilters = !showFilters"
+          >
             <i class="icon-icon-filter"></i>
           </a>
         </div>
@@ -64,7 +75,7 @@
                 <span class="blue">{{ item.validationDate }}</span>
               </div>
             </td>
-            <td>{{item.Prize}}</td>
+            <td>{{ item.Prize }}</td>
           </tr>
         </tbody>
       </table>
@@ -95,7 +106,7 @@ export default {
   components: {
     Pagination,
     [Select.name]: Select,
-    [Option.name]: Option,
+    [Option.name]: Option
   },
   data() {
     return {
@@ -103,7 +114,7 @@ export default {
       sortField: 'name',
       operations: [],
       showFilters: false,
-      campaigns: [],
+      campaigns: []
     };
   },
   methods: {
@@ -114,11 +125,11 @@ export default {
         pageItems: self.$data.pagination.perPage,
         searchWord: self.searchQuery,
         idOperation: self.filters.operation,
-        idScratchcard: self.filters.scratchcard,
+        idScratchcard: self.filters.scratchcard
       };
       this.$data.loading = true;
       scratchcardDrawService.list(request).then(
-        (response) => {
+        response => {
           self.$data.tableData = response.data;
           self.savePageSettings(self, response.totalItems);
           self.$data.loading = false;
@@ -134,8 +145,8 @@ export default {
       const self = this;
       if (!self.operations || self.operations.length === 0) {
         self.operations = [];
-        operationService.findAll().then((response) => {
-          _.each(response.data, function (el) {
+        operationService.findAll().then(response => {
+          _.each(response.data, function(el) {
             if (el.id != self.id) {
               self.operations.push({ code: el.id, label: el.title });
             }
@@ -152,17 +163,17 @@ export default {
           pageItems: 999,
           searchWord: '',
           status: null,
-          idOperation: self.filters.operation,
+          idOperation: self.filters.operation
         };
-        scratchcardService.findAll().then((response) => {
-          _.each(response.data, function (el) {
+        scratchcardService.findAll(request).then(response => {
+          _.each(response.data, function(el) {
             if (el.id != self.id) {
               self.campaigns.push({ code: el.id, label: el.name });
             }
           });
         });
       }
-    },
+    }
   },
   watch: {
     'filters.campaign'() {
@@ -173,8 +184,8 @@ export default {
       this.pagination.currentPage = 1;
       this.campaigns = [];
       this.fetchData();
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

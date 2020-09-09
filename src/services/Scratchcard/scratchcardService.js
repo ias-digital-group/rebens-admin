@@ -19,7 +19,9 @@ export default {
         config.apiEndpoints.scratchcardUri.concat(
           `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${request.searchWord}&sort=${request.sort}&status=${request.status}` +
             `${
-              request.idOperation !== 0
+              request.idOperation != null &&
+              request.idOperation != undefined &&
+              request.idOperation != 0
                 ? '&idOperation=' + request.idOperation
                 : ''
             }`

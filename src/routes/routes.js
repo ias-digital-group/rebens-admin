@@ -100,6 +100,10 @@ const PromoterReport = () => import('src/pages/Promoter/Report.vue');
 
 const ScratchcardList = () => import('src/pages/Scratchcard/List.vue');
 const ScratchcardEdit = () => import('src/pages/Scratchcard/Edit.vue');
+const ScratchcardPrizeList = () => import('src/pages/Scratchcard/PrizeList.vue');
+const ScratchcardPrizeEdit = () => import('src/pages/Scratchcard/PrizeEdit.vue');
+const ScratchcardBillets = () => import('src/pages/Scratchcard/Billets.vue');
+const ScratchcardPrizedBillets = () => import('src/pages/Scratchcard/PrizedBillets.vue');
 
 const BenefitValidation = () => import('src/pages/Benefits/Validation.vue');
 const OrderValidation = () => import('src/pages/Order/Validation.vue');
@@ -1675,6 +1679,95 @@ let scratchcardPages = {
   ]
 };
 
+let scratchcardPrizePages = {
+  path: '/scratchcard/prizes',
+  component: MainLayout,
+  meta: {
+    requiresAuth: true,
+    roles: ['publisherRebens', 'administratorRebens', 'master'],
+    title: i18n.t('pages.scratchcard.title')
+  },
+  children: [
+    {
+      path: '',
+      name: 'scratchcardPrizes',
+      component: ScratchcardPrizeList,
+      meta: {
+        requiresAuth: true,
+        roles: ['publisherRebens', 'administratorRebens', 'master'],
+        title: i18n.t('pages.scratchcard.title')
+      }
+    },
+    {
+      path: 'new',
+      name: `new_scratchcardPrize`,
+      component: ScratchcardPrizeEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['publisherRebens', 'administratorRebens', 'master'],
+        title: i18n.t('pages.scratchcard.title')
+      }
+    },
+    {
+      path: ':id/edit',
+      name: 'edit_scratchcardPrize',
+      props: true,
+      component: ScratchcardPrizeEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['publisherRebens', 'administratorRebens', 'master'],
+        title: i18n.t('pages.scratchcard.title')
+      }
+    }
+  ]
+};
+
+let scratchcardBilletsPages = {
+  path: '/scratchcard/billets',
+  component: MainLayout,
+  meta: {
+    requiresAuth: true,
+    roles: ['publisherRebens', 'administratorRebens', 'master'],
+    title: i18n.t('pages.scratchcard.title')
+  },
+  children: [
+    {
+      path: '',
+      name: 'scratchcardBillets',
+      component: ScratchcardBillets,
+      meta: {
+        requiresAuth: true,
+        roles: ['publisherRebens', 'administratorRebens', 'master'],
+        title: i18n.t('pages.scratchcard.title')
+      }
+    }
+  ]
+};
+
+let scratchcardPrizedilletsPages = {
+  path: '/scratchcard/prizedBillets',
+  component: MainLayout,
+  meta: {
+    requiresAuth: true,
+    roles: ['publisherRebens', 'administratorRebens', 'master'],
+    title: i18n.t('pages.scratchcard.title')
+  },
+  children: [
+    {
+      path: '',
+      name: 'scratchcardPrizedBillets',
+      component: ScratchcardPrizedBillets,
+      meta: {
+        requiresAuth: true,
+        roles: ['publisherRebens', 'administratorRebens', 'master'],
+        title: i18n.t('pages.scratchcard.title')
+      }
+    }
+  ]
+};
+
+
+
 let subscriptionPages = {
   path: '/subscriptions',
   component: MainLayout,
@@ -1862,7 +1955,10 @@ const routes = [
   promoterPages,
   scratchcardPages,
   orderPages,
-  subscriptionPages
+  subscriptionPages,
+  scratchcardPrizePages,
+  scratchcardBilletsPages,
+  scratchcardPrizedilletsPages
 ];
 
 export default routes;

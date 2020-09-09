@@ -306,32 +306,30 @@ export default {
     },
     validatePrize() {
       const self = this;
-      self.customErrors = [];
+      self.customErrors = new Map();
       if (self.model.name == '') {
-        self.customErrors.push('name');
+        self.customErrors.set('name', 'Campo obrigatório');
       } else if (self.model.name.length > 200) {
-        self.customErrors.push('nameMax');
+        self.customErrors.set('name', 'Este campo aceita no máximo 200 caracteres');
       }
       if (self.model.image == '' && self.image == null) {
-        self.customErrors.push('image');
-      } else if (self.model.image.length > 500) {
-        self.customErrors.push('imageMax');
+        self.customErrors.set('image', 'Campo obrigatório');
       }
       if (self.model.title == '') {
-        self.customErrors.push('title');
+        self.customErrors.set('title', 'Campo obrigatório');
       } else if (self.model.title.length > 200) {
-        self.customErrors.push('titleMax');
+        self.customErrors.set('title', 'Este campo aceita no máximo 200 caracteres');
       }
       if (self.model.quantity <= 0) {
-        self.customErrors.push('qty');
+        self.customErrors.set('quantity', 'Campo obrigatório');
       }
       if (self.model.description == '') {
-        self.customErrors.push('desc');
+        self.customErrors.set('description', 'Campo obrigatório');
       } else if (self.model.description.length > 2000) {
-        self.customErrors.push('descMax');
+        self.customErrors.set('description', 'Este campo aceita no máximo 2000 caracteres');
       }
 
-      if (self.customErrors.length == 0) {
+      if (self.customErrors.size === 0) {
         self.submitLoading = true;
         if (self.image) {
           scratchcardService.uploadImage(self.image).then(

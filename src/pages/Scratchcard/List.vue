@@ -4,16 +4,30 @@
       <h2>Campanhas</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
-          <input type="text" v-model="searchQuery" placeholder="Digite aqui o que deseja encontrar" />
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Digite aqui o que deseja encontrar"
+          />
           <i v-if="searchQuery === ''" class="icon-icon-search"></i>
-          <i v-else class="bt-clear-search icon-icon-times c-red" @click="searchQuery = ''"></i>
+          <i
+            v-else
+            class="bt-clear-search icon-icon-times c-red"
+            @click="searchQuery = ''"
+          ></i>
         </div>
         <div class="filter" :class="{ active: showFilters }">
-          <a class="bt bt-square bg-white-2 c-light-blue" @click="showFilters = !showFilters">
+          <a
+            class="bt bt-square bg-white-2 c-light-blue"
+            @click="showFilters = !showFilters"
+          >
             <i class="icon-icon-filter"></i>
           </a>
         </div>
-        <base-link to="/scratchcard/campaigns/new" class="bt bt-square bg-white-2 c-light-blue">
+        <base-link
+          to="/scratchcard/campaigns/new"
+          class="bt bt-square bg-white-2 c-light-blue"
+        >
           <i class="icon-icon-plus"></i>
         </base-link>
       </div>
@@ -75,7 +89,7 @@
                 <span class="blue">{{ item.end }}</span>
               </div>
             </td>
-            <td>{{item.statusName}}</td>
+            <td>{{ item.statusName }}</td>
             <td>
               <div class="actions">
                 <button
@@ -117,7 +131,7 @@ export default {
   components: {
     Pagination,
     [Select.name]: Select,
-    [Option.name]: Option,
+    [Option.name]: Option
   },
   data() {
     return {
@@ -130,28 +144,28 @@ export default {
         { code: '2', label: 'Gerado' },
         { code: '3', label: 'Ativo' },
         { code: '4', label: 'Inativo' },
-        { code: '5', label: 'Processando' },
-      ],
+        { code: '5', label: 'Processando' }
+      ]
     };
   },
   methods: {
-    handleEdit(index, row) {
+    handleEdit(row) {
       this.$router.push(`/scratchcard/campaigns/${row.id}/edit/`);
     },
     fetchData() {
-        const self = this;
+      const self = this;
       const request = {
         page: self.$data.pagination.currentPage - 1,
         pageItems: self.$data.pagination.perPage,
         searchWord: self.searchQuery,
         status: self.filters.status,
-        idOperation: self.filters.operation,
+        idOperation: self.filters.operation
       };
       this.$data.loading = true;
       scratchcardService.list(request).then(
-        (response) => {
+        response => {
           self.$data.tableData = response.data;
-          self.savePageSettings(self, response.totalItems);
+          self.savePageSettings(self, response.totalItems, response.totalPages);
           self.$data.loading = false;
         },
         () => {
@@ -159,22 +173,21 @@ export default {
         }
       );
 
-      if(self.operations.length <= 0 )
-        self.loadOperations();
+      if (self.operations.length <= 0) self.loadOperations();
     },
     loadOperations() {
       const self = this;
       if (!self.operations || self.operations.length === 0) {
         self.operations = [];
-        operationService.findAll().then((response) => {
-          _.each(response.data, function (el) {
+        operationService.findAll().then(response => {
+          _.each(response.data, function(el) {
             if (el.id != self.id) {
               self.operations.push({ code: el.id, label: el.title });
             }
           });
         });
       }
-    },
+    }
   },
   watch: {
     'filters.status'() {
@@ -184,8 +197,8 @@ export default {
     'filters.operation'() {
       this.pagination.currentPage = 1;
       this.fetchData();
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
