@@ -146,6 +146,20 @@ export default {
       );
     });
   },
+  toggleActive: id => {
+    return new Promise((resolve, reject) => {
+      HTTP.post(
+        config.apiEndpoints.scratchcardUri.concat(`${id}/ToggleActive`)
+      ).then(
+        response => {
+          resolve(response.data);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+  },
   billets: id => {
     return new Promise((resolve, reject) => {
       HTTP.get(config.apiEndpoints.scratchcardUri.concat(id + '/Billets')).then(

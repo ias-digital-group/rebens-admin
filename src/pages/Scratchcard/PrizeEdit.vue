@@ -30,9 +30,11 @@
               >
                 <span slot="no-options">Nenhuma Campanha encontrada</span>
               </v-select>
-              <label v-if="customErrors.get('idScratchcard')" class="ias-error">{{
-                customErrors.get('idScratchcard')
-              }}</label>
+              <label
+                v-if="customErrors.get('idScratchcard')"
+                class="ias-error"
+                >{{ customErrors.get('idScratchcard') }}</label
+              >
             </div>
           </div>
           <div class="ias-row">
@@ -71,7 +73,6 @@
             >
           </div>
 
-          
           <div class="ias-row">
             <custom-input
               :required="true"
@@ -93,7 +94,6 @@
                 <span v-if="viewAction === 'new'">Cadastrar</span>
                 <span v-else>Salvar</span>
               </button>
-              
             </div>
             <div class="div-spacer"></div>
           </div>
@@ -172,7 +172,10 @@ export default {
       if (self.model.name == '') {
         self.customErrors.set('name', 'Campo obrigatório');
       } else if (self.model.name.length > 200) {
-        self.customErrors.set('name', 'Este campo aceita no máximo 200 caracteres');
+        self.customErrors.set(
+          'name',
+          'Este campo aceita no máximo 200 caracteres'
+        );
       }
       if (self.imagePath == '' && self.image == null) {
         self.customErrors.set('image', 'Campo obrigatório');
@@ -180,7 +183,10 @@ export default {
       if (self.model.title == '') {
         self.customErrors.set('title', 'Campo obrigatório');
       } else if (self.model.title.length > 200) {
-        self.customErrors.set('title', 'Este campo aceita no máximo 200 caracteres');
+        self.customErrors.set(
+          'title',
+          'Este campo aceita no máximo 200 caracteres'
+        );
       }
       if (self.model.quantity <= 0) {
         self.customErrors.set('quantity', 'Campo obrigatório');
@@ -188,7 +194,10 @@ export default {
       if (self.model.description == '') {
         self.customErrors.set('description', 'Campo obrigatório');
       } else if (self.model.description.length > 2000) {
-        self.customErrors.set('description', 'Este campo aceita no máximo 2000 caracteres');
+        self.customErrors.set(
+          'description',
+          'Este campo aceita no máximo 2000 caracteres'
+        );
       }
 
       if (self.customErrors.size === 0) {
@@ -287,24 +296,26 @@ export default {
       }
 
       self.selectLoading = true;
-      scratchcardService.list({
-            page: 0,
-            pageItems: 999,
-            searchWord: '',
-            sort: 'name ASC',
-            status: '',
-            idOperation: null
-          }).then(
-        response => {
-          _.each(response.data, function(el) {
-            self.scratchcards.push({ code: el.id, label: el.name });
-          });
-          self.selectLoading = false;
-        },
-        () => {
-          self.selectLoading = false;
-        }
-      );
+      scratchcardService
+        .list({
+          page: 0,
+          pageItems: 999,
+          searchWord: '',
+          sort: 'name ASC',
+          status: '',
+          idOperation: null
+        })
+        .then(
+          response => {
+            _.each(response.data, function(el) {
+              self.scratchcards.push({ code: el.id, label: el.name });
+            });
+            self.selectLoading = false;
+          },
+          () => {
+            self.selectLoading = false;
+          }
+        );
     },
     onImageChange(file) {
       this.image = file;

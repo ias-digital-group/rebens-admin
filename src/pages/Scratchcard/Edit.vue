@@ -311,7 +311,10 @@ export default {
       if (self.model.name == '') {
         self.customErrors.set('name', 'Campo obrigatório');
       } else if (self.model.name.length > 200) {
-        self.customErrors.set('name', 'Este campo aceita no máximo 200 caracteres');
+        self.customErrors.set(
+          'name',
+          'Este campo aceita no máximo 200 caracteres'
+        );
       }
       if (self.model.quantity == '') {
         self.customErrors.set('quantity', 'Campo obrigatório');

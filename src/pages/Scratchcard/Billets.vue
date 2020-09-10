@@ -75,7 +75,7 @@
                 <span class="blue">{{ item.validationDate }}</span>
               </div>
             </td>
-            <td>{{ item.Prize }}</td>
+            <td>{{ item.prize }}</td>
           </tr>
         </tbody>
       </table>
@@ -131,7 +131,7 @@ export default {
       scratchcardDrawService.list(request).then(
         response => {
           self.$data.tableData = response.data;
-          self.savePageSettings(self, response.totalItems);
+          self.savePageSettings(self, response.totalItems, response.totalPages);
           self.$data.loading = false;
         },
         () => {

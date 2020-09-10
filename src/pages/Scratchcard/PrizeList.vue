@@ -168,7 +168,7 @@ export default {
         self.operations = [];
         operationService.findAll().then(response => {
           _.each(response.data, function(el) {
-              self.operations.push({ code: el.id, label: el.title });
+            self.operations.push({ code: el.id, label: el.title });
           });
         });
       }
@@ -177,18 +177,20 @@ export default {
       const self = this;
       if (!self.scratchcards || self.scratchcards.length === 0) {
         self.scratchcards = [];
-        scratchcardService.list({
+        scratchcardService
+          .list({
             page: 0,
             pageItems: 999,
             searchWord: '',
             sort: 'name ASC',
             status: '',
             idOperation: self.filters.operation
-          }).then(response => {
-          _.each(response.data, function(el) {
+          })
+          .then(response => {
+            _.each(response.data, function(el) {
               self.scratchcards.push({ code: el.id, label: el.name });
+            });
           });
-        });
       }
     }
   },

@@ -100,10 +100,13 @@ const PromoterReport = () => import('src/pages/Promoter/Report.vue');
 
 const ScratchcardList = () => import('src/pages/Scratchcard/List.vue');
 const ScratchcardEdit = () => import('src/pages/Scratchcard/Edit.vue');
-const ScratchcardPrizeList = () => import('src/pages/Scratchcard/PrizeList.vue');
-const ScratchcardPrizeEdit = () => import('src/pages/Scratchcard/PrizeEdit.vue');
+const ScratchcardPrizeList = () =>
+  import('src/pages/Scratchcard/PrizeList.vue');
+const ScratchcardPrizeEdit = () =>
+  import('src/pages/Scratchcard/PrizeEdit.vue');
 const ScratchcardBillets = () => import('src/pages/Scratchcard/Billets.vue');
-const ScratchcardPrizedBillets = () => import('src/pages/Scratchcard/PrizedBillets.vue');
+const ScratchcardPrizedBillets = () =>
+  import('src/pages/Scratchcard/PrizedBillets.vue');
 
 const BenefitValidation = () => import('src/pages/Benefits/Validation.vue');
 const OrderValidation = () => import('src/pages/Order/Validation.vue');
@@ -1765,8 +1768,6 @@ let scratchcardPrizedilletsPages = {
     }
   ]
 };
-
-
 
 let subscriptionPages = {
   path: '/subscriptions',

@@ -1,7 +1,7 @@
 <template>
   <div class="list-box">
     <div class="page-header">
-      <h2>Raspadinhas</h2>
+      <h2>Raspadinhas Premiadas</h2>
       <div class="box-actions">
         <div class="input-post-icon search">
           <input
@@ -51,6 +51,7 @@
           <tr>
             <th>Campanha / Clube</th>
             <th>Cliente / Geração</th>
+            <th>E-mail / CPF</th>
             <th>Código / Validação</th>
             <th>Prêmio</th>
           </tr>
@@ -67,6 +68,12 @@
               <div class="two-lines">
                 <span>{{ item.customerName }}</span>
                 <span class="blue">{{ item.date }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="two-lines">
+                <span>{{ item.customerEmail }}</span>
+                <span class="blue">{{ item.customerCpf }}</span>
               </div>
             </td>
             <td>
@@ -110,7 +117,7 @@ export default {
   },
   data() {
     return {
-      internalName: 'billets',
+      internalName: 'prizedBillets',
       sortField: 'name',
       operations: [],
       showFilters: false,
@@ -128,10 +135,10 @@ export default {
         idScratchcard: self.filters.scratchcard
       };
       this.$data.loading = true;
-      scratchcardDrawService.list(request).then(
+      scratchcardDrawService.listPrized(request).then(
         response => {
           self.$data.tableData = response.data;
-          self.savePageSettings(self, response.totalItems);
+          self.savePageSettings(self, response.totalItems, response.totalPages);
           self.$data.loading = false;
         },
         () => {

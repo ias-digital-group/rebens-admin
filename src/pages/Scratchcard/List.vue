@@ -93,12 +93,34 @@
             <td>
               <div class="actions">
                 <button
+                  @click="toggleActive(item)"
+                  v-show="item.showActive"
+                  type="button"
+                  :title="item.active ? 'Inativar' : 'Ativar'"
+                  class="bt"
+                  :class="{
+                    'c-green': item.active,
+                    'c-light-gray': !item.active
+                  }"
+                >
+                  <i class="icon-icon-check"></i>
+                </button>
+                <button
                   @click="handleEdit(item)"
                   type="button"
                   title="Editar"
                   class="bt c-light-blue"
                 >
                   <i class="icon-icon-edit"></i>
+                </button>
+                <button
+                  @click="handleDelete(item)"
+                  type="button"
+                  title="apagar"
+                  class="bt c-red"
+                  v-show="item.showDelete"
+                >
+                  <i class="icon-icon-delete"></i>
                 </button>
               </div>
             </td>
@@ -116,11 +138,18 @@
         @update-per-page="changePerPage"
       ></pagination>
     </div>
+    <delete-modal
+      @confirmDelete="confirmDelete"
+      :itemName="modal.itemName"
+      :show="modal.visible"
+      :showSuccess="modal.showSuccess"
+      @closeDeleteSuccess="closeDeleteSuccess"
+    ></delete-modal>
   </div>
 </template>
 <script>
 import { Select, Option } from 'element-ui';
-import { Pagination } from 'src/components';
+import { Pagination, DeleteModal } from 'src/components';
 import operationService from '../../services/Operation/operationService';
 import scratchcardService from '../../services/Scratchcard/scratchcardService';
 import paging from '../../mixins/paging';
@@ -129,6 +158,7 @@ import _ from 'lodash';
 export default {
   mixins: [paging],
   components: {
+    DeleteModal,
     Pagination,
     [Select.name]: Select,
     [Option.name]: Option
@@ -144,13 +174,36 @@ export default {
         { code: '2', label: 'Gerado' },
         { code: '3', label: 'Ativo' },
         { code: '4', label: 'Inativo' },
-        { code: '5', label: 'Processando' }
+        { code: '5', label: 'Processando' },
+        { code: '6', label: 'Pronto para publicar' }
       ]
     };
   },
   methods: {
+    handleDelete(item) {
+      this.modal.model = item;
+      this.modal.itemName = item.name;
+      this.modal.visible = true;
+    },
     handleEdit(row) {
       this.$router.push(`/scratchcard/campaigns/${row.id}/edit/`);
+    },
+    toggleActive(row) {
+      const self = this;
+      self.loading = true;
+      scratchcardService.toggleActive(row.id).then(data => {
+        if (data.status === 'ok') {
+          row.active = data.data;
+          row.statusName = data.message;
+          self.loading = false;
+          self.$notify({
+            type: 'success',
+            message: `Campanha ${
+              row.active ? 'ativada' : 'inativada'
+            } com sucesso`
+          });
+        }
+      });
     },
     fetchData() {
       const self = this;
@@ -187,6 +240,38 @@ export default {
           });
         });
       }
+    },
+    confirmDelete(val) {
+      const self = this;
+      if (val) {
+        self.modal.formLoading = true;
+        scratchcardService.delete(self.modal.model.id).then(
+          () => {
+            self.resetModal();
+            self.fetchData();
+            self.showSuccess(true);
+          },
+          err => {
+            if (err.response.status === 400 && err.response.data.message) {
+              self.$notify({
+                type: 'warning',
+                message: err.response.data.message
+              });
+            } else {
+              self.$notify({
+                type: 'danger',
+                message: err.message
+              });
+            }
+            self.modal.formLoading = false;
+          }
+        );
+      } else {
+        self.resetModal();
+      }
+    },
+    closeDeleteSuccess() {
+      this.showSuccess(false);
     }
   },
   watch: {

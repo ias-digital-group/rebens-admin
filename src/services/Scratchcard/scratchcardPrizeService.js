@@ -14,20 +14,25 @@ export default {
             idScratchcard: null,
             idOperation: null
           };
-      HTTP.get(config.apiEndpoints.scratchcardPrizeUri.concat(`?page=${request.page}&pageItems=${
-        request.pageItems
-      }&searchWord=${
-        request.searchWord
-      }&idScratchcard=${
-        request.idScratchcard != null && 
-        request.idScratchcard != undefined && 
-        request.idScratchcard != 0 ? '&idScratchcard=' + request.idScratchcard : ''
-      }${
-        request.idOperation != null && request.idOperation != undefined && 
-        request.idOperation != 0
-          ? '&idOperation=' + request.idOperation
-          : ''
-      }`)).then(
+      HTTP.get(
+        config.apiEndpoints.scratchcardPrizeUri.concat(
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
+            request.searchWord
+          }&idScratchcard=${
+            request.idScratchcard != null &&
+            request.idScratchcard != undefined &&
+            request.idScratchcard != 0
+              ? '&idScratchcard=' + request.idScratchcard
+              : ''
+          }${
+            request.idOperation != null &&
+            request.idOperation != undefined &&
+            request.idOperation != 0
+              ? '&idOperation=' + request.idOperation
+              : ''
+          }`
+        )
+      ).then(
         response => {
           resolve(response.data);
         },
