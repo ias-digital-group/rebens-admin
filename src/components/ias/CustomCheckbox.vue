@@ -1,5 +1,5 @@
 <template>
-  <div class="ias-check">
+  <div class="ias-check" :class="{ iasDisabled: disabled }">
     <label :for="cbId">
       <input :id="cbId" type="checkbox" :disabled="disabled" v-model="model" />
       <span> </span>

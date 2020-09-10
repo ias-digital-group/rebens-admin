@@ -35,6 +35,7 @@
           v-bind="$attrs"
           v-on="listeners"
           class="ias-input"
+          :disabled="disabled"
         />
       </template>
     </slot>

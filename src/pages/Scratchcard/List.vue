@@ -122,6 +122,15 @@
                 >
                   <i class="icon-icon-delete"></i>
                 </button>
+                <button
+                  @click="handleView(item)"
+                  type="button"
+                  title="Visualizar"
+                  class="bt c-orange"
+                  v-show="!item.showDelete"
+                >
+                  <i class="icon-icon-view"></i>
+                </button>
               </div>
             </td>
           </tr>
@@ -184,6 +193,9 @@ export default {
       this.modal.model = item;
       this.modal.itemName = item.name;
       this.modal.visible = true;
+    },
+    handleView(row) {
+      this.$router.push(`/scratchcard/campaigns/${row.id}/view/`);
     },
     handleEdit(row) {
       this.$router.push(`/scratchcard/campaigns/${row.id}/edit/`);

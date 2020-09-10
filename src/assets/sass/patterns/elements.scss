@@ -130,6 +130,12 @@
       }
     }
   }
+  &.iasDisabled{
+    cursor: not-allowed;
+    label{
+      cursor: not-allowed;
+    }
+  }
 }
 .ias-check label input[type='checkbox']:checked + span::after {
   opacity: 1;
@@ -323,6 +329,9 @@
       background-color: $red-20;
     }
   }
+}
+.vs--disabled .vs__actions{
+  display: none;
 }
 .filters {
   .v-select {
@@ -694,6 +703,23 @@
         }
       }
     }
+  }
+}
+.ias-row-editor{
+  .ias-label{
+    line-height: 30px;
+    font-size: 12px;
+    color:#41b0ce;
+    position: absolute;
+    top:0;
+    left:24px;
+    font-weight: 500;
+  }
+  .box{
+    padding:24px;
+    background-color: #f5f6fa;
+    height: 250px;
+    border-radius: 5px;
   }
 }
 

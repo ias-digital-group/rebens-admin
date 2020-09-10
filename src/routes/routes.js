@@ -100,6 +100,7 @@ const PromoterReport = () => import('src/pages/Promoter/Report.vue');
 
 const ScratchcardList = () => import('src/pages/Scratchcard/List.vue');
 const ScratchcardEdit = () => import('src/pages/Scratchcard/Edit.vue');
+const ScratchcardView = () => import('src/pages/Scratchcard/View.vue');
 const ScratchcardPrizeList = () =>
   import('src/pages/Scratchcard/PrizeList.vue');
 const ScratchcardPrizeEdit = () =>
@@ -1673,6 +1674,17 @@ let scratchcardPages = {
       name: 'edit_scratchcard',
       props: true,
       component: ScratchcardEdit,
+      meta: {
+        requiresAuth: true,
+        roles: ['publisherRebens', 'administratorRebens', 'master'],
+        title: i18n.t('pages.scratchcard.title')
+      }
+    },
+    {
+      path: ':id/view',
+      name: 'view_scratchcard',
+      props: true,
+      component: ScratchcardView,
       meta: {
         requiresAuth: true,
         roles: ['publisherRebens', 'administratorRebens', 'master'],
