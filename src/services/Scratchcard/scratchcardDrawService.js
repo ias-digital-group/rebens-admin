@@ -4,18 +4,18 @@ import config from '../../config';
 export default {
   list: request => {
     request = request
-        ? request
-        : {
-            page: 0,
-            pageItems: 30,
-            searchWord: '',
-            idOperation: 0,
-            idScratchcard: 0
-          };
+      ? request
+      : {
+          page: 0,
+          pageItems: 30,
+          searchWord: '',
+          idOperation: 0,
+          idScratchcard: 0
+        };
     return new Promise((resolve, reject) => {
-      HTTP.get(config.apiEndpoints.scratchcardDrawUri.concat(`?page=${
-            request.page
-          }&pageItems=${request.pageItems}&searchWord=${
+      HTTP.get(
+        config.apiEndpoints.scratchcardDrawUri.concat(
+          `?page=${request.page}&pageItems=${request.pageItems}&searchWord=${
             request.searchWord
           }${
             request.idOperation != null &&
@@ -30,7 +30,8 @@ export default {
               ? '&idScratchcard=' + request.idScratchcard
               : ''
           }`
-      )).then(
+        )
+      ).then(
         response => {
           resolve(response.data);
         },
@@ -46,20 +47,20 @@ export default {
   },
   listPrized: request => {
     request = request
-        ? request
-        : {
-            page: 0,
-            pageItems: 30,
-            searchWord: '',
-            idOperation: 0,
-            idScratchcard: 0
-          };
+      ? request
+      : {
+          page: 0,
+          pageItems: 30,
+          searchWord: '',
+          idOperation: 0,
+          idScratchcard: 0
+        };
     return new Promise((resolve, reject) => {
-      HTTP.get(config.apiEndpoints.scratchcardDrawUri.concat(`PrizedListPage?page=${
-            request.page
-          }&pageItems=${request.pageItems}&searchWord=${
-            request.searchWord
-          }${
+      HTTP.get(
+        config.apiEndpoints.scratchcardDrawUri.concat(
+          `PrizedListPage?page=${request.page}&pageItems=${
+            request.pageItems
+          }&searchWord=${request.searchWord}${
             request.idOperation != null &&
             request.idOperation != undefined &&
             request.idOperation != 0
@@ -72,7 +73,8 @@ export default {
               ? '&idScratchcard=' + request.idScratchcard
               : ''
           }`
-      )).then(
+        )
+      ).then(
         response => {
           resolve(response.data);
         },
