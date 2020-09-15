@@ -728,15 +728,13 @@ export default {
     fetchData() {
       const self = this;
       if (this.viewAction == 'edit') {
-        self.formLoading = true;
+        this.formLoading = true;
         operationService.get(self.id).then(
           response => {
             self.model = response.data;
             self.actualStatus = self.model.active;
             self.formLoading = response.data.publishStatus === 'Processando';
             self.formLoading = false;
-            // self.formLoading =
-            //   response.data.temporaryPublishStatus === 'Processando Temporário';
             self.showTempPublishBtn =
               response.data.temporaryPublishStatus !== 'Incompleto Temporário';
           },
@@ -747,19 +745,16 @@ export default {
       }
       this.selectLoading = true;
       helperService.findAllOperationTypes().then(
-        response => {
-          _.each(response.data, function(el) {
-            self.operationTypeList.push({ code: el.id, label: el.name });
-            if (el.id === self.model.idOperationType)
-              self.selectedOperationType = el.name;
-          });
-          self.selectLoading = false;
-        },
-        () => {
-          self.selectLoading = false;
-        }
-      );
-      operationService.getConfiguration(self.id).then(
+           this.formLoading = true;
+        operationService.get(self.id).then(
+          response => {
+            self.model = response.data;
+            self.actualStatus = self.model.active;
+            self.formLoading = response.data.publishStatus === 'Processando';
+            self.formLoading = false;
+            self.formLoading =
+              response.data.temporaryPublishStatus === 'Processando Temporário';
+(
         response => {
           self.config.images = [];
           self.config.data = response.data;
