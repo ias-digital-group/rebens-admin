@@ -728,15 +728,15 @@ export default {
     fetchData() {
       const self = this;
       if (this.viewAction == 'edit') {
-        this.formLoading = true;
+        self.formLoading = true;
         operationService.get(self.id).then(
           response => {
             self.model = response.data;
             self.actualStatus = self.model.active;
             self.formLoading = response.data.publishStatus === 'Processando';
             self.formLoading = false;
-            self.formLoading =
-              response.data.temporaryPublishStatus === 'Processando Temporário';
+            // self.formLoading =
+            //   response.data.temporaryPublishStatus === 'Processando Temporário';
             self.showTempPublishBtn =
               response.data.temporaryPublishStatus !== 'Incompleto Temporário';
           },
