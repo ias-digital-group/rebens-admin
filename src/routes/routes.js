@@ -532,7 +532,13 @@ let faqsPages = {
   component: MainLayout,
   meta: {
     requiresAuth: true,
-    roles: ['publisher', 'administrator', 'publisher', 'master'],
+    roles: [
+      'publisher',
+      'administrator',
+      'administratorRebens',
+      'publisherRebens',
+      'master'
+    ],
     title: i18n.t('pages.faqs.title')
   },
   children: [
@@ -543,7 +549,13 @@ let faqsPages = {
       component: FaqsList,
       meta: {
         requiresAuth: true,
-        roles: ['publisher', 'administrator', 'master'],
+        roles: [
+          'publisher',
+          'administrator',
+          'administratorRebens',
+          'publisherRebens',
+          'master'
+        ],
         title: i18n.t('pages.faqs.title')
       }
     }
