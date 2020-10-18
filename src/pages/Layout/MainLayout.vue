@@ -67,6 +67,14 @@
               <router-link :to="item.path">{{ item.name }}</router-link>
             </template>
           </li>
+          <li v-show="isMaster">
+            <a
+              href="https://admin.rebens.com.br/Unicsul/WeeklyReport"
+              target="_blank"
+            >
+              Relatório Unicsul
+            </a>
+          </li>
         </ul>
       </div>
       <div class="content">
@@ -349,6 +357,9 @@ export default {
         this.$store.getters.currentUser.role === 'administratorRebens' ||
         this.$store.getters.currentUser.role === 'publisherRebens'
       );
+    },
+    isMaster() {
+      return this.$store.getters.currentUser.role === 'master';
     }
   },
   methods: {
